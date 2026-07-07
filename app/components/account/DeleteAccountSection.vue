@@ -5,19 +5,19 @@
             @click="deleteAccountDialog = true"
         >
             <Trash2 class="w-5" />
-            <span>Supprimer compte</span>
+            <span>Se désinscrire du site</span>
         </Button>
 
         <Dialog v-model:open="deleteAccountDialog">
             <DialogContent class="w-full max-w-sm sm:max-w-xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle class="text-center">
-                        Supprimer votre compte
+                        Se désinscrire du site
                     </DialogTitle>
                 </DialogHeader>
                 <div class="mt-8">
-                    Veuillez confirmer votre action en entrant votre mot de passe. En le confirmant, vous ne pouvez plus
-                    accéder aux informations de votre compte.
+                    Confirmez avec votre mot de passe. Votre compte sera supprimé et les administrateurs
+                    du site seront informés par e-mail.
                 </div>
 
                 <div class="mt-4 space-y-3">
@@ -90,7 +90,7 @@ const handleDeleteAccount = async () => {
         deleteAccountDialog.value = false;
 
         $toast({
-            description: 'Votre compte a été supprimé avec succès.',
+            description: 'Votre désinscription a été enregistrée.',
         });
 
         await router.push('/');

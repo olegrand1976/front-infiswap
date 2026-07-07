@@ -52,8 +52,9 @@ export function showsPaidNetworkAccessBadge(user: {
     return isSubjectToPlatformAccessPayment(user) && hasPaidPlatformAccess(user);
 }
 
-/** Accès réseau à vie : cotisation payée ou compte legacy antérieur au cutoff. */
+/** Accès réseau à vie : cotisation payée ou inscription antérieure au cutoff (tous profils). */
 export function hasLifetimeNetworkAccess(user: {
+    type?: string | null;
     roles?: string[];
     account_type?: string | null;
     created_at?: string | null;
@@ -63,7 +64,7 @@ export function hasLifetimeNetworkAccess(user: {
         return false;
     }
 
-    if (!isPlatformAccessRole(resolvePlatformAccessRoles(user))) {
+    if (user.type === 'institution') {
         return false;
     }
 

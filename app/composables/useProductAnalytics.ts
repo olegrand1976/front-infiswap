@@ -12,7 +12,10 @@ type ProductEventName =
     | 'contract_cta_click'
     | 'contract_paid'
     | 'purchase_celebration_impression'
-    | 'purchase_celebration_cta_click';
+    | 'purchase_celebration_cta_click'
+    | 'google_review_impression'
+    | 'google_review_cta_click'
+    | 'google_review_dismiss';
 
 export function useProductAnalytics() {
     const { gtag } = useGtag();

@@ -44,7 +44,7 @@ describe('platformAccess', () => {
         })).toBe(false);
     });
 
-    it('detects lifetime network access for paid and legacy nurses', () => {
+    it('detects lifetime network access for paid and legacy users', () => {
         expect(hasLifetimeNetworkAccess({
             roles: ['nurse'],
             created_at: '2026-07-02T10:00:00',
@@ -56,12 +56,18 @@ describe('platformAccess', () => {
             platform_access_paid_at: null,
         })).toBe(true);
         expect(hasLifetimeNetworkAccess({
+            roles: ['developer'],
+            created_at: '2026-06-15T10:00:00',
+            platform_access_paid_at: null,
+        })).toBe(true);
+        expect(hasLifetimeNetworkAccess({
             roles: ['nurse'],
             created_at: '2026-07-02T10:00:00',
             platform_access_paid_at: null,
         })).toBe(false);
         expect(hasLifetimeNetworkAccess({
-            roles: ['collaborator'],
+            type: 'institution',
+            roles: ['nurse'],
             created_at: '2026-06-15T10:00:00',
             platform_access_paid_at: null,
         })).toBe(false);

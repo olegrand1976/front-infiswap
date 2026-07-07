@@ -243,12 +243,13 @@
                             >
                                 Réactiver Mon réseau InfiSwap
                             </DropdownMenuItem>
-                            <DropdownMenuItem>
+                            <DropdownMenuItem as-child>
                                 <NuxtLink to="/acces-plan">Accès plateforme</NuxtLink>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
                                 v-if="user?.account_type != 'nurse' && user?.account_type != 'caregiver' && user?.account_type != 'midwife'"
+                                as-child
                             >
                                 <NuxtLink to="/dashboard/settings">Paramètres</NuxtLink>
                             </DropdownMenuItem>
@@ -282,6 +283,12 @@
                     @continue="handleCelebrationContinue"
                 />
             </div>
+            <div
+                v-if="activeGoogleReviewPrompt"
+                class="fixed inset-0 z-[110] flex items-center justify-center bg-white/95 backdrop-blur-sm px-4 overflow-y-auto"
+            >
+                <MarketingGoogleReviewPrompt />
+            </div>
         </Teleport>
     </SidebarProvider>
 </template>
@@ -294,6 +301,7 @@ import type { AccountType, User } from '~/lib/types';
 import { cn } from '@/lib/utils';
 import { getRole, getShortDisplayName } from '~/lib/utils';
 import { showsPaidNetworkAccessBadge } from '~/utils/platformAccess';
+import { mapCelebrationVariantToReviewSource } from '~/utils/googleReview';
 
 const { isAdmin, hasChangedAvatar } = useAuth();
 
@@ -336,10 +344,25 @@ const displayShortName = computed(() => getShortDisplayName(user.value) || displ
 const showNetworkMemberBadge = computed(() => showsPaidNetworkAccessBadge(user.value));
 
 const { activeCelebration, dismissCelebration } = usePurchaseCelebration();
+const { activePrompt: activeGoogleReviewPrompt, requestPrompt } = useGoogleReviewPrompt();
 const router = useRouter();
 
 async function handleCelebrationContinue(targetRoute: string) {
+    const variant = activeCelebration.value?.variant;
     dismissCelebration();
+
+    if (variant) {
+        const shown = requestPrompt(mapCelebrationVariantToReviewSource(variant), {
+            pendingRoute: targetRoute,
+        });
+
+        if (!shown) {
+            await router.replace(targetRoute);
+        }
+
+        return;
+    }
+
     await router.replace(targetRoute);
 }
 
@@ -352,6 +375,7 @@ const {
 const showReenableNetworkJourney = computed(() => isJourneyDisabled.value);
 
 const MEDICAL_ROLES = ['nurse', 'caregiver', 'midwife', 'collaborator'];
+const STAFF_SWITCH_ROLES = ['administrator', 'developer', 'manager', 'community_manager', 'sale_representative'];
 
 const hasMultipleContexts = computed(() => {
     let count = 0;
@@ -362,7 +386,16 @@ const hasMultipleContexts = computed(() => {
 });
 
 const secondaryRoles = computed(() => {
-    if (activeContext.value !== 'nurse' || !roles.value?.length) return [];
+    if (!roles.value?.length) return [];
+
+    if (activeContext.value === 'admin') {
+        const staffRoles = roles.value.filter((r: string) => STAFF_SWITCH_ROLES.includes(r));
+        if (staffRoles.length <= 1) return [];
+
+        return staffRoles.filter((role: string) => role !== user.value?.account_type);
+    }
+
+    if (activeContext.value !== 'nurse') return [];
 
     const medicalRoles = roles.value.filter((r: string) => MEDICAL_ROLES.includes(r));
     if (medicalRoles.length <= 1) return [];
