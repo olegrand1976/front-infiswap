@@ -384,11 +384,11 @@ const accessFeatures = [
 ];
 
 const boostFeatures = [
+    'Boost 2 : 7 jours à 4,40 € — recommandé',
+    'Boost 1 : 3 jours à 2,00 € — option rapide',
     'Annonce en tête des résultats de recherche',
-    '3 jours à 2,00 € ou 7 jours à 4,40 €',
-    'Idéal pour combler une période rapidement',
     'Activation en un clic sur vos annonces',
-    'Prolongation possible avant expiration',
+    'Contrat de remplacement optionnel — 3 €',
 ];
 
 const tips = [

@@ -29,7 +29,7 @@
                                         >info@infiswap.be</a> ou au 0478.02.33.77 pour plus d'informations.
                                     </p>
                                     <p class="mt-2">
-                                        Abonnement infirmière : 15 €/mois. Option de mise en avant des remplacements : 5 €/semaine.
+                                        Accès réseau infirmière : paiement unique 9,90 € (accès permanent). Boost remplacement : Boost 1 à 2 € (3 jours) ou Boost 2 à 4,40 € (7 jours).
                                     </p>
                                 </div>
 

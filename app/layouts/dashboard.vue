@@ -184,7 +184,7 @@
                                     {{ user?.type == 'standard' ? getRole(user?.account_type) : 'INSTITUTION' }}
                                 </p>
                             </div>
-                            <ProfileLifetimeAccessBadge>
+                            <ProfileLifetimeAccessBadge session-consumer>
                                 <Avatar v-if="user?.profil_url != null">
                                     <AvatarImage :src="useRuntimeConfig().public.API_URL + '/storage/' + hasChangedAvatar" />
                                     <AvatarFallback>{{ user.firstname.slice(1, 1).toUpperCase() + user.lastname.slice(1, 1).toUpperCase() }}</AvatarFallback>
@@ -269,6 +269,20 @@
             </div>
         </SidebarInset>
         <SubscriptionPlatformAccessModal />
+
+        <Teleport to="body">
+            <div
+                v-if="activeCelebration && activeCelebration.variant !== 'platform_access'"
+                class="fixed inset-0 z-[100] flex items-center justify-center bg-white/95 backdrop-blur-sm px-4 overflow-y-auto"
+            >
+                <SubscriptionPurchaseCelebration
+                    :variant="activeCelebration.variant"
+                    :replacement-id="activeCelebration.replacementId"
+                    :dedupe-key="activeCelebration.dedupeKey"
+                    @continue="handleCelebrationContinue"
+                />
+            </div>
+        </Teleport>
     </SidebarProvider>
 </template>
 
@@ -320,6 +334,14 @@ const reportDescription = ref('');
 const displayFullName = computed(() => user.value?.full_name || 'xxx XXX');
 const displayShortName = computed(() => getShortDisplayName(user.value) || displayFullName.value);
 const showNetworkMemberBadge = computed(() => showsPaidNetworkAccessBadge(user.value));
+
+const { activeCelebration, dismissCelebration } = usePurchaseCelebration();
+const router = useRouter();
+
+async function handleCelebrationContinue(targetRoute: string) {
+    dismissCelebration();
+    await router.replace(targetRoute);
+}
 
 const {
     showWidget: showNetworkJourneyWidget,

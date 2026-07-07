@@ -1115,6 +1115,11 @@
                         </div>
                     </section>
 
+                    <ProfileNetworkAccessCard
+                        v-if="user.type != 'institution'"
+                        class="mt-4 xl:mt-0"
+                    />
+
                     <section
                         v-if="user.type != 'institution'"
                         class="mt-4 xl:mt-0 shadow rounded-lg p-6"

@@ -105,6 +105,41 @@
                                                 Accéder
                                             </button>
                                         </NuxtLink>
+                                        <NuxtLink
+                                            to="/dashboard/replacements/contracts"
+                                            class="mt-2 block text-center text-xs text-orange-700 underline"
+                                        >
+                                            Mes contrats (3 €)
+                                        </NuxtLink>
+                                    </div>
+                                </div>
+                            </div>
+                        </CarouselItem>
+
+                        <CarouselItem
+                            v-if="showNetworkAccessPromo"
+                            class="basis-1/3 2xl:basis-1/4"
+                        >
+                            <div class="flex flex-col h-full overflow-hidden border-2 rounded-lg border-primary">
+                                <div class="p-2 text-base font-bold tracking-wide text-center text-white uppercase bg-primary md:p-3 md:text-sm">
+                                    Membre réseau
+                                </div>
+                                <div class="flex flex-col grow p-3 text-gray-700 bg-white md:p-5">
+                                    <p class="mb-2 text-sm font-medium text-center text-primary md:mb-3 md:text-base">
+                                        Accès à vie — 9,90 €
+                                    </p>
+                                    <ul class="grow mb-2 space-y-1 text-xs md:mb-4 md:text-sm">
+                                        <li class="flex items-start">
+                                            <span class="mr-1 font-bold text-primary md:mr-2">•</span>
+                                            <span>Publiez et répondez sur le réseau InfiSwap.</span>
+                                        </li>
+                                    </ul>
+                                    <div class="pt-2 md:pt-4">
+                                        <NuxtLink to="/acces-plan">
+                                            <button class="w-full py-1 text-sm font-semibold text-white transition rounded bg-primary md:py-2 md:text-sm hover:bg-primary/90">
+                                                Devenir membre
+                                            </button>
+                                        </NuxtLink>
                                     </div>
                                 </div>
                             </div>
@@ -519,6 +554,7 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from '@/components/ui/carousel';
+import { hasPaidPlatformAccess, isSubjectToPlatformAccessPayment } from '~/utils/platformAccess';
 
 type MonthlyReport = {
     month: string;
@@ -545,6 +581,10 @@ const proposalDialog = ref(false);
 const newlyAddedValue = ref<string>('');
 const configDialog = ref(false);
 const { $toast } = useNuxtApp();
+
+const showNetworkAccessPromo = computed(() =>
+    isSubjectToPlatformAccessPayment(user.value) && !hasPaidPlatformAccess(user.value),
+);
 
 const arePreferencesEmpty = () => {
     if (!user.value?.settings) return true;

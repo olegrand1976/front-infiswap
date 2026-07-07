@@ -1,27 +1,24 @@
 <template>
     <div class="pt-2">
         <div
-            v-if="showBoostSuccess"
+            v-if="showBoostOffer"
             class="mx-3 mb-3 rounded-xl border border-amber-200 bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 p-3 sm:p-4 shadow-sm"
         >
             <div class="flex flex-col sm:flex-row sm:items-center gap-3">
                 <ReplacementBoostStars size="md" />
                 <div class="flex-1">
                     <p class="font-bold text-amber-900 text-sm sm:text-base">
-                        Remplacement boosté avec succès !
+                        Annonce publiée !
                     </p>
                     <p class="text-xs text-amber-800/80 mt-0.5">
-                        Votre annonce est en tête de liste et bénéficie d'une visibilité maximale.
+                        Boost 2 — 7 j à 4,40 € recommandé (Boost 1 — 3 j à 2 € disponible).
                     </p>
                 </div>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    class="shrink-0 border-amber-300 text-amber-800 hover:bg-amber-100"
-                    @click="showBoostSuccess = false"
-                >
-                    Compris
-                </Button>
+                <ReplacementBoostButton
+                    variant="card"
+                    show-price
+                    @boost="openBoostPreview"
+                />
             </div>
         </div>
 
@@ -417,6 +414,13 @@ import ReplacementBoostStars from '~/components/replacements/ReplacementBoostSta
 import ReplacementDetailBoostBlock from '~/components/replacements/ReplacementDetailBoostBlock.vue';
 import ReplacementShareButtons from '~/components/replacements/ReplacementShareButtons.vue';
 import ReplacementBoostModal from '~/components/replacements/ReplacementBoostModal.vue';
+import ReplacementBoostButton from '~/components/replacements/ReplacementBoostButton.vue';
+import { extractStripeSessionId, isStripeCheckoutSessionId } from '~/utils/accessReturn';
+import {
+    buildAnalyticsSeenKey,
+    buildBoostCelebrationDedupeKey,
+    shouldTrackPurchaseAnalytics,
+} from '~/utils/purchaseCelebration';
 import { useDetailReplacement, sendResponse } from '~/composables/useReplacements';
 import { useInstitutions } from '~/composables/useInstitution';
 
@@ -425,8 +429,78 @@ const route = useRoute();
 const router = useRouter();
 const { $toast } = useNuxtApp();
 const replacementId = route.params.id;
-const showBoostSuccess = ref(false);
+const showBoostOffer = ref(false);
 const boostModalOpen = ref(false);
+const { triggerCelebration } = usePurchaseCelebration();
+const { confirmBoost } = useSubscription();
+
+function trackBoostPaidOnce(sessionId: string, planDays: number | null) {
+    if (!import.meta.client) {
+        return;
+    }
+
+    const key = buildAnalyticsSeenKey('boost', sessionId);
+
+    if (!shouldTrackPurchaseAnalytics(sessionId, sessionStorage.getItem(key))) {
+        return;
+    }
+
+    useProductAnalytics().trackEvent('boost_paid', {
+        replacement_id: String(replacementId),
+        plan_days: planDays ?? 0,
+        is_first_boost: true,
+    });
+    sessionStorage.setItem(key, sessionId);
+}
+
+async function processBoostReturn() {
+    if (route.query.boost !== 'success') {
+        return;
+    }
+
+    const sessionId = extractStripeSessionId(route.query);
+
+    if (!sessionId || !isStripeCheckoutSessionId(sessionId)) {
+        await router.replace({ path: route.path, query: {} });
+        return;
+    }
+
+    let granted = false;
+    let planDays = null;
+
+    for (let attempt = 0; attempt < 4; attempt++) {
+        const result = await confirmBoost(Number(replacementId), sessionId);
+
+        if (result.outcome === 'active') {
+            granted = true;
+            planDays = result.planDays;
+            break;
+        }
+
+        if (result.outcome === 'auth_error') {
+            break;
+        }
+
+        if (attempt < 3) {
+            await new Promise(resolve => setTimeout(resolve, 1500));
+        }
+    }
+
+    await fetchReplacement();
+    await router.replace({ path: route.path, query: {} });
+
+    if (!granted) {
+        return;
+    }
+
+    trackBoostPaidOnce(sessionId, planDays);
+    triggerCelebration({
+        variant: 'boost',
+        replacementId: Number(replacementId),
+        dedupeKey: buildBoostCelebrationDedupeKey(Number(replacementId), sessionId),
+        planDays,
+    });
+}
 
 const { replacement, fetchReplacement } = useDetailReplacement(replacementId);
 const { canBoostReplacement } = useReplacementBoost();
@@ -666,14 +740,17 @@ useProductAnalytics().trackEvent('replacement_viewed', {
 
 onMounted(async () => {
     if (route.query.boost === 'success') {
-        showBoostSuccess.value = true;
-        $toast({ description: 'Votre remplacement est maintenant boosté !' });
-        await fetchReplacement();
-        router.replace({ path: route.path, query: {} });
+        await processBoostReturn();
     }
     else if (route.query.boost === 'offer') {
         if (canBoostThisReplacement.value) {
-            boostModalOpen.value = true;
+            showBoostOffer.value = true;
+            useProductAnalytics().trackEvent('boost_impression', {
+                source: 'post_create',
+                replacement_id: String(replacementId),
+                responses_count: replacement.value?.responses_count ?? 0,
+                boost_tier: 'boost2',
+            });
         }
         router.replace({ path: route.path, query: {} });
     }

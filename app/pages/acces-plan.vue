@@ -42,6 +42,22 @@
                 </div>
 
                 <div
+                    v-else-if="pageView === 'success'"
+                    class="flex justify-center"
+                >
+                    <SubscriptionPurchaseCelebration
+                        v-if="stripeSessionId"
+                        variant="platform_access"
+                        :display-name="celebrationDisplayName"
+                        :avatar-url="celebrationAvatarUrl"
+                        :dedupe-key="stripeSessionId"
+                        :auto-continue-route="redirectTo"
+                        :secondary-route="redirectTo"
+                        @continue="finishAccessCelebration"
+                    />
+                </div>
+
+                <div
                     v-else-if="pageView === 'plan'"
                     class="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center max-w-6xl mx-auto"
                 >
@@ -267,7 +283,11 @@ import {
     Zap,
 } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
-import { extractStripeSessionId, safeReturnPath, waitForAuthReady } from '~/utils/accessReturn';
+import { extractStripeSessionId, isStripeCheckoutSessionId, safeReturnPath, waitForAuthReady } from '~/utils/accessReturn';
+import {
+    LIFETIME_CELEBRATION_SEEN_KEY,
+    PROCESSED_ACCESS_SESSION_KEY,
+} from '~/utils/purchaseCelebration';
 import { useAuthTokenCookie } from '~/lib/authTokenCookie';
 
 useHead({
@@ -302,12 +322,17 @@ const membersCount = computed(() => getKpiValue('members_total'));
 const formattedMembersCount = computed(() => membersCount.value.toLocaleString('fr-BE'));
 
 const hasAccess = ref(false);
+const showSuccessCelebration = ref(false);
 const purchasing = ref(false);
 const confirmingPayment = ref(false);
 const confirmFailed = ref(false);
 const planLoaded = ref(false);
 
 const pageView = computed(() => {
+    if (showSuccessCelebration.value) {
+        return 'success';
+    }
+
     if (confirmingPayment.value) {
         return 'confirming';
     }
@@ -357,7 +382,47 @@ const includedItems = [
 ];
 
 const redirectTo = computed(() => safeReturnPath(route.query.redirectTo));
-const processedSessionIds = ref(new Set<string>());
+const { triggerLifetimeBadgeReveal } = useLifetimeBadgeReveal();
+const config = useRuntimeConfig();
+
+function getStoredSession(key: string): string | null {
+    if (!import.meta.client) {
+        return null;
+    }
+
+    return sessionStorage.getItem(key);
+}
+
+function setStoredSession(key: string, value: string): void {
+    if (import.meta.client) {
+        sessionStorage.setItem(key, value);
+    }
+}
+
+function hasProcessedAccessSession(sessionId: string): boolean {
+    return getStoredSession(PROCESSED_ACCESS_SESSION_KEY) === sessionId;
+}
+
+function hasSeenLifetimeCelebration(sessionId: string): boolean {
+    return getStoredSession(LIFETIME_CELEBRATION_SEEN_KEY) === sessionId;
+}
+
+const celebrationDisplayName = computed(() => user.value?.full_name ?? user.value?.firstname ?? null);
+
+const celebrationAvatarUrl = computed(() => {
+    const path = user.value?.profile?.profil_url ?? user.value?.profil_url;
+
+    if (!path) {
+        return null;
+    }
+
+    return `${config.public.API_URL}/storage/${path}`;
+});
+
+async function finishAccessCelebration(targetRoute: string) {
+    showSuccessCelebration.value = false;
+    await navigateTo(targetRoute || redirectTo.value, { replace: true });
+}
 
 const stripeSessionId = computed(() => extractStripeSessionId(route.query));
 const purchaseBlocked = computed(() => Boolean(
@@ -386,8 +451,23 @@ const processStripeReturn = async () => {
         return;
     }
 
-    if (processedSessionIds.value.has(sessionId) && !confirmFailed.value) {
+    if (!isStripeCheckoutSessionId(sessionId)) {
         return;
+    }
+
+    if (hasProcessedAccessSession(sessionId) && !confirmFailed.value) {
+        if (hasSeenLifetimeCelebration(sessionId)) {
+            return navigateTo(redirectTo.value, { replace: true });
+        }
+
+        if (!hasAccess.value) {
+            hasAccess.value = await hasPlatformAccess();
+        }
+
+        if (hasAccess.value) {
+            showSuccessCelebration.value = true;
+            return;
+        }
     }
 
     const authReady = await waitForAuthReady();
@@ -452,12 +532,18 @@ const processStripeReturn = async () => {
         }
 
         if (activated) {
-            processedSessionIds.value.add(sessionId);
+            setStoredSession(PROCESSED_ACCESS_SESSION_KEY, sessionId);
             hasAccess.value = true;
             confirmFailed.value = false;
             await refresh();
-            $toast({ description: 'Accès activé avec succès !' });
-            await navigateTo(redirectTo.value, { replace: true });
+            triggerLifetimeBadgeReveal();
+
+            if (hasSeenLifetimeCelebration(sessionId)) {
+                return navigateTo(redirectTo.value, { replace: true });
+            }
+
+            setStoredSession(LIFETIME_CELEBRATION_SEEN_KEY, sessionId);
+            showSuccessCelebration.value = true;
         }
         else {
             confirmFailed.value = true;

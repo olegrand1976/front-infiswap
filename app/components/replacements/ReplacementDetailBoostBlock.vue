@@ -36,7 +36,8 @@
                     <ReplacementBoostButton
                         v-if="canBoost && !isBoosted"
                         variant="detail"
-                        @boost="emit('boost')"
+                        show-price
+                        @boost="onBoostClick"
                     />
                     <Button
                         v-else-if="isBoosted"
@@ -71,11 +72,26 @@ const emit = defineEmits<{
     manage: [];
 }>();
 
+const { trackEvent } = useProductAnalytics();
+
 const actionButtonClass = 'border-white/90 bg-white text-amber-700 font-semibold shadow-sm hover:bg-amber-50 hover:text-amber-800 hover:border-white';
 
 const isBoosted = computed(() =>
     props.replacement ? isReplacementActivelyBoosted(props.replacement) : false,
 );
+
+const responsesCount = computed(() => props.replacement?.responses_count ?? 0);
+
+const isStaleWithoutResponses = computed(() => {
+    if (!props.replacement?.created_at || responsesCount.value > 0) {
+        return false;
+    }
+
+    const created = new Date(props.replacement.created_at);
+    const hoursSince = (Date.now() - created.getTime()) / (1000 * 60 * 60);
+
+    return hoursSince >= 12;
+});
 
 const visible = computed(() => {
     if (!props.replacement) return false;
@@ -87,6 +103,11 @@ const title = computed(() => {
     if (isBoosted.value) {
         return props.isOwner ? 'Remplacement boosté' : 'Annonce mise en avant';
     }
+
+    if (responsesCount.value === 0 && isStaleWithoutResponses.value) {
+        return 'Aucune candidature ?';
+    }
+
     return 'Boostez votre remplacement';
 });
 
@@ -99,8 +120,40 @@ const subtitle = computed(() => {
             ? 'Votre annonce apparaît en tête des recherches.'
             : 'Cette annonce bénéficie d\'une visibilité maximale.';
     }
-    return 'Passez en tête de liste : 3 jours à 2 € ou 7 jours à 4,40 €.';
+
+    const boostOptions = 'Boost 2 — 7 j à 4,40 € (recommandé) · Boost 1 — 3 j à 2 €';
+
+    if (responsesCount.value === 0) {
+        if (isStaleWithoutResponses.value) {
+            return `Aucune candidature ? ${boostOptions}`;
+        }
+        return `Lancez votre visibilité : ${boostOptions}`;
+    }
+
+    return `${responsesCount.value} collègue(s) intéressée(s) — ${boostOptions}`;
 });
+
+watch(visible, (isVisible) => {
+    if (isVisible && props.replacement?.id) {
+        trackEvent('boost_impression', {
+            source: 'detail_block',
+            replacement_id: String(props.replacement.id),
+            responses_count: responsesCount.value,
+            boost_tier: 'boost2',
+        });
+    }
+}, { immediate: true });
+
+function onBoostClick() {
+    if (props.replacement?.id) {
+        trackEvent('boost_cta_click', {
+            source: 'detail_block',
+            plan_days: 7,
+            plan_amount: 4.4,
+        });
+    }
+    emit('boost');
+}
 
 function formatDate(iso: string) {
     const date = new Date(iso);

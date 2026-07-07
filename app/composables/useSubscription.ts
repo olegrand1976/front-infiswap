@@ -10,6 +10,11 @@ export type ConfirmAccessResult = {
     outcome: ConfirmAccessOutcome;
 };
 
+export type ConfirmBoostResult = {
+    outcome: ConfirmAccessOutcome;
+    planDays: number | null;
+};
+
 export const useSubscription = () => {
     const { $apifetch, $toast } = useNuxtApp();
     const { refresh } = useAuth();
@@ -183,6 +188,32 @@ export const useSubscription = () => {
         }
     };
 
+    const confirmBoost = async (
+        replacementId: number,
+        sessionId: string,
+    ): Promise<ConfirmBoostResult> => {
+        try {
+            const response = await $apifetch<{ status: string; plan_days?: number | null }>(
+                `api/subscription/replacements/${replacementId}/boost/confirm`,
+                {
+                    method: 'POST',
+                    body: { session_id: sessionId },
+                },
+            );
+
+            return {
+                outcome: parseConfirmAccessOutcome(response),
+                planDays: response.plan_days ?? null,
+            };
+        }
+        catch (error: unknown) {
+            return {
+                outcome: parseConfirmAccessOutcome(null, error),
+                planDays: null,
+            };
+        }
+    };
+
     const boostReplacement = async (replacementId: number, planId: number): Promise<CheckoutResponse | null> => {
         loading.value = true;
         try {
@@ -254,6 +285,7 @@ export const useSubscription = () => {
         getAccessPlan,
         purchaseAccess,
         confirmAccess,
+        confirmBoost,
         boostReplacement,
         cancelBoost,
         check,

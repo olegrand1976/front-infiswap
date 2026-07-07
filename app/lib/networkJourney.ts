@@ -181,12 +181,21 @@ export const QUESTS: Quest[] = [
         order: 3,
     },
     {
+        id: 'discover_access',
+        title: 'Découvrir l\'accès réseau',
+        cta: 'Découvrir l\'accès réseau',
+        xp: 40,
+        route: '/acces-plan',
+        optional: true,
+        order: 4,
+    },
+    {
         id: 'first_action',
         title: 'Répondre ou publier un remplacement',
         cta: 'Passer à l\'action',
         xp: 120,
         route: '/dashboard/replacements',
-        order: 4,
+        order: 5,
     },
     {
         id: 'notif_on',
@@ -194,15 +203,6 @@ export const QUESTS: Quest[] = [
         cta: 'Activer les notifications',
         xp: 60,
         route: '/dashboard/settings',
-        order: 5,
-    },
-    {
-        id: 'discover_access',
-        title: 'Découvrir l\'accès réseau',
-        cta: 'Découvrir l\'accès réseau',
-        xp: 40,
-        route: '/acces-plan',
-        optional: true,
         order: 6,
     },
 ];

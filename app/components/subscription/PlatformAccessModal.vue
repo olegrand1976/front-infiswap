@@ -13,12 +13,19 @@ const {
 } = useSubscription();
 
 const { getKpiValue, fetchStats, loading: statsLoading } = usePlatformStats();
+const { trackEvent } = useProductAnalytics();
 
 onMounted(async () => {
     await Promise.all([
         getAccessPlan(),
         fetchStats(),
     ]);
+});
+
+watch(platformAccessModalOpen, (open) => {
+    if (open) {
+        trackEvent('platform_access_impression', { source: 'modal' });
+    }
 });
 
 const membersCount = computed(() => getKpiValue('members_total'));
@@ -49,6 +56,7 @@ const currencySymbol = computed(() => {
 });
 
 function handleObtainAccess() {
+    trackEvent('platform_access_cta_click', { source: 'modal' });
     const redirectTo = platformAccessRedirectTo.value ?? undefined;
     closePlatformAccessModal();
     redirectToAccesPlan(redirectTo);
@@ -63,37 +71,30 @@ function handleObtainAccess() {
         <AlertDialogContent class="max-w-lg">
             <AlertDialogHeader>
                 <AlertDialogTitle>
-                    Rejoignez le réseau n°1 des remplacements infirmiers
+                    Sans accès, votre annonce reste invisible
                 </AlertDialogTitle>
                 <AlertDialogDescription as="div" class="space-y-4 text-left text-sm text-muted-foreground">
                     <div class="rounded-xl border border-primary/20 bg-primary/5 px-4 py-4 text-center">
                         <p class="text-xs font-semibold uppercase tracking-wide text-primary">
-                            Paiement unique
+                            Paiement unique — accès à vie
                         </p>
                         <p class="mt-1 text-3xl font-extrabold text-primary">
                             {{ formattedPrice }} {{ currencySymbol }}
                         </p>
                         <p class="mt-1 text-xs text-muted-foreground">
-                            Accès à vie au réseau — sans abonnement
+                            Publiez, postulez et rejoignez le réseau pour toujours
                         </p>
                     </div>
 
                     <div class="rounded-xl border-2 border-success/30 bg-success/5 px-4 py-3">
                         <p class="text-sm leading-relaxed">
-                            Pour publier votre remplacement et le rendre visible auprès des infirmiers et aides-soignant(e)s
-                            de votre région, activez votre accès avec un
+                            Activez votre accès avec un
                             <strong class="text-foreground">paiement unique de {{ formattedPrice }} {{ currencySymbol }}</strong>.
-                            Aucun abonnement, aucun renouvellement : vous accédez
+                            Aucun abonnement : vous accédez
                             <strong class="text-foreground">à vie</strong>
-                            au réseau n°1 des remplacements infirmiers.
+                            au réseau n°1 des remplacements infirmiers, avec le badge membre sur votre profil.
                         </p>
                     </div>
-
-                    <p>
-                        Sans cet accès, votre annonce ne sera pas diffusée sur le réseau.
-                        En souscrivant, vous rejoignez une communauté active de professionnels
-                        qui publient, répondent et trouvent des remplacements près de chez eux — en quelques clics.
-                    </p>
 
                     <div class="flex items-center gap-4 rounded-2xl border border-primary/15 bg-primary/5 p-4">
                         <div class="rounded-2xl bg-primary/10 p-3 text-primary">
@@ -123,18 +124,6 @@ function handleObtainAccess() {
                             </p>
                         </div>
                     </div>
-
-                    <div class="rounded-xl bg-muted/50 px-4 py-3 text-center">
-                        <span class="inline-block rounded-full bg-success/15 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-success">
-                            Paiement unique
-                        </span>
-                        <p class="mt-2 text-lg font-semibold text-foreground">
-                            {{ formattedPrice }} {{ currencySymbol }}
-                        </p>
-                        <p class="text-xs text-muted-foreground">
-                            Paiement unique — accès à vie au réseau
-                        </p>
-                    </div>
                 </AlertDialogDescription>
             </AlertDialogHeader>
 
@@ -147,7 +136,7 @@ function handleObtainAccess() {
                     :in-progress="loading"
                     @click="handleObtainAccess"
                 >
-                    Obtenir mon accès à vie
+                    Accès à vie — {{ formattedPrice }} {{ currencySymbol }}
                 </Button>
             </AlertDialogFooter>
         </AlertDialogContent>

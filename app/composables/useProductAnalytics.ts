@@ -2,7 +2,17 @@ type ProductEventName =
     | 'replacement_created'
     | 'replacement_viewed'
     | 'response_sent'
-    | 'email_cta_clicked';
+    | 'email_cta_clicked'
+    | 'platform_access_impression'
+    | 'platform_access_cta_click'
+    | 'boost_impression'
+    | 'boost_cta_click'
+    | 'boost_paid'
+    | 'contract_offer_shown'
+    | 'contract_cta_click'
+    | 'contract_paid'
+    | 'purchase_celebration_impression'
+    | 'purchase_celebration_cta_click';
 
 export function useProductAnalytics() {
     const { gtag } = useGtag();

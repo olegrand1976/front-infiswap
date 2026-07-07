@@ -4,14 +4,14 @@
         :variant="isLight ? 'outline' : 'default'"
         :class="buttonClass"
         title="Booster ce remplacement"
-        aria-label="Booster ce remplacement"
+        :aria-label="showPrice ? 'Booster ce remplacement — 2 €' : 'Booster ce remplacement'"
         @click.stop="emit('boost')"
     >
         <Rocket
             :class="rocketClass"
             :stroke-width="2.5"
         />
-        Booster
+        {{ label }}
     </Button>
 </template>
 
@@ -21,13 +21,17 @@ import { Button } from '@/components/ui/button';
 
 const props = withDefaults(defineProps<{
     variant?: 'table' | 'card' | 'detail';
+    showPrice?: boolean;
 }>(), {
     variant: 'table',
+    showPrice: false,
 });
 
 const emit = defineEmits<{ boost: [] }>();
 
 const isLight = computed(() => props.variant === 'detail');
+
+const label = computed(() => (props.showPrice ? 'Booster — dès 2 €' : 'Booster'));
 
 const buttonClass = computed(() => {
     if (props.variant === 'detail') {

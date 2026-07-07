@@ -124,7 +124,7 @@
                 </section>
 
                 <section
-                    v-if="boostPlans.length > 0"
+                    v-if="sortedBoostPlans.length > 0"
                     class="space-y-3"
                 >
                     <h3 class="text-xs font-semibold uppercase tracking-wide text-gray-500">
@@ -132,20 +132,38 @@
                     </h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <button
-                            v-for="plan in boostPlans"
+                            v-for="plan in sortedBoostPlans"
                             :key="plan.id"
                             type="button"
-                            class="rounded-xl border-2 p-4 text-left transition-all"
+                            class="relative rounded-xl border-2 p-4 text-left transition-all"
                             :class="selectedPlanId === plan.id
                                 ? 'border-amber-400 bg-amber-50 shadow-sm'
                                 : 'border-gray-200 bg-white hover:border-amber-200'"
                             @click="selectedPlanId = plan.id"
                         >
+                            <span
+                                v-if="plan.duration_days !== boost1DurationDays"
+                                class="absolute -top-2 right-2 rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white"
+                            >
+                                Recommandé
+                            </span>
                             <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                                {{ plan.duration_days }} jours
+                                Boost {{ plan.duration_days === boost1DurationDays ? '1' : '2' }} · {{ plan.duration_days }} jours
                             </p>
                             <p class="text-xl font-bold text-amber-700 mt-1">
                                 {{ plan.label }}
+                            </p>
+                            <p
+                                v-if="plan.duration_days !== boost1DurationDays"
+                                class="text-xs text-gray-500 mt-1"
+                            >
+                                Meilleur rapport visibilité/prix
+                            </p>
+                            <p
+                                v-else
+                                class="text-xs text-gray-500 mt-1"
+                            >
+                                Option rapide — 3 jours
                             </p>
                             <p
                                 v-if="plan.description"
@@ -158,7 +176,7 @@
                 </section>
 
                 <p
-                    v-if="boostPlans.length === 0 && !planLoading"
+                    v-if="sortedBoostPlans.length === 0 && !planLoading"
                     class="text-sm text-center text-gray-500 py-2"
                 >
                     L'option boost n'est pas disponible pour le moment.
@@ -219,18 +237,25 @@ const emit = defineEmits<{
 const { $toast } = useNuxtApp();
 const { boostReplacement, cancelBoost } = useSubscription();
 const { boostPlans, fetchBoostPlans } = useReplacementBoost();
+const { trackEvent } = useProductAnalytics();
 
 const paying = ref(false);
 const canceling = ref(false);
 const planLoading = ref(false);
 const selectedPlanId = ref<number | null>(null);
+const boost1DurationDays = 3;
+
+/** Boost 2 (7 j) en tête — Boost 1 (3 j) en alternative. */
+const sortedBoostPlans = computed(() =>
+    [...boostPlans.value].sort((a, b) => (b.duration_days ?? 0) - (a.duration_days ?? 0)),
+);
 
 const isActiveMode = computed(() =>
     props.replacement ? isReplacementActivelyBoosted(props.replacement) : false,
 );
 
 const selectedPlan = computed(() =>
-    boostPlans.value.find(plan => plan.id === selectedPlanId.value) ?? null,
+    sortedBoostPlans.value.find(plan => plan.id === selectedPlanId.value) ?? null,
 );
 
 watch(open, async (isOpen) => {
@@ -238,7 +263,14 @@ watch(open, async (isOpen) => {
     planLoading.value = true;
     try {
         const plans = await fetchBoostPlans(true);
-        selectedPlanId.value = plans[0]?.id ?? null;
+        const sorted = [...plans].sort((a, b) => (b.duration_days ?? 0) - (a.duration_days ?? 0));
+        selectedPlanId.value = sorted[0]?.id ?? null;
+        trackEvent('boost_impression', {
+            source: 'modal',
+            replacement_id: String(props.replacement?.id ?? ''),
+            responses_count: props.replacement?.responses_count ?? 0,
+            boost_tier: 'boost2',
+        });
     }
     finally {
         planLoading.value = false;
@@ -326,6 +358,13 @@ const confirmBoost = async () => {
     const id = props.replacement?.id;
     const planId = selectedPlanId.value;
     if (!id || !planId) return;
+
+    const plan = selectedPlan.value;
+    trackEvent('boost_cta_click', {
+        source: 'modal',
+        plan_days: plan?.duration_days ?? 3,
+        plan_amount: Number(plan?.amount ?? 2),
+    });
 
     paying.value = true;
     try {
