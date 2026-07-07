@@ -122,12 +122,12 @@ const imgData = computed(() => {
     if (props.theme === 'assur') {
         return {
             src: '/nurs_assur.png',
-            alt: 'NurseAssur',
+            alt: 'NursAssur',
         };
     }
     return {
         src: '/nurs_tech.png',
-        alt: 'NurseTech',
+        alt: 'NursTech',
     };
 });
 

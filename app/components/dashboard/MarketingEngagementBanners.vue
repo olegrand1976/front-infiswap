@@ -30,11 +30,17 @@ const showCandidateBanner = computed(() =>
     pendingResponseCount.value > 0 && !showAccessBanner.value,
 );
 
-const showPartnerBanner = computed(() =>
-    !showAccessBanner.value
-    && !showCandidateBanner.value
-    && !!activeCampaign.value,
-);
+const showPartnerBanner = computed(() => {
+    if (!activeCampaign.value || showAccessBanner.value || showCandidateBanner.value) {
+        return false;
+    }
+
+    if (isSubjectToPlatformAccessPayment(user.value) && hasPaidPlatformAccess(user.value)) {
+        return false;
+    }
+
+    return true;
+});
 
 const partnerCtaPath = computed(() => activeCampaign.value?.cta_path ?? '/nurstech-by-infiswap');
 const partnerIsNursAssur = computed(() => activeCampaign.value?.featured === 'nursassur');
