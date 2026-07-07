@@ -492,7 +492,7 @@
                                 class="flex items-center gap-2 p-3 rounded-xl bg-[#d3405c]/10 border border-[#d3405c]/20 text-xs text-[#d3405c] font-semibold"
                             >
                                 <i class="fa-solid fa-tags" />
-                                <span>Offre promotionnelle — {{ diyPromoValidityLabel }}</span>
+                                <span>Offre promotionnelle — {{ diyPromoValidityLabel }}. {{ getInstitutionPriceLockLabel() }}</span>
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
                                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm relative">
@@ -503,12 +503,12 @@
                                     <span
                                         v-else
                                         class="absolute top-3 right-3 bg-emerald-50 text-emerald-800 text-[9px] font-extrabold px-2.5 py-1 rounded uppercase tracking-wider"
-                                    >Sans engagement</span>
+                                    >12 mois min.</span>
                                     <h3 class="font-extrabold text-slate-900 text-sm">
                                         Abonnement Mensuel
                                     </h3>
                                     <p class="text-xs text-slate-400 mt-1">
-                                        Flexibilité totale, arrêt de l'abonnement à tout moment.
+                                        Facturation mensuelle, engagement minimum de 12 mois.
                                     </p>
                                     <div class="mt-4 pb-4 border-b border-slate-100">
                                         <span class="text-3xl font-black text-slate-900">{{ diyMonthlyAmountLabel }}</span>
@@ -519,7 +519,7 @@
                                         >{{ diyFullMonthlyAmountLabel }} / mois</span>
                                     </div>
                                     <ul class="mt-4 space-y-2 text-xs text-slate-600">
-                                        <li><i class="fa-solid fa-circle-check text-[#46d88e] mr-1.5" /> Facturation claire, résiliable mensuellement</li>
+                                        <li><i class="fa-solid fa-circle-check text-[#46d88e] mr-1.5" /> Engagement 12 mois, reconduction tacite</li>
                                         <li><i class="fa-solid fa-circle-check text-[#46d88e] mr-1.5" /> Publication prioritaire <strong>En Haut de Liste</strong></li>
                                         <li><i class="fa-solid fa-circle-check text-[#46d88e] mr-1.5" /> Mise en relation directe et rapide avec {{ networkProfilesLabel }}</li>
                                     </ul>
@@ -1219,6 +1219,7 @@ import {
 import {
     formatInstitutionDiyMonthlyLabel,
     formatInstitutionDiyYearlyLabel,
+    getInstitutionPriceLockLabel,
     INSTITUTION_DIY_FULL_MONTHLY,
     INSTITUTION_DIY_FULL_YEARLY,
 } from '~/lib/offreInstitutionPricing';

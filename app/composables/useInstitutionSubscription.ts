@@ -52,6 +52,11 @@ export type InstitutionSubscriptionItem = {
     created_at?: string | null;
     signed_at?: string | null;
     has_signed_pdf?: boolean;
+    pending_payment?: boolean;
+    client_signing_url?: string | null;
+    commercial_signing_url?: string | null;
+    base_amount_htva?: number | null;
+    price_locked_at?: string | null;
     institution?: { id: number; name: string } | null;
     requester?: { id: number; full_name: string; email: string } | null;
     signatory?: { id: number; full_name: string; email: string } | null;
@@ -78,6 +83,7 @@ export type InstitutionSubscriptionKpis = {
     pending_signature: number;
     draft: number;
     active: number;
+    pending_payment?: number;
     total_received: number;
 };
 

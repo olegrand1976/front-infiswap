@@ -57,6 +57,12 @@ const items = computed(() => {
             icon: TrendingUp,
         },
         {
+            value: data?.pending_payment ?? 0,
+            label: 'Paiement en attente',
+            colorClass: 'bg-amber-600',
+            icon: FileClock,
+        },
+        {
             value: data?.draft ?? 0,
             label: 'Brouillons',
             colorClass: 'bg-slate-600',

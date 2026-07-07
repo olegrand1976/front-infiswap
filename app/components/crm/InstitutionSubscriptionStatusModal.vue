@@ -76,6 +76,69 @@
                     <span class="text-sm">{{ formattedSignedAt }}</span>
                 </div>
 
+                <div
+                    v-if="clientSigningUrl || commercialSigningUrl"
+                    class="space-y-2 rounded-lg border bg-muted/30 p-3"
+                >
+                    <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                        Liens Documenso
+                    </p>
+                    <div
+                        v-if="clientSigningUrl"
+                        class="flex flex-col gap-1"
+                    >
+                        <span class="text-xs text-muted-foreground">Client</span>
+                        <div class="flex gap-2">
+                            <Input
+                                :model-value="clientSigningUrl"
+                                readonly
+                                class="text-xs"
+                            />
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                @click="copySigningUrl(clientSigningUrl)"
+                            >
+                                Copier
+                            </Button>
+                        </div>
+                    </div>
+                    <div
+                        v-if="commercialSigningUrl"
+                        class="flex flex-col gap-1"
+                    >
+                        <span class="text-xs text-muted-foreground">Commercial</span>
+                        <div class="flex gap-2">
+                            <Input
+                                :model-value="commercialSigningUrl"
+                                readonly
+                                class="text-xs"
+                            />
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                @click="copySigningUrl(commercialSigningUrl)"
+                            >
+                                Copier
+                            </Button>
+                        </div>
+                    </div>
+                    <Button
+                        v-if="subscription.can_sign && institutionId"
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        class="touch-manipulation"
+                        :disabled="resendLoading"
+                        :in-progress="resendLoading"
+                        @click="resendSignatureLinks"
+                    >
+                        Récupérer les liens
+                    </Button>
+                </div>
+
                 <div class="flex flex-wrap gap-2 pt-2">
                     <Button
                         v-if="subscription.contract_id && institutionId"
@@ -164,6 +227,7 @@
 import { Button } from '@/components/ui/button';
 import ConfirmDialog from '~/components/ui/alert-dialog/ConfirmDialog.vue';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import type { CrmInstitutionSubscription } from '~/lib/types';
 import { useCrm } from '@/composables/useCrm';
 
@@ -178,14 +242,81 @@ const props = defineProps<{
 const emit = defineEmits<{
     signed: [];
     deleted: [];
+    refreshed: [];
 }>();
 
-const { viewInstitutionSubscriptionPdf, sendInstitutionSubscriptionForSignature, deleteInstitutionSubscriptionDraft } = useCrm();
+const {
+    viewInstitutionSubscriptionPdf,
+    sendInstitutionSubscriptionForSignature,
+    resendInstitutionSubscriptionForSignature,
+    deleteInstitutionSubscriptionDraft,
+} = useCrm();
 const { $toast } = useNuxtApp();
 
 const pdfLoading = ref(false);
 const signingLoading = ref(false);
+const resendLoading = ref(false);
 const deleteLoading = ref(false);
+
+const localSigningUrls = ref<{ client: string | null; commercial: string | null } | null>(null);
+
+watch(
+    () => props.subscription,
+    () => {
+        localSigningUrls.value = null;
+    },
+    { deep: true },
+);
+
+const clientSigningUrl = computed(() =>
+    localSigningUrls.value?.client
+    ?? props.subscription?.signing_urls?.client
+    ?? props.subscription?.client_signing_url
+    ?? null,
+);
+
+const commercialSigningUrl = computed(() =>
+    localSigningUrls.value?.commercial
+    ?? props.subscription?.signing_urls?.commercial
+    ?? props.subscription?.commercial_signing_url
+    ?? null,
+);
+
+async function copySigningUrl(url: string) {
+    try {
+        await navigator.clipboard.writeText(url);
+        $toast({ description: 'Lien copié dans le presse-papiers.' });
+    }
+    catch {
+        $toast({ description: 'Impossible de copier le lien.', variant: 'destructive' });
+    }
+}
+
+async function resendSignatureLinks() {
+    const contractId = props.subscription?.contract_id;
+    if (!contractId || !props.institutionId) {
+        return;
+    }
+
+    resendLoading.value = true;
+    try {
+        const response = await resendInstitutionSubscriptionForSignature(props.institutionId, contractId);
+        if (response.signing_urls) {
+            localSigningUrls.value = {
+                client: response.signing_urls.client ?? null,
+                commercial: response.signing_urls.commercial ?? null,
+            };
+        }
+        $toast({ description: response.message ?? 'Liens récupérés.' });
+        emit('refreshed');
+    }
+    catch {
+        $toast({ description: 'Impossible de récupérer les liens.', variant: 'destructive' });
+    }
+    finally {
+        resendLoading.value = false;
+    }
+}
 
 const archiveDescription = computed(() => {
     const reference = props.subscription?.reference ?? props.subscription?.contract_id;
@@ -321,6 +452,7 @@ async function sendForSignature() {
         });
 
         emit('signed');
+        emit('refreshed');
     }
     catch {
         $toast({

@@ -134,6 +134,9 @@ export type CrmInstitutionSubscription = {
     signatory?: { id: number; full_name: string; email: string } | null;
     signed_at?: string | null;
     has_signed_pdf?: boolean;
+    pending_payment?: boolean;
+    client_signing_url?: string | null;
+    commercial_signing_url?: string | null;
     signing_urls?: { client?: string | null; commercial?: string | null } | null;
 };
 

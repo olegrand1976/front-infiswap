@@ -6,6 +6,7 @@
         />
 
         <DashboardAdminPageContent>
+            <InstitutionChurnRiskPanel />
             <InstitutionSubscriptionKpiCards
                 :kpis="subscriptionKpis"
                 :loading="kpiLoading"
@@ -122,6 +123,7 @@ import { formatToDMY } from '@/composables/useDate';
 import type { InstitutionSubscriptionHistory, InstitutionSubscriptionItem, InstitutionSubscriptionKpis } from '@/composables/useInstitutionSubscription';
 import InstitutionSubscriptionDetailSheet from '@/components/contracts/InstitutionSubscriptionDetailSheet.vue';
 import InstitutionSubscriptionKpiCards from '@/components/contracts/InstitutionSubscriptionKpiCards.vue';
+import InstitutionChurnRiskPanel from '@/components/crm/InstitutionChurnRiskPanel.vue';
 import RollingLoader from '~/components/RollingLoader.vue';
 
 useHead({ title: 'BC Institutions' });
@@ -307,7 +309,16 @@ const columns: ColumnDef<InstitutionSubscriptionItem>[] = [
     {
         accessorKey: 'status_label',
         header: () => h('div', 'Statut BC'),
-        cell: ({ row }) => h('div', row.original.status_label ?? row.original.status ?? '—'),
+        cell: ({ row }) => {
+            const label = row.original.status_label ?? row.original.status ?? '—';
+            const pending = row.original.pending_payment;
+            return h('div', { class: 'flex flex-col gap-1' }, [
+                h('span', label),
+                pending ? h('span', {
+                    class: 'inline-flex w-fit px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-100 text-amber-800',
+                }, 'Paiement en attente') : null,
+            ]);
+        },
     },
     {
         id: 'documenso_status',

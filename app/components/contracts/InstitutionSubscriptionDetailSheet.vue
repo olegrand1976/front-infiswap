@@ -235,6 +235,13 @@ async function viewSignedBcPdf() {
                     BC archivé le {{ subscription.deleted_at ? formatToDMY(subscription.deleted_at) : '—' }} — consultation seule.
                 </div>
 
+                <div
+                    v-else-if="subscription.pending_payment"
+                    class="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950"
+                >
+                    <strong>Encaissement requis</strong> — le client a signé le BC. Enregistrez le paiement dans la section ci-dessous.
+                </div>
+
                 <section class="rounded-lg border bg-muted/30 p-4">
                     <dl class="grid gap-3 sm:grid-cols-2 text-sm">
                         <div>

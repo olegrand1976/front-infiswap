@@ -51,3 +51,5 @@ export function formatInstitutionDiyMonthlyLabel(amount?: number): string {
 export function formatInstitutionDiyYearlyLabel(amount?: number): string {
     return `${formatInstitutionDiyAmount(amount ?? getInstitutionDiyYearlyPrice())} € / an`;
 }
+
+export { getInstitutionPriceLockLabel } from './institutionSubscriptionPolicy';

@@ -486,6 +486,7 @@
             :subscription="subscriptionStatusData"
             @signed="onSubscriptionStatusChanged"
             @deleted="onSubscriptionStatusChanged"
+            @refreshed="onSubscriptionStatusChanged"
         />
 
         <div class="mt-auto shrink-0">
@@ -1431,6 +1432,20 @@ function openSubscriptionStatusModal(institution: CrmInstitution) {
     subscriptionStatusData.value = institution.subscription ?? null;
     subscriptionStatusModalOpen.value = true;
 }
+
+watch(
+    () => props.institutions?.data,
+    (institutions) => {
+        if (!subscriptionStatusModalOpen.value || subscriptionInstitutionId.value === null) {
+            return;
+        }
+
+        const institution = institutions?.find(item => item.id === subscriptionInstitutionId.value);
+        if (institution?.subscription) {
+            subscriptionStatusData.value = institution.subscription;
+        }
+    },
+);
 
 function handleSubscriptionClick(institution: CrmInstitution) {
     if (isCollaborator.value) {

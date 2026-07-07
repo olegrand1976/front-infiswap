@@ -320,6 +320,13 @@ export const useCrm = () => {
         );
     }
 
+    async function resendInstitutionSubscriptionForSignature(institutionId: number, contractId: number) {
+        return await $apifetch(
+            `/api/crm/institutions/${institutionId}/subscription/${contractId}/resend-signature`,
+            { method: 'POST' },
+        );
+    }
+
     async function deleteInstitutionSubscriptionDraft(institutionId: number, contractId: number) {
         return await $apifetch(
             `/api/crm/institutions/${institutionId}/subscription/${contractId}`,
@@ -423,6 +430,7 @@ export const useCrm = () => {
         viewInstitutionSubscriptionPdf,
         openCrmDocumentationPdf,
         sendInstitutionSubscriptionForSignature,
+        resendInstitutionSubscriptionForSignature,
         deleteInstitutionSubscriptionDraft,
         updateCrmInstitutionContact,
         ensureCrmInstitutionContact,
