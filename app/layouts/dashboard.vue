@@ -291,6 +291,7 @@
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
+                </div>
             </header>
             <OnboardingNetworkJourneyWidget v-if="showNetworkJourneyWidget" />
             <DashboardMarketingEngagementBanners />
@@ -434,12 +435,21 @@ const hasMultipleContexts = computed(() => {
     return count > 1;
 });
 
-const availableRoles = computed((): AccountType[] => {
-    if (roles.value.length) {
-        return roles.value;
-    }
+function normalizeAccountRoles(input: unknown): AccountType[] {
+    const values = Array.isArray(input)
+        ? input
+        : input && typeof input === 'object'
+            ? Object.values(input as Record<string, unknown>)
+            : [];
 
-    return (user.value?.roles ?? []) as AccountType[];
+    return [...new Set(values.filter((role): role is AccountType => typeof role === 'string'))];
+}
+
+const availableRoles = computed((): AccountType[] => {
+    const fromUser = normalizeAccountRoles(user.value?.roles);
+    const fromApi = normalizeAccountRoles(roles.value);
+
+    return [...new Set([...fromUser, ...fromApi])] as AccountType[];
 });
 
 const switchableRoles = computed(() => {
@@ -449,19 +459,16 @@ const switchableRoles = computed(() => {
         return [];
     }
 
-    if (activeContext.value === 'admin') {
-        const staffRoles = source.filter((role: string) => STAFF_SWITCH_ROLES.includes(role));
+    const switchableRoleSet = new Set<string>([
+        ...STAFF_SWITCH_ROLES,
+        ...MEDICAL_ROLES,
+        'tester',
+        'test_manager',
+    ]);
 
-        return staffRoles.length > 1 ? staffRoles : [];
-    }
+    const uniqueRoles = source.filter((role: string) => switchableRoleSet.has(role));
 
-    if (activeContext.value !== 'nurse') {
-        return [];
-    }
-
-    const medicalRoles = source.filter((role: string) => MEDICAL_ROLES.includes(role));
-
-    return medicalRoles.length > 1 ? medicalRoles : [];
+    return uniqueRoles.length > 1 ? uniqueRoles : [];
 });
 
 const showProfileTypeSelect = computed(() => switchableRoles.value.length > 1);
@@ -544,15 +551,26 @@ const handleDisable = async () => {
     }
 };
 
+watch(
+    () => user.value?.roles,
+    (nextRoles) => {
+        const normalized = normalizeAccountRoles(nextRoles);
+        if (normalized.length) {
+            roles.value = normalized;
+        }
+    },
+    { immediate: true },
+);
+
 onMounted(async () => {
     const [fetchedRoles] = await Promise.all([
         getRoles(),
         getUnreadCount(),
         processSponsorshipStripeReturn(),
     ]);
-    roles.value = Array.isArray(fetchedRoles) ? fetchedRoles as AccountType[] : [];
-    if (!roles.value.length && user.value?.roles?.length) {
-        roles.value = user.value.roles as AccountType[];
+    const normalizedApiRoles = normalizeAccountRoles(fetchedRoles);
+    if (normalizedApiRoles.length) {
+        roles.value = [...new Set([...roles.value, ...normalizedApiRoles])] as AccountType[];
     }
     startPolling(10000);
 
