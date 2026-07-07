@@ -5,6 +5,12 @@
             :loading="kpiLoading"
         />
 
+        <CommissionGainLossChart
+            class="rounded-lg border p-4 bg-card"
+            :series="gainLossSeries"
+            :loading="gainLossLoading"
+        />
+
         <div class="flex flex-wrap gap-3 items-center">
             <InputIcon
                 v-if="isAdminView"
@@ -291,10 +297,11 @@ import { InputIcon } from '~/components/ui/input-with-icon';
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import CommissionKpiCards from '@/components/commissions/CommissionKpiCards.vue';
+import CommissionGainLossChart from '@/components/commissions/CommissionGainLossChart.vue';
 import RollingLoader from '~/components/RollingLoader.vue';
 import { PERPAGE } from '~/lib/constants';
 import { formatToDMY } from '@/composables/useDate';
-import type { CommissionTrackingFilters, VendorCommissionDetail, VendorCommissionSummary } from '@/composables/useInstitutionCommissionTracking';
+import type { CommissionTrackingFilters, GainLossRow, VendorCommissionDetail, VendorCommissionSummary } from '@/composables/useInstitutionCommissionTracking';
 
 const props = defineProps<{
     isAdminView?: boolean;
@@ -318,11 +325,15 @@ const {
     getMyKpis,
     getMyTracking,
     getMyDetail,
+    getAdminGainLoss,
+    getMyGainLoss,
 } = useInstitutionCommissionTracking();
 
 const page = ref(1);
 const perPage = ref(PERPAGE);
 const kpiLoading = ref(false);
+const gainLossLoading = ref(false);
+const gainLossSeries = ref<GainLossRow[]>([]);
 const detailOpen = ref(false);
 const detailLoading = ref(false);
 const detail = ref<VendorCommissionDetail | null>(null);
@@ -445,6 +456,18 @@ function splitTypeLabel(type: string) {
     }
 }
 
+async function loadGainLoss() {
+    gainLossLoading.value = true;
+    try {
+        gainLossSeries.value = props.isAdminView
+            ? await getAdminGainLoss(filters)
+            : await getMyGainLoss(filters);
+    }
+    finally {
+        gainLossLoading.value = false;
+    }
+}
+
 async function loadKpis() {
     kpiLoading.value = true;
     try {
@@ -463,6 +486,7 @@ async function loadKpis() {
 async function refresh() {
     await Promise.all([
         loadKpis(),
+        loadGainLoss(),
         props.isAdminView
             ? getAdminVendors(page.value, perPage.value, filters)
             : getMyTracking(page.value, perPage.value, filters),

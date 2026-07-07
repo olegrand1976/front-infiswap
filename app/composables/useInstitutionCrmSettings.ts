@@ -49,6 +49,8 @@ export type InstitutionCrmCommercial = {
     career_grade?: CommercialCareerGrade | null;
     upline?: { id: number; full_name: string; email?: string | null } | null;
     commercial_grade_assigned_at?: string | null;
+    commercial_collaboration_status?: string;
+    has_pending_signature?: boolean;
 };
 
 export type AssignCareerGradePayload = {

@@ -3,6 +3,11 @@
         <DashboardAdminPageHeader title="Suivi commercial" />
 
         <DashboardAdminPageContent>
+            <CollaborationContractBanner
+                v-if="!canManageSettings && collaborationStatus"
+                class="mb-6 mx-4"
+                :status="collaborationStatus"
+            />
             <CommercialCareerStatusCard
                 v-if="!canManageSettings"
                 class="mb-6 mx-4"
@@ -20,8 +25,10 @@
 <script setup lang="ts">
 import CommissionVendorTracking from '@/components/commissions/CommissionVendorTracking.vue';
 import CommercialCareerStatusCard from '@/components/crm/CommercialCareerStatusCard.vue';
+import CollaborationContractBanner from '@/components/crm/CollaborationContractBanner.vue';
 
 const { getMyCareerStatus } = useInstitutionCrmSettings();
+const { fetchMyCollaboration, status: collaborationStatus } = useCommercialCollaboration();
 const careerStatus = ref<Awaited<ReturnType<typeof getMyCareerStatus>> | null>(null);
 const careerLoading = ref(false);
 
@@ -46,6 +53,7 @@ onMounted(async () => {
     if (!canManageSettings.value) {
         careerLoading.value = true;
         try {
+            await fetchMyCollaboration();
             careerStatus.value = await getMyCareerStatus();
         }
         finally {

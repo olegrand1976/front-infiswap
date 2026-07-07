@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { Banknote, CircleDollarSign, FileCheck, Percent, Users } from 'lucide-vue-next';
+import { AlertTriangle, Banknote, CircleDollarSign, FileCheck, Scale, TrendingDown, Users } from 'lucide-vue-next';
 import type { CommissionKpis } from '@/composables/useInstitutionCommissionTracking';
 
 const props = defineProps<{
@@ -25,16 +25,34 @@ const items = computed(() => {
             icon: Banknote,
         },
         {
-            value: Math.round(data?.commission_due ?? 0),
-            label: 'Commissions dues (€)',
-            colorClass: 'bg-amber-500',
+            value: Math.round(data?.commission_net ?? data?.commission_due ?? 0),
+            label: 'Net acquise (€)',
+            colorClass: 'bg-indigo-600',
             icon: CircleDollarSign,
         },
         {
             value: Math.round(data?.commission_paid ?? 0),
             label: 'Commissions versées (€)',
-            colorClass: 'bg-indigo-600',
+            colorClass: 'bg-violet-600',
             icon: CircleDollarSign,
+        },
+        {
+            value: Math.round(data?.commission_reversed ?? 0),
+            label: 'Reprises (€)',
+            colorClass: 'bg-red-600',
+            icon: TrendingDown,
+        },
+        {
+            value: Math.round(data?.commission_at_risk ?? 0),
+            label: 'À risque (€)',
+            colorClass: 'bg-amber-500',
+            icon: AlertTriangle,
+        },
+        {
+            value: Math.round(data?.net_remuneration_impact ?? 0),
+            label: 'Impact net rémunération (€)',
+            colorClass: 'bg-slate-700',
+            icon: Scale,
         },
         {
             value: data?.signed_contracts ?? 0,
@@ -45,14 +63,8 @@ const items = computed(() => {
         {
             value: data?.active_vendors ?? 0,
             label: 'Commerciaux actifs',
-            colorClass: 'bg-violet-600',
-            icon: Users,
-        },
-        {
-            value: data?.payout_rate ?? 0,
-            label: 'Taux de versement (%)',
             colorClass: 'bg-slate-600',
-            icon: Percent,
+            icon: Users,
         },
     ];
 });

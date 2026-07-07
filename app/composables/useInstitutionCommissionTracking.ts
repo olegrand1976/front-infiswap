@@ -22,9 +22,25 @@ export type CommissionKpis = {
     commission_direct_paid?: number;
     commission_override_due?: number;
     commission_override_paid?: number;
+    commission_earned?: number;
+    commission_reversed?: number;
+    commission_net?: number;
+    commission_clawback_due?: number;
+    commission_at_risk?: number;
+    client_collection_rate?: number;
+    net_remuneration_impact?: number;
     signed_contracts: number;
     active_vendors: number;
     payout_rate: number;
+};
+
+export type GainLossRow = {
+    month: string;
+    received: number;
+    earned: number;
+    paid: number;
+    reversed: number;
+    net: number;
 };
 
 export type VendorCommissionSummary = {
@@ -194,6 +210,20 @@ export const useInstitutionCommissionTracking = () => {
         return response.data as VendorCommissionDetail;
     }
 
+    async function getAdminGainLoss(filters: CommissionTrackingFilters = {}) {
+        const response = await $apifetch('api/admin/institution-commission-tracking/gain-loss', {
+            params: buildParams(filters),
+        });
+        return response.data as GainLossRow[];
+    }
+
+    async function getMyGainLoss(filters: CommissionTrackingFilters = {}) {
+        const response = await $apifetch('api/crm/institution-commission-tracking/gain-loss', {
+            params: buildParams(filters),
+        });
+        return response.data as GainLossRow[];
+    }
+
     return {
         kpis,
         vendors,
@@ -209,5 +239,7 @@ export const useInstitutionCommissionTracking = () => {
         getMyKpis,
         getMyTracking,
         getMyDetail,
+        getAdminGainLoss,
+        getMyGainLoss,
     };
 };

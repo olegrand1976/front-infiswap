@@ -39,6 +39,7 @@
                     <TableRow>
                         <TableHead>Commercial</TableHead>
                         <TableHead>Grade actuel</TableHead>
+                        <TableHead>Contrat</TableHead>
                         <TableHead>Upline</TableHead>
                         <TableHead>Attribué le</TableHead>
                         <TableHead class="w-40" />
@@ -57,6 +58,14 @@
                         </TableCell>
                         <TableCell>
                             {{ commercial.career_grade?.name ?? '—' }}
+                        </TableCell>
+                        <TableCell>
+                            <span
+                                class="text-xs rounded px-2 py-0.5"
+                                :class="collaborationBadgeClass(commercial)"
+                            >
+                                {{ collaborationLabel(commercial) }}
+                            </span>
                         </TableCell>
                         <TableCell>
                             {{ commercial.upline?.full_name ?? '—' }}
@@ -308,6 +317,20 @@ const uplineCandidates = computed(() =>
 function formatDate(value?: string | null) {
     if (!value) return '—';
     return new Date(value).toLocaleDateString('fr-FR');
+}
+
+function collaborationLabel(commercial: InstitutionCrmCommercial) {
+    if (commercial.has_pending_signature) return 'Avenant pending';
+    if (commercial.commercial_collaboration_status === 'active') return 'Actif';
+    if (commercial.commercial_collaboration_status === 'pending_framework') return 'Cadre pending';
+    return commercial.commercial_collaboration_status ?? '—';
+}
+
+function collaborationBadgeClass(commercial: InstitutionCrmCommercial) {
+    if (commercial.commercial_collaboration_status === 'active' && !commercial.has_pending_signature) {
+        return 'bg-emerald-100 text-emerald-800';
+    }
+    return 'bg-amber-100 text-amber-800';
 }
 
 async function refreshCommercials() {
