@@ -151,82 +151,79 @@
                             </DialogContent>
                         </Dialog>
                     </div>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger class="flex min-w-0 items-center gap-2">
-                            <div
-                                class="min-w-0 text-right"
-                                :title="displayFullName"
+                    <div class="flex min-w-0 items-center gap-2">
+                        <div
+                            class="min-w-0 text-right"
+                            :title="displayFullName"
+                        >
+                            <p
+                                v-if="user?.type == 'institution'"
+                                class="font-medium truncate max-w-[6rem] sm:max-w-[10rem] md:max-w-none"
                             >
-                                <p
-                                    v-if="user?.type == 'institution'"
-                                    class="font-medium truncate max-w-[6rem] sm:max-w-[10rem] md:max-w-none"
+                                {{ user?.institution?.name || 'Institution XXX' }}
+                            </p>
+                            <p
+                                v-else
+                                class="font-medium sm:hidden"
+                            >
+                                {{ displayShortName }}
+                            </p>
+                            <p
+                                v-if="user?.type != 'institution'"
+                                class="font-medium hidden truncate max-w-[8rem] md:max-w-[12rem] lg:max-w-none sm:block"
+                            >
+                                {{ displayFullName }}
+                            </p>
+                            <p
+                                v-if="!showProfileTypeSelect"
+                                :class="cn('text-xs -mt-1 text-end font-bold truncate', {
+                                    'text-success': isAdmin,
+                                    'text-primary': !isAdmin,
+                                })"
+                            >
+                                {{ user?.type == 'standard' ? getRole(user?.account_type) : 'INSTITUTION' }}
+                            </p>
+                        </div>
+
+                        <Select
+                            v-if="showProfileTypeSelect"
+                            :model-value="user?.account_type"
+                            :disabled="isSwitchingRole"
+                            @update:model-value="handleProfileTypeChange"
+                        >
+                            <SelectTrigger
+                                :class="cn(
+                                    'h-8 min-w-[7.5rem] max-w-[10rem] shrink-0 rounded-md border border-input bg-background px-2 text-xs font-semibold shadow-sm focus:ring-2 focus:ring-primary sm:max-w-[12rem]',
+                                    isAdmin ? 'text-success' : 'text-primary',
+                                )"
+                                :aria-label="`Type de profil : ${getRole(user?.account_type)}`"
+                            >
+                                <SelectValue :placeholder="getRole(user?.account_type)" />
+                            </SelectTrigger>
+                            <SelectContent align="end">
+                                <SelectItem
+                                    v-for="role in switchableRoles"
+                                    :key="role"
+                                    :value="role"
                                 >
-                                    {{ user?.institution?.name || 'Institution XXX' }}
-                                </p>
-                                <p
-                                    v-else
-                                    class="font-medium sm:hidden"
-                                >
-                                    {{ displayShortName }}
-                                </p>
-                                <p
-                                    v-if="user?.type != 'institution'"
-                                    class="font-medium hidden truncate max-w-[8rem] md:max-w-[12rem] lg:max-w-none sm:block"
-                                >
-                                    {{ displayFullName }}
-                                </p>
-                                <div
-                                    v-if="showProfileTypeSelect"
-                                    class="flex justify-end"
-                                    @click.stop
-                                    @pointerdown.stop
-                                >
-                                    <Select
-                                        :model-value="user?.account_type"
-                                        :disabled="isSwitchingRole"
-                                        @update:model-value="handleProfileTypeChange"
-                                    >
-                                        <SelectTrigger
-                                            :class="cn(
-                                                'h-7 min-w-0 max-w-[9rem] border-none bg-transparent p-0 text-xs font-bold shadow-none focus:ring-0 sm:max-w-[12rem]',
-                                                isAdmin ? 'text-success' : 'text-primary',
-                                            )"
-                                            @click.stop
-                                        >
-                                            <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent align="end">
-                                            <SelectItem
-                                                v-for="role in switchableRoles"
-                                                :key="role"
-                                                :value="role"
-                                            >
-                                                {{ getRole(role) }}
-                                            </SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                <p
-                                    v-else
-                                    :class="cn('text-xs -mt-1 text-end font-bold truncate', {
-                                        'text-success': isAdmin,
-                                        'text-primary': !isAdmin,
-                                    })"
-                                >
-                                    {{ user?.type == 'standard' ? getRole(user?.account_type) : 'INSTITUTION' }}
-                                </p>
-                            </div>
-                            <ProfileLifetimeAccessBadge session-consumer>
-                                <Avatar v-if="user?.profil_url != null">
-                                    <AvatarImage :src="useRuntimeConfig().public.API_URL + '/storage/' + hasChangedAvatar" />
-                                    <AvatarFallback>{{ user.firstname.slice(1, 1).toUpperCase() + user.lastname.slice(1, 1).toUpperCase() }}</AvatarFallback>
-                                </Avatar>
-                                <CircleUser
-                                    v-else
-                                    class="size-11 text-black/40"
-                                />
-                            </ProfileLifetimeAccessBadge>
-                        </DropdownMenuTrigger>
+                                    {{ getRole(role) }}
+                                </SelectItem>
+                            </SelectContent>
+                        </Select>
+
+                        <DropdownMenu>
+                            <DropdownMenuTrigger class="flex shrink-0 items-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                                <ProfileLifetimeAccessBadge session-consumer>
+                                    <Avatar v-if="user?.profil_url != null">
+                                        <AvatarImage :src="useRuntimeConfig().public.API_URL + '/storage/' + hasChangedAvatar" />
+                                        <AvatarFallback>{{ user.firstname.slice(1, 1).toUpperCase() + user.lastname.slice(1, 1).toUpperCase() }}</AvatarFallback>
+                                    </Avatar>
+                                    <CircleUser
+                                        v-else
+                                        class="size-11 text-black/40"
+                                    />
+                                </ProfileLifetimeAccessBadge>
+                            </DropdownMenuTrigger>
                         <DropdownMenuContent>
                             <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
                             <template v-if="hasMultipleContexts">
@@ -437,13 +434,23 @@ const hasMultipleContexts = computed(() => {
     return count > 1;
 });
 
+const availableRoles = computed((): AccountType[] => {
+    if (roles.value.length) {
+        return roles.value;
+    }
+
+    return (user.value?.roles ?? []) as AccountType[];
+});
+
 const switchableRoles = computed(() => {
-    if (!roles.value?.length || user.value?.type !== 'standard') {
+    const source = availableRoles.value;
+
+    if (!source.length || user.value?.type !== 'standard') {
         return [];
     }
 
     if (activeContext.value === 'admin') {
-        const staffRoles = roles.value.filter((role: string) => STAFF_SWITCH_ROLES.includes(role));
+        const staffRoles = source.filter((role: string) => STAFF_SWITCH_ROLES.includes(role));
 
         return staffRoles.length > 1 ? staffRoles : [];
     }
@@ -452,7 +459,7 @@ const switchableRoles = computed(() => {
         return [];
     }
 
-    const medicalRoles = roles.value.filter((role: string) => MEDICAL_ROLES.includes(role));
+    const medicalRoles = source.filter((role: string) => MEDICAL_ROLES.includes(role));
 
     return medicalRoles.length > 1 ? medicalRoles : [];
 });
@@ -543,7 +550,10 @@ onMounted(async () => {
         getUnreadCount(),
         processSponsorshipStripeReturn(),
     ]);
-    roles.value = fetchedRoles;
+    roles.value = Array.isArray(fetchedRoles) ? fetchedRoles as AccountType[] : [];
+    if (!roles.value.length && user.value?.roles?.length) {
+        roles.value = user.value.roles as AccountType[];
+    }
     startPolling(10000);
 
     const notif = parsedSettings.value?.notification || {};

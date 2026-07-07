@@ -1,5 +1,5 @@
 <template>
-    <div class="flex h-full min-h-0 w-full flex-col overflow-hidden">
+    <div class="flex min-h-0 w-full flex-1 flex-col md:h-full md:overflow-hidden">
         <DashboardAdminPageHeader
             as="div"
             class="shrink-0"
@@ -19,7 +19,7 @@
                 </Button>
             </template>
         </DashboardAdminPageHeader>
-        <DashboardAdminPageContent class="flex min-h-0 flex-1 flex-col overflow-hidden">
+        <DashboardAdminPageContent class="flex min-h-0 flex-1 flex-col md:overflow-hidden">
             <Tabs
                 v-model="selectedCrm"
                 class="mb-4 shrink-0"
@@ -262,7 +262,7 @@
             </div>
             <div
                 v-else
-                class="relative flex min-h-0 flex-1 flex-col overflow-hidden"
+                class="relative flex min-h-0 flex-1 flex-col md:overflow-hidden"
             >
                 <div
                     v-if="isListLoading"
@@ -308,7 +308,7 @@
                 <template v-else-if="isInstitutionsTab">
                     <CrmInstitutionAdminList
                         v-if="institutions"
-                        class="flex min-h-0 flex-1 flex-col overflow-hidden"
+                        class="flex min-h-0 flex-1 flex-col md:overflow-hidden"
                         :institutions="institutions"
                         :page="page"
                         :per-page="perPage"
@@ -321,7 +321,7 @@
                 <template v-else-if="users">
                     <template v-if="selectedCrm === 'users'">
                         <CrmAdminList
-                            class="flex min-h-0 flex-1 flex-col overflow-hidden"
+                            class="flex min-h-0 flex-1 flex-col md:overflow-hidden"
                             :users="users"
                             :page="page"
                             :per-page="perPage"
@@ -333,7 +333,7 @@
                     </template>
                     <template v-else-if="selectedCrm === 'exUsers'">
                         <CrmUserDeletedList
-                            class="flex min-h-0 flex-1 flex-col overflow-hidden"
+                            class="flex min-h-0 flex-1 flex-col md:overflow-hidden"
                             :users="users"
                             :page="page"
                             :per-page="perPage"

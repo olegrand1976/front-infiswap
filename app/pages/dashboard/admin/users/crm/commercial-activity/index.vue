@@ -18,9 +18,9 @@ definePageMeta({
     middleware: ['admin'],
 });
 
-const { isAdmin, isSuperAdmin } = useAuth();
+const { isAdmin, isSuperAdmin, isDeveloper } = useAuth();
 
-const canAccess = computed(() => isSuperAdmin.value || isAdmin.value);
+const canAccess = computed(() => isSuperAdmin.value || isAdmin.value || isDeveloper.value);
 
 onMounted(() => {
     if (!canAccess.value) {

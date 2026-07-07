@@ -1,5 +1,5 @@
 <template>
-    <div class="flex h-full min-h-0 w-full flex-col">
+    <div class="flex w-full flex-col md:h-full md:min-h-0">
         <div
             v-if="selectedCount > 0"
             class="mb-3 flex shrink-0 items-center gap-3 px-2"
@@ -14,7 +14,7 @@
                 Exporter la sélection
             </Button>
         </div>
-        <div class="mb-4 min-h-0 flex-1 space-y-3 overflow-y-auto md:hidden">
+        <div class="mb-4 space-y-3 px-1 pb-2 md:hidden">
             <article
                 v-for="crmUser in localUsers"
                 :key="`mobile-user-${crmUser.id}`"
