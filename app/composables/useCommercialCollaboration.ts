@@ -29,16 +29,16 @@ export const useCommercialCollaboration = () => {
     }
 
     async function confirmIndependent(bceNiss: string) {
-        const response = await $apifetch('api/crm/my-collaboration/confirm-independent', {
+        const response = await $apifetch<{ message?: string; data: CollaborationStatus }>('api/crm/my-collaboration/confirm-independent', {
             method: 'POST',
             body: { bce_niss: bceNiss, confirmed: true },
         });
-        status.value = response.data as CollaborationStatus;
+        status.value = response.data;
         return response;
     }
 
     async function resendSignature(contractId: number) {
-        return $apifetch(`api/crm/my-collaboration/contracts/${contractId}/resend-signature`, {
+        return $apifetch<{ message?: string }>(`api/crm/my-collaboration/contracts/${contractId}/resend-signature`, {
             method: 'POST',
         });
     }

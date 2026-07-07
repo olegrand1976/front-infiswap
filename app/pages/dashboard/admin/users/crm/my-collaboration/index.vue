@@ -16,7 +16,21 @@
                 />
 
                 <div
-                    v-if="needsIndependentConfirm"
+                    v-if="showStaffCareerHint"
+                    class="rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900 max-w-lg"
+                >
+                    En tant qu'administrateur ou développeur, vous n'avez pas de contrat de collaboration.
+                    Initialisez votre grade depuis le
+                    <NuxtLink
+                        to="/dashboard/admin/users/crm/commercial-activity"
+                        class="underline font-medium"
+                    >
+                        récap activité commercial
+                    </NuxtLink>.
+                </div>
+
+                <div
+                    v-else-if="needsIndependentConfirm"
                     class="rounded-lg border p-4 space-y-3 max-w-lg"
                 >
                     <p class="text-sm font-medium">
@@ -108,6 +122,8 @@ definePageMeta({
 
 useHead({ title: 'Ma collaboration' });
 
+const { $toast } = useNuxtApp();
+const { isAdmin, isSuperAdmin, isDeveloper, isSaleRepresentative, isCommunityManager } = useAuth();
 const { getMyCareerStatus } = useInstitutionCrmSettings();
 const { fetchMyCollaboration, confirmIndependent, resendSignature, status: collaboration } = useCommercialCollaboration();
 const { getMyKpis, kpis } = useInstitutionCommissionTracking();
@@ -117,8 +133,26 @@ const careerLoading = ref(false);
 const bceNiss = ref('');
 const submitting = ref(false);
 
+const isCollaborationEligible = computed(() =>
+    isSaleRepresentative.value || isCommunityManager.value,
+);
+
+const hasFrameworkContract = computed(() =>
+    (collaboration.value?.contracts ?? []).some(
+        (contract) => contract.contract_type === 'commercial_collaboration_framework',
+    ),
+);
+
+const showStaffCareerHint = computed(() =>
+    !isCollaborationEligible.value
+    && (isAdmin.value || isSuperAdmin.value || isDeveloper.value)
+    && collaboration.value?.commercial_collaboration_status === 'pending_framework',
+);
+
 const needsIndependentConfirm = computed(() =>
-    collaboration.value?.commercial_collaboration_status === 'pending_framework',
+    isCollaborationEligible.value
+    && collaboration.value?.commercial_collaboration_status === 'pending_framework'
+    && !hasFrameworkContract.value,
 );
 
 function formatEuro(value: number) {
@@ -132,7 +166,14 @@ function contractTypeLabel(type: string) {
 async function submitIndependent() {
     submitting.value = true;
     try {
-        await confirmIndependent(bceNiss.value);
+        const response = await confirmIndependent(bceNiss.value);
+        $toast({ description: response.message ?? 'Contrat-cadre généré.' });
+    }
+    catch {
+        $toast({
+            description: 'Impossible de générer le contrat-cadre. Vérifiez votre BCE/NISS ou contactez l\'administrateur.',
+            variant: 'destructive',
+        });
     }
     finally {
         submitting.value = false;
@@ -140,7 +181,13 @@ async function submitIndependent() {
 }
 
 async function resend(contractId: number) {
-    await resendSignature(contractId);
+    try {
+        const response = await resendSignature(contractId);
+        $toast({ description: response.message ?? 'Lien de signature renvoyé.' });
+    }
+    catch {
+        $toast({ description: 'Impossible de renvoyer le lien de signature.', variant: 'destructive' });
+    }
 }
 
 onMounted(async () => {
