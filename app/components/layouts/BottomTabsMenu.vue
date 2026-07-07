@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Briefcase, Building2, Headphones as HeadphonesIcon, Home, Info, LayoutGrid, LogIn as LogInIcon } from 'lucide-vue-next';
+import { Briefcase, Building2, Headphones as HeadphonesIcon, Home, Info, LayoutGrid, LogIn as LogInIcon, Sparkles } from 'lucide-vue-next';
 
 const { isLoggedIn } = useAuth();
 const route = useRoute();
@@ -53,6 +53,12 @@ const tabs = computed(() => {
             route: '/offre-institution',
             iconOutline: Building2,
             iconSolid: Building2,
+        },
+        {
+            label: 'Carrière',
+            route: '/carriere',
+            iconOutline: Sparkles,
+            iconSolid: Sparkles,
         },
         {
             label: 'Contact',

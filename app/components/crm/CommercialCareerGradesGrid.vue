@@ -7,6 +7,9 @@
                 </h3>
                 <p class="text-xs text-muted-foreground mt-0.5">
                     Promotions évaluées automatiquement le 1<sup>er</sup> de chaque mois.
+                    <span class="block mt-1">
+                        <strong>BC</strong> = Bon de Commande institution (contrat d'abonnement signé).
+                    </span>
                 </p>
             </div>
         </div>
@@ -34,9 +37,15 @@
                     <TableRow>
                         <TableHead>Nom</TableHead>
                         <TableHead>Niveau</TableHead>
-                        <TableHead>Multiplicateur</TableHead>
-                        <TableHead>Override L1</TableHead>
-                        <TableHead>Override L2</TableHead>
+                        <TableHead v-if="showRemuneration">
+                            Multiplicateur
+                        </TableHead>
+                        <TableHead v-if="showRemuneration">
+                            Override L1
+                        </TableHead>
+                        <TableHead v-if="showRemuneration">
+                            Override L2
+                        </TableHead>
                         <TableHead>Seuils promotion</TableHead>
                         <TableHead>Défaut</TableHead>
                     </TableRow>
@@ -57,9 +66,15 @@
                             </span>
                         </TableCell>
                         <TableCell>{{ grade.level }}</TableCell>
-                        <TableCell>×{{ grade.direct_commission_multiplier }}</TableCell>
-                        <TableCell>{{ grade.upline_override_level_1_rate }}%</TableCell>
-                        <TableCell>{{ grade.upline_override_level_2_rate }}%</TableCell>
+                        <TableCell v-if="showRemuneration">
+                            ×{{ grade.direct_commission_multiplier }}
+                        </TableCell>
+                        <TableCell v-if="showRemuneration">
+                            {{ grade.upline_override_level_1_rate }}%
+                        </TableCell>
+                        <TableCell v-if="showRemuneration">
+                            {{ grade.upline_override_level_2_rate }}%
+                        </TableCell>
                         <TableCell>
                             <div class="space-y-1 text-xs">
                                 <div class="flex items-center gap-2">
@@ -118,7 +133,7 @@ import {
 } from '@/components/ui/table';
 import type { CommercialCareerGrade } from '@/composables/useInstitutionCrmSettings';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     grades: CommercialCareerGrade[];
     loading?: boolean;
     currentGradeId?: number | null;
@@ -126,7 +141,10 @@ const props = defineProps<{
         direct_bc: number;
         team_revenue?: number | null;
     } | null;
-}>();
+    showRemuneration?: boolean;
+}>(), {
+    showRemuneration: true,
+});
 
 const sortedGrades = computed(() =>
     [...props.grades].sort((a, b) => a.level - b.level),

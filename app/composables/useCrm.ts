@@ -41,6 +41,10 @@ export type CrmCommercialActivityRow = {
     roles: string[];
     roles_label: string;
     can_revoke: boolean;
+    can_manage_career?: boolean;
+    career_grade_id?: number | null;
+    career_grade_name?: string | null;
+    has_initial_assignment?: boolean;
     nb_call: number;
     nb_sale: number;
     nb_recommandation: number;

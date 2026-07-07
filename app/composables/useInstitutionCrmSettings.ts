@@ -264,6 +264,11 @@ export const useInstitutionCrmSettings = () => {
         return response.data as CareerProgressionSeries;
     }
 
+    async function getCareerGrades() {
+        const response = await $apifetch('api/crm/career-grades');
+        return (response.data ?? []) as CommercialCareerGrade[];
+    }
+
     return {
         settings,
         commercials,
@@ -280,5 +285,6 @@ export const useInstitutionCrmSettings = () => {
         getCommercialCareerStatus,
         getCommercialCareerHistory,
         getCommercialCareerProgressionSeries,
+        getCareerGrades,
     };
 };

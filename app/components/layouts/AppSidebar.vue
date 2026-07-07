@@ -280,6 +280,12 @@ const crmChildren = computed<NavigationItem[]>(() => [
         visible: isSuperAdmin.value || isAdmin.value || isSaleRepresentative.value,
     },
     {
+        label: 'Ma carrière',
+        route: '/dashboard/admin/users/crm/my-career',
+        icon: Sparkles,
+        visible: isSuperAdmin.value || isAdmin.value || isSaleRepresentative.value || isCommunityManager.value,
+    },
+    {
         label: 'Simulateur équipe',
         route: '/dashboard/admin/users/crm/team-simulator',
         icon: Network,

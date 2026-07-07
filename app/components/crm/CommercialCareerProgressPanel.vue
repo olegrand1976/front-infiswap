@@ -138,29 +138,51 @@
             <!-- Graphique -->
             <div
                 v-if="series?.months.length"
-                class="space-y-2"
+                class="space-y-4"
             >
                 <h4 class="text-sm font-medium text-muted-foreground">
                     Évolution sur 12 mois
                 </h4>
                 <ClientOnly>
-                    <LineChart
-                        :data="chartData"
-                        index="label"
-                        :categories="['direct_bc_cumulative', 'team_revenue']"
-                        :colors="['var(--primary)', 'var(--chart-3, #8b5cf6)']"
-                        :legend-labels="{ direct_bc_cumulative: 'BC cumulés', team_revenue: 'CA équipe (€)' }"
-                        :y-formatter="yFormatter"
-                        class="w-full"
-                    />
+                    <div class="space-y-6">
+                        <div>
+                            <p class="text-xs text-muted-foreground mb-2">
+                                BC directs signés par mois (total actuel : {{ series.totals.direct_bc }})
+                            </p>
+                            <LineChart
+                                :data="bcChartData"
+                                index="label"
+                                :categories="['direct_bc']"
+                                :colors="['var(--primary)']"
+                                :legend-labels="{ direct_bc: 'BC / mois' }"
+                                :y-formatter="yFormatter"
+                                class="w-full"
+                            />
+                        </div>
+                        <div>
+                            <p class="text-xs text-muted-foreground mb-2">
+                                CA équipe par mois (12 mois glissants : {{ formatEuro(series.totals.team_revenue) }})
+                            </p>
+                            <LineChart
+                                :data="revenueChartData"
+                                index="label"
+                                :categories="['team_revenue']"
+                                :colors="['var(--chart-3, #8b5cf6)']"
+                                :legend-labels="{ team_revenue: 'CA équipe (€)' }"
+                                :y-formatter="yFormatter"
+                                class="w-full"
+                            />
+                        </div>
+                    </div>
                 </ClientOnly>
                 <p
                     v-if="series.next_grade?.min_direct_bc"
                     class="text-xs text-muted-foreground"
                 >
-                    Seuil BC grade suivant : {{ series.next_grade.min_direct_bc }}
+                    Seuils grade suivant ({{ series.next_grade.name }}) :
+                    {{ series.next_grade.min_direct_bc }} BC directs cumulés
                     <span v-if="series.next_grade.min_team_revenue">
-                        — Seuil CA équipe : {{ formatEuro(series.next_grade.min_team_revenue) }}
+                        — {{ formatEuro(series.next_grade.min_team_revenue) }} CA équipe (12 mois)
                     </span>
                 </p>
             </div>
@@ -305,6 +327,7 @@ const props = defineProps<{
     userId: number;
     commercialName: string;
     grades: CommercialCareerGrade[];
+    allowInitialAssignment?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -333,17 +356,24 @@ const assignForm = reactive({
 });
 
 const needsInitialGrade = computed(() =>
-    !status.value?.grade || !status.value?.has_initial_assignment,
+    props.allowInitialAssignment
+    && (!status.value?.grade || !status.value?.has_initial_assignment),
 );
 
 const initialHistoryEntry = computed(() =>
     history.value.find(entry => entry.assignment_type === 'initial') ?? null,
 );
 
-const chartData = computed(() =>
+const bcChartData = computed(() =>
     (series.value?.months ?? []).map(row => ({
         label: formatMonthLabel(row.month),
-        direct_bc_cumulative: row.direct_bc_cumulative,
+        direct_bc: row.direct_bc,
+    })),
+);
+
+const revenueChartData = computed(() =>
+    (series.value?.months ?? []).map(row => ({
+        label: formatMonthLabel(row.month),
         team_revenue: Math.round(row.team_revenue),
     })),
 );
