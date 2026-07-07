@@ -407,7 +407,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ArrowRight, Calendar, CircleCheck, Clock, Home, User } from 'lucide-vue-next';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/components/ui/dialog';
 import ReplacementBoostStars from '~/components/replacements/ReplacementBoostStars.vue';
