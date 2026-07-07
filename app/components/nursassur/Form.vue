@@ -24,6 +24,7 @@
                         type="text"
                         placeholder="John Doe"
                         class="w-full border border-gray-300 rounded text-sm py-1.5 px-2 focus:outline-none focus:ring-1 focus:ring-primaryassur mt-1.5"
+                        @focus="onFirstFocus"
                     >
                 </div>
                 <div class="mt-4">
@@ -122,6 +123,7 @@
                         placeholder="Votre message..."
                         rows="3"
                         class="w-full border border-gray-300 rounded-md p-3 text-sm focus:outline-primary transition"
+                        @focus="onFirstFocus"
                     />
                 </div>
 
@@ -152,13 +154,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, reactive } from 'vue';
 import { useNuxtApp } from '#app';
+import type { User } from '~/lib/types';
 
-const { getAssurTypes, createHistory } = useService();
+const { getAssurTypes, submitContact } = useService();
 const { $toast } = useNuxtApp();
 const { isLoggedIn } = useAuth();
-const { trackPartnerFormStart, trackPartnerFormSubmit } = usePartnerServices();
+const user = useState<User | null>('user');
+const { trackPartnerFormStartOnce, trackPartnerFormSubmit } = usePartnerServices();
+const { onFirstFocus } = trackPartnerFormStartOnce('nursassur', 'dashboard_modal');
 
 const emit = defineEmits(['close']);
 
@@ -169,8 +174,43 @@ const form = ref({
     description: '',
 });
 
+const contact = reactive({
+    product: 'NursAssur',
+    name: '',
+    email: '',
+    phone: '',
+    description: '',
+    captcha: false,
+});
+
+function prefillFromUser() {
+    if (!user.value) {
+        return;
+    }
+
+    contact.name = user.value.full_name ?? `${user.value.firstname ?? ''} ${user.value.lastname ?? ''}`.trim();
+    contact.email = user.value.email ?? '';
+    contact.phone = user.value.phone_number ?? '';
+}
+
+function buildLoggedInPayload() {
+    prefillFromUser();
+
+    return {
+        product: 'NursAssur',
+        name: contact.name,
+        email: contact.email,
+        phone: contact.phone,
+        description: form.value.description,
+        interested_products: assurTypes.value
+            .filter((type) => form.value.types.includes(type.id))
+            .map((type) => type.label),
+    };
+}
+
 onMounted(async () => {
-    trackPartnerFormStart('nursassur', 'dashboard_modal');
+    prefillFromUser();
+
     if (!isLoggedIn.value) {
         return;
     }
@@ -188,32 +228,27 @@ onMounted(async () => {
 });
 
 const { submit: handleContact, inProgress: inProgressContact } = useSubmit(async () => {
-    trackPartnerFormSubmit('nursassur', 'dashboard_modal');
-    await createHistory({
-        product: 'NursAssur',
-        description: form.value.description,
-        types: form.value.types,
-    });
+    try {
+        trackPartnerFormSubmit('nursassur', 'dashboard_modal');
+        await submitContact(buildLoggedInPayload());
 
-    $toast({
-        description: 'Votre demande a été transmise à NursAssur avec succès.',
-    });
+        $toast({
+            description: 'Votre demande a été transmise à NursAssur avec succès.',
+        });
 
-    form.value.types = [];
-    form.value.description = '';
-    emit('close');
+        form.value.types = [];
+        form.value.description = '';
+        emit('close');
+    }
+    catch (error) {
+        const message = error?.data?.message || error?.message || 'Une erreur est survenue.';
+        $toast({
+            description: message,
+            status: 'error',
+            variant: 'destructive',
+        });
+    }
 });
-
-const contact = reactive({
-    product: 'NursAssur',
-    name: '',
-    email: '',
-    phone: '',
-    description: '',
-    captcha: false,
-});
-
-const { submitContact } = useService();
 
 const { submit, inProgress } = useSubmit(async () => {
     try {

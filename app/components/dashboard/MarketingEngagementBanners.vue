@@ -12,7 +12,10 @@ const {
     fetchActiveCampaign,
     trackPartnerBannerImpression,
     trackPartnerBannerClick,
+    registerPartnerClickFromProduct,
 } = usePartnerServices();
+
+const partnerBannerImpressionSent = ref(false);
 
 const showAccessBanner = computed(() =>
     isSubjectToPlatformAccessPayment(user.value)
@@ -61,8 +64,9 @@ onMounted(async () => {
 });
 
 watch(showPartnerBanner, (visible) => {
-    if (visible) {
+    if (visible && !partnerBannerImpressionSent.value) {
         trackPartnerBannerImpression();
+        partnerBannerImpressionSent.value = true;
     }
 });
 
@@ -72,6 +76,13 @@ function onAccessClick() {
 
 function onPartnerBannerClick() {
     trackPartnerBannerClick();
+    if (activeCampaign.value?.featured) {
+        registerPartnerClickFromProduct(
+            activeCampaign.value.featured,
+            'dashboard',
+            'partner_banner',
+        );
+    }
 }
 </script>
 

@@ -100,7 +100,7 @@ const showNursAssur = ref(false);
 const {
     trackPartnerImpression,
     trackPartnerCtaClick,
-    registerPartnerClick,
+    registerPartnerClickFromProduct,
 } = usePartnerServices();
 
 const showNursTechCard = computed(() => !isPartnerProductActive(user.value?.site));
@@ -109,11 +109,6 @@ const showNursAssurCard = computed(() => !isPartnerProductActive(user.value?.ins
 const gridClass = computed(() =>
     showNursTechCard.value && showNursAssurCard.value ? 'lg:grid-cols-2' : 'lg:grid-cols-1',
 );
-
-const productApiNames: Record<PartnerProduct, string> = {
-    nurstech: 'NursTech',
-    nursassur: 'NursAssur',
-};
 
 onMounted(() => {
     if (showNursTechCard.value) {
@@ -126,15 +121,12 @@ onMounted(() => {
 
 function onDiscover(product: PartnerProduct) {
     trackPartnerCtaClick(product, 'dashboard_presentation', 'discover', 'dashboard');
-    registerPartnerClick({
-        product: productApiNames[product],
-        source: 'dashboard',
-        placement: 'presentation_card',
-    });
+    registerPartnerClickFromProduct(product, 'dashboard', 'presentation_card');
 }
 
 function onContact(product: PartnerProduct) {
     trackPartnerCtaClick(product, 'dashboard_presentation', 'contact', 'dashboard');
+    registerPartnerClickFromProduct(product, 'dashboard', 'presentation_contact');
     if (product === 'nurstech') {
         showNursTech.value = true;
     }

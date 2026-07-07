@@ -17,6 +17,7 @@
                         v-model="formData.name"
                         type="text"
                         class="w-full border border-gray-300 rounded-md text-sm py-3 px-2 focus:outline-none focus:ring-1 focus:ring-primary mt-4"
+                        @focus="onFirstFocus"
                     >
                 </div>
 
@@ -85,7 +86,8 @@ const { submitContact } = useService();
 const { $toast } = useNuxtApp();
 const { isLoggedIn } = useAuth();
 const user = useState<User | null>('user');
-const { trackPartnerFormStart, trackPartnerFormSubmit } = usePartnerServices();
+const { trackPartnerFormStartOnce, trackPartnerFormSubmit } = usePartnerServices();
+const { onFirstFocus } = trackPartnerFormStartOnce('nursassur', 'landing_quote_form');
 
 const props = defineProps<{
     selectedItems?: string[];
@@ -105,7 +107,6 @@ const formData = reactive({
 });
 
 onMounted(() => {
-    trackPartnerFormStart('nursassur', 'landing_quote_form');
     if (isLoggedIn.value && user.value) {
         formData.name = user.value.full_name ?? `${user.value.firstname} ${user.value.lastname}`.trim();
         formData.email = user.value.email ?? '';

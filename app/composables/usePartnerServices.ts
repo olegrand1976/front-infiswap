@@ -1,4 +1,5 @@
 import type { PartnerCampaign, PartnerProduct } from '~/utils/partnerServices';
+import { PARTNER_PRODUCT_API_NAMES } from '~/utils/partnerServices';
 
 type PartnerClickPayload = {
     product: string;
@@ -80,13 +81,45 @@ export function usePartnerServices() {
         });
     }
 
+    function trackPartnerFormStartOnce(product: PartnerProduct, placement: string) {
+        const started = ref(false);
+
+        function onFirstFocus() {
+            if (started.value) {
+                return;
+            }
+
+            started.value = true;
+            trackPartnerFormStart(product, placement);
+        }
+
+        return { onFirstFocus };
+    }
+
     async function registerPartnerClick(payload: PartnerClickPayload) {
         try {
-            await productClick(payload);
+            await productClick({
+                ...payload,
+                utm_campaign: payload.utm_campaign ?? activeCampaign.value?.period,
+            });
         }
-        catch {
-            // gtag remains the source of truth for anonymous users
+        catch (error) {
+            if (import.meta.dev) {
+                console.warn('[partner-click] API registration failed', error);
+            }
         }
+    }
+
+    function registerPartnerClickFromProduct(
+        product: PartnerProduct,
+        source: string,
+        placement: string,
+    ) {
+        return registerPartnerClick({
+            product: PARTNER_PRODUCT_API_NAMES[product],
+            source,
+            placement,
+        });
     }
 
     return {
@@ -95,9 +128,11 @@ export function usePartnerServices() {
         trackPartnerImpression,
         trackPartnerCtaClick,
         trackPartnerFormStart,
+        trackPartnerFormStartOnce,
         trackPartnerFormSubmit,
         trackPartnerBannerImpression,
         trackPartnerBannerClick,
         registerPartnerClick,
+        registerPartnerClickFromProduct,
     };
 }

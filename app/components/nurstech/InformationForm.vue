@@ -24,6 +24,7 @@
                                 type="text"
                                 placeholder="John Doe"
                                 class="w-full border border-gray-300 rounded text-sm py-1.5 px-2 focus:outline-none focus:ring-1 focus:ring-primary mt-1.5"
+                                @focus="onFirstFocus"
                             >
                         </div>
                         <div>
@@ -104,7 +105,8 @@ import type { User } from '~/lib/types';
 const { $toast } = useNuxtApp();
 const { isLoggedIn } = useAuth();
 const user = useState<User | null>('user');
-const { trackPartnerFormStart, trackPartnerFormSubmit } = usePartnerServices();
+const { trackPartnerFormStartOnce, trackPartnerFormSubmit } = usePartnerServices();
+const { onFirstFocus } = trackPartnerFormStartOnce('nurstech', 'landing_information_form');
 const contact = reactive({
     product: 'NursTech',
     name: '',
@@ -117,7 +119,6 @@ const contact = reactive({
 const { submitContact } = useService();
 
 onMounted(() => {
-    trackPartnerFormStart('nurstech', 'landing_information_form');
     if (isLoggedIn.value && user.value) {
         contact.name = user.value.full_name ?? `${user.value.firstname} ${user.value.lastname}`.trim();
         contact.email = user.value.email ?? '';
