@@ -54,6 +54,10 @@
                 :scope="isInstitutionsTab ? 'institutions' : 'users'"
                 :loading="kpiLoading"
             />
+            <CrmPartnerClicksBreakdown
+                v-if="selectedCrm === 'users' && !isInstitutionsTab"
+                :rows="crmKpis?.partner_clicks_by_placement_30d ?? []"
+            />
             <div class="flex shrink-0 gap-3 items-center overflow-x-auto p-4 px-4 pb-3 scrollbar-hide">
                 <InputIcon
                     v-model="option.name"
@@ -407,6 +411,7 @@ definePageMeta({
 });
 
 const route = useRoute();
+const { $toast } = useNuxtApp();
 
 const pageCookie = useCookie<number>('crm_page', {
     default: () => 1,
