@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
+import 'core/theme/theme_mode_provider.dart';
 import 'features/auth/data/auth_repository.dart';
-import 'features/auth/providers/auth_session_provider.dart';
 
 class InfiSwapApp extends ConsumerWidget {
   const InfiSwapApp({super.key});
@@ -14,11 +14,14 @@ class InfiSwapApp extends ConsumerWidget {
     ref.watch(authBootstrapProvider);
 
     final router = ref.watch(appRouterProvider);
+    final themeMode = ref.watch(themeModeProvider);
 
     return MaterialApp.router(
       title: 'InfiSwap',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.dark(),
+      theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
+      themeMode: themeMode,
       routerConfig: router,
     );
   }

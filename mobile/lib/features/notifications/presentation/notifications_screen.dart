@@ -7,8 +7,10 @@ class NotificationsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: colors.background,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -17,11 +19,11 @@ class NotificationsScreen extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(20, 16, 20, 8),
               child: _SimpleTitle(title: 'Notifications'),
             ),
-            const Expanded(
+            Expanded(
               child: Center(
                 child: Text(
                   'Vos notifications apparaîtront ici',
-                  style: TextStyle(color: AppColors.textSecondary),
+                  style: TextStyle(color: colors.textSecondary),
                 ),
               ),
             ),
@@ -39,13 +41,15 @@ class _SimpleTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
-          style: const TextStyle(
-            color: AppColors.textPrimary,
+          style: TextStyle(
+            color: colors.textPrimary,
             fontSize: 28,
             fontWeight: FontWeight.bold,
           ),
@@ -55,7 +59,7 @@ class _SimpleTitle extends StatelessWidget {
           width: 48,
           height: 3,
           decoration: BoxDecoration(
-            color: AppColors.mint,
+            color: colors.primary,
             borderRadius: BorderRadius.circular(2),
           ),
         ),

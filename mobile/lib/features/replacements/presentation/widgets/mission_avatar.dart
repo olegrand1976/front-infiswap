@@ -16,6 +16,7 @@ class MissionAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     final url = logoUrl?.trim();
     final hasLogo = url != null && url.isNotEmpty;
+    final colors = context.appColors;
 
     if (!hasLogo) {
       return _BuildingFallback(size: size);
@@ -39,14 +40,14 @@ class MissionAvatar extends StatelessWidget {
             return Container(
               width: size,
               height: size,
-              color: AppColors.mint.withValues(alpha: 0.08),
+              color: colors.primary.withValues(alpha: 0.08),
               alignment: Alignment.center,
               child: SizedBox(
                 width: size * 0.35,
                 height: size * 0.35,
-                child: const CircularProgressIndicator(
+                child: CircularProgressIndicator(
                   strokeWidth: 1.5,
-                  color: AppColors.mint,
+                  color: colors.primary,
                 ),
               ),
             );
@@ -64,18 +65,20 @@ class _BuildingFallback extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     return Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: AppColors.mint.withValues(alpha: 0.12),
+        color: colors.primary.withValues(alpha: 0.12),
         shape: BoxShape.circle,
       ),
       alignment: Alignment.center,
       child: Icon(
         Icons.apartment_outlined,
         size: size * 0.5,
-        color: AppColors.mint,
+        color: colors.primary,
       ),
     );
   }

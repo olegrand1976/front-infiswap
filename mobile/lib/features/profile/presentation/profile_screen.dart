@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/theme_mode_provider.dart';
 import '../../auth/data/auth_repository.dart';
 import '../../auth/providers/auth_session_provider.dart';
 
@@ -12,16 +13,24 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final session = ref.watch(authSessionProvider);
+    final themeMode = ref.watch(themeModeProvider);
+    final colors = context.appColors;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final themeSubtitle = switch (themeMode) {
+      ThemeMode.system => 'Système',
+      ThemeMode.dark => 'Sombre',
+      ThemeMode.light => 'Clair',
+    };
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: colors.background,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.fromLTRB(20, 16, 20, 8),
-              child: _SimpleTitle(title: 'Profil'),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+              child: _SimpleTitle(title: 'Profil', colors: colors),
             ),
             Expanded(
               child: ListView(
@@ -31,7 +40,7 @@ class ProfileScreen extends ConsumerWidget {
                     width: double.infinity,
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: AppColors.card,
+                      color: colors.card,
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Column(
@@ -39,8 +48,8 @@ class ProfileScreen extends ConsumerWidget {
                       children: [
                         Text(
                           session?.displayName ?? 'Utilisateur',
-                          style: const TextStyle(
-                            color: AppColors.textPrimary,
+                          style: TextStyle(
+                            color: colors.textPrimary,
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
@@ -49,12 +58,53 @@ class ProfileScreen extends ConsumerWidget {
                           const SizedBox(height: 8),
                           Text(
                             session!.user['email'].toString(),
-                            style: const TextStyle(
-                              color: AppColors.textSecondary,
-                            ),
+                            style: TextStyle(color: colors.textSecondary),
                           ),
                         ],
                       ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: colors.card,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: SwitchListTile(
+                      contentPadding: EdgeInsets.zero,
+                      secondary: Icon(
+                        isDark
+                            ? Icons.dark_mode_outlined
+                            : Icons.light_mode_outlined,
+                        color: colors.primary,
+                      ),
+                      title: Text(
+                        'Thème sombre',
+                        style: TextStyle(
+                          color: colors.textPrimary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      subtitle: Text(
+                        themeSubtitle,
+                        style: TextStyle(
+                          color: colors.textSecondary,
+                          fontSize: 13,
+                        ),
+                      ),
+                      activeThumbColor: colors.onPrimary,
+                      activeTrackColor: colors.primary,
+                      value: isDark,
+                      onChanged: (value) {
+                        ref.read(themeModeProvider.notifier).setThemeMode(
+                              value ? ThemeMode.dark : ThemeMode.light,
+                            );
+                      },
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -90,9 +140,10 @@ class ProfileScreen extends ConsumerWidget {
 }
 
 class _SimpleTitle extends StatelessWidget {
-  const _SimpleTitle({required this.title});
+  const _SimpleTitle({required this.title, required this.colors});
 
   final String title;
+  final AppPalette colors;
 
   @override
   Widget build(BuildContext context) {
@@ -101,8 +152,8 @@ class _SimpleTitle extends StatelessWidget {
       children: [
         Text(
           title,
-          style: const TextStyle(
-            color: AppColors.textPrimary,
+          style: TextStyle(
+            color: colors.textPrimary,
             fontSize: 28,
             fontWeight: FontWeight.bold,
           ),
@@ -112,7 +163,7 @@ class _SimpleTitle extends StatelessWidget {
           width: 48,
           height: 3,
           decoration: BoxDecoration(
-            color: AppColors.mint,
+            color: colors.primary,
             borderRadius: BorderRadius.circular(2),
           ),
         ),

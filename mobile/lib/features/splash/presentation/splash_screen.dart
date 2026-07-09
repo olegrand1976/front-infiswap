@@ -7,8 +7,10 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: colors.background,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -19,7 +21,7 @@ class SplashScreen extends StatelessWidget {
               fit: BoxFit.contain,
             ),
             const SizedBox(height: 32),
-            const CircularProgressIndicator(color: AppColors.mint),
+            CircularProgressIndicator(color: colors.primary),
           ],
         ),
       ),

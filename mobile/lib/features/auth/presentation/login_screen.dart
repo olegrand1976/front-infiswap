@@ -4,8 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/api/api_exception.dart';
-import '../../../core/theme/app_colors.dart';
 import '../../../core/router/app_router.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/theme_mode_provider.dart';
 import '../data/auth_repository.dart';
 import '../providers/auth_session_provider.dart';
 
@@ -94,18 +95,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
-  void _showComingSoon(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: AppColors.card,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       body: Stack(
         children: [
@@ -120,6 +114,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             right: -40,
             child: _GlowCircle(
                 color: AppColors.coral.withValues(alpha: 0.12), size: 180),
+          ),
+          SafeArea(
+            child: Align(
+              alignment: Alignment.topRight,
+              child: IconButton(
+                tooltip: isDark ? 'Thème clair' : 'Thème sombre',
+                onPressed: () {
+                  ref.read(themeModeProvider.notifier).toggleAgainst(
+                        Theme.of(context).brightness,
+                      );
+                },
+                icon: Icon(
+                  isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+                  color: colors.textSecondary,
+                ),
+              ),
+            ),
           ),
           SafeArea(
             child: Center(
@@ -137,22 +148,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         fit: BoxFit.contain,
                       ),
                       const SizedBox(height: 32),
-                      const Text(
+                      Text(
                         'Bienvenue',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary,
+                          color: colors.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 8),
-                      const Text(
+                      Text(
                         'Connectez-vous à votre compte',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 16,
-                          color: AppColors.textSecondary,
+                          color: colors.textSecondary,
                         ),
                       ),
                       const SizedBox(height: 32),
@@ -160,11 +171,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         controller: _identifierController,
                         keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next,
-                        style: const TextStyle(color: AppColors.textPrimary),
-                        decoration: const InputDecoration(
+                        style: TextStyle(color: colors.textPrimary),
+                        decoration: InputDecoration(
                           labelText: 'Email',
-                          prefixIcon:
-                              Icon(Icons.email_outlined, color: AppColors.mint),
+                          prefixIcon: Icon(
+                            Icons.email_outlined,
+                            color: colors.primary,
+                          ),
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
@@ -179,11 +192,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         obscureText: _obscurePassword,
                         textInputAction: TextInputAction.done,
                         onFieldSubmitted: (_) => _submit(),
-                        style: const TextStyle(color: AppColors.textPrimary),
+                        style: TextStyle(color: colors.textPrimary),
                         decoration: InputDecoration(
                           labelText: 'Mot de passe',
-                          prefixIcon: const Icon(Icons.lock_outline,
-                              color: AppColors.mint),
+                          prefixIcon: Icon(
+                            Icons.lock_outline,
+                            color: colors.primary,
+                          ),
                           suffixIcon: IconButton(
                             onPressed: () {
                               setState(
@@ -193,7 +208,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               _obscurePassword
                                   ? Icons.visibility_outlined
                                   : Icons.visibility_off_outlined,
-                              color: AppColors.textSecondary,
+                              color: colors.textSecondary,
                             ),
                           ),
                         ),
@@ -213,9 +228,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                           onPressed: () => openUrl(
                               'https://infiswap.be/password/reset-password'),
-                          child: const Text(
+                          child: Text(
                             'Mot de passe oublié ?',
-                            style: TextStyle(color: AppColors.mint),
+                            style: TextStyle(color: colors.primary),
                           ),
                         ),
                       ),
@@ -230,12 +245,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       DecoratedBox(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
-                          gradient: const LinearGradient(
-                            colors: [AppColors.mint, AppColors.mintDark],
-                          ),
+                          color: colors.primary,
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.mint.withValues(alpha: 0.3),
+                              color: colors.primary.withValues(alpha: 0.3),
                               blurRadius: 16,
                               offset: const Offset(0, 6),
                             ),
@@ -245,16 +258,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           onPressed: _isLoading ? null : _submit,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,
+                            foregroundColor: colors.onPrimary,
                             shadowColor: Colors.transparent,
                             elevation: 0,
                           ),
                           child: _isLoading
-                              ? const SizedBox(
+                              ? SizedBox(
                                   height: 22,
                                   width: 22,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    color: AppColors.primaryForeground,
+                                    color: colors.onPrimary,
                                   ),
                                 )
                               : const Text(
@@ -270,17 +284,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text(
+                          Text(
                             'Pas encore de compte ? ',
-                            style: TextStyle(color: AppColors.textSecondary),
+                            style: TextStyle(color: colors.textSecondary),
                           ),
                           GestureDetector(
                             onTap: () =>
                                 {openUrl('https://infiswap.be/register')},
-                            child: const Text(
+                            child: Text(
                               'Créer un compte',
                               style: TextStyle(
-                                color: AppColors.coral,
+                                color: colors.primary,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),

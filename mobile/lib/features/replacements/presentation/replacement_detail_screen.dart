@@ -14,8 +14,10 @@ class ReplacementDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: colors.background,
       body: SafeArea(
         child: Column(
           children: [
@@ -25,9 +27,9 @@ class ReplacementDetailScreen extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.arrow_back,
-                      color: AppColors.mint,
+                      color: colors.primary,
                     ),
                   ),
                   Expanded(
@@ -36,8 +38,8 @@ class ReplacementDetailScreen extends StatelessWidget {
                           ? 'Détail de la mission'
                           : 'Détail du remplacement',
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: AppColors.textPrimary,
+                      style: TextStyle(
+                        color: colors.textPrimary,
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
@@ -80,8 +82,8 @@ class ReplacementDetailScreen extends StatelessWidget {
                       label: 'DIPLÔME',
                       child: Text(
                         item.role,
-                        style: const TextStyle(
-                          color: AppColors.textPrimary,
+                        style: TextStyle(
+                          color: colors.textPrimary,
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
                         ),
@@ -95,8 +97,8 @@ class ReplacementDetailScreen extends StatelessWidget {
                       label: 'DESCRIPTION',
                       child: Text(
                         item.description,
-                        style: const TextStyle(
-                          color: AppColors.textPrimary,
+                        style: TextStyle(
+                          color: colors.textPrimary,
                           fontSize: 14,
                           height: 1.45,
                           fontWeight: FontWeight.w400,
@@ -114,15 +116,15 @@ class ReplacementDetailScreen extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Candidature bientôt disponible'),
-                        backgroundColor: AppColors.card,
+                      SnackBar(
+                        content: const Text('Candidature bientôt disponible'),
+                        backgroundColor: colors.card,
                       ),
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.mint,
-                    foregroundColor: AppColors.primaryForeground,
+                    backgroundColor: colors.primary,
+                    foregroundColor: colors.onPrimary,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(28),
@@ -152,11 +154,13 @@ class _SimpleHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: colors.card,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -172,8 +176,8 @@ class _SimpleHeader extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             item.title,
-            style: const TextStyle(
-              color: AppColors.textPrimary,
+            style: TextStyle(
+              color: colors.textPrimary,
               fontSize: 22,
               fontWeight: FontWeight.bold,
             ),
@@ -181,25 +185,25 @@ class _SimpleHeader extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             item.subtitle,
-            style: const TextStyle(
-              color: AppColors.textSecondary,
+            style: TextStyle(
+              color: colors.textSecondary,
               fontSize: 14,
             ),
           ),
           const SizedBox(height: 12),
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.pin_drop_outlined,
                 size: 16,
-                color: AppColors.mint,
+                color: colors.primary,
               ),
               const SizedBox(width: 4),
               Flexible(
                 child: Text(
                   item.zipCodesLabel,
-                  style: const TextStyle(
-                    color: AppColors.textSecondary,
+                  style: TextStyle(
+                    color: colors.textSecondary,
                     fontSize: 13,
                   ),
                 ),
@@ -208,20 +212,20 @@ class _SimpleHeader extends StatelessWidget {
               Container(
                 width: 1,
                 height: 14,
-                color: AppColors.textSecondary.withValues(alpha: 0.4),
+                color: colors.textSecondary.withValues(alpha: 0.4),
               ),
               const SizedBox(width: 10),
-              const Icon(
+              Icon(
                 Icons.calendar_today_outlined,
                 size: 14,
-                color: AppColors.mint,
+                color: colors.primary,
               ),
               const SizedBox(width: 4),
               Flexible(
                 child: Text(
                   item.dateLabel,
-                  style: const TextStyle(
-                    color: AppColors.textSecondary,
+                  style: TextStyle(
+                    color: colors.textSecondary,
                     fontSize: 13,
                   ),
                 ),
@@ -241,6 +245,8 @@ class _MissionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     return Column(
       children: [
         if (item.isBoosted) ...[
@@ -251,7 +257,7 @@ class _MissionHeader extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: AppColors.card,
+            color: colors.card,
             borderRadius: BorderRadius.circular(16),
           ),
           child: Row(
@@ -262,10 +268,10 @@ class _MissionHeader extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'INSTITUTION',
                       style: TextStyle(
-                        color: AppColors.textSecondary,
+                        color: colors.textSecondary,
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 0.6,
@@ -274,8 +280,8 @@ class _MissionHeader extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       item.institutionName ?? 'Institution',
-                      style: const TextStyle(
-                        color: AppColors.textPrimary,
+                      style: TextStyle(
+                        color: colors.textPrimary,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
@@ -299,11 +305,13 @@ class _LocationDetailCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: colors.card,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -315,20 +323,20 @@ class _LocationDetailCard extends StatelessWidget {
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  color: AppColors.mint.withValues(alpha: 0.12),
+                  color: colors.primary.withValues(alpha: 0.12),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.pin_drop_outlined,
                   size: 18,
-                  color: AppColors.mint,
+                  color: colors.primary,
                 ),
               ),
               const SizedBox(width: 12),
-              const Text(
+              Text(
                 'CODES POSTAUX',
                 style: TextStyle(
-                  color: AppColors.textSecondary,
+                  color: colors.textSecondary,
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.6,
@@ -338,9 +346,9 @@ class _LocationDetailCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           if (item.zipCodes.isEmpty)
-            const Text(
+            Text(
               'Aucun code postal',
-              style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+              style: TextStyle(color: colors.textSecondary, fontSize: 14),
             )
           else
             Wrap(
@@ -353,18 +361,18 @@ class _LocationDetailCard extends StatelessWidget {
           const SizedBox(height: 16),
           const Divider(color: Color(0xFF1E293B), height: 1),
           const SizedBox(height: 16),
-          const Row(
+          Row(
             children: [
               Icon(
                 Icons.location_city_outlined,
                 size: 18,
-                color: AppColors.mint,
+                color: colors.primary,
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
                 'VILLES',
                 style: TextStyle(
-                  color: AppColors.textSecondary,
+                  color: colors.textSecondary,
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.6,
@@ -374,9 +382,9 @@ class _LocationDetailCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           if (item.cities.isEmpty)
-            const Text(
+            Text(
               'Aucune ville',
-              style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+              style: TextStyle(color: colors.textSecondary, fontSize: 14),
             )
           else
             Wrap(
@@ -403,23 +411,25 @@ class _LocationChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: emphasized
-            ? AppColors.mint.withValues(alpha: 0.12)
-            : AppColors.background,
+            ? colors.primary.withValues(alpha: 0.12)
+            : colors.background,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: emphasized
-              ? AppColors.mint.withValues(alpha: 0.45)
-              : AppColors.textSecondary.withValues(alpha: 0.25),
+              ? colors.primary.withValues(alpha: 0.45)
+              : colors.textSecondary.withValues(alpha: 0.25),
         ),
       ),
       child: Text(
         label,
         style: TextStyle(
-          color: emphasized ? AppColors.mint : AppColors.textPrimary,
+          color: emphasized ? colors.primary : colors.textPrimary,
           fontSize: 13,
           fontWeight: emphasized ? FontWeight.w600 : FontWeight.w400,
         ),
@@ -457,22 +467,24 @@ class _PeriodRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            const Icon(
+            Icon(
               Icons.event_outlined,
               size: 16,
-              color: AppColors.textSecondary,
+              color: colors.textSecondary,
             ),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
                 period.dateLabel,
-                style: const TextStyle(
-                  color: AppColors.textPrimary,
+                style: TextStyle(
+                  color: colors.textPrimary,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
@@ -515,29 +527,31 @@ class _ShiftLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: colors.background,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.mint.withValues(alpha: 0.35)),
+        border: Border.all(color: colors.primary.withValues(alpha: 0.35)),
       ),
       child: Row(
         children: [
-          Icon(icon, size: 16, color: AppColors.mint),
+          Icon(icon, size: 16, color: colors.primary),
           const SizedBox(width: 8),
           Text(
             label,
-            style: const TextStyle(
-              color: AppColors.mint,
+            style: TextStyle(
+              color: colors.primary,
               fontWeight: FontWeight.w600,
             ),
           ),
           const Spacer(),
           Text(
             value,
-            style: const TextStyle(color: AppColors.textPrimary),
+            style: TextStyle(color: colors.textPrimary),
           ),
         ],
       ),
@@ -558,11 +572,13 @@ class _InfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: colors.card,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -572,10 +588,10 @@ class _InfoCard extends StatelessWidget {
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: AppColors.mint.withValues(alpha: 0.12),
+              color: colors.primary.withValues(alpha: 0.12),
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, size: 18, color: AppColors.mint),
+            child: Icon(icon, size: 18, color: colors.primary),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -584,8 +600,8 @@ class _InfoCard extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: const TextStyle(
-                    color: AppColors.textSecondary,
+                  style: TextStyle(
+                    color: colors.textSecondary,
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.6,
@@ -609,16 +625,18 @@ class _CareChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.mint.withValues(alpha: 0.5)),
+        border: Border.all(color: colors.primary.withValues(alpha: 0.5)),
       ),
       child: Text(
         label,
-        style: const TextStyle(
-          color: AppColors.mint,
+        style: TextStyle(
+          color: colors.primary,
           fontSize: 12,
           fontWeight: FontWeight.w500,
         ),

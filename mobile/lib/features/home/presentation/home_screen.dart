@@ -11,6 +11,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.appColors;
     final session = ref.watch(authSessionProvider);
 
     if (session == null) {
@@ -49,7 +50,7 @@ class HomeScreen extends ConsumerWidget {
                   Text(
                     'Bienvenue',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: AppColors.mutedForeground,
+                          color: colors.textSecondary,
                         ),
                   ),
                   const SizedBox(height: 8),

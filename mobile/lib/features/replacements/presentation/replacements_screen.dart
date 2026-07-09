@@ -13,10 +13,11 @@ class ReplacementsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.appColors;
     final asyncList = ref.watch(replacementsListProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: colors.background,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,8 +28,8 @@ class ReplacementsScreen extends ConsumerWidget {
             ),
             Expanded(
               child: asyncList.when(
-                loading: () => const Center(
-                  child: CircularProgressIndicator(color: AppColors.mint),
+                loading: () => Center(
+                  child: CircularProgressIndicator(color: colors.primary),
                 ),
                 error: (error, _) => _ErrorState(
                   message: error is ApiException
@@ -38,16 +39,16 @@ class ReplacementsScreen extends ConsumerWidget {
                 ),
                 data: (items) {
                   if (items.isEmpty) {
-                    return const Center(
+                    return Center(
                       child: Text(
                         'Aucun remplacement pour le moment',
-                        style: TextStyle(color: AppColors.textSecondary),
+                        style: TextStyle(color: colors.textSecondary),
                       ),
                     );
                   }
 
                   return RefreshIndicator(
-                    color: AppColors.mint,
+                    color: colors.primary,
                     onRefresh: () async {
                       ref.invalidate(replacementsListProvider);
                       await ref.read(replacementsListProvider.future);
@@ -93,6 +94,8 @@ class _ErrorState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -108,8 +111,8 @@ class _ErrorState extends StatelessWidget {
             ElevatedButton(
               onPressed: onRetry,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.mint,
-                foregroundColor: AppColors.primaryForeground,
+                backgroundColor: colors.primary,
+                foregroundColor: colors.onPrimary,
               ),
               child: const Text('Réessayer'),
             ),
@@ -127,13 +130,15 @@ class _ScreenTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
-          style: const TextStyle(
-            color: AppColors.textPrimary,
+          style: TextStyle(
+            color: colors.textPrimary,
             fontSize: 28,
             fontWeight: FontWeight.bold,
           ),
@@ -143,7 +148,7 @@ class _ScreenTitle extends StatelessWidget {
           width: 48,
           height: 3,
           decoration: BoxDecoration(
-            color: AppColors.mint,
+            color: colors.primary,
             borderRadius: BorderRadius.circular(2),
           ),
         ),
@@ -175,6 +180,7 @@ class _ReplacementCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
     final descriptionPreview = _previewDescription(item.description);
 
     return Material(
@@ -184,7 +190,7 @@ class _ReplacementCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         child: Container(
           decoration: BoxDecoration(
-            color: AppColors.card,
+            color: colors.card,
             borderRadius: BorderRadius.circular(12),
           ),
           clipBehavior: Clip.antiAlias,
@@ -192,7 +198,7 @@ class _ReplacementCard extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Container(width: 3, color: AppColors.mint),
+                Container(width: 3, color: colors.primary),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
@@ -249,8 +255,8 @@ class _ReplacementCard extends StatelessWidget {
                                       descriptionPreview,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        color: AppColors.textSecondary,
+                                      style: TextStyle(
+                                        color: colors.textSecondary,
                                         fontSize: 12,
                                         fontWeight: FontWeight.w400,
                                       ),
@@ -294,8 +300,9 @@ class _MetaRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
     final color =
-        emphasize ? AppColors.textPrimary : AppColors.textSecondary;
+        emphasize ? colors.textPrimary : colors.textSecondary;
 
     return Row(
       children: [

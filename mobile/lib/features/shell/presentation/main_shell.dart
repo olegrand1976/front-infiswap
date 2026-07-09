@@ -27,20 +27,22 @@ class _MainShellState extends State<MainShell> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: colors.background,
       body: _pages[_currentIndex],
       bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           border: Border(
-            top: BorderSide(color: AppColors.mint, width: 1),
+            top: BorderSide(color: colors.primary, width: 1),
           ),
         ),
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
-          backgroundColor: AppColors.card,
-          selectedItemColor: AppColors.mint,
-          unselectedItemColor: AppColors.textSecondary,
+          backgroundColor: colors.card,
+          selectedItemColor: colors.primary,
+          unselectedItemColor: colors.textSecondary,
           selectedFontSize: 12,
           unselectedFontSize: 12,
           currentIndex: _currentIndex,

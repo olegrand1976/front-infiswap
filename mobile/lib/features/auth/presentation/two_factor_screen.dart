@@ -73,6 +73,8 @@ class _TwoFactorScreenState extends ConsumerState<TwoFactorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     return Scaffold(
       body: Stack(
         children: [
@@ -109,22 +111,22 @@ class _TwoFactorScreenState extends ConsumerState<TwoFactorScreen> {
                         fit: BoxFit.contain,
                       ),
                       const SizedBox(height: 32),
-                      const Text(
+                      Text(
                         'Vérification',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary,
+                          color: colors.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 8),
                       Text(
                         'Entrez le code à 6 chiffres',
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
-                          color: AppColors.textSecondary,
+                          color: colors.textSecondary,
                         ),
                       ),
                       const SizedBox(height: 32),
@@ -134,8 +136,8 @@ class _TwoFactorScreenState extends ConsumerState<TwoFactorScreen> {
                         textAlign: TextAlign.center,
                         textInputAction: TextInputAction.done,
                         onFieldSubmitted: (_) => _submit(),
-                        style: const TextStyle(
-                          color: AppColors.textPrimary,
+                        style: TextStyle(
+                          color: colors.textPrimary,
                           fontSize: 24,
                           letterSpacing: 8,
                           fontWeight: FontWeight.w600,
@@ -144,11 +146,11 @@ class _TwoFactorScreenState extends ConsumerState<TwoFactorScreen> {
                           FilteringTextInputFormatter.digitsOnly,
                           LengthLimitingTextInputFormatter(6),
                         ],
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'Code à 6 chiffres',
                           prefixIcon: Icon(
                             Icons.lock_outline,
-                            color: AppColors.mint,
+                            color: colors.primary,
                           ),
                         ),
                         validator: (value) {
@@ -170,12 +172,10 @@ class _TwoFactorScreenState extends ConsumerState<TwoFactorScreen> {
                       DecoratedBox(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
-                          gradient: const LinearGradient(
-                            colors: [AppColors.mint, AppColors.mintDark],
-                          ),
+                          color: colors.primary,
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.mint.withValues(alpha: 0.3),
+                              color: colors.primary.withValues(alpha: 0.3),
                               blurRadius: 16,
                               offset: const Offset(0, 6),
                             ),
@@ -185,17 +185,18 @@ class _TwoFactorScreenState extends ConsumerState<TwoFactorScreen> {
                           onPressed: _isLoading ? null : _submit,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,
+                            foregroundColor: colors.onPrimary,
                             shadowColor: Colors.transparent,
                             elevation: 0,
                             padding: const EdgeInsets.symmetric(vertical: 16),
                           ),
                           child: _isLoading
-                              ? const SizedBox(
+                              ? SizedBox(
                                   height: 22,
                                   width: 22,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    color: AppColors.primaryForeground,
+                                    color: colors.onPrimary,
                                   ),
                                 )
                               : const Text(
@@ -214,9 +215,9 @@ class _TwoFactorScreenState extends ConsumerState<TwoFactorScreen> {
                           splashFactory: NoSplash.splashFactory,
                           overlayColor: Colors.transparent,
                         ),
-                        child: const Text(
+                        child: Text(
                           'Retour à la connexion',
-                          style: TextStyle(color: AppColors.mint),
+                          style: TextStyle(color: colors.primary),
                         ),
                       ),
                     ],
