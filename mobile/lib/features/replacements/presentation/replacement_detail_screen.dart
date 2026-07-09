@@ -57,18 +57,7 @@ class ReplacementDetailScreen extends StatelessWidget {
                   const SizedBox(height: 12),
                   _PeriodsCard(periods: item.periods),
                   const SizedBox(height: 12),
-                  _InfoCard(
-                    icon: Icons.location_on_outlined,
-                    label: item.isMission ? 'LIEU' : 'LOCALISATION',
-                    child: Text(
-                      item.location,
-                      style: const TextStyle(
-                        color: AppColors.textPrimary,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
+                  _LocationDetailCard(item: item),
                   const SizedBox(height: 12),
                   _InfoCard(
                     icon: Icons.favorite_border,
@@ -96,19 +85,22 @@ class ReplacementDetailScreen extends StatelessWidget {
                       ),
                     ),
                   ],
-                  const SizedBox(height: 12),
-                  _InfoCard(
-                    icon: Icons.description_outlined,
-                    label: 'DESCRIPTION',
-                    child: Text(
-                      item.description,
-                      style: const TextStyle(
-                        color: AppColors.textPrimary,
-                        fontSize: 14,
-                        height: 1.45,
+                  if (item.description.trim().isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    _InfoCard(
+                      icon: Icons.description_outlined,
+                      label: 'DESCRIPTION',
+                      child: Text(
+                        item.description,
+                        style: const TextStyle(
+                          color: AppColors.textPrimary,
+                          fontSize: 14,
+                          height: 1.45,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ],
               ),
             ),
@@ -195,14 +187,14 @@ class _SimpleHeader extends StatelessWidget {
           Row(
             children: [
               const Icon(
-                Icons.location_on_outlined,
+                Icons.pin_drop_outlined,
                 size: 16,
                 color: AppColors.mint,
               ),
               const SizedBox(width: 4),
               Flexible(
                 child: Text(
-                  item.location,
+                  item.zipCodesLabel,
                   style: const TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 13,
@@ -268,10 +260,21 @@ class _MissionHeader extends StatelessWidget {
                   color: Colors.white,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
-                  Icons.local_hospital,
-                  color: AppColors.mint,
-                ),
+                clipBehavior: Clip.antiAlias,
+                child: item.institutionLogoUrl != null &&
+                        item.institutionLogoUrl!.isNotEmpty
+                    ? Image.network(
+                        item.institutionLogoUrl!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => const Icon(
+                          Icons.local_hospital,
+                          color: AppColors.mint,
+                        ),
+                      )
+                    : const Icon(
+                        Icons.local_hospital,
+                        color: AppColors.mint,
+                      ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -304,6 +307,142 @@ class _MissionHeader extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _LocationDetailCard extends StatelessWidget {
+  const _LocationDetailCard({required this.item});
+
+  final ReplacementItem item;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: AppColors.mint.withValues(alpha: 0.12),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.pin_drop_outlined,
+                  size: 18,
+                  color: AppColors.mint,
+                ),
+              ),
+              const SizedBox(width: 12),
+              const Text(
+                'CODES POSTAUX',
+                style: TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.6,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          if (item.zipCodes.isEmpty)
+            const Text(
+              'Aucun code postal',
+              style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+            )
+          else
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: item.zipCodes
+                  .map((zip) => _LocationChip(label: zip, emphasized: true))
+                  .toList(),
+            ),
+          const SizedBox(height: 16),
+          const Divider(color: Color(0xFF1E293B), height: 1),
+          const SizedBox(height: 16),
+          const Row(
+            children: [
+              Icon(
+                Icons.location_city_outlined,
+                size: 18,
+                color: AppColors.mint,
+              ),
+              SizedBox(width: 8),
+              Text(
+                'VILLES',
+                style: TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.6,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          if (item.cities.isEmpty)
+            const Text(
+              'Aucune ville',
+              style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+            )
+          else
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: item.cities
+                  .map((city) => _LocationChip(label: city))
+                  .toList(),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LocationChip extends StatelessWidget {
+  const _LocationChip({
+    required this.label,
+    this.emphasized = false,
+  });
+
+  final String label;
+  final bool emphasized;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: emphasized
+            ? AppColors.mint.withValues(alpha: 0.12)
+            : AppColors.background,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: emphasized
+              ? AppColors.mint.withValues(alpha: 0.45)
+              : AppColors.textSecondary.withValues(alpha: 0.25),
+        ),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: emphasized ? AppColors.mint : AppColors.textPrimary,
+          fontSize: 13,
+          fontWeight: emphasized ? FontWeight.w600 : FontWeight.w400,
+        ),
+      ),
     );
   }
 }

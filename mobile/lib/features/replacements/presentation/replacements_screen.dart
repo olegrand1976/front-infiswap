@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/api/api_exception.dart';
 import '../../../core/theme/app_colors.dart';
+import '../data/replacements_repository.dart';
 import '../models/replacement_item.dart';
 import 'replacement_detail_screen.dart';
 
-class ReplacementsScreen extends StatelessWidget {
+class ReplacementsScreen extends ConsumerWidget {
   const ReplacementsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final asyncList = ref.watch(replacementsListProvider);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -20,24 +25,92 @@ class ReplacementsScreen extends StatelessWidget {
               child: _ScreenTitle(title: 'Remplacements'),
             ),
             Expanded(
-              child: ListView.separated(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                itemCount: demoReplacements.length,
-                separatorBuilder: (_, __) => const SizedBox(height: 10),
-                itemBuilder: (context, index) {
-                  final item = demoReplacements[index];
-                  return _ReplacementCard(
-                    item: item,
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute<void>(
-                          builder: (_) => ReplacementDetailScreen(item: item),
-                        ),
-                      );
+              child: asyncList.when(
+                loading: () => const Center(
+                  child: CircularProgressIndicator(color: AppColors.mint),
+                ),
+                error: (error, _) => _ErrorState(
+                  message: error is ApiException
+                      ? error.message
+                      : 'Impossible de charger les remplacements.',
+                  onRetry: () => ref.invalidate(replacementsListProvider),
+                ),
+                data: (items) {
+                  if (items.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        'Aucun remplacement pour le moment',
+                        style: TextStyle(color: AppColors.textSecondary),
+                      ),
+                    );
+                  }
+
+                  return RefreshIndicator(
+                    color: AppColors.mint,
+                    onRefresh: () async {
+                      ref.invalidate(replacementsListProvider);
+                      await ref.read(replacementsListProvider.future);
                     },
+                    child: ListView.separated(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                      itemCount: items.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: 10),
+                      itemBuilder: (context, index) {
+                        final item = items[index];
+                        return _ReplacementCard(
+                          item: item,
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (_) =>
+                                    ReplacementDetailScreen(item: item),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
                   );
                 },
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ErrorState extends StatelessWidget {
+  const _ErrorState({
+    required this.message,
+    required this.onRetry,
+  });
+
+  final String message;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: AppColors.coral),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: onRetry,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.mint,
+                foregroundColor: AppColors.primaryForeground,
+              ),
+              child: const Text('Réessayer'),
             ),
           ],
         ),
@@ -87,8 +160,22 @@ class _ReplacementCard extends StatelessWidget {
   final ReplacementItem item;
   final VoidCallback onTap;
 
+  static String? _previewDescription(String raw) {
+    final cleaned = raw.trim().replaceAll(RegExp(r'\s+'), ' ');
+    if (cleaned.isEmpty) {
+      return null;
+    }
+    const maxChars = 72;
+    if (cleaned.length <= maxChars) {
+      return cleaned;
+    }
+    return '${cleaned.substring(0, maxChars).trimRight()}…';
+  }
+
   @override
   Widget build(BuildContext context) {
+    final descriptionPreview = _previewDescription(item.description);
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -107,7 +194,7 @@ class _ReplacementCard extends StatelessWidget {
                 Container(width: 3, color: AppColors.mint),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -116,12 +203,13 @@ class _ReplacementCard extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   _MetaRow(
                                     icon: Icons.location_on_outlined,
-                                    text: item.location,
+                                    text: item.zipCodesLabel,
                                   ),
-                                  const SizedBox(height: 4),
+                                  const SizedBox(height: 3),
                                   _MetaRow(
                                     icon: Icons.calendar_today_outlined,
                                     text: item.dateLabel,
@@ -136,45 +224,46 @@ class _ReplacementCard extends StatelessWidget {
                           ],
                         ),
                         if (item.isBoosted) ...[
-                          const SizedBox(height: 6),
-                          const _BoostStars(size: 14),
+                          const SizedBox(height: 4),
+                          const _BoostStars(size: 12),
                         ],
-                        const SizedBox(height: 8),
-                        Text(
-                          item.title,
-                          style: const TextStyle(
-                            color: AppColors.textPrimary,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
+                        const SizedBox(height: 6),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Expanded(
-                              child: Text(
-                                item.subtitle,
-                                style: const TextStyle(
-                                  color: AppColors.textSecondary,
-                                  fontSize: 12,
-                                ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    item.role,
+                                    style: const TextStyle(
+                                      color: AppColors.textPrimary,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  if (descriptionPreview != null) ...[
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      descriptionPreview,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        color: AppColors.textSecondary,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ],
+                                ],
                               ),
                             ),
                             if (item.isMission) ...[
                               const SizedBox(width: 8),
-                              Container(
-                                width: 28,
-                                height: 28,
-                                decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Icon(
-                                  Icons.local_hospital,
-                                  size: 16,
-                                  color: AppColors.mint,
-                                ),
+                              _InstitutionLogo(
+                                logoUrl: item.institutionLogoUrl,
+                                size: 24,
                               ),
                             ],
                           ],
@@ -188,6 +277,45 @@ class _ReplacementCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _InstitutionLogo extends StatelessWidget {
+  const _InstitutionLogo({
+    this.logoUrl,
+    this.size = 28,
+  });
+
+  final String? logoUrl;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final url = logoUrl;
+    return Container(
+      width: size,
+      height: size,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle,
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: url != null && url.isNotEmpty
+          ? Image.network(
+              url,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => Icon(
+                Icons.local_hospital,
+                size: size * 0.55,
+                color: AppColors.mint,
+              ),
+            )
+          : Icon(
+              Icons.local_hospital,
+              size: size * 0.55,
+              color: AppColors.mint,
+            ),
     );
   }
 }
