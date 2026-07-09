@@ -9,7 +9,6 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          // Évite l'appel API au démarrage pendant les tests.
           authBootstrapProvider.overrideWith((ref) async {}),
         ],
         child: const InfiSwapApp(),

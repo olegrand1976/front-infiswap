@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/api/api_exception.dart';
 import '../../../core/theme/app_colors.dart';
@@ -78,6 +79,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
+  Future<void> openUrl(String url) async {
+    final Uri uri = Uri.parse(url);
+
+    if (!await launchUrl(
+      uri,
+      mode: LaunchMode.externalApplication,
+    )) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Impossible d\'ouvrir le lien'),
+      ));
+    }
+  }
+
   void _showComingSoon(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -96,18 +112,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           Positioned(
             top: -80,
             left: -60,
-            child: _GlowCircle(color: AppColors.mint.withValues(alpha: 0.15), size: 220),
+            child: _GlowCircle(
+                color: AppColors.mint.withValues(alpha: 0.15), size: 220),
           ),
           Positioned(
             bottom: 100,
             right: -40,
-            child: _GlowCircle(color: AppColors.coral.withValues(alpha: 0.12), size: 180),
+            child: _GlowCircle(
+                color: AppColors.coral.withValues(alpha: 0.12), size: 180),
           ),
-
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -119,7 +137,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         fit: BoxFit.contain,
                       ),
                       const SizedBox(height: 32),
-
                       const Text(
                         'Bienvenue',
                         textAlign: TextAlign.center,
@@ -139,7 +156,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                       ),
                       const SizedBox(height: 32),
-
                       TextFormField(
                         controller: _identifierController,
                         keyboardType: TextInputType.emailAddress,
@@ -147,7 +163,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         style: const TextStyle(color: AppColors.textPrimary),
                         decoration: const InputDecoration(
                           labelText: 'Email',
-                          prefixIcon: Icon(Icons.email_outlined, color: AppColors.mint),
+                          prefixIcon:
+                              Icon(Icons.email_outlined, color: AppColors.mint),
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
@@ -165,10 +182,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         style: const TextStyle(color: AppColors.textPrimary),
                         decoration: InputDecoration(
                           labelText: 'Mot de passe',
-                          prefixIcon: const Icon(Icons.lock_outline, color: AppColors.mint),
+                          prefixIcon: const Icon(Icons.lock_outline,
+                              color: AppColors.mint),
                           suffixIcon: IconButton(
                             onPressed: () {
-                              setState(() => _obscurePassword = !_obscurePassword);
+                              setState(
+                                  () => _obscurePassword = !_obscurePassword);
                             },
                             icon: Icon(
                               _obscurePassword
@@ -185,18 +204,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           return null;
                         },
                       ),
-
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
-                          onPressed: () => _showComingSoon('Fonctionnalité bientôt disponible'),
+                          style: TextButton.styleFrom(
+                            splashFactory: NoSplash.splashFactory,
+                            overlayColor: Colors.transparent,
+                          ),
+                          onPressed: () => openUrl(
+                              'https://infiswap.be/password/reset-password'),
                           child: const Text(
                             'Mot de passe oublié ?',
                             style: TextStyle(color: AppColors.mint),
                           ),
                         ),
                       ),
-
                       if (_errorMessage != null) ...[
                         Text(
                           _errorMessage!,
@@ -205,7 +227,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                         const SizedBox(height: 8),
                       ],
-
                       DecoratedBox(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
@@ -246,7 +267,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                       ),
                       const SizedBox(height: 24),
-
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -255,7 +275,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             style: TextStyle(color: AppColors.textSecondary),
                           ),
                           GestureDetector(
-                            onTap: () => _showComingSoon('Inscription bientôt disponible'),
+                            onTap: () =>
+                                {openUrl('https://infiswap.be/register')},
                             child: const Text(
                               'Créer un compte',
                               style: TextStyle(

@@ -15,7 +15,7 @@ fi
 
 flutter pub get
 
-API_URL="${API_BASE_URL:-http://127.0.0.1:8095}"
+API_URL="${API_BASE_URL:-http://127.0.0.1:8094}"
 
 echo "Lancement InfiSwap depuis $ROOT"
 echo "API_BASE_URL=$API_URL"

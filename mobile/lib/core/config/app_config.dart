@@ -1,13 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Configuration runtime de l'app (injectée via `--dart-define`).
 class AppConfig {
   const AppConfig({
     required this.apiBaseUrl,
   });
 
-  /// URL de base de l'API Laravel, sans slash final.
-  /// Ex. `http://10.0.2.2:8095` (émulateur Android) ou `http://localhost:8095`.
   final String apiBaseUrl;
 
   String get apiUrl => '$apiBaseUrl/api';
@@ -15,7 +12,7 @@ class AppConfig {
   static AppConfig fromEnvironment() {
     const baseUrl = String.fromEnvironment(
       'API_BASE_URL',
-      defaultValue: 'http://10.0.2.2:8095',
+      defaultValue: 'http://10.0.2.2:8094',
     );
 
     return AppConfig(apiBaseUrl: _trimTrailingSlash(baseUrl));
