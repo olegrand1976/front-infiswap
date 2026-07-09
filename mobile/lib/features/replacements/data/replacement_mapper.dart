@@ -3,23 +3,18 @@ import 'dart:convert';
 import '../models/replacement_item.dart';
 
 abstract final class ReplacementMapper {
-  static ReplacementItem fromMergedJson(Map<String, dynamic> json) {
+  static ReplacementItem fromMergedJson(
+    Map<String, dynamic> json, {
+    required String storageBaseUrl,
+  }) {
     final recordType = json['record_type']?.toString();
     if (recordType == 'mission') {
-      return _fromMission(json);
+      return _fromMission(json, storageBaseUrl: storageBaseUrl);
     }
     return _fromReplacement(json);
   }
 
-  static ReplacementItem fromReplacementJson(Map<String, dynamic> json) {
-    return _fromReplacement(json);
-  }
-
   static ReplacementItem _fromReplacement(Map<String, dynamic> json) {
-    final institution = _asMap(json['institution']);
-    final institutionId = json['institution_id'];
-    final isMissionLike = institutionId != null || institution != null;
-
     final zipCodes = _normalizeStringList(json['zip_codes']);
     final cities = _normalizeStringList(json['cities']);
 
@@ -27,12 +22,6 @@ abstract final class ReplacementMapper {
     final careTypes = _careTypeNames(json['care_types']);
     final role = _roleLabel(json['role_type'] ?? json['replacement_type']);
     final comment = json['comment']?.toString().trim();
-    final institutionName = institution?['name']?.toString() ??
-        institution?['institution_name']?.toString();
-
-    final title = isMissionLike && institutionName != null
-        ? institutionName
-        : 'Remplacement $role';
 
     final dateLabel = periods.isNotEmpty
         ? periods.first.dateLabel
@@ -46,7 +35,7 @@ abstract final class ReplacementMapper {
       zipCodes: zipCodes,
       cities: cities,
       dateLabel: dateLabel,
-      title: title,
+      title: 'Remplacement $role',
       subtitle: [
         role,
         if (careTypes.isNotEmpty) careTypes.first,
@@ -57,13 +46,14 @@ abstract final class ReplacementMapper {
       periods: periods,
       isUrgent: json['type']?.toString() == 'immediate',
       isBoosted: _isActivelyBoosted(json),
-      isMission: isMissionLike,
-      institutionName: institutionName,
-      institutionLogoUrl: institution?['logo']?.toString(),
+      isMission: false,
     );
   }
 
-  static ReplacementItem _fromMission(Map<String, dynamic> json) {
+  static ReplacementItem _fromMission(
+    Map<String, dynamic> json, {
+    required String storageBaseUrl,
+  }) {
     final institution = _asMap(json['institution']);
     final service = _asMap(json['service']);
 
@@ -91,6 +81,9 @@ abstract final class ReplacementMapper {
 
     final institutionName = institution?['institution_name']?.toString() ??
         institution?['name']?.toString();
+
+    final logoPath = institution?['logo']?.toString() ??
+        institution?['profil_url']?.toString();
 
     return ReplacementItem(
       id: 'mission-${json['id']}',
@@ -122,8 +115,33 @@ abstract final class ReplacementMapper {
       isBoosted: false,
       isMission: true,
       institutionName: institutionName,
-      institutionLogoUrl: institution?['logo']?.toString(),
+      institutionLogoUrl: _resolveStorageUrl(logoPath, storageBaseUrl),
     );
+  }
+
+  static String? _resolveStorageUrl(String? path, String storageBaseUrl) {
+    var value = path?.trim();
+    if (value == null || value.isEmpty) {
+      return null;
+    }
+
+    // Certains payloads gardent des backslashes JSON.
+    value = value.replaceAll('\\', '/');
+
+    if (value.startsWith('http://') || value.startsWith('https://')) {
+      return value;
+    }
+
+    final normalized = value.startsWith('/') ? value.substring(1) : value;
+    final withoutStorage = normalized.startsWith('storage/')
+        ? normalized.substring('storage/'.length)
+        : normalized;
+
+    final base = storageBaseUrl.endsWith('/')
+        ? storageBaseUrl.substring(0, storageBaseUrl.length - 1)
+        : storageBaseUrl;
+
+    return '$base/storage/$withoutStorage';
   }
 
   static bool _isActivelyBoosted(Map<String, dynamic> json) {
@@ -159,7 +177,8 @@ abstract final class ReplacementMapper {
           timeSlot?['end_at']?.toString(),
     );
     final evening = _formatTimeRange(
-      eveningSlot?['start_at']?.toString() ?? eveningSlot?['startAt']?.toString(),
+      eveningSlot?['start_at']?.toString() ??
+          eveningSlot?['startAt']?.toString(),
       eveningSlot?['end_at']?.toString() ?? eveningSlot?['endAt']?.toString(),
     );
 

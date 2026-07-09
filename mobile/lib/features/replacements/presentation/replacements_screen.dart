@@ -6,6 +6,7 @@ import '../../../core/theme/app_colors.dart';
 import '../data/replacements_repository.dart';
 import '../models/replacement_item.dart';
 import 'replacement_detail_screen.dart';
+import 'widgets/mission_avatar.dart';
 
 class ReplacementsScreen extends ConsumerWidget {
   const ReplacementsScreen({super.key});
@@ -235,13 +236,12 @@ class _ReplacementCard extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    item.role,
-                                    style: const TextStyle(
-                                      color: AppColors.textPrimary,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                                  _MetaRow(
+                                    icon: item.isMission
+                                        ? Icons.school_outlined
+                                        : Icons.medical_services_outlined,
+                                    text: item.role,
+                                    emphasize: true,
                                   ),
                                   if (descriptionPreview != null) ...[
                                     const SizedBox(height: 2),
@@ -261,7 +261,7 @@ class _ReplacementCard extends StatelessWidget {
                             ),
                             if (item.isMission) ...[
                               const SizedBox(width: 8),
-                              _InstitutionLogo(
+                              MissionAvatar(
                                 logoUrl: item.institutionLogoUrl,
                                 size: 24,
                               ),
@@ -281,66 +281,33 @@ class _ReplacementCard extends StatelessWidget {
   }
 }
 
-class _InstitutionLogo extends StatelessWidget {
-  const _InstitutionLogo({
-    this.logoUrl,
-    this.size = 28,
-  });
-
-  final String? logoUrl;
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    final url = logoUrl;
-    return Container(
-      width: size,
-      height: size,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.circle,
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: url != null && url.isNotEmpty
-          ? Image.network(
-              url,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Icon(
-                Icons.local_hospital,
-                size: size * 0.55,
-                color: AppColors.mint,
-              ),
-            )
-          : Icon(
-              Icons.local_hospital,
-              size: size * 0.55,
-              color: AppColors.mint,
-            ),
-    );
-  }
-}
-
 class _MetaRow extends StatelessWidget {
   const _MetaRow({
     required this.icon,
     required this.text,
+    this.emphasize = false,
   });
 
   final IconData icon;
   final String text;
+  final bool emphasize;
 
   @override
   Widget build(BuildContext context) {
+    final color =
+        emphasize ? AppColors.textPrimary : AppColors.textSecondary;
+
     return Row(
       children: [
-        Icon(icon, size: 14, color: AppColors.textSecondary),
+        Icon(icon, size: 14, color: color),
         const SizedBox(width: 6),
         Expanded(
           child: Text(
             text,
-            style: const TextStyle(
-              color: AppColors.textSecondary,
-              fontSize: 12,
+            style: TextStyle(
+              color: color,
+              fontSize: emphasize ? 13 : 12,
+              fontWeight: emphasize ? FontWeight.w500 : FontWeight.w400,
             ),
           ),
         ),

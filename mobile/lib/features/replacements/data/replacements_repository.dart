@@ -2,13 +2,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/api/api_client.dart';
 import '../../../core/api/api_exception.dart';
+import '../../../core/config/app_config.dart';
 import '../models/replacement_item.dart';
 import 'replacement_mapper.dart';
 
 class ReplacementsRepository {
-  ReplacementsRepository(this._api);
+  ReplacementsRepository({
+    required ApiClient apiClient,
+    required AppConfig config,
+  })  : _api = apiClient,
+        _config = config;
 
   final ApiClient _api;
+  final AppConfig _config;
 
   Future<List<ReplacementItem>> fetchMergedList({
     String country = 'be',
@@ -50,29 +56,18 @@ class ReplacementsRepository {
         .map(
           (item) => ReplacementMapper.fromMergedJson(
             item.map((key, value) => MapEntry(key.toString(), value)),
+            storageBaseUrl: _config.apiBaseUrl,
           ),
         )
         .toList();
   }
-
-  Future<ReplacementItem> fetchReplacement(String id) async {
-    final response = await _api.get<Map<String, dynamic>>(
-      '/replacements/$id',
-    );
-    final root = response.data ?? {};
-    final replacement = root['replacement'];
-    if (replacement is! Map) {
-      throw ApiException(message: 'Remplacement introuvable.');
-    }
-
-    return ReplacementMapper.fromReplacementJson(
-      replacement.map((key, value) => MapEntry(key.toString(), value)),
-    );
-  }
 }
 
 final replacementsRepositoryProvider = Provider<ReplacementsRepository>((ref) {
-  return ReplacementsRepository(ref.watch(apiClientProvider));
+  return ReplacementsRepository(
+    apiClient: ref.watch(apiClientProvider),
+    config: ref.watch(appConfigProvider),
+  );
 });
 
 final replacementsListProvider =

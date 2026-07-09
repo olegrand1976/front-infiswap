@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../models/replacement_item.dart';
+import 'widgets/mission_avatar.dart';
 
 class ReplacementDetailScreen extends StatelessWidget {
   const ReplacementDetailScreen({
@@ -32,7 +33,7 @@ class ReplacementDetailScreen extends StatelessWidget {
                   Expanded(
                     child: Text(
                       item.isMission
-                          ? 'Détail du mission'
+                          ? 'Détail de la mission'
                           : 'Détail du remplacement',
                       textAlign: TextAlign.center,
                       style: const TextStyle(
@@ -58,23 +59,25 @@ class ReplacementDetailScreen extends StatelessWidget {
                   _PeriodsCard(periods: item.periods),
                   const SizedBox(height: 12),
                   _LocationDetailCard(item: item),
-                  const SizedBox(height: 12),
-                  _InfoCard(
-                    icon: Icons.favorite_border,
-                    label: 'TYPES DE SOINS',
-                    child: Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: item.careTypes
-                          .map((care) => _CareChip(label: care))
-                          .toList(),
+                  if (item.careTypes.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    _InfoCard(
+                      icon: Icons.favorite_border,
+                      label: 'TYPES DE SOINS',
+                      child: Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: item.careTypes
+                            .map((care) => _CareChip(label: care))
+                            .toList(),
+                      ),
                     ),
-                  ),
+                  ],
                   if (item.isMission) ...[
                     const SizedBox(height: 12),
                     _InfoCard(
-                      icon: Icons.person_outline,
-                      label: 'RÔLE',
+                      icon: Icons.school_outlined,
+                      label: 'DIPLÔME',
                       child: Text(
                         item.role,
                         style: const TextStyle(
@@ -253,29 +256,7 @@ class _MissionHeader extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                ),
-                clipBehavior: Clip.antiAlias,
-                child: item.institutionLogoUrl != null &&
-                        item.institutionLogoUrl!.isNotEmpty
-                    ? Image.network(
-                        item.institutionLogoUrl!,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => const Icon(
-                          Icons.local_hospital,
-                          color: AppColors.mint,
-                        ),
-                      )
-                    : const Icon(
-                        Icons.local_hospital,
-                        color: AppColors.mint,
-                      ),
-              ),
+              MissionAvatar(logoUrl: item.institutionLogoUrl, size: 48),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
