@@ -6,7 +6,7 @@ import '../../features/auth/data/auth_repository.dart';
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/auth/presentation/two_factor_screen.dart';
 import '../../features/auth/providers/auth_session_provider.dart';
-import '../../features/home/presentation/home_screen.dart';
+import '../../features/shell/presentation/main_shell.dart';
 import '../../features/splash/presentation/splash_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -25,7 +25,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         return location == '/splash' ? null : '/splash';
       }
 
-      final isAuthRoute = location == '/login' || location.startsWith('/two-factor');
+      final isAuthRoute =
+          location == '/login' || location.startsWith('/two-factor');
 
       if (!isAuthenticated && !isAuthRoute && location != '/splash') {
         return '/login';
@@ -62,7 +63,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/home',
-        builder: (context, state) => const HomeScreen(),
+        builder: (context, state) => const MainShell(),
       ),
     ],
   );
