@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/theme/app_colors.dart';
-import '../../replacements/presentation/replacements_screen.dart';
+import '../../applications/presentation/applications_screen.dart';
 import '../../notifications/presentation/notifications_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
-import '../../applications/presentation/applications_screen.dart';
+import '../../replacements/presentation/replacements_screen.dart';
 
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
@@ -15,6 +16,8 @@ class MainShell extends StatefulWidget {
 class _MainShellState extends State<MainShell> {
   int _currentIndex = 0;
 
+  static const int _notificationCount = 3;
+
   final List<Widget> _pages = const [
     ReplacementsScreen(),
     ApplicationsScreen(),
@@ -25,32 +28,56 @@ class _MainShellState extends State<MainShell> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       body: _pages[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: AppColors.card,
-        selectedItemColor: AppColors.mint,
-        unselectedItemColor: AppColors.textSecondary,
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list_alt),
-            label: 'Remplacements',
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          border: Border(
+            top: BorderSide(color: AppColors.mint, width: 1),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.send_outlined),
-            label: 'Candidatures',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Notifications',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'Profil',
-          ),
-        ],
+        ),
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: AppColors.card,
+          selectedItemColor: AppColors.mint,
+          unselectedItemColor: AppColors.textSecondary,
+          selectedFontSize: 12,
+          unselectedFontSize: 12,
+          currentIndex: _currentIndex,
+          onTap: (index) => setState(() => _currentIndex = index),
+          items: [
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.list_alt_outlined),
+              activeIcon: Icon(Icons.list_alt),
+              label: 'Remplacements',
+            ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.send_outlined),
+              activeIcon: Icon(Icons.send),
+              label: 'Candidatures',
+            ),
+            BottomNavigationBarItem(
+              icon: Badge(
+                isLabelVisible: _notificationCount > 0,
+                backgroundColor: AppColors.coral,
+                label: Text('$_notificationCount'),
+                child: const Icon(Icons.notifications_outlined),
+              ),
+              activeIcon: Badge(
+                isLabelVisible: _notificationCount > 0,
+                backgroundColor: AppColors.coral,
+                label: Text('$_notificationCount'),
+                child: const Icon(Icons.notifications),
+              ),
+              label: 'Notifications',
+            ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline),
+              activeIcon: Icon(Icons.person),
+              label: 'Profil',
+            ),
+          ],
+        ),
       ),
     );
   }
