@@ -135,6 +135,7 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
 
 final authBootstrapProvider = FutureProvider<void>((ref) async {
   final repository = ref.read(authRepositoryProvider);
+
   final session = await repository.restoreSession();
   if (session != null) {
     ref.read(authSessionProvider.notifier).state = session;
