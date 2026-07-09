@@ -162,6 +162,14 @@ class _SimpleHeader extends StatelessWidget {
       decoration: BoxDecoration(
         color: colors.card,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: colors.border),
+        boxShadow: [
+          BoxShadow(
+            color: colors.shadow,
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -212,7 +220,7 @@ class _SimpleHeader extends StatelessWidget {
               Container(
                 width: 1,
                 height: 14,
-                color: colors.textSecondary.withValues(alpha: 0.4),
+                color: colors.divider,
               ),
               const SizedBox(width: 10),
               Icon(
@@ -259,6 +267,14 @@ class _MissionHeader extends StatelessWidget {
           decoration: BoxDecoration(
             color: colors.card,
             borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: colors.border),
+            boxShadow: [
+              BoxShadow(
+                color: colors.shadow,
+                blurRadius: 10,
+                offset: const Offset(0, 3),
+              ),
+            ],
           ),
           child: Row(
             children: [
@@ -313,6 +329,14 @@ class _LocationDetailCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: colors.card,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: colors.border),
+        boxShadow: [
+          BoxShadow(
+            color: colors.shadow,
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -323,7 +347,7 @@ class _LocationDetailCard extends StatelessWidget {
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  color: colors.primary.withValues(alpha: 0.12),
+                  color: colors.primaryMuted,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -359,7 +383,7 @@ class _LocationDetailCard extends StatelessWidget {
                   .toList(),
             ),
           const SizedBox(height: 16),
-          const Divider(color: Color(0xFF1E293B), height: 1),
+          Divider(color: colors.divider, height: 1),
           const SizedBox(height: 16),
           Row(
             children: [
@@ -416,14 +440,10 @@ class _LocationChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: emphasized
-            ? colors.primary.withValues(alpha: 0.12)
-            : colors.background,
+        color: emphasized ? colors.primaryMuted : colors.background,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: emphasized
-              ? colors.primary.withValues(alpha: 0.45)
-              : colors.textSecondary.withValues(alpha: 0.25),
+          color: emphasized ? colors.primaryOutline : colors.border,
         ),
       ),
       child: Text(
@@ -445,13 +465,15 @@ class _PeriodsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     return _InfoCard(
       icon: Icons.calendar_today_outlined,
       label: 'PÉRIODES',
       child: Column(
         children: [
           for (var i = 0; i < periods.length; i++) ...[
-            if (i > 0) const Divider(color: Color(0xFF1E293B), height: 20),
+            if (i > 0) Divider(color: colors.divider, height: 20),
             _PeriodRow(period: periods[i]),
           ],
         ],
@@ -535,7 +557,7 @@ class _ShiftLine extends StatelessWidget {
       decoration: BoxDecoration(
         color: colors.background,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: colors.primary.withValues(alpha: 0.35)),
+        border: Border.all(color: colors.primaryOutline),
       ),
       child: Row(
         children: [
@@ -580,6 +602,14 @@ class _InfoCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: colors.card,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: colors.border),
+        boxShadow: [
+          BoxShadow(
+            color: colors.shadow,
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -588,7 +618,7 @@ class _InfoCard extends StatelessWidget {
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: colors.primary.withValues(alpha: 0.12),
+              color: colors.primaryMuted,
               shape: BoxShape.circle,
             ),
             child: Icon(icon, size: 18, color: colors.primary),
@@ -631,7 +661,7 @@ class _CareChip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: colors.primary.withValues(alpha: 0.5)),
+        border: Border.all(color: colors.primaryOutline),
       ),
       child: Text(
         label,

@@ -40,7 +40,7 @@ class MissionAvatar extends StatelessWidget {
             return Container(
               width: size,
               height: size,
-              color: colors.primary.withValues(alpha: 0.08),
+              color: colors.primaryMuted,
               alignment: Alignment.center,
               child: SizedBox(
                 width: size * 0.35,
@@ -71,7 +71,7 @@ class _BuildingFallback extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: colors.primary.withValues(alpha: 0.12),
+        color: colors.primaryMuted,
         shape: BoxShape.circle,
       ),
       alignment: Alignment.center,

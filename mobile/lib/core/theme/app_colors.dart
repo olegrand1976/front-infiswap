@@ -1,29 +1,17 @@
 import 'package:flutter/material.dart';
 
-/// Couleurs de marque (hex Tailwind).
 abstract final class AppColors {
-  /// emerald-400
   static const Color mint = Color(0xFF34D399);
 
-  /// teal-400
   static const Color mintDark = Color(0xFF2DD4BF);
 
-  /// rose-500
   static const Color coral = Color(0xFFF43F5E);
 
-  /// Texte sur mint (slate-950).
   static const Color onMint = Color(0xFF020617);
 
-  /// Texte sur coral.
   static const Color onCoral = Color(0xFFFFFFFF);
 }
 
-/// Palette sémantique selon le thème.
-///
-/// - Clair : primary = rose (coral), secondary = mint
-/// - Sombre : primary = mint, secondary = coral
-///
-/// Bordure focus input + curseur = toujours [primary].
 @immutable
 class AppPalette extends ThemeExtension<AppPalette> {
   const AppPalette({
@@ -34,9 +22,13 @@ class AppPalette extends ThemeExtension<AppPalette> {
     required this.inputBackground,
     required this.inputBorder,
     required this.border,
+    required this.divider,
     required this.primary,
     required this.onPrimary,
     required this.secondary,
+    required this.primaryMuted,
+    required this.primaryOutline,
+    required this.shadow,
   });
 
   final Color background;
@@ -46,21 +38,32 @@ class AppPalette extends ThemeExtension<AppPalette> {
   final Color inputBackground;
   final Color inputBorder;
   final Color border;
+  final Color divider;
   final Color primary;
   final Color onPrimary;
   final Color secondary;
 
+  final Color primaryMuted;
+
+  final Color primaryOutline;
+
+  final Color shadow;
+
   static const light = AppPalette(
-    background: Color(0xFFF8FAFC),
+    background: Color(0xFFF1F5F9),
     card: Color(0xFFFFFFFF),
     textPrimary: Color(0xFF0F172A),
-    textSecondary: Color(0xFF64748B),
-    inputBackground: Color(0xFFF1F5F9),
-    inputBorder: Color(0x4DF43F5E),
-    border: Color(0xFFE2E8F0),
+    textSecondary: Color(0xFF475569),
+    inputBackground: Color(0xFFFFFFFF),
+    inputBorder: Color(0xFFCBD5E1),
+    border: Color(0xFFCBD5E1),
+    divider: Color(0xFFE2E8F0),
     primary: AppColors.coral,
     onPrimary: AppColors.onCoral,
     secondary: AppColors.mint,
+    primaryMuted: Color(0xFFFFE4E6),
+    primaryOutline: Color(0xFFFB7185),
+    shadow: Color(0x1A0F172A),
   );
 
   static const dark = AppPalette(
@@ -68,12 +71,16 @@ class AppPalette extends ThemeExtension<AppPalette> {
     card: Color(0xFF0F172A),
     textPrimary: Color(0xFFF8FAFC),
     textSecondary: Color(0xFF94A3B8),
-    inputBackground: Color(0x990F172A),
-    inputBorder: Color(0x4D34D399),
-    border: Color(0x4D34D399),
+    inputBackground: Color(0xFF0F172A),
+    inputBorder: Color(0x6634D399),
+    border: Color(0x6634D399),
+    divider: Color(0xFF1E293B),
     primary: AppColors.mint,
     onPrimary: AppColors.onMint,
     secondary: AppColors.coral,
+    primaryMuted: Color(0x1F34D399),
+    primaryOutline: Color(0x8034D399),
+    shadow: Color(0x00000000),
   );
 
   @override
@@ -85,9 +92,13 @@ class AppPalette extends ThemeExtension<AppPalette> {
     Color? inputBackground,
     Color? inputBorder,
     Color? border,
+    Color? divider,
     Color? primary,
     Color? onPrimary,
     Color? secondary,
+    Color? primaryMuted,
+    Color? primaryOutline,
+    Color? shadow,
   }) {
     return AppPalette(
       background: background ?? this.background,
@@ -97,9 +108,13 @@ class AppPalette extends ThemeExtension<AppPalette> {
       inputBackground: inputBackground ?? this.inputBackground,
       inputBorder: inputBorder ?? this.inputBorder,
       border: border ?? this.border,
+      divider: divider ?? this.divider,
       primary: primary ?? this.primary,
       onPrimary: onPrimary ?? this.onPrimary,
       secondary: secondary ?? this.secondary,
+      primaryMuted: primaryMuted ?? this.primaryMuted,
+      primaryOutline: primaryOutline ?? this.primaryOutline,
+      shadow: shadow ?? this.shadow,
     );
   }
 
@@ -116,9 +131,13 @@ class AppPalette extends ThemeExtension<AppPalette> {
       inputBackground: Color.lerp(inputBackground, other.inputBackground, t)!,
       inputBorder: Color.lerp(inputBorder, other.inputBorder, t)!,
       border: Color.lerp(border, other.border, t)!,
+      divider: Color.lerp(divider, other.divider, t)!,
       primary: Color.lerp(primary, other.primary, t)!,
       onPrimary: Color.lerp(onPrimary, other.onPrimary, t)!,
       secondary: Color.lerp(secondary, other.secondary, t)!,
+      primaryMuted: Color.lerp(primaryMuted, other.primaryMuted, t)!,
+      primaryOutline: Color.lerp(primaryOutline, other.primaryOutline, t)!,
+      shadow: Color.lerp(shadow, other.shadow, t)!,
     );
   }
 }

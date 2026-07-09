@@ -192,6 +192,14 @@ class _ReplacementCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: colors.card,
             borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: colors.border),
+            boxShadow: [
+              BoxShadow(
+                color: colors.shadow,
+                blurRadius: 10,
+                offset: const Offset(0, 3),
+              ),
+            ],
           ),
           clipBehavior: Clip.antiAlias,
           child: IntrinsicHeight(

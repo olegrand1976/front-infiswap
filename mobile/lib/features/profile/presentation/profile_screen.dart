@@ -42,6 +42,14 @@ class ProfileScreen extends ConsumerWidget {
                     decoration: BoxDecoration(
                       color: colors.card,
                       borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: colors.border),
+                      boxShadow: [
+                        BoxShadow(
+                          color: colors.shadow,
+                          blurRadius: 10,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,6 +82,14 @@ class ProfileScreen extends ConsumerWidget {
                     decoration: BoxDecoration(
                       color: colors.card,
                       borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: colors.border),
+                      boxShadow: [
+                        BoxShadow(
+                          color: colors.shadow,
+                          blurRadius: 10,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
                     ),
                     child: SwitchListTile(
                       contentPadding: EdgeInsets.zero,
