@@ -30,10 +30,9 @@ class ApiException implements Exception {
     } else if (error.type == DioExceptionType.connectionTimeout ||
         error.type == DioExceptionType.receiveTimeout ||
         error.type == DioExceptionType.sendTimeout) {
-      message = 'Délai de connexion dépassé. Vérifiez l\'URL de l\'API.';
+      message = 'Délai de connexion dépassé.';
     } else if (error.type == DioExceptionType.connectionError) {
-      message =
-          'Impossible de joindre l\'API. Vérifiez que le serveur Laravel tourne.';
+      message = 'Erreur serveur';
     }
 
     return ApiException(
