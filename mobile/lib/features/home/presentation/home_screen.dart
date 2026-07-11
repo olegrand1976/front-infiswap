@@ -6,11 +6,13 @@ import '../../../core/config/app_config.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../auth/providers/auth_session_provider.dart';
 import '../../replacements/presentation/replacement_detail_screen.dart';
-import '../../replacements/presentation/widgets/replacement_list_card.dart';
 import '../../shell/providers/shell_tab_index_provider.dart';
 import '../data/home_dashboard_notifier.dart';
+import 'widgets/home_decorations.dart';
 import 'widgets/home_header.dart';
 import 'widgets/home_quick_actions.dart';
+import 'widgets/home_recent_card.dart';
+import 'widgets/home_search_bar.dart';
 import 'widgets/home_stats_row.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -58,6 +60,8 @@ class HomeScreen extends ConsumerWidget {
                     apiBaseUrl: apiBaseUrl,
                   ),
                   const SizedBox(height: 20),
+                  const HomeSearchBar(),
+                  const SizedBox(height: 20),
                   HomeStatsRow(stats: dashboard.stats),
                   const SizedBox(height: 24),
                   const HomeQuickActions(),
@@ -78,15 +82,18 @@ class HomeScreen extends ConsumerWidget {
                             ref.read(shellTabIndexProvider.notifier).state = 1,
                         child: Text(
                           'Voir tout',
-                          style: TextStyle(color: colors.primary),
+                          style: TextStyle(
+                            color: HomeDecorations.accentMint(context),
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 10),
                   if (dashboard.recentReplacements.isEmpty)
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 24),
+                      padding: const EdgeInsets.symmetric(vertical: 32),
                       child: Center(
                         child: Text(
                           'Aucun remplacement récent',
@@ -97,8 +104,8 @@ class HomeScreen extends ConsumerWidget {
                   else
                     ...dashboard.recentReplacements.map(
                       (item) => Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: ReplacementListCard(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: HomeRecentCard(
                           item: item,
                           onTap: () {
                             Navigator.of(context).push(

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../models/home_dashboard_data.dart';
+import '../../models/user_activity_stats.dart';
+import 'home_decorations.dart';
 
 class HomeStatsRow extends StatelessWidget {
   const HomeStatsRow({
@@ -10,7 +11,7 @@ class HomeStatsRow extends StatelessWidget {
     required this.stats,
   });
 
-  final HomeStats stats;
+  final UserActivityStats stats;
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +21,8 @@ class HomeStatsRow extends StatelessWidget {
           child: _StatCard(
             value: _formatCount(stats.applicationsCount),
             label: 'Candidatures',
+            icon: Icons.assignment_outlined,
+            accent: HomeDecorations.accentCoral(context),
             onTap: () => context.push('/applications'),
           ),
         ),
@@ -27,14 +30,18 @@ class HomeStatsRow extends StatelessWidget {
         Expanded(
           child: _StatCard(
             value: _formatCount(stats.acceptedCount),
-            label: 'Acceptés',
+            label: 'Acceptées',
+            icon: Icons.check_circle_outline,
+            accent: HomeDecorations.accentMint(context),
           ),
         ),
         const SizedBox(width: 10),
         Expanded(
           child: _StatCard(
             value: _formatCount(stats.createdCount),
-            label: 'Créés',
+            label: 'Publiés',
+            icon: Icons.campaign_outlined,
+            accent: HomeDecorations.accentCoral(context),
           ),
         ),
       ],
@@ -53,11 +60,15 @@ class _StatCard extends StatelessWidget {
   const _StatCard({
     required this.value,
     required this.label,
+    required this.icon,
+    required this.accent,
     this.onTap,
   });
 
   final String value;
   final String label;
+  final IconData icon;
+  final Color accent;
   final VoidCallback? onTap;
 
   @override
@@ -68,39 +79,40 @@ class _StatCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(7),
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
-          decoration: BoxDecoration(
-            color: colors.card,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: colors.border),
-            boxShadow: [
-              BoxShadow(
-                color: colors.shadow,
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
+          padding: const EdgeInsets.fromLTRB(10, 14, 10, 12),
+          decoration: HomeDecorations.card(context, accent: accent),
           child: Column(
             children: [
               Text(
                 value,
                 style: TextStyle(
-                  color: colors.primary,
-                  fontSize: 24,
+                  color: accent,
+                  fontSize: 28,
                   fontWeight: FontWeight.bold,
+                  height: 1,
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 6),
               Text(
                 label,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: colors.textSecondary,
-                  fontSize: 12,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500,
                 ),
+              ),
+              const SizedBox(height: 10),
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: accent.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(icon, color: accent, size: 18),
               ),
             ],
           ),

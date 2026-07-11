@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/api/api_client.dart';
-import '../../../core/api/api_exception.dart';
 import '../../../core/config/app_config.dart';
 import '../data/application_mapper.dart';
 import '../models/application_item.dart';

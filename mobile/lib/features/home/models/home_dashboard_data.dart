@@ -1,16 +1,5 @@
 import '../../replacements/models/replacement_item.dart';
-
-class HomeStats {
-  const HomeStats({
-    this.applicationsCount,
-    this.acceptedCount,
-    this.createdCount,
-  });
-
-  final int? applicationsCount;
-  final int? acceptedCount;
-  final int? createdCount;
-}
+import 'user_activity_stats.dart';
 
 class HomeDashboardData {
   const HomeDashboardData({
@@ -18,6 +7,6 @@ class HomeDashboardData {
     required this.recentReplacements,
   });
 
-  final HomeStats stats;
+  final UserActivityStats stats;
   final List<ReplacementItem> recentReplacements;
 }

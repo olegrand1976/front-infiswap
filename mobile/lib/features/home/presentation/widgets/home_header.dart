@@ -23,70 +23,90 @@ class HomeHeader extends StatelessWidget {
     return 'Bonsoir';
   }
 
-  static String firstNameFromUser(Map<String, dynamic> user) {
-    final firstname = user['firstname']?.toString().trim();
-    if (firstname != null && firstname.isNotEmpty) {
-      return firstname;
-    }
-
-    final fullName = user['full_name']?.toString().trim();
-    if (fullName != null && fullName.isNotEmpty) {
-      return fullName.split(RegExp(r'\s+')).first;
-    }
-
-    return 'Utilisateur';
-  }
-
-  static String? profileImageUrl(Map<String, dynamic> user, String apiBaseUrl) {
-    final path = user['profil_url']?.toString().trim();
-    if (path == null || path.isEmpty) {
-      return null;
-    }
-    if (path.startsWith('http://') || path.startsWith('https://')) {
-      return path;
-    }
-    final base = apiBaseUrl.endsWith('/')
-        ? apiBaseUrl.substring(0, apiBaseUrl.length - 1)
-        : apiBaseUrl;
-    return '$base/storage/$path';
-  }
-
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
+    final dark = Theme.of(context).brightness == Brightness.dark;
     final now = DateTime.now();
     final greeting = greetingForHour(now.hour);
-    final firstName = firstNameFromUser(session.user);
-    final imageUrl = profileImageUrl(session.user, apiBaseUrl);
-    final dateLabel = _formatFrenchDate(now);
+    final firstName = session.firstName;
+    final imageUrl = session.profileImageUrl(apiBaseUrl);
+    final dateLabel = _capitalize(_formatFrenchDate(now));
+    final taglineColor = colors.primary;
 
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _ProfileAvatar(
-          imageUrl: imageUrl,
-          initial: firstName.isNotEmpty ? firstName[0].toUpperCase() : '?',
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/logo.png',
+              height: 50,
+              fit: BoxFit.contain,
+            ),
+          ],
         ),
-        const SizedBox(width: 14),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        const SizedBox(height: 20),
+        Row(
+          children: [
+            _ProfileAvatar(
+              imageUrl: imageUrl,
+              initial: firstName.isNotEmpty ? firstName[0].toUpperCase() : '?',
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '$greeting, $firstName',
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w700,
+                      height: 1.1,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    dateLabel,
+                    style: TextStyle(
+                      color: colors.textSecondary,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 5),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                '$greeting, $firstName',
-                style: TextStyle(
-                  color: colors.textPrimary,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
+              Icon(
+                Icons.medical_services_outlined,
+                color: colors.primary,
+                size: 20,
               ),
-              const SizedBox(height: 4),
-              Text(
-                _capitalize(dateLabel),
-                style: TextStyle(
-                  color: colors.textSecondary,
-                  fontSize: 13,
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Prête pour votre prochain remplacement ?',
+                  style: TextStyle(
+                    color: colors.textPrimary,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
+              )
             ],
           ),
         ),
@@ -127,7 +147,7 @@ class HomeHeader extends StatelessWidget {
     ];
     final weekday = weekdays[date.weekday - 1];
     final month = months[date.month - 1];
-    return _capitalize('$weekday ${date.day} $month');
+    return '$weekday ${date.day} $month';
   }
 }
 
@@ -144,19 +164,31 @@ class _ProfileAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
 
+    Widget avatar;
     if (imageUrl != null) {
-      return ClipOval(
+      avatar = ClipOval(
         child: Image.network(
           imageUrl!,
-          width: 56,
-          height: 56,
+          width: 52,
+          height: 52,
           fit: BoxFit.cover,
           errorBuilder: (_, __, ___) => _InitialAvatar(initial: initial),
         ),
       );
+    } else {
+      avatar = _InitialAvatar(initial: initial);
     }
 
-    return _InitialAvatar(initial: initial);
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: colors.textPrimary.withValues(alpha: 0.15),
+          width: 2,
+        ),
+      ),
+      child: avatar,
+    );
   }
 }
 
@@ -170,13 +202,13 @@ class _InitialAvatar extends StatelessWidget {
     final colors = context.appColors;
 
     return CircleAvatar(
-      radius: 28,
+      radius: 26,
       backgroundColor: colors.primaryMuted,
       child: Text(
         initial,
         style: TextStyle(
           color: colors.primary,
-          fontSize: 22,
+          fontSize: 20,
           fontWeight: FontWeight.w600,
         ),
       ),

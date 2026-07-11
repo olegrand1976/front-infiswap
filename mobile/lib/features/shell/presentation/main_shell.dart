@@ -46,13 +46,13 @@ class MainShell extends ConsumerWidget {
               ref.read(shellTabIndexProvider.notifier).state = index,
           items: [
             const BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              activeIcon: Icon(Icons.home),
-              label: 'Accueil',
+              icon: Icon(Icons.dashboard_outlined),
+              activeIcon: Icon(Icons.dashboard),
+              label: 'Tableau de Bord',
             ),
             const BottomNavigationBarItem(
-              icon: Icon(Icons.list_alt_outlined),
-              activeIcon: Icon(Icons.list_alt),
+              icon: Icon(Icons.search_outlined),
+              activeIcon: Icon(Icons.search),
               label: 'Remplacements',
             ),
             BottomNavigationBarItem(

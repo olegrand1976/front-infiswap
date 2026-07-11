@@ -1,4 +1,3 @@
-import '../../../core/config/app_config.dart';
 import '../../replacements/data/replacement_mapper.dart';
 import '../models/application_item.dart';
 
