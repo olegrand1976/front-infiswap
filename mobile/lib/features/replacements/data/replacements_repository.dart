@@ -4,6 +4,7 @@ import '../../../core/api/api_client.dart';
 import '../../../core/api/api_exception.dart';
 import '../../../core/config/app_config.dart';
 import '../models/replacement_item.dart';
+import '../models/replacement_search_params.dart';
 import 'replacement_mapper.dart';
 
 class ReplacementsRepository {
@@ -16,28 +17,12 @@ class ReplacementsRepository {
   final ApiClient _api;
   final AppConfig _config;
 
-  Future<List<ReplacementItem>> fetchMergedList({
-    String country = 'be',
-    int page = 1,
-    int perPage = 25,
-  }) async {
+  Future<List<ReplacementItem>> fetchMergedList(
+    ReplacementSearchParams params,
+  ) async {
     final response = await _api.post<Map<String, dynamic>>(
       '/replacements/search/merged',
-      data: {
-        'days': <String>[],
-        'cities': <String>[],
-        'zipCodes': <String>[],
-        'type': '',
-        'country': country,
-        'filters': {
-          'type': 'all',
-          'role': 'all',
-        },
-        'provinces': <String>[],
-        'page': page,
-        'perPage': perPage,
-        'groupByProvince': false,
-      },
+      data: params.toApiBody(),
     );
 
     final root = response.data ?? {};
@@ -68,10 +53,4 @@ final replacementsRepositoryProvider = Provider<ReplacementsRepository>((ref) {
     apiClient: ref.watch(apiClientProvider),
     config: ref.watch(appConfigProvider),
   );
-});
-
-final replacementsListProvider =
-    FutureProvider.autoDispose<List<ReplacementItem>>((ref) async {
-  final repository = ref.watch(replacementsRepositoryProvider);
-  return repository.fetchMergedList();
 });

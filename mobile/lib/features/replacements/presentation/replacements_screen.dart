@@ -3,10 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/api/api_exception.dart';
 import '../../../core/theme/app_colors.dart';
-import '../data/replacements_repository.dart';
+import '../data/replacements_list_notifier.dart';
 import '../models/replacement_item.dart';
 import 'replacement_detail_screen.dart';
+import 'widgets/active_search_chips.dart';
 import 'widgets/mission_avatar.dart';
+import 'widgets/replacement_filters_modal.dart';
+import 'widgets/replacement_search_modal.dart';
 
 class ReplacementsScreen extends ConsumerWidget {
   const ReplacementsScreen({super.key});
@@ -15,6 +18,8 @@ class ReplacementsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.appColors;
     final asyncList = ref.watch(replacementsListProvider);
+    final notifier = ref.read(replacementsListProvider.notifier);
+    final params = notifier.params;
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -22,10 +27,47 @@ class ReplacementsScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.fromLTRB(20, 16, 20, 8),
-              child: _ScreenTitle(title: 'Remplacements'),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 12, 8),
+              child: _ScreenTitle(
+                title: 'Remplacements',
+                hasActiveSearch: params.hasActiveSearch,
+                hasActiveFilters: params.hasActiveFilters,
+                onSearchTap: () => ReplacementSearchModal.show(
+                  context,
+                  initialZipCodes: params.zipCodes,
+                  initialCities: params.cities,
+                  onApply: ({required zipCodes, required cities}) {
+                    notifier.applySearch(
+                      zipCodes: zipCodes,
+                      cities: cities,
+                    );
+                  },
+                ),
+                onFilterTap: () => ReplacementFiltersModal.show(
+                  context,
+                  initialCountry: params.country,
+                  initialFilterType: params.filterType,
+                  initialFilterRole: params.filterRole,
+                  initialDays: params.days,
+                  onApply: ({
+                    required country,
+                    required filterType,
+                    required filterRole,
+                    required days,
+                  }) {
+                    notifier.applyFilters(
+                      country: country,
+                      filterType: filterType,
+                      filterRole: filterRole,
+                      days: days,
+                    );
+                  },
+                ),
+              ),
             ),
+            const ActiveSearchChips(),
+            if (params.hasAnyActive) const SizedBox(height: 8),
             Expanded(
               child: asyncList.when(
                 loading: () => Center(
@@ -35,24 +77,19 @@ class ReplacementsScreen extends ConsumerWidget {
                   message: error is ApiException
                       ? error.message
                       : 'Impossible de charger les remplacements.',
-                  onRetry: () => ref.invalidate(replacementsListProvider),
+                  onRetry: notifier.refresh,
                 ),
                 data: (items) {
                   if (items.isEmpty) {
-                    return Center(
-                      child: Text(
-                        'Aucun remplacement pour le moment',
-                        style: TextStyle(color: colors.textSecondary),
-                      ),
+                    return _EmptyState(
+                      hasActiveCriteria: params.hasAnyActive,
+                      onClearFilters: notifier.clearAll,
                     );
                   }
 
                   return RefreshIndicator(
                     color: colors.primary,
-                    onRefresh: () async {
-                      ref.invalidate(replacementsListProvider);
-                      await ref.read(replacementsListProvider.future);
-                    },
+                    onRefresh: notifier.refresh,
                     child: ListView.separated(
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                       itemCount: items.length,
@@ -76,6 +113,49 @@ class ReplacementsScreen extends ConsumerWidget {
                 },
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _EmptyState extends StatelessWidget {
+  const _EmptyState({
+    required this.hasActiveCriteria,
+    required this.onClearFilters,
+  });
+
+  final bool hasActiveCriteria;
+  final VoidCallback onClearFilters;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              hasActiveCriteria
+                  ? 'Aucun résultat pour ces critères'
+                  : 'Aucun remplacement pour le moment',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: colors.textSecondary),
+            ),
+            if (hasActiveCriteria) ...[
+              const SizedBox(height: 16),
+              TextButton(
+                onPressed: onClearFilters,
+                child: Text(
+                  'Effacer les filtres',
+                  style: TextStyle(color: colors.primary),
+                ),
+              ),
+            ],
           ],
         ),
       ),
@@ -124,9 +204,19 @@ class _ErrorState extends StatelessWidget {
 }
 
 class _ScreenTitle extends StatelessWidget {
-  const _ScreenTitle({required this.title});
+  const _ScreenTitle({
+    required this.title,
+    required this.hasActiveSearch,
+    required this.hasActiveFilters,
+    required this.onSearchTap,
+    required this.onFilterTap,
+  });
 
   final String title;
+  final bool hasActiveSearch;
+  final bool hasActiveFilters;
+  final VoidCallback onSearchTap;
+  final VoidCallback onFilterTap;
 
   @override
   Widget build(BuildContext context) {
@@ -135,13 +225,30 @@ class _ScreenTitle extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: TextStyle(
-            color: colors.textPrimary,
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-          ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  color: colors.textPrimary,
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            _ActionIconButton(
+              icon: Icons.search_outlined,
+              showBadge: hasActiveSearch,
+              onTap: onSearchTap,
+            ),
+            _ActionIconButton(
+              icon: Icons.tune_outlined,
+              showBadge: hasActiveFilters,
+              onTap: onFilterTap,
+            ),
+          ],
         ),
         const SizedBox(height: 8),
         Container(
@@ -152,6 +259,47 @@ class _ScreenTitle extends StatelessWidget {
             borderRadius: BorderRadius.circular(2),
           ),
         ),
+      ],
+    );
+  }
+}
+
+class _ActionIconButton extends StatelessWidget {
+  const _ActionIconButton({
+    required this.icon,
+    required this.showBadge,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final bool showBadge;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        IconButton(
+          onPressed: onTap,
+          icon: Icon(icon, color: colors.textPrimary),
+        ),
+        if (showBadge)
+          Positioned(
+            top: 10,
+            right: 10,
+            child: Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: colors.primary,
+                shape: BoxShape.circle,
+                border: Border.all(color: colors.card, width: 1.5),
+              ),
+            ),
+          ),
       ],
     );
   }
