@@ -8,7 +8,6 @@ import '../models/replacement_item.dart';
 import 'replacement_detail_screen.dart';
 import 'widgets/active_search_chips.dart';
 import 'widgets/mission_avatar.dart';
-import 'widgets/replacement_list_card.dart';
 import 'widgets/replacement_filters_modal.dart';
 import 'widgets/replacement_search_modal.dart';
 
@@ -65,6 +64,11 @@ class ReplacementsScreen extends ConsumerWidget {
                     );
                   },
                 ),
+                onCreateTap: () {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content:
+                          Text('Création remplacement bientôt disponible.')));
+                },
               ),
             ),
             const ActiveSearchChips(),
@@ -205,19 +209,20 @@ class _ErrorState extends StatelessWidget {
 }
 
 class _ScreenTitle extends StatelessWidget {
-  const _ScreenTitle({
-    required this.title,
-    required this.hasActiveSearch,
-    required this.hasActiveFilters,
-    required this.onSearchTap,
-    required this.onFilterTap,
-  });
+  const _ScreenTitle(
+      {required this.title,
+      required this.hasActiveSearch,
+      required this.hasActiveFilters,
+      required this.onSearchTap,
+      required this.onFilterTap,
+      required this.onCreateTap});
 
   final String title;
   final bool hasActiveSearch;
   final bool hasActiveFilters;
   final VoidCallback onSearchTap;
   final VoidCallback onFilterTap;
+  final VoidCallback onCreateTap;
 
   @override
   Widget build(BuildContext context) {
@@ -249,6 +254,10 @@ class _ScreenTitle extends StatelessWidget {
               showBadge: hasActiveFilters,
               onTap: onFilterTap,
             ),
+            _ActionIconButton(
+              icon: Icons.add_circle_outline,
+              onTap: onCreateTap,
+            )
           ],
         ),
         const SizedBox(height: 8),
@@ -268,7 +277,7 @@ class _ScreenTitle extends StatelessWidget {
 class _ActionIconButton extends StatelessWidget {
   const _ActionIconButton({
     required this.icon,
-    required this.showBadge,
+    this.showBadge = false,
     required this.onTap,
   });
 
@@ -458,8 +467,7 @@ class _MetaRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final color =
-        emphasize ? colors.textPrimary : colors.textSecondary;
+    final color = emphasize ? colors.textPrimary : colors.textSecondary;
 
     return Row(
       children: [
