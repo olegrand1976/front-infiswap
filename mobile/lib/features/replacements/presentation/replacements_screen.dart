@@ -8,6 +8,7 @@ import '../models/replacement_item.dart';
 import 'replacement_detail_screen.dart';
 import 'widgets/active_search_chips.dart';
 import 'widgets/mission_avatar.dart';
+import 'widgets/replacement_list_card.dart';
 import 'widgets/replacement_filters_modal.dart';
 import 'widgets/replacement_search_modal.dart';
 

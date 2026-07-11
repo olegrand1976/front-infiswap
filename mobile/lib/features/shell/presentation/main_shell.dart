@@ -1,37 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_colors.dart';
-import '../../applications/presentation/applications_screen.dart';
+import '../../home/presentation/home_screen.dart';
 import '../../notifications/presentation/notifications_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 import '../../replacements/presentation/replacements_screen.dart';
+import '../providers/shell_tab_index_provider.dart';
 
-class MainShell extends StatefulWidget {
+class MainShell extends ConsumerWidget {
   const MainShell({super.key});
-
-  @override
-  State<MainShell> createState() => _MainShellState();
-}
-
-class _MainShellState extends State<MainShell> {
-  int _currentIndex = 0;
 
   static const int _notificationCount = 3;
 
-  final List<Widget> _pages = const [
+  static const List<Widget> _pages = [
+    HomeScreen(),
     ReplacementsScreen(),
-    ApplicationsScreen(),
     NotificationsScreen(),
     ProfileScreen(),
   ];
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.appColors;
+    final currentIndex = ref.watch(shellTabIndexProvider);
 
     return Scaffold(
       backgroundColor: colors.background,
-      body: _pages[_currentIndex],
+      body: _pages[currentIndex],
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           border: Border(
@@ -45,18 +41,19 @@ class _MainShellState extends State<MainShell> {
           unselectedItemColor: colors.textSecondary,
           selectedFontSize: 12,
           unselectedFontSize: 12,
-          currentIndex: _currentIndex,
-          onTap: (index) => setState(() => _currentIndex = index),
+          currentIndex: currentIndex,
+          onTap: (index) =>
+              ref.read(shellTabIndexProvider.notifier).state = index,
           items: [
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              activeIcon: Icon(Icons.home),
+              label: 'Accueil',
+            ),
             const BottomNavigationBarItem(
               icon: Icon(Icons.list_alt_outlined),
               activeIcon: Icon(Icons.list_alt),
               label: 'Remplacements',
-            ),
-            const BottomNavigationBarItem(
-              icon: Icon(Icons.send_outlined),
-              activeIcon: Icon(Icons.send),
-              label: 'Candidatures',
             ),
             BottomNavigationBarItem(
               icon: Badge(

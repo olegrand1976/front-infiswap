@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
+import '../../../core/api/api_exception.dart';
+import '../../../core/config/app_config.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../auth/data/auth_repository.dart';
 import '../../auth/providers/auth_session_provider.dart';
+import '../../replacements/presentation/replacement_detail_screen.dart';
+import '../../replacements/presentation/widgets/replacement_list_card.dart';
+import '../../shell/providers/shell_tab_index_provider.dart';
+import '../data/home_dashboard_notifier.dart';
+import 'widgets/home_header.dart';
+import 'widgets/home_quick_actions.dart';
+import 'widgets/home_stats_row.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -13,113 +20,142 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.appColors;
     final session = ref.watch(authSessionProvider);
+    final asyncDashboard = ref.watch(homeDashboardProvider);
+    final notifier = ref.read(homeDashboardProvider.notifier);
+    final apiBaseUrl = ref.watch(appConfigProvider).apiBaseUrl;
 
     if (session == null) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+      return Scaffold(
+        backgroundColor: colors.background,
+        body: Center(
+          child: CircularProgressIndicator(color: colors.primary),
+        ),
       );
     }
 
-    final roles = session.roles;
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('InfiSwap'),
-        actions: [
-          IconButton(
-            tooltip: 'Déconnexion',
-            onPressed: () async {
-              await ref.read(authRepositoryProvider).logout();
-              if (context.mounted) {
-                context.go('/login');
-              }
-            },
-            icon: const Icon(Icons.logout),
+      backgroundColor: colors.background,
+      body: SafeArea(
+        child: asyncDashboard.when(
+          loading: () => Center(
+            child: CircularProgressIndicator(color: colors.primary),
           ),
-        ],
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          error: (error, _) => _ErrorState(
+            message: error is ApiException
+                ? error.message
+                : 'Impossible de charger le tableau de bord.',
+            onRetry: notifier.refresh,
+          ),
+          data: (dashboard) {
+            return RefreshIndicator(
+              color: colors.primary,
+              onRefresh: notifier.refresh,
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
                 children: [
-                  Text(
-                    'Bienvenue',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: colors.textSecondary,
+                  HomeHeader(
+                    session: session,
+                    apiBaseUrl: apiBaseUrl,
+                  ),
+                  const SizedBox(height: 20),
+                  HomeStatsRow(stats: dashboard.stats),
+                  const SizedBox(height: 24),
+                  const HomeQuickActions(),
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Remplacements récents',
+                        style: TextStyle(
+                          color: colors.textPrimary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
                         ),
+                      ),
+                      TextButton(
+                        onPressed: () =>
+                            ref.read(shellTabIndexProvider.notifier).state = 1,
+                        child: Text(
+                          'Voir tout',
+                          style: TextStyle(color: colors.primary),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    session.displayName ?? 'Utilisateur',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
+                  if (dashboard.recentReplacements.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 24),
+                      child: Center(
+                        child: Text(
+                          'Aucun remplacement récent',
+                          style: TextStyle(color: colors.textSecondary),
                         ),
-                  ),
-                  if (session.user['email'] != null) ...[
-                    const SizedBox(height: 8),
-                    Text(session.user['email'].toString()),
-                  ],
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Phase 0 — Fondations',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  else
+                    ...dashboard.recentReplacements.map(
+                      (item) => Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: ReplacementListCard(
+                          item: item,
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (_) =>
+                                    ReplacementDetailScreen(item: item),
+                              ),
+                            );
+                          },
                         ),
-                  ),
-                  const SizedBox(height: 12),
-                  const Text(
-                    'Connexion Sanctum, stockage sécurisé du token et récupération du profil utilisateur sont opérationnels.',
-                  ),
-                  const SizedBox(height: 12),
-                  if (roles.isNotEmpty)
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: roles
-                          .map(
-                            (role) => Chip(label: Text(role)),
-                          )
-                          .toList(),
+                      ),
                     ),
                 ],
               ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _ErrorState extends StatelessWidget {
+  const _ErrorState({
+    required this.message,
+    required this.onRetry,
+  });
+
+  final String message;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: AppColors.coral),
             ),
-          ),
-          const SizedBox(height: 16),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Prochaine étape',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  const SizedBox(height: 8),
-                  const Text('Phase 1 : liste des remplacements, détail et candidatures.'),
-                ],
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: onRetry,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: colors.primary,
+                foregroundColor: colors.onPrimary,
               ),
+              child: const Text('Réessayer'),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

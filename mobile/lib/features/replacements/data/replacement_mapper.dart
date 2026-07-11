@@ -14,6 +14,10 @@ abstract final class ReplacementMapper {
     return _fromReplacement(json);
   }
 
+  static ReplacementItem fromReplacementJson(Map<String, dynamic> json) {
+    return _fromReplacement(json);
+  }
+
   static ReplacementItem _fromReplacement(Map<String, dynamic> json) {
     final zipCodes = _normalizeStringList(json['zip_codes']);
     final cities = _normalizeStringList(json['cities']);
