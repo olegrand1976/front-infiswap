@@ -185,18 +185,24 @@ export const useAuth = () => {
         loading.value = true;
 
         try {
-            await $apifetch(`/api/email/verify/${id}/${hash}`, {
+            const data = await $apifetch(`/api/email/verify/${id}/${hash}`, {
                 method: 'POST',
             });
 
             toast.success('Compte validé avec succès.');
 
-            return true;
+            return {
+                success: true,
+                email: data?.user?.email as string | undefined,
+            };
         }
         catch (err) {
             toast.error('Une erreur s\'est produite lors de la validation de votre compte. Merci de réessayer plus tard.');
 
-            throw new Error(err);
+            return {
+                success: false,
+                email: undefined,
+            };
         }
         finally {
             loading.value = false;
@@ -210,14 +216,10 @@ export const useAuth = () => {
     }
 
     async function registerImmediate(credentials) {
-        return $apifetch('/api/register-immediate', { method: 'post', body: credentials })
-            .then((response) => {
-                authToken.value = response.token;
-            })
-            .then(() => {
-                toast.success('Inscription rapide réussie');
-            })
-            .catch((error) => { throw error; });
+        const response = await $apifetch('/api/register-immediate', { method: 'post', body: credentials });
+        toast.success('Inscription rapide réussie');
+
+        return response;
     }
 
     async function resendEmailVerification(email: string) {

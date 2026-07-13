@@ -117,6 +117,7 @@
 <script lang="ts" setup>
 import { CircleUser, Mail, Phone } from 'lucide-vue-next';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
+import { useAuthTokenCookie } from '~/lib/authTokenCookie';
 
 const formData = reactive({
     lastname: '',
@@ -126,9 +127,11 @@ const formData = reactive({
 });
 
 const route = useRoute();
+const router = useRouter();
 const { registerImmediate } = useAuth();
 const { sendUrgentReplacement } = useReplacements();
 const { $toast, $apifetch } = useNuxtApp();
+const authToken = useAuthTokenCookie();
 
 const status = ref(
     (route.query.reset ?? '').length > 0 ? atob(route.query.reset as string) : '',
@@ -137,10 +140,11 @@ const status = ref(
 const { submit, inProgress } = useSubmit(
     async () => {
         status.value = '';
-        await registerImmediate(formData);
+        const response = await registerImmediate(formData);
         const pendingReplacement = useState('pendingReplacement');
 
         if (pendingReplacement.value) {
+            authToken.value = response.token;
             const result = await sendUrgentReplacement(pendingReplacement.value);
 
             if (result === true) {
@@ -153,7 +157,16 @@ const { submit, inProgress } = useSubmit(
                     navigateTo('/');
                 }, 2000);
             }
+
+            return;
         }
+
+        setTimeout(() => {
+            router.push({
+                path: '/auth/registration-success',
+                query: { email: formData.email },
+            });
+        }, 1500);
     },
 );
 

@@ -128,11 +128,8 @@ const resendEmail = async () => {
     if (userEmail.value) {
         try {
             await resendEmailVerification(userEmail.value);
-            $toast({
-                description: 'Email de confirmation renvoyé avec succès',
-            });
         }
-        catch (error) {
+        catch {
             $toast({
                 variant: 'destructive',
                 description: 'Erreur lors de l\'envoi de l\'email',
