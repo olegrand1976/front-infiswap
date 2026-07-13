@@ -38,12 +38,16 @@
                         Votre compte a été validé avec succès !
                     </span>
                     <span
-                        v-else
+                        v-else-if="loading"
                         class="flex justify-center py-12"
                     >
-                        <RollingLoader
-                            :loading="loading"
-                        />
+                        <RollingLoader :loading="loading" />
+                    </span>
+                    <span
+                        v-else-if="validationFailed"
+                        class="flex justify-center py-12 text-destructive font-semibold px-4 text-center"
+                    >
+                        La validation a échoué. Le lien est peut-être invalide ou expiré.
                     </span>
                 </p>
             </div>
@@ -53,11 +57,13 @@
                 <p class="text-xs sm:text-xs md:text-sm text-center px-4 sm:px-0">
                     Si vous rencontrez des problèmes, vous pouvez
                     <Button
+                        v-if="userEmail"
                         variant="link"
-                        @click="resendEmailVerification(user.email)"
+                        @click="resendEmailVerification(userEmail)"
                     >
                         renvoyer le mail de confirmation
-                    </Button>.
+                    </Button>
+                    <span v-else>renvoyer le mail de confirmation depuis la page d'inscription</span>.
                 </p>
             </div>
         </div>
@@ -77,10 +83,11 @@ definePageMeta({
     layout: 'minimal',
 });
 
-const user = useUser();
 const { validateEmail, resendEmailVerification, loading } = useAuth();
 const route = useRoute();
 const validated = ref(false);
+const validationFailed = ref(false);
+const userEmail = ref((route.query.email as string) || '');
 
 useHead({
     title: 'Validation de compte',
@@ -90,10 +97,18 @@ onMounted(async () => {
     const { id, hash } = route.params;
 
     if (!id || !hash) {
+        validationFailed.value = true;
+
         return;
     }
 
-    validated.value = await validateEmail(id as string, hash as string);
+    const validationResult = await validateEmail(id as string, hash as string);
+    validated.value = validationResult?.success ?? false;
+    validationFailed.value = !validated.value;
+
+    if (!userEmail.value && validationResult?.email) {
+        userEmail.value = validationResult.email;
+    }
 
     if (validated.value) {
         setTimeout(() => {
