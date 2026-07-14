@@ -240,7 +240,14 @@ const { submit, inProgress } = useSubmit(
             });
         }
 
-        return navigateTo(safeLoginRedirectPath(route.query.redirect));
+        const target = safeLoginRedirectPath(route.query.redirect);
+        await navigateTo(target, { replace: true });
+
+        await nextTick();
+
+        if (route.path === '/login') {
+            window.location.assign(target);
+        }
     },
 );
 

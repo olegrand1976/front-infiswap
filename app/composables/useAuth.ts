@@ -116,12 +116,14 @@ export const useAuth = () => {
         try {
             user.value = await $fetchCurrentUser();
         }
-        catch {
+        catch (error) {
             user.value = null;
-        }
 
-        if (!user.value && authToken.value) {
-            authToken.value = null;
+            const err = error as { status?: number; statusCode?: number };
+            const status = err.status ?? err.statusCode;
+            if (status === 401 || status === 403) {
+                authToken.value = null;
+            }
         }
     }
 
