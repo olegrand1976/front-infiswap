@@ -17,6 +17,18 @@ const {
 
 const partnerBannerImpressionSent = ref(false);
 
+const isNursAssurEligible = computed(() => {
+    const country = user.value?.profile?.country;
+
+    if (!country) {
+        return false;
+    }
+
+    const normalized = country.toLowerCase();
+
+    return normalized === 'be' || normalized === 'belgique';
+});
+
 const showAccessBanner = computed(() =>
     isSubjectToPlatformAccessPayment(user.value)
     && !hasPaidPlatformAccess(user.value)
@@ -39,6 +51,10 @@ const showPartnerBanner = computed(() => {
     }
 
     if (isSubjectToPlatformAccessPayment(user.value) && hasPaidPlatformAccess(user.value)) {
+        return false;
+    }
+
+    if (activeCampaign.value.featured === 'nursassur' && !isNursAssurEligible.value) {
         return false;
     }
 
