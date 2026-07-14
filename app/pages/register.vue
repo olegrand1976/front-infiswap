@@ -80,6 +80,13 @@
                         autocomplete="off"
                         @submit.prevent="submit"
                     >
+                        <div
+                            v-if="referrerDisplay"
+                            class="rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-gray-700"
+                        >
+                            Vous avez été invité par
+                            <span class="font-semibold text-primary">{{ referrerDisplay }}</span>
+                        </div>
                         <div>
                             <h2 class="mt-1 sm:mt-2 lg:mt-3 text-lg text-center max-w-xl mx-auto text-gray-500 mb-3 sm:mb-4">
                                 Quel type de compte souhaitez-vous choisir ?
@@ -683,6 +690,13 @@
                     autocomplete="off"
                     @submit.prevent="submit"
                 >
+                    <div
+                        v-if="referrerDisplay"
+                        class="rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-gray-700"
+                    >
+                        Vous avez été invité par
+                        <span class="font-semibold text-primary">{{ referrerDisplay }}</span>
+                    </div>
                     <div class="space-y-6">
                         <div>
                             <h2
@@ -1520,11 +1534,13 @@ function buildRegistrationPayload() {
         zipCodes: formData.zipCodesArray.join(', '),
         cities: formData.citiesArray.join(', '),
         charteAccepted: charteAccepted.value,
+        referralCode: referralCode.value ?? undefined,
     };
 }
 
 const route = useRoute();
 const { register } = useAuth();
+const { referralCode, referrerDisplay, clearReferralRegistration } = useReferralRegistration();
 
 const status = ref(
     (route.query.reset ?? '').length > 0 ? atob(route.query.reset as string) : '',
@@ -1535,7 +1551,8 @@ const { submit, inProgress } = useSubmit(
         status.value = '';
         const formDataForBackend = buildRegistrationPayload();
 
-        return register(formDataForBackend);
+        await register(formDataForBackend);
+        clearReferralRegistration();
     },
 );
 

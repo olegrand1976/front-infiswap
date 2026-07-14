@@ -54,6 +54,13 @@
                     class="grid grid-cols-2 lg:grid-cols-4 gap-4"
                     @submit.prevent="submit"
                 >
+                    <div
+                        v-if="referrerDisplay"
+                        class="col-span-2 lg:col-span-4 rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-gray-700"
+                    >
+                        Vous avez été invité par
+                        <span class="font-semibold text-primary">{{ referrerDisplay }}</span>
+                    </div>
                     <div class="col-span-2 relative w-full items-center">
                         <InputIcon
                             v-model="formData.lastname"
@@ -132,6 +139,7 @@ const { registerImmediate } = useAuth();
 const { sendUrgentReplacement } = useReplacements();
 const { $toast, $apifetch } = useNuxtApp();
 const authToken = useAuthTokenCookie();
+const { referralCode, referrerDisplay, clearReferralRegistration } = useReferralRegistration();
 
 const status = ref(
     (route.query.reset ?? '').length > 0 ? atob(route.query.reset as string) : '',
@@ -140,7 +148,11 @@ const status = ref(
 const { submit, inProgress } = useSubmit(
     async () => {
         status.value = '';
-        const response = await registerImmediate(formData);
+        const response = await registerImmediate({
+            ...formData,
+            referralCode: referralCode.value ?? undefined,
+        });
+        clearReferralRegistration();
         const pendingReplacement = useState('pendingReplacement');
 
         if (pendingReplacement.value) {

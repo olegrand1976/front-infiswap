@@ -126,8 +126,6 @@ export const useAuth = () => {
     }
 
     async function login(credentials: { identifier: string; password: string }) {
-        if (isLoggedIn.value) return;
-
         try {
             const response = await $apifetch('api/login', {
                 method: 'post',
@@ -138,6 +136,13 @@ export const useAuth = () => {
                 authToken.value = response.token;
                 await nextTick();
                 await refresh();
+
+                if (!user.value) {
+                    throw createError({
+                        statusMessage: 'Connexion impossible. Veuillez réessayer.',
+                    });
+                }
+
                 return;
             }
 

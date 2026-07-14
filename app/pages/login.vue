@@ -219,12 +219,11 @@ import Button from '~/components/ui/button/Button.vue';
 import BackButton from '~/components/ui/back-button/BackButton.vue';
 import { safeLoginRedirectPath } from '~/utils/accessReturn';
 
-const router = useRouter();
 const route = useRoute();
 const { login } = useAuth();
 
 const credentials = reactive({
-    identifier: null,
+    identifier: '',
     password: '',
 });
 
@@ -235,14 +234,13 @@ const { submit, inProgress } = useSubmit(
         await nextTick();
 
         if (useCookie('2fa_hash').value) {
-            return router.push({
+            return navigateTo({
                 path: '/2fa-challenge',
                 query: route.query.redirect ? { redirect: route.query.redirect } : undefined,
             });
         }
-        else {
-            return router.push(safeLoginRedirectPath(route.query.redirect));
-        }
+
+        return navigateTo(safeLoginRedirectPath(route.query.redirect));
     },
 );
 
