@@ -340,6 +340,7 @@ import FormatTimePeriod from '~/components/replacements/FormatTimePeriod.vue';
 import { Skeleton } from '@/components/ui/skeleton';
 
 import UsersName from '@/components/users/Name.vue';
+import { formatRelativeDate, formatToDMY } from '~/composables/useDate';
 
 useHead({ title: 'Remplacements' });
 
@@ -602,6 +603,33 @@ const columns: ColumnDef<Replacement>[] = [
             ]);
         },
         sortingFn: 'alphanumeric',
+    },
+    {
+        accessorKey: 'created_at',
+        header: ({ column }) => {
+            return h(Button, {
+                variant: 'ghost',
+                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                style: 'white-space: nowrap;',
+            }, () => ['Date de création', h(ChevronsUpDown, { class: 'ml-2 h-4 w-4' })]);
+        },
+        cell: ({ row }) => {
+            const createdAt = row.getValue('created_at') as string | null | undefined;
+
+            if (!createdAt) {
+                return h('div', { class: 'text-center text-muted-foreground' }, '—');
+            }
+
+            return h(
+                'div',
+                {
+                    class: 'whitespace-nowrap text-center',
+                    title: formatRelativeDate(createdAt),
+                },
+                formatToDMY(createdAt, true),
+            );
+        },
+        sortingFn: 'datetime',
     },
     {
         accessorKey: 'time_slot',
@@ -904,18 +932,6 @@ const columns: ColumnDef<Replacement>[] = [
                     class: 'bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold',
                 }, 'URGENT'),
             ]);
-        },
-    },
-    {
-        accessorKey: 'created_at',
-        header: ({ column }) => {
-            return h(Button, {
-                variant: 'ghost',
-                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
-            }, () => ['Date', h(ChevronsUpDown, { class: '' })]);
-        },
-        cell: ({ row }) => {
-            return h('div', { class: '' }, formatRelativeDate(row.getValue('created_at')));
         },
     },
     {
