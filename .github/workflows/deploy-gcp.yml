@@ -1,8 +1,8 @@
 name: Deploy GCP
 
 # Front → Artifact Registry → Cloud Run (sans Docker Hub).
-# Staging : branche staging. Prod web-only : branche main.
-# Déploiement API+Web prod complet : back-infiswap (deploy-prod-gcp.yml).
+# Staging : branche staging. Prod web : branche main (source canonique du front prod).
+# API prod seule : back-infiswap (deploy-prod-gcp.yml → cloudbuild-prod-api-only.yaml).
 on:
   push:
     branches: [main, staging]

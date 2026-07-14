@@ -26,13 +26,11 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         }
     };
 
-    if (!user.value) {
-        if (token.value) {
-            user.value = await fetchCurrentUser();
-        }
-        else {
-            user.value = null;
-        }
+    if (!token.value) {
+        user.value = null;
+    }
+    else if (!user.value) {
+        user.value = await fetchCurrentUser();
     }
 
     authReady.value = true;

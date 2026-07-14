@@ -341,10 +341,13 @@
                     </div>
                     <div class="p-4">
                         <h3 class="text-sm text-gray-900">
-                            Nombre d'affiliés à votre compte
+                            Collègues inscrits via votre parrainage
                         </h3>
-                        <p class="text-3xl font-bold text-primary">
-                            {{ reports?.referrals }}
+                        <p class="text-xs text-gray-500 mt-1">
+                            Personnes ayant créé un compte avec votre lien ou code de parrainage.
+                        </p>
+                        <p class="text-3xl font-bold text-primary mt-2">
+                            {{ reports?.referrals ?? 0 }}
                         </p>
                     </div>
                 </div>
