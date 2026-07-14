@@ -1,5 +1,7 @@
 <template>
     <div class="space-y-6">
+        <DashboardOnboardingServicesBanner />
+
         <section class="grid items-center grid-cols-1 gap-4">
             <NurstechPresentation />
 
@@ -336,19 +338,48 @@
 
             <div class="w-full lg:w-1/2 space-y-8">
                 <div class="flex flex-col w-full bg-white rounded-lg shadow-lg">
-                    <div class="p-5 bg-gray-200 rounded">
-                        <User class="w-8 opacity-80 " />
+                    <div class="p-5 bg-teal-100 rounded">
+                        <User class="w-8 opacity-80 text-primary" />
                     </div>
-                    <div class="p-4">
+                    <div class="p-4 space-y-3">
                         <h3 class="text-sm text-gray-900">
                             Collègues inscrits via votre parrainage
                         </h3>
-                        <p class="text-xs text-gray-500 mt-1">
-                            Personnes ayant créé un compte avec votre lien ou code de parrainage.
+                        <p class="text-xs text-gray-500">
+                            Partagez InfiSwap — plus le réseau grandit, plus vous trouvez de remplacements.
                         </p>
-                        <p class="text-3xl font-bold text-primary mt-2">
+                        <p class="text-3xl font-bold text-primary">
                             {{ reports?.referrals ?? 0 }}
                         </p>
+                        <button
+                            type="button"
+                            class="text-sm font-medium text-primary hover:underline"
+                            @click="copyReferralLink"
+                        >
+                            Copier mon lien de parrainage
+                        </button>
+                    </div>
+                </div>
+
+                <div
+                    v-if="showNetworkAccessPromo"
+                    class="flex flex-col w-full overflow-hidden bg-white border-2 rounded-lg shadow-lg border-amber-400"
+                >
+                    <div class="p-3 text-sm font-bold tracking-wide text-center text-white uppercase bg-amber-500">
+                        Boost remplacement
+                    </div>
+                    <div class="p-4 space-y-3">
+                        <p class="text-sm text-gray-700">
+                            Mettez votre annonce en tête de liste — dès 2 € pour 3 jours.
+                        </p>
+                        <NuxtLink to="/pricing">
+                            <button
+                                class="w-full py-2 text-sm font-semibold text-white transition rounded bg-amber-500 hover:bg-amber-500/90"
+                                @click="trackBoostClick"
+                            >
+                                Découvrir le Boost
+                            </button>
+                        </NuxtLink>
                     </div>
                 </div>
 
@@ -588,6 +619,31 @@ const { $toast } = useNuxtApp();
 const showNetworkAccessPromo = computed(() =>
     isSubjectToPlatformAccessPayment(user.value) && !hasPaidPlatformAccess(user.value),
 );
+
+const config = useRuntimeConfig();
+const { trackEvent } = useProductAnalytics();
+
+const referralShareUrl = computed(() =>
+    `${config.public.FRONT_END_URL}/register/?referral=${user.value?.referral_code ?? ''}`,
+);
+
+function trackReferralCopy() {
+    trackEvent('referral_dashboard_copy', { source: 'nurse_dashboard' });
+}
+
+async function copyReferralLink() {
+    if (!import.meta.client) {
+        return;
+    }
+
+    await navigator.clipboard.writeText(referralShareUrl.value);
+    trackReferralCopy();
+    $toast({ description: 'Lien copié avec succès' });
+}
+
+function trackBoostClick() {
+    trackEvent('boost_cta_click', { source: 'nurse_dashboard_services' });
+}
 
 const arePreferencesEmpty = () => {
     if (!user.value?.settings) return true;
