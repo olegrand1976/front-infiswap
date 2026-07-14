@@ -184,7 +184,7 @@
 </template>
 
 <script lang="ts" setup>
-import { BarChart3, Briefcase, ChevronRight, CircleHelp, CirclePlay, CircleUser, ClipboardList, Cog, Euro, FileSearch, FileText, Inbox, LayoutGrid, Link, List, Mail, MessageSquare, Network, Plus, Power, RefreshCw, Search, ShieldAlert, ShieldCheck, ShoppingBag, Sparkles, Star, UserCheck, Users, UserSearch, Wrench } from 'lucide-vue-next';
+import { BarChart3, Briefcase, ChevronRight, CircleHelp, CirclePlay, CircleUser, ClipboardList, Cog, CreditCard, Euro, FileSearch, FileText, Inbox, LayoutGrid, Link, List, Mail, MessageSquare, Network, Plus, Power, RefreshCw, Search, ShieldAlert, ShieldCheck, ShoppingBag, Sparkles, Star, UserCheck, Users, UserSearch, Wrench } from 'lucide-vue-next';
 import type { FunctionalComponent } from 'vue';
 import QuickReplacementIcon from '../icons/QuickReplacementIcon.vue';
 import { useSidebar } from '../ui/sidebar';
@@ -489,6 +489,12 @@ const adminNavigationItems = computed<NavigationItem[]>(() => [
         label: 'Abonnement',
         route: '/dashboard/admin/subscription-plans',
         icon: Euro,
+        visible: isSuperAdmin.value || isAdmin.value || isManager.value,
+    },
+    {
+        label: 'Paiements Stripe',
+        route: '/dashboard/admin/stripe-payments',
+        icon: CreditCard,
         visible: isSuperAdmin.value || isAdmin.value || isManager.value,
     },
     {
