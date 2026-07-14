@@ -6,6 +6,11 @@ export default defineNuxtRouteMiddleware(async () => {
     const user = useUser();
     const token = useAuthTokenCookie();
     const { $apifetch } = useNuxtApp();
+    const { refresh } = useAuth();
+
+    if (!user.value && token.value) {
+        await refresh();
+    }
 
     if (user.value && token.value) {
         if (!user.value.email_verified_at) {

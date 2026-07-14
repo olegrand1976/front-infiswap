@@ -19,6 +19,7 @@ const {
 } = usePostSuccessEngagement();
 const { plans, loadingPlans, checkoutLoading, fetchPlans, checkout } = useSponsorship();
 const { trackEvent } = useProductAnalytics();
+const { $toast } = useNuxtApp();
 
 const titleId = `success-engagement-title-${useId()}`;
 const markingReview = ref(false);
@@ -40,8 +41,14 @@ async function handleReviewClick() {
     markingReview.value = true;
 
     try {
-        window.open(GOOGLE_REVIEW_URL, '_blank', 'noopener,noreferrer');
         await markReviewLeft(source.value);
+        window.open(GOOGLE_REVIEW_URL, '_blank', 'noopener,noreferrer');
+    }
+    catch {
+        $toast({
+            title: 'Impossible d\'enregistrer votre réponse. Réessayez ou reconnectez-vous.',
+            variant: 'destructive',
+        });
     }
     finally {
         markingReview.value = false;

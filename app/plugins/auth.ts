@@ -17,8 +17,9 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         try {
             return await $apifetch('/api/user');
         }
-        catch (error: { data?: { code?: string }; status?: number }) {
-            if (error?.data?.code === 'institution_deleted') {
+        catch (error: { data?: { code?: string }; status?: number; statusCode?: number }) {
+            const status = error?.status ?? error?.statusCode;
+            if (status === 401 || status === 403 || error?.data?.code === 'institution_deleted') {
                 token.value = null;
             }
 
