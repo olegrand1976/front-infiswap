@@ -285,6 +285,9 @@ gcp-disable-premedica:
 gcp-smoke:
 	@"$(BACK_DIR)/infra/gcp/smoke-test.sh"
 
+e2e-auth-staging:
+	cd "$(FRONT_DIR)" && npm run test:e2e -- tests/e2e/auth/
+
 gcp-scale-up:
 	@"$(BACK_DIR)/infra/gcp/scale-staging.sh" 1
 
