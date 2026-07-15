@@ -291,7 +291,7 @@ class _FilterTabs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 34,
+      height: 30,
       child: ListView(
         scrollDirection: Axis.horizontal,
         clipBehavior: Clip.none,
