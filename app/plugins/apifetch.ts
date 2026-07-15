@@ -11,17 +11,20 @@ import {
 } from '#app';
 
 export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
-    const language = useCookie(LANGUAGE)?.value ?? 'fr';
+    const runtimeConfig = useRuntimeConfig();
+    const languageCookie = useCookie(LANGUAGE);
+    const authToken = useAuthTokenCookie();
+
     const apifetch = $fetch.create({
         credentials: 'omit',
         timeout: import.meta.server ? 15_000 : 60_000,
         async onRequest({ options }) {
-            options.baseURL = resolveApiBaseUrl(useRuntimeConfig());
+            options.baseURL = resolveApiBaseUrl(runtimeConfig);
 
             const headers: Record<string, string> = {
                 'Accept': 'application/json',
-                'Authorization': `Bearer ${useAuthTokenCookie().value ?? ''}`,
-                'Accept-Language': language,
+                'Authorization': `Bearer ${authToken.value ?? ''}`,
+                'Accept-Language': languageCookie.value ?? 'fr',
                 ...(options?.headers as Record<string, string> | undefined),
             };
 
