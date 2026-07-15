@@ -285,6 +285,15 @@ gcp-disable-premedica:
 gcp-smoke:
 	@"$(BACK_DIR)/infra/gcp/smoke-test.sh"
 
+gcp-monitoring-prod:
+	@"$(BACK_DIR)/infra/gcp/setup-monitoring-prod.sh"
+
+gcp-monitoring-prod-secrets:
+	@"$(BACK_DIR)/infra/gcp/setup-monitoring-secrets-prod.sh"
+
+gcp-monitoring-prod-smoke:
+	@"$(BACK_DIR)/infra/gcp/smoke-test-monitoring-prod.sh"
+
 e2e-auth-staging:
 	cd "$(FRONT_DIR)" && npm run test:e2e -- tests/e2e/auth/
 
