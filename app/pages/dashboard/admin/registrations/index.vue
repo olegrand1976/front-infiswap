@@ -55,7 +55,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowUpDown } from 'lucide-vue-next';
+import { ArrowUpDown, Medal } from 'lucide-vue-next';
 import { h } from 'vue';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
@@ -266,12 +266,21 @@ const columns: ColumnDef<User>[] = [
                 return h('div', { class: 'text-center text-muted-foreground' }, '—');
             }
 
+            if (!hasPaidPlatformAccess(user)) {
+                return h('div', { class: 'text-center text-muted-foreground' }, '—');
+            }
+
             return h('div', { class: 'flex justify-center' }, [
-                h(Switch, {
-                    class: 'mx-auto text-center',
-                    checked: hasPaidPlatformAccess(user),
-                    disabled: true,
-                }),
+                h('span', {
+                    class: 'inline-flex size-7 items-center justify-center rounded-full border-2 border-white bg-gradient-to-br from-amber-400 via-yellow-500 to-amber-600 shadow-md ring-1 ring-amber-300/80',
+                    title: 'Inscription validée à vie — accès InfiSwap permanent',
+                    'aria-label': 'Inscription validée à vie — accès InfiSwap permanent',
+                }, [
+                    h(Medal, {
+                        class: 'size-3.5 text-white drop-shadow-sm',
+                        'aria-hidden': 'true',
+                    }),
+                ]),
             ]);
         },
         enableSorting: false,
