@@ -68,6 +68,11 @@ steps:
           --timeout=120 \
           --set-env-vars="NODE_ENV=production,NUXT_PUBLIC_API_URL=${_API_PUBLIC_URL},NUXT_PUBLIC_FRONT_END_URL=${_WEB_PUBLIC_URL},NUXT_API_URL_INTERNAL=$$API_RUN_URL" \
           --quiet
+        gcloud run services update-traffic ${_WEB_SERVICE} \
+          --project="$PROJECT_ID" \
+          --region="${_RUN_REGION}" \
+          --to-latest \
+          --quiet
         gcloud run services add-iam-policy-binding ${_WEB_SERVICE} \
           --project="$PROJECT_ID" \
           --region="${_RUN_REGION}" \
