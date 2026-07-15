@@ -97,7 +97,8 @@ class _ApplicationsScreenState extends ConsumerState<ApplicationsScreen> {
                   final filtered = _filter == null
                       ? items
                       : items
-                          .where((item) => applicationStatusBucket(item.status) == _filter)
+                          .where((item) =>
+                              applicationStatusBucket(item.status) == _filter)
                           .toList();
 
                   return RefreshIndicator(
@@ -112,7 +113,8 @@ class _ApplicationsScreenState extends ConsumerState<ApplicationsScreen> {
                           total: items.length,
                           counts: counts,
                           selected: _filter,
-                          onSelect: (bucket) => setState(() => _filter = bucket),
+                          onSelect: (bucket) =>
+                              setState(() => _filter = bucket),
                         ),
                         const SizedBox(height: 12),
                         if (filtered.isEmpty)
@@ -121,7 +123,8 @@ class _ApplicationsScreenState extends ConsumerState<ApplicationsScreen> {
                             child: Center(
                               child: Text(
                                 'Aucune candidature dans ce filtre',
-                                style: TextStyle(color: colors.textSecondary, fontSize: 13),
+                                style: TextStyle(
+                                    color: colors.textSecondary, fontSize: 13),
                               ),
                             ),
                           )
@@ -153,7 +156,8 @@ class _ApplicationsScreenState extends ConsumerState<ApplicationsScreen> {
     );
   }
 
-  static Map<ApplicationStatusBucket, int> _countByBucket(List<ApplicationItem> items) {
+  static Map<ApplicationStatusBucket, int> _countByBucket(
+      List<ApplicationItem> items) {
     final counts = {
       ApplicationStatusBucket.pending: 0,
       ApplicationStatusBucket.success: 0,
@@ -184,13 +188,17 @@ class _StatsStrip extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: colors.border),
         boxShadow: [
-          BoxShadow(color: colors.shadow, blurRadius: 10, offset: const Offset(0, 3)),
+          BoxShadow(
+              color: colors.shadow, blurRadius: 10, offset: const Offset(0, 3)),
         ],
       ),
       child: Row(
         children: [
           Expanded(
-            child: _StatCell(value: total.toString(), label: 'TOTAL', color: colors.textPrimary),
+            child: _StatCell(
+                value: total.toString(),
+                label: 'TOTAL',
+                color: colors.textPrimary),
           ),
           _StatDivider(color: colors.divider),
           Expanded(
@@ -215,7 +223,8 @@ class _StatsStrip extends StatelessWidget {
 }
 
 class _StatCell extends StatelessWidget {
-  const _StatCell({required this.value, required this.label, required this.color});
+  const _StatCell(
+      {required this.value, required this.label, required this.color});
 
   final String value;
   final String label;
@@ -230,7 +239,11 @@ class _StatCell extends StatelessWidget {
       children: [
         Text(
           value,
-          style: TextStyle(color: color, fontSize: 19, fontWeight: FontWeight.w800, height: 1),
+          style: TextStyle(
+              color: color,
+              fontSize: 19,
+              fontWeight: FontWeight.w800,
+              height: 1),
         ),
         const SizedBox(height: 4),
         Text(
@@ -255,7 +268,10 @@ class _StatDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(width: 1, margin: const EdgeInsets.symmetric(vertical: 2), color: color);
+    return Container(
+        width: 1,
+        margin: const EdgeInsets.symmetric(vertical: 2),
+        color: color);
   }
 }
 
@@ -340,7 +356,9 @@ class _FilterTab extends StatelessWidget {
           decoration: BoxDecoration(
             color: selected ? colors.textPrimary : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: selected ? colors.textPrimary : colors.divider, width: 1.3),
+            border: Border.all(
+                color: selected ? colors.textPrimary : colors.divider,
+                width: 1.3),
           ),
           child: Text(
             '$label $count',
@@ -371,13 +389,17 @@ class _EmptyState extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             'Aucune candidature',
-            style: TextStyle(color: colors.textPrimary, fontSize: 13, fontWeight: FontWeight.w700),
+            style: TextStyle(
+                color: colors.textPrimary,
+                fontSize: 13,
+                fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 4),
           Text(
             'Postulez à un remplacement ou une mission — elles apparaîtront ici avec leur statut.',
             textAlign: TextAlign.center,
-            style: TextStyle(color: colors.textSecondary, fontSize: 11.5, height: 1.5),
+            style: TextStyle(
+                color: colors.textSecondary, fontSize: 11.5, height: 1.5),
           ),
         ],
       ),

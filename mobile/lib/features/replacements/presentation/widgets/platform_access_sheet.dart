@@ -4,6 +4,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/config/app_config.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../subscription/data/subscription_repository.dart';
+
+const _fallbackAccessPrice = '9,90 €';
 
 // Restrict access to the platform sheet
 class PlatformAccessSheet extends ConsumerWidget {
@@ -22,6 +25,11 @@ class PlatformAccessSheet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.appColors;
     final config = ref.watch(appConfigProvider);
+    final priceLabel = ref.watch(accessPlanProvider).when(
+          data: (plan) => plan?.formattedAmount ?? _fallbackAccessPrice,
+          loading: () => _fallbackAccessPrice,
+          error: (_, __) => _fallbackAccessPrice,
+        );
 
     return SafeArea(
       top: false,
@@ -86,7 +94,7 @@ class PlatformAccessSheet extends ConsumerWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '9,90 €',
+                    priceLabel,
                     style: TextStyle(
                       color: colors.primary,
                       fontSize: 28,
@@ -132,7 +140,7 @@ class PlatformAccessSheet extends ConsumerWidget {
                       foregroundColor: colors.onPrimary,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                     ),
-                    child: const Text('Accès à vie — 9,90 €'),
+                    child: Text('Accès à vie — $priceLabel'),
                   ),
                 ),
               ],
