@@ -27,7 +27,10 @@ export async function fillRegistrationForm(page: Page, data: RegistrationFormDat
     await form.getByPlaceholder('Code postal *', { exact: true }).fill(data.zipCode);
     await form.getByPlaceholder('Ville *', { exact: true }).fill(data.city);
 
-    const belgiumCheckbox = form.locator('label').filter({ hasText: 'Belgique' }).getByRole('checkbox');
+    const workingCountriesBlock = form.locator('div.col-span-4').filter({ hasText: 'Pays de recherche' });
+    const belgiumCheckbox = workingCountriesBlock.getByRole('checkbox').first();
+    await belgiumCheckbox.scrollIntoViewIfNeeded();
+
     if (!(await belgiumCheckbox.isChecked())) {
         await belgiumCheckbox.click();
     }
