@@ -1,90 +1,102 @@
 <template>
-    <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 px-4 pb-4">
-        <section class="bg-white rounded-md shadow-sm border border-gray-100 p-5">
-            <h3 class="font-semibold text-sm text-gray-800 mb-4">
-                Funnel conversion (inscriptions période)
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-3 px-4 pb-4">
+        <section class="bg-white rounded-md shadow-sm border border-gray-100 p-4 xl:col-span-1">
+            <h3 class="font-semibold text-sm text-gray-800 mb-3">
+                Funnel conversion
             </h3>
             <div
                 v-if="loading"
-                class="h-40 animate-pulse bg-gray-100 rounded-md"
+                class="h-32 animate-pulse bg-gray-100 rounded-md"
             />
-            <dl
-                v-else
-                class="grid grid-cols-2 gap-3"
-            >
+            <template v-else>
+                <dl class="grid grid-cols-2 gap-2">
+                    <div
+                        v-for="item in funnelItems"
+                        :key="item.label"
+                        class="rounded-md border border-gray-100 px-2.5 py-2"
+                    >
+                        <dt class="text-[11px] uppercase tracking-wide text-gray-500">
+                            {{ item.label }}
+                        </dt>
+                        <dd class="text-xl font-bold text-gray-900 mt-0.5">
+                            {{ item.value }}
+                        </dd>
+                    </div>
+                </dl>
                 <div
-                    v-for="item in funnelItems"
-                    :key="item.label"
-                    class="rounded-md border border-gray-100 p-3"
+                    v-if="acquisition"
+                    class="mt-3 flex flex-wrap gap-2 text-xs text-gray-600"
                 >
-                    <dt class="text-xs uppercase tracking-wide text-gray-500">
-                        {{ item.label }}
-                    </dt>
-                    <dd class="text-2xl font-bold text-gray-900 mt-1">
-                        {{ item.value }}
-                    </dd>
+                    <span class="rounded-full bg-amber-50 border border-amber-100 px-2.5 py-1">
+                        BE {{ acquisition.belgium }}
+                    </span>
+                    <span class="rounded-full bg-indigo-50 border border-indigo-100 px-2.5 py-1">
+                        FR {{ acquisition.france }}
+                    </span>
                 </div>
-            </dl>
+            </template>
         </section>
 
-        <section class="bg-white rounded-md shadow-sm border border-gray-100 p-5">
-            <h3 class="font-semibold text-sm text-gray-800 mb-4">
+        <section class="bg-white rounded-md shadow-sm border border-gray-100 p-4 xl:col-span-1">
+            <h3 class="font-semibold text-sm text-gray-800 mb-3">
                 Emails Journey
             </h3>
             <div
                 v-if="loading"
-                class="h-40 animate-pulse bg-gray-100 rounded-md"
+                class="h-32 animate-pulse bg-gray-100 rounded-md"
             />
             <template v-else>
-                <p class="text-sm text-gray-600 mb-3">
-                    {{ journey?.total_sends ?? 0 }} envois sur la période
+                <p class="text-xs text-gray-500 mb-2">
+                    <span class="text-lg font-bold text-gray-900">{{ journey?.total_sends ?? 0 }}</span>
+                    envois
                 </p>
-                <ul class="space-y-2 max-h-48 overflow-y-auto">
+                <ul class="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto">
                     <li
                         v-for="workflow in journey?.by_workflow ?? []"
                         :key="workflow.workflow"
-                        class="flex items-center justify-between text-sm border-b border-gray-50 pb-2"
                     >
-                        <span class="font-medium text-gray-700">{{ workflow.workflow }}</span>
-                        <span class="text-gray-900">{{ workflow.sends }}</span>
+                        <span class="inline-flex items-center gap-1.5 rounded-full border border-gray-100 bg-gray-50 px-2.5 py-1 text-xs text-gray-700">
+                            <span class="font-medium">{{ workflow.workflow }}</span>
+                            <span class="font-semibold text-gray-900">{{ workflow.sends }}</span>
+                        </span>
                     </li>
                     <li
                         v-if="(journey?.by_workflow ?? []).length === 0"
                         class="text-sm text-gray-500"
                     >
-                        Aucun envoi Journey sur la période.
+                        Aucun envoi sur la période.
                     </li>
                 </ul>
             </template>
         </section>
 
-        <section class="bg-white rounded-md shadow-sm border border-gray-100 p-5 xl:col-span-2">
-            <h3 class="font-semibold text-sm text-gray-800 mb-4">
-                Partenaires (30 jours)
+        <section class="bg-white rounded-md shadow-sm border border-gray-100 p-4 xl:col-span-1">
+            <h3 class="font-semibold text-sm text-gray-800 mb-3">
+                Partenaires (30 j)
             </h3>
             <div
                 v-if="loading"
-                class="h-24 animate-pulse bg-gray-100 rounded-md"
+                class="h-32 animate-pulse bg-gray-100 rounded-md"
             />
             <div
                 v-else
-                class="grid grid-cols-2 md:grid-cols-4 gap-3"
+                class="grid grid-cols-2 gap-2"
             >
-                <div class="rounded-md border border-gray-100 p-3">
-                    <p class="text-xs text-gray-500">Clics NursTech</p>
-                    <p class="text-xl font-bold">{{ partners?.clicks.nurstech_30d ?? 0 }}</p>
+                <div class="rounded-md border border-gray-100 px-2.5 py-2">
+                    <p class="text-[11px] text-gray-500">Clics NursTech</p>
+                    <p class="text-lg font-bold text-gray-900">{{ partners?.clicks.nurstech_30d ?? 0 }}</p>
                 </div>
-                <div class="rounded-md border border-gray-100 p-3">
-                    <p class="text-xs text-gray-500">Clics NursAssur</p>
-                    <p class="text-xl font-bold">{{ partners?.clicks.nursassur_30d ?? 0 }}</p>
+                <div class="rounded-md border border-gray-100 px-2.5 py-2">
+                    <p class="text-[11px] text-gray-500">Clics NursAssur</p>
+                    <p class="text-lg font-bold text-gray-900">{{ partners?.clicks.nursassur_30d ?? 0 }}</p>
                 </div>
-                <div class="rounded-md border border-gray-100 p-3">
-                    <p class="text-xs text-gray-500">Contacts NursTech</p>
-                    <p class="text-xl font-bold">{{ partners?.contacts.nurstech_30d ?? 0 }}</p>
+                <div class="rounded-md border border-gray-100 px-2.5 py-2">
+                    <p class="text-[11px] text-gray-500">Contacts NursTech</p>
+                    <p class="text-lg font-bold text-gray-900">{{ partners?.contacts.nurstech_30d ?? 0 }}</p>
                 </div>
-                <div class="rounded-md border border-gray-100 p-3">
-                    <p class="text-xs text-gray-500">Contacts NursAssur</p>
-                    <p class="text-xl font-bold">{{ partners?.contacts.nursassur_30d ?? 0 }}</p>
+                <div class="rounded-md border border-gray-100 px-2.5 py-2">
+                    <p class="text-[11px] text-gray-500">Contacts NursAssur</p>
+                    <p class="text-lg font-bold text-gray-900">{{ partners?.contacts.nursassur_30d ?? 0 }}</p>
                 </div>
             </div>
         </section>
@@ -98,6 +110,7 @@ const props = defineProps<{
     conversion: MarketingAnalyticsOverview['conversion'] | null;
     journey: MarketingAnalyticsOverview['journey_emails'] | null;
     partners: MarketingAnalyticsOverview['partners'] | null;
+    acquisition?: MarketingAnalyticsOverview['acquisition'] | null;
     loading?: boolean;
 }>();
 

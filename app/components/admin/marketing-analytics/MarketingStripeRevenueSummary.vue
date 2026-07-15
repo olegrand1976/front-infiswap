@@ -1,27 +1,33 @@
 <template>
     <section class="px-4 pb-4">
-        <h3 class="font-semibold text-sm text-gray-800 mb-3">
-            Indicateurs paiements Stripe
-        </h3>
-
         <div
             v-if="loading"
             class="h-24 rounded-md bg-gray-100 animate-pulse"
         />
         <div
             v-else
-            class="bg-white rounded-md shadow-sm border border-gray-100 p-4 space-y-3"
+            class="bg-white rounded-md shadow-sm border border-gray-100 p-4"
         >
-            <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3">
+            <div class="flex flex-wrap items-baseline justify-between gap-2 mb-3">
+                <h3 class="font-semibold text-sm text-gray-800">
+                    Revenus Stripe
+                </h3>
+                <p class="text-2xl font-bold text-emerald-700 tabular-nums">
+                    {{ formatStripePaymentAmount(kpis?.total_amount_cents ?? 0) }}
+                    <span class="text-xs font-medium text-gray-500 ml-1">période</span>
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
                 <div
-                    v-for="metric in metrics"
+                    v-for="metric in secondaryMetrics"
                     :key="metric.label"
-                    class="rounded-md border border-gray-100 p-3"
+                    class="rounded-md border border-gray-100 px-2.5 py-2"
                 >
-                    <p class="text-xs text-gray-500">
+                    <p class="text-[11px] text-gray-500">
                         {{ metric.label }}
                     </p>
-                    <p class="text-base font-semibold text-gray-900 mt-1 break-words">
+                    <p class="text-sm font-semibold text-gray-900 mt-0.5 break-words">
                         {{ metric.value }}
                     </p>
                 </div>
@@ -29,14 +35,14 @@
 
             <div
                 v-if="productBreakdown.length > 0"
-                class="flex flex-wrap items-center gap-2"
+                class="mt-3 flex flex-wrap items-center gap-1.5"
             >
-                <span class="text-sm font-medium text-gray-700">Répartition :</span>
+                <span class="text-xs font-medium text-gray-500">Répartition</span>
                 <Badge
                     v-for="item in productBreakdown"
                     :key="item.product_type"
                     variant="secondary"
-                    class="rounded-md"
+                    class="rounded-md text-xs"
                 >
                     {{ item.label }} {{ item.count }}
                 </Badge>
@@ -55,7 +61,7 @@ const props = defineProps<{
     loading?: boolean;
 }>();
 
-const metrics = computed(() => {
+const secondaryMetrics = computed(() => {
     const data = props.kpis;
 
     const latestLabel = data?.latest_payment?.user?.full_name
@@ -68,10 +74,6 @@ const metrics = computed(() => {
 
     return [
         {
-            label: 'Encaissements (période)',
-            value: formatStripePaymentAmount(data?.total_amount_cents ?? 0),
-        },
-        {
             label: 'Paiements',
             value: String(data?.payment_count ?? 0),
         },
@@ -80,7 +82,7 @@ const metrics = computed(() => {
             value: `${data?.payments_this_month?.count ?? 0} · ${formatStripePaymentAmount(data?.payments_this_month?.amount_cents ?? 0)}`,
         },
         {
-            label: 'Dernier paiement',
+            label: 'Dernier',
             value: latestLabel,
         },
         {

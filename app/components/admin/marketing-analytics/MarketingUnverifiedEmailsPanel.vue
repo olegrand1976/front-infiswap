@@ -2,9 +2,7 @@
     <section class="px-4 pb-4 space-y-8">
         <div>
             <div class="flex items-center gap-2 mb-3">
-                <h3 class="font-semibold text-sm text-gray-800">
-                    Emails non vérifiés
-                </h3>
+                <span class="text-xs font-medium text-gray-500 uppercase tracking-wide">En attente</span>
                 <Badge
                     v-if="count > 0"
                     class="bg-amber-600 text-white"
@@ -39,9 +37,7 @@
 
         <div>
             <div class="flex items-center gap-2 mb-3">
-                <h3 class="font-semibold text-sm text-gray-800">
-                    Emails vérifiés (7 derniers jours)
-                </h3>
+                <span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Vérifiés (7 j)</span>
                 <Badge
                     v-if="verifiedCount > 0"
                     class="bg-emerald-600 text-white"

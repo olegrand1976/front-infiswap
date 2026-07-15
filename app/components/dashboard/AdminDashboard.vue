@@ -1,508 +1,427 @@
 <template>
-    <div>
-        <section class="grid grid-cols-1 lg:grid-cols-2 gap-4 xl:gap-8">
-            <div class="col-span-1 lg:col-span-2">
-                <button
-                    type="button"
-                    class="w-full flex items-center justify-between px-5 py-4 bg-white rounded-md shadow-sm border border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
-                    @click="showStats = !showStats"
-                >
-                    <span class="font-semibold text-sm text-gray-800">Statistiques générales</span>
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        class="w-4 h-4 text-gray-400 transition-transform duration-200"
-                        :class="showStats ? 'rotate-180' : ''"
-                    >
-                        <path
-                            fill-rule="evenodd"
-                            d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
-                            clip-rule="evenodd"
-                        />
-                    </svg>
-                </button>
-                <div
-                    v-show="showStats"
-                    class="mt-3 grid grid-cols-1 lg:grid-cols-2 gap-4 xl:gap-8"
-                >
-                    <div class="col-span-full mb-2 sm:mb-0">
-                        <div v-if="loading">
-                            <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
-                        </div>
-                        <div
-                            v-else
-                            class="mt-3 grid grid-cols-2 gap-4 sm:gap-8 items-center"
-                        >
-                            <div class="p-8 bg-white rounded-sm shadow-md flex justify-between items-center gap-2">
-                                <div>
-                                    <h3 class="text-sm font-semibold">
-                                        Utilisateur en Belgique
-                                    </h3>
-                                    <p class="font-semibold text-primary text-3xl">
-                                        {{ userBelgianCount }}
-                                    </p>
-                                </div>
-                                <LayoutsAppImage
-                                    :src="'/icons/belgium.png'"
-                                    alt="Belgium flag"
-                                    class="w-8 sm:w-12"
-                                />
-                            </div>
-                            <div class="p-8 bg-white rounded-sm shadow-md flex justify-between items-center gap-4">
-                                <div>
-                                    <h3 class="text-sm font-semibold">
-                                        Utilisateur en France
-                                    </h3>
-                                    <p class="font-semibold text-success text-3xl">
-                                        {{ userFrenchCount }}
-                                    </p>
-                                </div>
-                                <LayoutsAppImage
-                                    :src="'/icons/fr.png'"
-                                    alt="France flag"
-                                    class="w-8 sm:w-12"
-                                />
-                            </div>
-                        </div>
+    <div class="space-y-4">
+        <!-- Bandeau KPI scan -->
+        <section
+            aria-label="Synthèse"
+            class="space-y-3"
+        >
+            <div
+                v-if="loading"
+                class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3"
+            >
+                <Skeleton
+                    v-for="i in 6"
+                    :key="i"
+                    class="h-20 rounded-md bg-gray-200"
+                />
+            </div>
+            <template v-else>
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                    <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
+                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">Users BE</p>
+                        <p class="text-2xl font-bold text-primary tabular-nums mt-0.5">{{ userBelgianCount }}</p>
                     </div>
-
-                    <div class="col-span-1 lg:col-span-2">
-                        <div v-if="loading">
-                            <Skeleton class="mt-3 bg-gray-200 rounded-sm h-96" />
-                        </div>
-                        <div
-                            v-else
-                            class="mt-3 space-y-4"
-                        >
-                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                                <div class="p-5 bg-white rounded-md shadow-sm border border-gray-100 flex flex-col gap-1">
-                                    <span class="text-xs font-semibold uppercase tracking-wide text-gray-500">Total</span>
-                                    <span class="text-2xl font-bold text-gray-800">{{ institutionStats.total }}</span>
-                                </div>
-                                <div class="p-5 bg-white rounded-md shadow-sm border border-gray-100 flex flex-col gap-1">
-                                    <span class="text-xs font-semibold uppercase tracking-wide text-gray-500">Belgique</span>
-                                    <span class="text-2xl font-bold text-primary">{{ institutionStats.total_belgian }}</span>
-                                </div>
-                                <div class="p-5 bg-white rounded-md shadow-sm border border-gray-100 flex flex-col gap-1">
-                                    <span class="text-xs font-semibold uppercase tracking-wide text-gray-500">France</span>
-                                    <span class="text-2xl font-bold text-success">{{ institutionStats.total_french }}</span>
-                                </div>
-                                <div class="p-5 bg-white rounded-md shadow-sm border border-gray-100 flex flex-col gap-1">
-                                    <span class="text-xs font-semibold uppercase tracking-wide text-gray-500">30 derniers jours</span>
-                                    <span class="text-2xl font-bold text-orange-600">{{ institutionStats.last_30_days }}</span>
-                                </div>
-                            </div>
-
-                            <div>
-                                <p class="ml-2 mb-1 font-semibold text-sm">
-                                    Nouvelles institutions par semaine (année en cours)
-                                </p>
-                                <div class="mt-3 bg-white rounded-sm shadow-md">
-                                    <ClientOnly>
-                                        <BarChart
-                                            :data="institutionWeeklyChartData.data"
-                                            index="name"
-                                            :categories="['Inscrits']"
-                                            :x-formatter="xInstitutionWeekFormatter"
-                                            :y-formatter="yFormatter"
-                                            :show-all-x-ticks="showAllXTicks(institutionWeeklyChartData.data)"
-                                            :colors="['var(--chart-3, #8b5cf6)']"
-                                            :legend-labels="institutionWeeklyChartData.legendLabels"
-                                            class="w-full"
-                                        />
-                                    </ClientOnly>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
+                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">Users FR</p>
+                        <p class="text-2xl font-bold text-success tabular-nums mt-0.5">{{ userFrenchCount }}</p>
                     </div>
-                    <div class="col-span-1 lg:col-span-2">
-                        <DashboardStatCardAdminGroup
-                            v-for="(report, index) in adminReports"
-                            :key="index"
-                            :title="report.title"
-                            :items="report.items"
-                            :loading="loading"
-                        />
+                    <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
+                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">Users total</p>
+                        <p class="text-2xl font-bold text-gray-800 tabular-nums mt-0.5">{{ userTotal }}</p>
+                    </div>
+                    <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
+                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">Users 30 j</p>
+                        <p class="text-2xl font-bold text-orange-600 tabular-nums mt-0.5">{{ userLast30 }}</p>
+                    </div>
+                    <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
+                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">Rempl. acceptés 30 j</p>
+                        <p class="text-2xl font-bold text-indigo-600 tabular-nums mt-0.5">{{ acceptedLast30 }}</p>
+                    </div>
+                    <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
+                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">Réponses 30 j</p>
+                        <p class="text-2xl font-bold text-pink-600 tabular-nums mt-0.5">{{ responsesLast30 }}</p>
                     </div>
                 </div>
-            </div>
 
-            <div class="col-span-1 lg:col-span-2">
-                <button
-                    type="button"
-                    class="w-full flex items-center justify-between px-5 py-4 bg-white rounded-md shadow-sm border border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
-                    @click="showRegistrations = !showRegistrations"
-                >
-                    <span class="font-semibold text-sm text-gray-800">Évolution des inscriptions & remplacements</span>
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        class="w-4 h-4 text-gray-400 transition-transform duration-200"
-                        :class="showRegistrations ? 'rotate-180' : ''"
-                    >
-                        <path
-                            fill-rule="evenodd"
-                            d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
-                            clip-rule="evenodd"
-                        />
-                    </svg>
-                </button>
-                <div
-                    class="mt-3 grid grid-cols-1 lg:grid-cols-2 gap-4 xl:gap-8 transition-none"
-                    :class="showRegistrations
-                        ? ''
-                        : 'pointer-events-none fixed -left-[10000px] top-0 z-[-1] w-full max-w-6xl opacity-0'"
-                    :aria-hidden="!showRegistrations"
-                >
-                    <template v-if="loading">
-                        <div
-                            v-for="i in 4"
-                            :key="i"
-                            class="col-span-1"
-                        >
-                            <Skeleton class="mt-3 h-96 rounded-sm bg-gray-200" />
-                        </div>
-                    </template>
-                    <template v-else-if="!preloadCharts">
-                        <div
-                            v-for="i in 4"
-                            :key="`preload-${i}`"
-                            class="col-span-1"
-                        >
-                            <Skeleton class="mt-3 h-96 rounded-sm bg-gray-200" />
-                        </div>
-                    </template>
-                    <template v-else>
-                        <div>
-                            <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
-                                Évolution des inscriptions de cette semaine-ci
-                            </p>
-                            <div class="mt-3 bg-white rounded-sm shadow-md">
-                                <ClientOnly>
-                                    <BarChart
-                                        :data="registrationDailyChartData.data"
-                                        index="name"
-                                        :categories="['count']"
-                                        :x-formatter="xRegistrationDayFormatter"
-                                        :y-formatter="yFormatter"
-                                        :show-all-x-ticks="false"
-                                        :colors="['var(--chart-2)']"
-                                        :legend-labels="registrationDailyChartData.legendLabels"
-                                        class="w-full"
-                                    />
-                                </ClientOnly>
-                            </div>
-                        </div>
-
-                        <div>
-                            <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
-                                Évolution des remplacements de cette semaine-ci
-                            </p>
-                            <div class="mt-3 bg-white rounded-sm shadow-md">
-                                <ClientOnly>
-                                    <BarChart
-                                        :data="replacementDailyChartData.data"
-                                        index="name"
-                                        :categories="['count', 'accepted']"
-                                        :x-formatter="xReplacementDayFormatter"
-                                        :y-formatter="yFormatter"
-                                        :show-all-x-ticks="false"
-                                        :colors="['var(--primary)', 'var(--success)']"
-                                        :legend-labels="replacementDailyChartData.legendLabels"
-                                        class="w-full"
-                                    />
-                                </ClientOnly>
-                            </div>
-                        </div>
-
-                        <div>
-                            <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
-                                Évolution des inscriptions de ce mois-ci
-                            </p>
-                            <div class="mt-3 bg-white rounded-sm shadow-md">
-                                <ClientOnly>
-                                    <BarChart
-                                        :data="registrationMonthlyChartData.data"
-                                        index="name"
-                                        :categories="['count']"
-                                        :x-formatter="xRegistrationMonthFormatter"
-                                        :y-formatter="yFormatter"
-                                        :show-all-x-ticks="false"
-                                        :colors="['var(--chart-2)']"
-                                        :legend-labels="registrationMonthlyChartData.legendLabels"
-                                        class="w-full"
-                                    />
-                                </ClientOnly>
-                            </div>
-                        </div>
-
-                        <div>
-                            <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
-                                Évolution des remplacements de ce mois-ci
-                            </p>
-                            <div class="mt-3 bg-white rounded-sm shadow-md">
-                                <ClientOnly>
-                                    <BarChart
-                                        :data="replacementMonthlyChartData.data"
-                                        index="name"
-                                        :categories="['count', 'accepted']"
-                                        :x-formatter="xReplacementMonthFormatter"
-                                        :y-formatter="yFormatter"
-                                        :show-all-x-ticks="false"
-                                        :colors="['var(--primary)', 'var(--success)']"
-                                        :legend-labels="replacementMonthlyChartData.legendLabels"
-                                        class="w-full"
-                                    />
-                                </ClientOnly>
-                            </div>
-                        </div>
-
-                        <div>
-                            <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
-                                Évolution des inscriptions de l'année
-                            </p>
-                            <div class="mt-3 bg-white rounded-sm shadow-md">
-                                <ClientOnly>
-                                    <BarChart
-                                        :data="registrationChartData.data"
-                                        index="name"
-                                        :categories="['count']"
-                                        :x-formatter="xRegistrationWeekYearFormatter"
-                                        :y-formatter="yFormatter"
-                                        :show-all-x-ticks="false"
-                                        :colors="['var(--chart-2)']"
-                                        :legend-labels="registrationChartData.legendLabels"
-                                        class="w-full"
-                                    />
-                                </ClientOnly>
-                            </div>
-                        </div>
-
-                        <div>
-                            <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
-                                Évolution des remplacements de l'année
-                            </p>
-                            <div class="mt-3 bg-white rounded-sm shadow-md">
-                                <ClientOnly>
-                                    <BarChart
-                                        :data="replacementChartData.data"
-                                        index="name"
-                                        :categories="['count', 'accepted']"
-                                        :x-formatter="xReplacementWeekYearFormatter"
-                                        :y-formatter="yFormatter"
-                                        :show-all-x-ticks="false"
-                                        :colors="['var(--primary)', 'var(--success)']"
-                                        :legend-labels="replacementChartData.legendLabels"
-                                        class="w-full"
-                                    />
-                                </ClientOnly>
-                            </div>
-                        </div>
-
-                        <div
-                            v-if="deletedUserChartData.data.length > 0"
-                            class="col-span-1 lg:col-span-2"
-                        >
-                            <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
-                                Évolution des utilisateurs perdus
-                            </p>
-                            <div class="mt-3 bg-white rounded-sm shadow-md">
-                                <ClientOnly>
-                                    <BarChart
-                                        :data="deletedUserChartData.data"
-                                        index="name"
-                                        :categories="['count']"
-                                        :x-formatter="xDeletedUsersFormatter"
-                                        :y-formatter="yFormatter"
-                                        :show-all-x-ticks="false"
-                                        :colors="['var(--chart-2)']"
-                                        :legend-labels="deletedUserChartData.legendLabels"
-                                        class="w-full"
-                                    />
-                                </ClientOnly>
-                            </div>
-                        </div>
-                    </template>
-                </div>
-            </div>
-
-            <div class="col-span-1 lg:col-span-2">
-                <div>
-                    <button
-                        type="button"
-                        class="w-full flex items-center justify-between px-5 py-4 bg-white rounded-md shadow-sm border border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
-                        @click="showReplacements = !showReplacements"
-                    >
-                        <span class="font-semibold text-sm text-gray-800">Inscriptions par province</span>
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            class="w-4 h-4 text-gray-400 transition-transform duration-200"
-                            :class="showReplacements ? 'rotate-180' : ''"
-                        >
-                            <path
-                                fill-rule="evenodd"
-                                d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
-                                clip-rule="evenodd"
-                            />
-                        </svg>
-                    </button>
-                    <div
-                        v-if="showReplacements"
-                        class="mt-3 space-y-4"
-                    >
-                        <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
-                            Évolution des inscriptions par province
-                        </p>
-
-                        <div class="mt-4 flex gap-8 items-center">
-                            <div class="flex gap-3 items-center">
-                                <input
-                                    v-model="selectedCountryForProvince"
-                                    type="radio"
-                                    value="be"
-                                >
-                                <label
-                                    class="font-medium text-sm"
-                                >
-                                    Belgique
-                                </label>
-                            </div>
-
-                            <div class="flex gap-3 items-center">
-                                <input
-                                    v-model="selectedCountryForProvince"
-                                    type="radio"
-                                    value="fr"
-                                >
-                                <label
-                                    class="font-medium text-sm"
-                                >
-                                    France
-                                </label>
-                            </div>
-                        </div>
-
-                        <div v-if="loading">
-                            <Skeleton class="mt-6 bg-gray-200 rounded-sm h-64" />
-                        </div>
-                        <div
-                            v-else
-                            class="mt-6 bg-white rounded-sm shadow-md p-4"
-                        >
-                            <ClientOnly>
-                                <LineChart
-                                    index="name"
-                                    :data="userByProvince"
-                                    :categories="['inscrits']"
-                                    :x-formatter="xProvinceFormatter"
-                                    :y-formatter="yFormatter"
-                                    :rounded-corners="4"
-                                    :colors="chartLineColors"
-                                    class="pb-8 w-full"
-                                    :legend-labels="{ inscrits: 'Inscrits' }"
-                                />
-                            </ClientOnly>
-                        </div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
+                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">Institutions</p>
+                        <p class="text-xl font-bold text-gray-800 tabular-nums mt-0.5">{{ institutionStats.total }}</p>
+                    </div>
+                    <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
+                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">Inst. BE</p>
+                        <p class="text-xl font-bold text-primary tabular-nums mt-0.5">{{ institutionStats.total_belgian }}</p>
+                    </div>
+                    <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
+                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">Inst. FR</p>
+                        <p class="text-xl font-bold text-success tabular-nums mt-0.5">{{ institutionStats.total_french }}</p>
+                    </div>
+                    <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
+                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">Inst. 30 j</p>
+                        <p class="text-xl font-bold text-orange-600 tabular-nums mt-0.5">{{ institutionStats.last_30_days }}</p>
                     </div>
                 </div>
-            </div>
-
-            <div class="col-span-1 lg:col-span-2">
-                <div>
-                    <button
-                        type="button"
-                        class="w-full flex items-center justify-between px-5 py-4 bg-white rounded-md shadow-sm border border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
-                        @click="showGeography = !showGeography"
-                    >
-                        <span class="font-semibold text-sm text-gray-800">Répartition par code postal</span>
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            class="w-4 h-4 text-gray-400 transition-transform duration-200"
-                            :class="showGeography ? 'rotate-180' : ''"
-                        >
-                            <path
-                                fill-rule="evenodd"
-                                d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
-                                clip-rule="evenodd"
-                            />
-                        </svg>
-                    </button>
-                    <div
-                        v-if="showGeography"
-                        class="mt-3 space-y-6"
-                    >
-                        <p class="ml-2 mb-1 first-letter:uppercase font-semibold text-sm">
-                            Évolution des inscriptions par zone de code postal
-                        </p>
-
-                        <div class="mt-4 flex gap-8 items-center">
-                            <div class="flex gap-3 items-center">
-                                <input
-                                    v-model="selectedCountryForZipCode"
-                                    type="radio"
-                                    value="be"
-                                >
-                                <label
-                                    class="font-medium text-sm"
-                                >
-                                    Belgique
-                                </label>
-                            </div>
-
-                            <div class="flex gap-3 items-center">
-                                <input
-                                    v-model="selectedCountryForZipCode"
-                                    type="radio"
-                                    value="fr"
-                                >
-                                <label
-                                    class="font-medium text-sm"
-                                >
-                                    France
-                                </label>
-                            </div>
-                        </div>
-
-                        <div v-if="loading">
-                            <Skeleton class="mt-6 bg-gray-200 rounded-sm h-96" />
-                        </div>
-                        <div
-                            v-else
-                            class="mt-6 bg-white rounded-sm shadow-md p-4"
-                        >
-                            <ClientOnly>
-                                <AreaChart
-                                    index="name"
-                                    :data="userByZipCode"
-                                    :show-all-x-ticks="false"
-                                    :categories="['inscrits']"
-                                    :x-formatter="xZipCodeFormatter"
-                                    :y-formatter="yFormatter"
-                                    :rounded-corners="4"
-                                    :colors="chartAreaColors"
-                                    class="pb-8 w-full"
-                                    :legend-labels="{ inscrits: 'Inscrits' }"
-                                />
-                            </ClientOnly>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </template>
         </section>
+
+        <!-- Statistiques générales -->
+        <div>
+            <button
+                type="button"
+                class="w-full flex items-center justify-between px-5 py-3.5 bg-white rounded-md shadow-sm border border-gray-100 hover:bg-gray-50 transition-colors"
+                :aria-expanded="showStats"
+                @click="showStats = !showStats"
+            >
+                <span class="font-semibold text-sm text-gray-800">Statistiques détaillées</span>
+                <ChevronDown
+                    class="size-4 text-gray-400 transition-transform duration-200"
+                    :class="showStats ? 'rotate-180' : ''"
+                />
+            </button>
+            <div
+                v-show="showStats"
+                class="mt-3 space-y-4"
+            >
+                <DashboardStatCardAdminGroup
+                    v-for="(report, index) in adminReports"
+                    :key="index"
+                    :title="report.title"
+                    :items="report.items"
+                    :loading="loading"
+                />
+
+                <div>
+                    <p class="mb-2 font-semibold text-sm text-gray-800">
+                        Nouvelles institutions / semaine
+                    </p>
+                    <div
+                        v-if="loading"
+                        class="h-72 rounded-md bg-gray-100 animate-pulse"
+                    />
+                    <div
+                        v-else
+                        class="bg-white rounded-md shadow-sm border border-gray-100 p-2"
+                    >
+                        <ClientOnly>
+                            <BarChart
+                                :data="institutionWeeklyChartData.data"
+                                index="name"
+                                :categories="['Inscrits']"
+                                :x-formatter="xInstitutionWeekFormatter"
+                                :y-formatter="yFormatter"
+                                :show-all-x-ticks="showAllXTicks(institutionWeeklyChartData.data)"
+                                :colors="['var(--chart-3, #8b5cf6)']"
+                                :legend-labels="institutionWeeklyChartData.legendLabels"
+                                class="w-full"
+                            />
+                        </ClientOnly>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Évolutions -->
+        <div>
+            <button
+                type="button"
+                class="w-full flex items-center justify-between px-5 py-3.5 bg-white rounded-md shadow-sm border border-gray-100 hover:bg-gray-50 transition-colors"
+                :aria-expanded="showRegistrations"
+                @click="showRegistrations = !showRegistrations"
+            >
+                <span class="font-semibold text-sm text-gray-800">Évolutions</span>
+                <ChevronDown
+                    class="size-4 text-gray-400 transition-transform duration-200"
+                    :class="showRegistrations ? 'rotate-180' : ''"
+                />
+            </button>
+            <div
+                class="mt-3 grid grid-cols-1 lg:grid-cols-2 gap-4 transition-none"
+                :class="showRegistrations
+                    ? ''
+                    : 'pointer-events-none fixed -left-[10000px] top-0 z-[-1] w-full max-w-6xl opacity-0'"
+                :aria-hidden="!showRegistrations"
+            >
+                <template v-if="loading">
+                    <div
+                        v-for="i in 4"
+                        :key="i"
+                    >
+                        <Skeleton class="h-72 rounded-md bg-gray-200" />
+                    </div>
+                </template>
+                <template v-else-if="!preloadCharts">
+                    <div
+                        v-for="i in 4"
+                        :key="`preload-${i}`"
+                    >
+                        <Skeleton class="h-72 rounded-md bg-gray-200" />
+                    </div>
+                </template>
+                <template v-else>
+                    <div>
+                        <p class="mb-1 font-semibold text-sm text-gray-800">Inscriptions — semaine</p>
+                        <div class="bg-white rounded-md shadow-sm border border-gray-100 p-2">
+                            <ClientOnly>
+                                <BarChart
+                                    :data="registrationDailyChartData.data"
+                                    index="name"
+                                    :categories="['count']"
+                                    :x-formatter="xRegistrationDayFormatter"
+                                    :y-formatter="yFormatter"
+                                    :show-all-x-ticks="false"
+                                    :colors="['var(--chart-2)']"
+                                    :legend-labels="registrationDailyChartData.legendLabels"
+                                    class="w-full"
+                                />
+                            </ClientOnly>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p class="mb-1 font-semibold text-sm text-gray-800">Remplacements — semaine</p>
+                        <div class="bg-white rounded-md shadow-sm border border-gray-100 p-2">
+                            <ClientOnly>
+                                <BarChart
+                                    :data="replacementDailyChartData.data"
+                                    index="name"
+                                    :categories="['count', 'accepted']"
+                                    :x-formatter="xReplacementDayFormatter"
+                                    :y-formatter="yFormatter"
+                                    :show-all-x-ticks="false"
+                                    :colors="['var(--primary)', 'var(--success)']"
+                                    :legend-labels="replacementDailyChartData.legendLabels"
+                                    class="w-full"
+                                />
+                            </ClientOnly>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p class="mb-1 font-semibold text-sm text-gray-800">Inscriptions — mois</p>
+                        <div class="bg-white rounded-md shadow-sm border border-gray-100 p-2">
+                            <ClientOnly>
+                                <BarChart
+                                    :data="registrationMonthlyChartData.data"
+                                    index="name"
+                                    :categories="['count']"
+                                    :x-formatter="xRegistrationMonthFormatter"
+                                    :y-formatter="yFormatter"
+                                    :show-all-x-ticks="false"
+                                    :colors="['var(--chart-2)']"
+                                    :legend-labels="registrationMonthlyChartData.legendLabels"
+                                    class="w-full"
+                                />
+                            </ClientOnly>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p class="mb-1 font-semibold text-sm text-gray-800">Remplacements — mois</p>
+                        <div class="bg-white rounded-md shadow-sm border border-gray-100 p-2">
+                            <ClientOnly>
+                                <BarChart
+                                    :data="replacementMonthlyChartData.data"
+                                    index="name"
+                                    :categories="['count', 'accepted']"
+                                    :x-formatter="xReplacementMonthFormatter"
+                                    :y-formatter="yFormatter"
+                                    :show-all-x-ticks="false"
+                                    :colors="['var(--primary)', 'var(--success)']"
+                                    :legend-labels="replacementMonthlyChartData.legendLabels"
+                                    class="w-full"
+                                />
+                            </ClientOnly>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p class="mb-1 font-semibold text-sm text-gray-800">Inscriptions — année</p>
+                        <div class="bg-white rounded-md shadow-sm border border-gray-100 p-2">
+                            <ClientOnly>
+                                <BarChart
+                                    :data="registrationChartData.data"
+                                    index="name"
+                                    :categories="['count']"
+                                    :x-formatter="xRegistrationWeekYearFormatter"
+                                    :y-formatter="yFormatter"
+                                    :show-all-x-ticks="false"
+                                    :colors="['var(--chart-2)']"
+                                    :legend-labels="registrationChartData.legendLabels"
+                                    class="w-full"
+                                />
+                            </ClientOnly>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p class="mb-1 font-semibold text-sm text-gray-800">Remplacements — année</p>
+                        <div class="bg-white rounded-md shadow-sm border border-gray-100 p-2">
+                            <ClientOnly>
+                                <BarChart
+                                    :data="replacementChartData.data"
+                                    index="name"
+                                    :categories="['count', 'accepted']"
+                                    :x-formatter="xReplacementWeekYearFormatter"
+                                    :y-formatter="yFormatter"
+                                    :show-all-x-ticks="false"
+                                    :colors="['var(--primary)', 'var(--success)']"
+                                    :legend-labels="replacementChartData.legendLabels"
+                                    class="w-full"
+                                />
+                            </ClientOnly>
+                        </div>
+                    </div>
+
+                    <div
+                        v-if="deletedUserChartData.data.length > 0"
+                        class="lg:col-span-2"
+                    >
+                        <p class="mb-1 font-semibold text-sm text-gray-800">Utilisateurs perdus</p>
+                        <div class="bg-white rounded-md shadow-sm border border-gray-100 p-2">
+                            <ClientOnly>
+                                <BarChart
+                                    :data="deletedUserChartData.data"
+                                    index="name"
+                                    :categories="['count']"
+                                    :x-formatter="xDeletedUsersFormatter"
+                                    :y-formatter="yFormatter"
+                                    :show-all-x-ticks="false"
+                                    :colors="['var(--chart-2)']"
+                                    :legend-labels="deletedUserChartData.legendLabels"
+                                    class="w-full"
+                                />
+                            </ClientOnly>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- Géographie -->
+        <div>
+            <button
+                type="button"
+                class="w-full flex items-center justify-between px-5 py-3.5 bg-white rounded-md shadow-sm border border-gray-100 hover:bg-gray-50 transition-colors"
+                :aria-expanded="showGeography"
+                @click="showGeography = !showGeography"
+            >
+                <span class="font-semibold text-sm text-gray-800">Géographie</span>
+                <ChevronDown
+                    class="size-4 text-gray-400 transition-transform duration-200"
+                    :class="showGeography ? 'rotate-180' : ''"
+                />
+            </button>
+            <div
+                v-if="showGeography"
+                class="mt-3 space-y-4"
+            >
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                    <div
+                        class="inline-flex rounded-md border border-gray-200 bg-white p-0.5 shadow-sm"
+                        role="group"
+                        aria-label="Pays"
+                    >
+                        <button
+                            type="button"
+                            class="rounded px-3 py-1.5 text-sm font-medium transition-colors"
+                            :class="selectedCountry === 'be'
+                                ? 'bg-primary text-white shadow-sm'
+                                : 'text-gray-600 hover:bg-gray-50'"
+                            :aria-pressed="selectedCountry === 'be'"
+                            @click="selectedCountry = 'be'"
+                        >
+                            Belgique
+                        </button>
+                        <button
+                            type="button"
+                            class="rounded px-3 py-1.5 text-sm font-medium transition-colors"
+                            :class="selectedCountry === 'fr'
+                                ? 'bg-success text-white shadow-sm'
+                                : 'text-gray-600 hover:bg-gray-50'"
+                            :aria-pressed="selectedCountry === 'fr'"
+                            @click="selectedCountry = 'fr'"
+                        >
+                            France
+                        </button>
+                    </div>
+
+                    <div
+                        class="inline-flex rounded-md border border-gray-200 bg-white p-0.5 shadow-sm"
+                        role="group"
+                        aria-label="Vue géographique"
+                    >
+                        <button
+                            type="button"
+                            class="rounded px-3 py-1.5 text-sm font-medium transition-colors"
+                            :class="geoView === 'province'
+                                ? 'bg-gray-800 text-white shadow-sm'
+                                : 'text-gray-600 hover:bg-gray-50'"
+                            :aria-pressed="geoView === 'province'"
+                            @click="geoView = 'province'"
+                        >
+                            Provinces
+                        </button>
+                        <button
+                            type="button"
+                            class="rounded px-3 py-1.5 text-sm font-medium transition-colors"
+                            :class="geoView === 'zip'
+                                ? 'bg-gray-800 text-white shadow-sm'
+                                : 'text-gray-600 hover:bg-gray-50'"
+                            :aria-pressed="geoView === 'zip'"
+                            @click="geoView = 'zip'"
+                        >
+                            Codes postaux
+                        </button>
+                    </div>
+                </div>
+
+                <div
+                    v-if="loading"
+                    class="h-72 rounded-md bg-gray-100 animate-pulse"
+                />
+                <div
+                    v-else
+                    class="bg-white rounded-md shadow-sm border border-gray-100 p-4"
+                >
+                    <ClientOnly>
+                        <LineChart
+                            v-if="geoView === 'province'"
+                            index="name"
+                            :data="userByProvince"
+                            :categories="['inscrits']"
+                            :x-formatter="xProvinceFormatter"
+                            :y-formatter="yFormatter"
+                            :rounded-corners="4"
+                            :colors="chartLineColors"
+                            class="pb-8 w-full"
+                            :legend-labels="{ inscrits: 'Inscrits' }"
+                        />
+                        <AreaChart
+                            v-else
+                            index="name"
+                            :data="userByZipCode"
+                            :show-all-x-ticks="false"
+                            :categories="['inscrits']"
+                            :x-formatter="xZipCodeFormatter"
+                            :y-formatter="yFormatter"
+                            :rounded-corners="4"
+                            :colors="chartAreaColors"
+                            class="pb-8 w-full"
+                            :legend-labels="{ inscrits: 'Inscrits' }"
+                        />
+                    </ClientOnly>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { RefreshCw, Send, Users } from 'lucide-vue-next';
+import { ChevronDown, RefreshCw, Send, Users } from 'lucide-vue-next';
 import { DashboardStatCardAdminGroup } from '#components';
 import { BarChart } from '@/components/ui/chart-bar';
 import { AreaChart } from '@/components/ui/chart-area';
+import { LineChart } from '@/components/ui/chart-line';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useReports } from '~/composables/useReports';
 
@@ -512,11 +431,12 @@ const { isAdmin, isCommunityManager } = useAuth();
 const loading = computed(() => reportsLoading.value || !reports.value);
 const { mapWeeklyStatistics, mapDailyStatistics, createXFormatter, yFormatter } = useChart();
 
-const showStats = ref(true);
+const showStats = ref(false);
 const showRegistrations = ref(false);
-const showReplacements = ref(false);
 const showGeography = ref(false);
 const preloadCharts = ref(false);
+const selectedCountry = ref<'be' | 'fr'>('be');
+const geoView = ref<'province' | 'zip'>('province');
 
 watch(() => reports.value, (data) => {
     if (!data || preloadCharts.value) {
@@ -544,16 +464,17 @@ function showAllXTicks(data: unknown[] = []) {
     return data.length > 0 && data.length <= 12;
 }
 
-const selectedCountryForProvince = ref('be');
-const selectedCountryForZipCode = ref('be');
-
 const userBelgianCount = computed(() => reports.value.registration_statistics?.total_belgian);
 const userFrenchCount = computed(() => reports.value.registration_statistics?.total_french);
+const userTotal = computed(() => reports.value.registration_statistics?.total ?? 0);
+const userLast30 = computed(() => reports.value.registration_statistics?.last_30_days ?? 0);
+const acceptedLast30 = computed(() => reports.value.accepted_replacement_statistics?.last_30_days ?? 0);
+const responsesLast30 = computed(() => reports.value.replacement_response_statistics?.last_30_days ?? 0);
 
 const userByProvince = computed(() => {
     const userByProvinces = reports.value?.registration_statistics?.group_by_province ?? [];
 
-    const countryData = userByProvinces.find(item => item.country === (selectedCountryForProvince.value === 'be' ? 'Belgique' : 'France'))?.data ?? [];
+    const countryData = userByProvinces.find(item => item.country === (selectedCountry.value === 'be' ? 'Belgique' : 'France'))?.data ?? [];
 
     return countryData.map((item: { province: string; total: number }) => ({
         name: item.province,
@@ -564,7 +485,7 @@ const userByProvince = computed(() => {
 const userByZipCode = computed(() => {
     const userByZipCodes = reports.value?.registration_statistics?.group_by_zip_code ?? [];
 
-    const countryData = userByZipCodes.find(item => item.country === (selectedCountryForZipCode.value === 'be' ? 'Belgique' : 'France'))?.data ?? [];
+    const countryData = userByZipCodes.find(item => item.country === (selectedCountry.value === 'be' ? 'Belgique' : 'France'))?.data ?? [];
 
     return countryData.map((item: { zip_code: string; total: number }) => ({
         name: item.zip_code,
@@ -573,11 +494,11 @@ const userByZipCode = computed(() => {
 });
 
 const chartLineColors = computed(() => {
-    return [selectedCountryForProvince.value === 'be' ? 'var(--primary)' : 'var(--success)'];
+    return [selectedCountry.value === 'be' ? 'var(--primary)' : 'var(--success)'];
 });
 
 const chartAreaColors = computed(() => {
-    return [selectedCountryForZipCode.value === 'be' ? 'var(--primary)' : 'var(--success)'];
+    return [selectedCountry.value === 'be' ? 'var(--primary)' : 'var(--success)'];
 });
 
 const registrationDailyChartData = computed(() => {
@@ -713,7 +634,7 @@ const institutionStats = computed(() => {
 const institutionWeeklyChartData = computed(() => {
     const raw = institutionStats.value.weeks_year ?? [];
     const data = raw.map((item: { name: number; count: number }) => ({
-        name: item.name, // number, pas string
+        name: item.name,
         Inscrits: item.count,
     }));
 
@@ -727,24 +648,3 @@ const xInstitutionWeekFormatter = computed(() =>
     createXFormatter(computed(() => institutionWeeklyChartData.value.data)),
 );
 </script>
-
-<style scoped>
-.no-scrollbar::-webkit-scrollbar {
-    width: 4px;
-    height: 1px;
-}
-
-.no-scrollbar::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-}
-
-.no-scrollbar::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.no-scrollbar {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
-}
-</style>

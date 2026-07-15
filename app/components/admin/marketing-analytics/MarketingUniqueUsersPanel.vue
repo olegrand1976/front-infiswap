@@ -2,15 +2,13 @@
     <section class="px-4 pb-4">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
             <div class="flex items-center gap-2">
-                <h3 class="font-semibold text-sm text-gray-800">
-                    Utilisateurs connectés (période)
-                </h3>
                 <Badge
                     v-if="count > 0"
                     class="bg-primary text-white"
                 >
                     {{ count }}
                 </Badge>
+                <span class="text-xs text-gray-500">sur la période</span>
             </div>
             <Select
                 :model-value="accountType"

@@ -1,10 +1,18 @@
 <template>
-    <DashboardStatCardAdminGroup
-        title="Fréquentation"
-        :items="items"
-        :loading="loading"
-        parent-class="px-4 pb-2"
-    />
+    <div class="px-4 pb-2 space-y-3">
+        <DashboardStatCardAdminGroup
+            title="Aujourd'hui"
+            :items="todayItems"
+            :loading="loading"
+            parent-class=""
+        />
+        <DashboardStatCardAdminGroup
+            title="Période"
+            :items="periodItems"
+            :loading="loading"
+            parent-class=""
+        />
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -16,39 +24,52 @@ const props = defineProps<{
     loading?: boolean;
 }>();
 
-const items = computed(() => {
+const todayItems = computed(() => {
     const data = props.attendance;
 
     return [
         {
             value: data?.today.logins ?? 0,
-            label: 'Connexions aujourd\'hui',
+            label: 'Connexions',
             colorClass: 'bg-emerald-700',
             icon: LogIn,
         },
         {
             value: data?.today.unique_users ?? 0,
-            label: 'Utilisateurs uniques (jour)',
+            label: 'Utilisateurs uniques',
             colorClass: 'bg-blue-600',
             icon: Users,
         },
         {
             value: data?.today.by_account_type.nurse.unique_users ?? 0,
-            label: 'Infirmières connectées (jour)',
+            label: 'Infirmières',
             colorClass: 'bg-violet-600',
             icon: Stethoscope,
         },
         {
             value: data?.today.by_account_type.institution.unique_users ?? 0,
-            label: 'Institutions connectées (jour)',
+            label: 'Institutions',
             colorClass: 'bg-amber-600',
             icon: Building2,
         },
+    ];
+});
+
+const periodItems = computed(() => {
+    const data = props.attendance;
+
+    return [
         {
             value: data?.period.unique_users ?? 0,
-            label: `Utilisateurs uniques (${data?.period.logins ?? 0} connexions période)`,
+            label: 'Utilisateurs uniques',
             colorClass: 'bg-slate-600',
             icon: Users,
+        },
+        {
+            value: data?.period.logins ?? 0,
+            label: 'Connexions',
+            colorClass: 'bg-slate-500',
+            icon: LogIn,
         },
     ];
 });
