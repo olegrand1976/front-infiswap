@@ -55,18 +55,18 @@ class MainShell extends ConsumerWidget {
               activeIcon: Icon(Icons.search),
               label: 'Remplacements',
             ),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Badge(
                 isLabelVisible: _notificationCount > 0,
                 backgroundColor: AppColors.coral,
                 label: Text('$_notificationCount'),
-                child: const Icon(Icons.notifications_outlined),
+                child: Icon(Icons.notifications_outlined),
               ),
               activeIcon: Badge(
                 isLabelVisible: _notificationCount > 0,
                 backgroundColor: AppColors.coral,
                 label: Text('$_notificationCount'),
-                child: const Icon(Icons.notifications),
+                child: Icon(Icons.notifications),
               ),
               label: 'Notifications',
             ),

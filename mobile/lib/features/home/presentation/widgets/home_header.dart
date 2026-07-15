@@ -26,13 +26,11 @@ class HomeHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final dark = Theme.of(context).brightness == Brightness.dark;
     final now = DateTime.now();
     final greeting = greetingForHour(now.hour);
     final firstName = session.firstName;
     final imageUrl = session.profileImageUrl(apiBaseUrl);
     final dateLabel = _capitalize(_formatFrenchDate(now));
-    final taglineColor = colors.primary;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

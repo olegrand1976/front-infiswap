@@ -22,3 +22,20 @@ String formatDateDmy(DateTime date) {
   final year = date.year.toString().padLeft(4, '0');
   return '$day/$month/$year';
 }
+
+// showTimePicker forced to 24h regardless of system format
+Future<void> pickTimeOfDay24h(
+  BuildContext context, {
+  required TimeOfDay? initial,
+  required ValueChanged<TimeOfDay> onPicked,
+}) async {
+  final picked = await showTimePicker(
+    context: context,
+    initialTime: initial ?? TimeOfDay.now(),
+    builder: (context, child) => MediaQuery(
+      data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+      child: child!,
+    ),
+  );
+  if (picked != null) onPicked(picked);
+}

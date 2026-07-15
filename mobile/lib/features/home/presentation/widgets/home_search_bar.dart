@@ -11,13 +11,12 @@ class HomeSearchBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.appColors;
-    final dark = HomeDecorations.isDark(context);
 
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: () => ref.read(shellTabIndexProvider.notifier).state = 1,
-        borderRadius: BorderRadius.circular(7),
+        borderRadius: BorderRadius.circular(16),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: HomeDecorations.searchField(context),

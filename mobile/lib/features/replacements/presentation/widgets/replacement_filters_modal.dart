@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../models/replacement_search_params.dart';
+import 'section_label.dart';
 
 class ReplacementFiltersModal extends StatefulWidget {
   const ReplacementFiltersModal({
@@ -156,7 +157,7 @@ class _ReplacementFiltersModalState extends State<ReplacementFiltersModal> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _SectionLabel(label: 'Pays', colors: colors),
+                      const SectionLabel(label: 'Pays'),
                       const SizedBox(height: 10),
                       _OptionChips(
                         options: replacementCountryLabels,
@@ -165,7 +166,7 @@ class _ReplacementFiltersModalState extends State<ReplacementFiltersModal> {
                             setState(() => _country = value),
                       ),
                       const SizedBox(height: 20),
-                      _SectionLabel(label: 'Type', colors: colors),
+                      const SectionLabel(label: 'Type'),
                       const SizedBox(height: 10),
                       _OptionChips(
                         options: replacementTypeLabels,
@@ -174,7 +175,7 @@ class _ReplacementFiltersModalState extends State<ReplacementFiltersModal> {
                             setState(() => _filterType = value),
                       ),
                       const SizedBox(height: 20),
-                      _SectionLabel(label: 'Rôle', colors: colors),
+                      const SectionLabel(label: 'Rôle'),
                       const SizedBox(height: 10),
                       _OptionChips(
                         options: replacementRoleLabels,
@@ -183,7 +184,7 @@ class _ReplacementFiltersModalState extends State<ReplacementFiltersModal> {
                             setState(() => _filterRole = value),
                       ),
                       const SizedBox(height: 20),
-                      _SectionLabel(label: 'Jours', colors: colors),
+                      const SectionLabel(label: 'Jours'),
                       const SizedBox(height: 10),
                       Wrap(
                         spacing: 8,
@@ -246,25 +247,6 @@ class _ReplacementFiltersModalState extends State<ReplacementFiltersModal> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _SectionLabel extends StatelessWidget {
-  const _SectionLabel({required this.label, required this.colors});
-
-  final String label;
-  final AppPalette colors;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      label,
-      style: TextStyle(
-        color: colors.textPrimary,
-        fontSize: 14,
-        fontWeight: FontWeight.w600,
       ),
     );
   }

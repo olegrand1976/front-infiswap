@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import 'section_label.dart';
 
 class ReplacementSearchModal extends StatefulWidget {
   const ReplacementSearchModal({
@@ -154,7 +155,7 @@ class _ReplacementSearchModalState extends State<ReplacementSearchModal> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _SectionLabel(label: 'Codes postaux', colors: colors),
+                      const SectionLabel(label: 'Codes postaux'),
                       const SizedBox(height: 8),
                       _TagInputRow(
                         controller: _zipController,
@@ -176,7 +177,7 @@ class _ReplacementSearchModalState extends State<ReplacementSearchModal> {
                         ),
                       ],
                       const SizedBox(height: 20),
-                      _SectionLabel(label: 'Villes', colors: colors),
+                      const SectionLabel(label: 'Villes'),
                       const SizedBox(height: 8),
                       _TagInputRow(
                         controller: _cityController,
@@ -233,25 +234,6 @@ class _ReplacementSearchModalState extends State<ReplacementSearchModal> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _SectionLabel extends StatelessWidget {
-  const _SectionLabel({required this.label, required this.colors});
-
-  final String label;
-  final AppPalette colors;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      label,
-      style: TextStyle(
-        color: colors.textPrimary,
-        fontSize: 14,
-        fontWeight: FontWeight.w600,
       ),
     );
   }

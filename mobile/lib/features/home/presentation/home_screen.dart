@@ -5,13 +5,13 @@ import '../../../core/api/api_exception.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../auth/providers/auth_session_provider.dart';
+import '../../replacements/models/dashboard_replacements_summary.dart';
+import '../../replacements/models/replacement_item.dart';
 import '../../replacements/presentation/replacement_detail_screen.dart';
-import '../../shell/providers/shell_tab_index_provider.dart';
 import '../data/home_dashboard_notifier.dart';
-import 'widgets/home_decorations.dart';
+import 'widgets/home_content_rails.dart';
 import 'widgets/home_header.dart';
 import 'widgets/home_quick_actions.dart';
-import 'widgets/home_recent_card.dart';
 import 'widgets/home_search_bar.dart';
 import 'widgets/home_stats_row.dart';
 
@@ -49,6 +49,15 @@ class HomeScreen extends ConsumerWidget {
             onRetry: notifier.refresh,
           ),
           data: (dashboard) {
+            final summary = dashboard.replacements;
+            void onCardTap(ReplacementItem item) {
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => ReplacementDetailScreen(item: item),
+                ),
+              );
+            }
+
             return RefreshIndicator(
               color: colors.primary,
               onRefresh: notifier.refresh,
@@ -66,58 +75,17 @@ class HomeScreen extends ConsumerWidget {
                   const SizedBox(height: 24),
                   const HomeQuickActions(),
                   const SizedBox(height: 24),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Remplacements récents',
-                        style: TextStyle(
-                          color: colors.textPrimary,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () =>
-                            ref.read(shellTabIndexProvider.notifier).state = 1,
-                        child: Text(
-                          'Voir tout',
-                          style: TextStyle(
-                            color: HomeDecorations.accentMint(context),
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ],
+                  HomeReplacementsRail(
+                    items: _replacementsRailItems(summary),
+                    total: summary.replacementsTotal,
+                    onCardTap: onCardTap,
                   ),
-                  const SizedBox(height: 10),
-                  if (dashboard.recentReplacements.isEmpty)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 32),
-                      child: Center(
-                        child: Text(
-                          'Aucun remplacement récent',
-                          style: TextStyle(color: colors.textSecondary),
-                        ),
-                      ),
-                    )
-                  else
-                    ...dashboard.recentReplacements.map(
-                      (item) => Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: HomeRecentCard(
-                          item: item,
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute<void>(
-                                builder: (_) =>
-                                    ReplacementDetailScreen(item: item),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
+                  const SizedBox(height: 24),
+                  HomeMissionsRail(
+                    items: summary.missions,
+                    total: summary.missionsTotal,
+                    onCardTap: onCardTap,
+                  ),
                 ],
               ),
             );
@@ -126,6 +94,25 @@ class HomeScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+const _replacementsRailTargetCount = 6;
+
+// Boosted first, always — then top up with the most recent open
+// replacements (deduplicated) until the rail has a decent number of cards,
+// since boosted alone is often just one or two items.
+List<ReplacementItem> _replacementsRailItems(DashboardReplacementsSummary summary) {
+  final items = <ReplacementItem>[...summary.boostedReplacements];
+  final seenIds = items.map((item) => item.id).toSet();
+
+  for (final item in summary.recentReplacements) {
+    if (items.length >= _replacementsRailTargetCount) break;
+    if (seenIds.contains(item.id)) continue;
+    items.add(item);
+    seenIds.add(item.id);
+  }
+
+  return items;
 }
 
 class _ErrorState extends StatelessWidget {

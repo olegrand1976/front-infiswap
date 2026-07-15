@@ -2,8 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/api/api_client.dart';
 import '../../replacements/data/replacements_repository.dart';
-import '../../replacements/models/replacement_item.dart';
-import '../../replacements/models/replacement_search_params.dart';
+import '../../replacements/models/dashboard_replacements_summary.dart';
 import '../models/home_dashboard_data.dart';
 import '../models/user_activity_stats.dart';
 
@@ -19,15 +18,13 @@ class HomeDashboardRepository {
 
   Future<HomeDashboardData> fetch(int userId) async {
     final statsFuture = _fetchActivity(userId);
-    final recentFuture = _replacements.fetchMergedList(
-      const ReplacementSearchParams(perPage: 5),
-    );
+    final summaryFuture = _replacements.fetchDashboardSummary();
 
-    final results = await Future.wait<Object>([statsFuture, recentFuture]);
+    final results = await Future.wait<Object>([statsFuture, summaryFuture]);
 
     return HomeDashboardData(
       stats: results[0] as UserActivityStats,
-      recentReplacements: results[1] as List<ReplacementItem>,
+      replacements: results[1] as DashboardReplacementsSummary,
     );
   }
 

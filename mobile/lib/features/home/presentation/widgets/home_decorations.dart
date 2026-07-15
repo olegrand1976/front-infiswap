@@ -9,7 +9,7 @@ abstract final class HomeDecorations {
   static BoxDecoration card(
     BuildContext context, {
     Color? accent,
-    double radius = 7,
+    double radius = 16,
   }) {
     final colors = context.appColors;
     final dark = isDark(context);
@@ -45,7 +45,7 @@ abstract final class HomeDecorations {
 
     return BoxDecoration(
       color: colors.inputBackground,
-      borderRadius: BorderRadius.circular(7),
+      borderRadius: BorderRadius.circular(16),
       border: Border.all(
         color: dark
             ? colors.secondary.withValues(alpha: 0.55)

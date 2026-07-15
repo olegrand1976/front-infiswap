@@ -46,7 +46,8 @@ class ReplacementsScreen extends ConsumerWidget {
                 resultCount: resultCount,
                 country: params.country,
                 hasActiveFilters: params.hasActiveFilters,
-                searchSummary: searchSummary.isEmpty ? null : searchSummary.join(', '),
+                searchSummary:
+                    searchSummary.isEmpty ? null : searchSummary.join(', '),
                 filterType: params.filterType,
                 onSearchTap: () => ReplacementSearchModal.show(
                   context,
@@ -228,10 +229,6 @@ class _ErrorState extends StatelessWidget {
   }
 }
 
-/// En-tête de liste — titre + compteur, barre de recherche proéminente
-/// (plutôt qu'une icône parmi d'autres) et onglets de type rapides, pour que
-/// les trois actions (chercher, filtrer, créer — celle-ci en FAB) se
-/// distinguent d'un coup d'œil au lieu de se ressembler.
 class _ListHeader extends StatelessWidget {
   const _ListHeader({
     required this.resultCount,
@@ -293,7 +290,8 @@ class _ListHeader extends StatelessWidget {
                 ],
               ),
             ),
-            _FilterButton(hasActiveFilters: hasActiveFilters, onTap: onFilterTap),
+            _FilterButton(
+                hasActiveFilters: hasActiveFilters, onTap: onFilterTap),
           ],
         ),
         const SizedBox(height: 12),
@@ -385,7 +383,10 @@ class _SearchPill extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
-            BoxShadow(color: colors.shadow, blurRadius: 12, offset: const Offset(0, 4)),
+            BoxShadow(
+                color: colors.shadow,
+                blurRadius: 12,
+                offset: const Offset(0, 4)),
           ],
         ),
         child: Row(
@@ -411,8 +412,10 @@ class _SearchPill extends StatelessWidget {
                 child: Container(
                   width: 20,
                   height: 20,
-                  decoration: BoxDecoration(color: colors.background, shape: BoxShape.circle),
-                  child: Icon(Icons.close, size: 12, color: colors.textSecondary),
+                  decoration: BoxDecoration(
+                      color: colors.background, shape: BoxShape.circle),
+                  child:
+                      Icon(Icons.close, size: 12, color: colors.textSecondary),
                 ),
               ),
           ],
@@ -422,11 +425,6 @@ class _SearchPill extends StatelessWidget {
   }
 }
 
-/// Bascule rapide Tous/Classique/Urgent — raccourci vers `filterType` sans
-/// ouvrir la feuille complète de filtres. Ne couvre pas les missions : le
-/// merged-search de l'API (`SearchMergedService`) n'accepte `filters.type`
-/// que pour `classic`/`immediate`, les missions étant incluses/exclues par
-/// le mode de recherche, pas par ce filtre.
 class _TypeTabs extends StatelessWidget {
   const _TypeTabs({required this.selected, required this.onSelect});
 
@@ -457,7 +455,8 @@ class _TypeTabs extends StatelessWidget {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: isOn ? colors.textPrimary : colors.card,
-                border: Border.all(color: isOn ? colors.textPrimary : colors.divider),
+                border: Border.all(
+                    color: isOn ? colors.textPrimary : colors.divider),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
@@ -588,9 +587,6 @@ class _ReplacementCard extends StatelessWidget {
   }
 }
 
-/// Badge de type — couleur sémantique fixe (`AppColors.urgent`/`mission`),
-/// « Classique » restant neutre à dessein pour que l'urgence garde le seul
-/// badge coloré et alarmant de la liste.
 class _TypeBadge extends StatelessWidget {
   const _TypeBadge({required this.item});
 
@@ -624,7 +620,8 @@ class _TypeBadge extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
-      decoration: BoxDecoration(color: background, borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(
+          color: background, borderRadius: BorderRadius.circular(8)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
