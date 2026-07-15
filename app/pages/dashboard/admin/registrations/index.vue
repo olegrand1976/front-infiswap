@@ -64,6 +64,7 @@ import { formatPhoneNumber } from '~/lib/utils';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
 import { PERPAGE } from '~/lib/constants';
 import { Switch } from '~/components/ui/switch';
+import { hasPaidPlatformAccess, isNurseSubjectToPlatformAccessPayment } from '~/utils/platformAccess';
 
 useHead({ title: 'Inscriptions au cours d\'une période' });
 
@@ -256,26 +257,19 @@ const columns: ColumnDef<User>[] = [
         },
     },
     {
-        accessorKey: 'ambassador',
-        header: 'Inficoncept',
+        accessorKey: 'platform_access_paid_at',
+        header: 'Réseau à vie',
         cell: ({ row }) => {
             const user = row.original as User;
 
-            const currentValue = (() => {
-                const mods = user.last_product_modifications ?? [];
-                const found = mods.find(p => (p.product_name || '').toLowerCase().includes('inficoncept'));
-                if (found !== undefined && found.activate !== undefined && found.activate !== null) {
-                    return Number(found.activate);
-                }
-                if (user.ambassador !== undefined && user.ambassador !== null) {
-                    return Number(user.ambassador);
-                }
-                return 0;
-            })();
+            if (!isNurseSubjectToPlatformAccessPayment(user)) {
+                return h('div', { class: 'text-center text-muted-foreground' }, '—');
+            }
+
             return h('div', { class: 'flex justify-center' }, [
                 h(Switch, {
                     class: 'mx-auto text-center',
-                    checked: currentValue === 1,
+                    checked: hasPaidPlatformAccess(user),
                     disabled: true,
                 }),
             ]);

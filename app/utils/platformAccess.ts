@@ -42,6 +42,20 @@ export function hasPaidPlatformAccess(user: { platform_access_paid_at?: string |
     return Boolean(user?.platform_access_paid_at);
 }
 
+/** Infirmière inscrite après le cutoff (cotisation réseau à vie requise). */
+export function isNurseSubjectToPlatformAccessPayment(user: {
+    roles?: string[];
+    account_type?: string | null;
+    created_at?: string | null;
+} | null | undefined): boolean {
+    if (!user) {
+        return false;
+    }
+
+    return resolvePlatformAccessRoles(user).includes('nurse')
+        && isRegisteredAfterPlatformAccessCutoff(user.created_at);
+}
+
 /** Badge header : infirmière ayant souscrit l'accès réseau (post-cutoff + payé). */
 export function showsPaidNetworkAccessBadge(user: {
     roles?: string[];
