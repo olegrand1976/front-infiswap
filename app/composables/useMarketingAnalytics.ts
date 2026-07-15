@@ -52,6 +52,15 @@ export type MarketingUnverifiedUser = {
     last_resend_at: string | null;
 };
 
+export type MarketingRecentlyVerifiedUser = {
+    id: number;
+    full_name: string;
+    email: string;
+    account_type: string;
+    created_at: string | null;
+    email_verified_at: string | null;
+};
+
 export type MarketingAnalyticsOverview = {
     period: {
         from: string;
@@ -128,13 +137,25 @@ export const useMarketingAnalytics = () => {
         );
     };
 
-    const getUnverifiedEmails = async (page = 1, perPage = 25) => {
+    const getUnverifiedEmails = async (
+        page = 1,
+        perPage = 25,
+        verifiedPage = 1,
+        verifiedPerPage = 25,
+    ) => {
         const params = new URLSearchParams({
             page: String(page),
             per_page: String(perPage),
+            verified_page: String(verifiedPage),
+            verified_per_page: String(verifiedPerPage),
         });
 
-        return await $apifetch<{ users: MarketingUnverifiedUser[]; count: number }>(
+        return await $apifetch<{
+            users: MarketingUnverifiedUser[];
+            count: number;
+            verified_recent: MarketingRecentlyVerifiedUser[];
+            verified_recent_count: number;
+        }>(
             `api/admin/marketing-analytics/unverified-emails?${params.toString()}`,
         );
     };
