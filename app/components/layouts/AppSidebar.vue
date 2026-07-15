@@ -200,6 +200,7 @@ const {
     isCollaborator,
     isCommunityManager,
     isSaleRepresentative,
+    canAccessMarketingAnalytics,
     isMedical,
     isInstitution,
     isInstitutionAdmin,
@@ -510,6 +511,12 @@ const adminNavigationItems = computed<NavigationItem[]>(() => [
         visible: true,
     },
     {
+        label: 'Suivi marketing',
+        route: '/dashboard/admin/marketing-analytics',
+        icon: BarChart3,
+        visible: canAccessMarketingAnalytics.value,
+    },
+    {
         label: 'Alertes',
         route: '/dashboard/admin/alerts',
         icon: ShieldAlert,
@@ -617,7 +624,8 @@ const navigationItems = computed(() => {
                     || i.route.includes('/users')
                     || i.route.includes('/users/crm')
                     || i.route.includes('/crm/documentation')
-                    || i.route.includes('/home-management'),
+                    || i.route.includes('/home-management')
+                    || i.route.includes('/marketing-analytics'),
             );
         case 'sale_representative':
             return items.filter(
@@ -626,7 +634,8 @@ const navigationItems = computed(() => {
                     || i.route.includes('/crm/documentation')
                     || i.route.includes('/products')
                     || i.route.includes('/contracts/nurstech')
-                    || i.route.includes('/contracts/institutions'),
+                    || i.route.includes('/contracts/institutions')
+                    || i.route.includes('/marketing-analytics'),
             );
         case 'collaborator':
         case 'medical':
