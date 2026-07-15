@@ -5,11 +5,11 @@
         </h3>
         <div
             v-if="loading"
-            class="h-72 rounded-md bg-gray-100 animate-pulse"
+            class="h-64 rounded-md bg-gray-100 animate-pulse"
         />
         <div
             v-else-if="chartData.length === 0"
-            class="rounded-md border border-dashed border-gray-200 bg-white p-6 text-sm text-gray-500 h-72 flex items-center justify-center"
+            class="rounded-md border border-dashed border-gray-200 p-6 text-sm text-gray-500 h-64 flex items-center justify-center"
         >
             Aucune page vue sur la période.
         </div>
@@ -21,7 +21,7 @@
                 :colors="['var(--chart-1, #2563eb)']"
                 :legend-labels="['Vues']"
                 :x-tick-rotation="-35"
-                class="w-full bg-white rounded-md shadow-sm border border-gray-100 p-2 h-72"
+                class="w-full max-w-full h-64"
             />
         </ClientOnly>
     </div>

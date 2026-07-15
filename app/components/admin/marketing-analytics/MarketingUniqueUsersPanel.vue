@@ -1,6 +1,6 @@
 <template>
-    <section class="px-4 pb-4">
-        <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+    <section class="min-w-0 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-3">
             <div class="flex items-center gap-2">
                 <Badge
                     v-if="count > 0"

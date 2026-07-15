@@ -1,17 +1,17 @@
 <template>
-    <div class="w-full">
+    <div class="w-full min-w-0">
         <DashboardAdminPageHeader title="Suivi marketing & fréquentation" />
 
-        <DashboardAdminPageContent>
+        <DashboardAdminPageContent class="overflow-hidden">
             <template v-if="canAccess">
-                <!-- Toolbar période -->
-                <div class="sticky top-0 z-10 px-4 pb-3 pt-1 bg-gray-50/95 backdrop-blur-sm border-b border-gray-100 mb-3">
-                    <div class="flex flex-wrap items-center justify-between gap-3">
+                <div class="px-4 sm:px-5 py-4 space-y-5 min-w-0">
+                    <!-- Toolbar période -->
+                    <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-gray-100">
                         <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">
                             Période d'analyse
                         </p>
                         <div
-                            class="inline-flex rounded-md border border-gray-200 bg-white p-0.5 shadow-sm"
+                            class="inline-flex rounded-md border border-gray-200 bg-gray-50 p-0.5"
                             role="group"
                             aria-label="Période"
                         >
@@ -22,7 +22,7 @@
                                 class="rounded px-3 py-1.5 text-sm font-medium transition-colors"
                                 :class="selectedPeriod === option.value
                                     ? 'bg-primary text-white shadow-sm'
-                                    : 'text-gray-600 hover:bg-gray-50'"
+                                    : 'text-gray-600 hover:bg-white'"
                                 :aria-pressed="selectedPeriod === option.value"
                                 @click="onPeriodChange(option.value)"
                             >
@@ -30,118 +30,121 @@
                             </button>
                         </div>
                     </div>
-                </div>
 
-                <!-- Zone Scan -->
-                <section aria-label="Scan KPIs">
-                    <MarketingAttendanceKpiCards
-                        :attendance="overview?.attendance ?? null"
-                        :loading="loading"
-                    />
-
-                    <MarketingStripeRevenueSummary
-                        :kpis="overview?.revenue ?? null"
-                        :loading="loading"
-                    />
-
-                    <MarketingFunnelPanel
-                        :conversion="overview?.conversion ?? null"
-                        :journey="overview?.journey_emails ?? null"
-                        :partners="overview?.partners ?? null"
-                        :acquisition="overview?.acquisition ?? null"
-                        :loading="loading"
-                    />
-                </section>
-
-                <!-- Zone Tendances -->
-                <section
-                    class="grid grid-cols-1 lg:grid-cols-2 gap-4 px-4 pb-4"
-                    aria-label="Tendances"
-                >
-                    <div class="bg-white rounded-md shadow-sm border border-gray-100 p-3">
-                        <h3 class="mb-2 font-semibold text-sm text-gray-800">
-                            Connexions par jour
-                        </h3>
-                        <div
-                            v-if="loading"
-                            class="h-72 rounded-md bg-gray-100 animate-pulse"
-                        />
-                        <ClientOnly v-else-if="attendanceChartData.length > 0">
-                            <LineChart
-                                :data="attendanceChartData"
-                                index="day"
-                                :categories="['logins', 'unique_users']"
-                                :colors="['var(--chart-1, #2563eb)', 'var(--chart-2, #16a34a)']"
-                                :legend-labels="['Connexions', 'Utilisateurs uniques']"
-                                class="w-full h-72"
-                            />
-                        </ClientOnly>
-                        <p
-                            v-else
-                            class="text-sm text-gray-500 rounded-md border border-dashed p-4 h-72 flex items-center justify-center"
-                        >
-                            Aucune connexion enregistrée sur la période.
-                        </p>
-                    </div>
-
-                    <div class="bg-white rounded-md shadow-sm border border-gray-100 p-3">
-                        <MarketingTopScreensChart
-                            :screens="overview?.top_screens ?? []"
+                    <!-- Zone Scan -->
+                    <section
+                        class="space-y-4 min-w-0"
+                        aria-label="Scan KPIs"
+                    >
+                        <MarketingAttendanceKpiCards
+                            :attendance="overview?.attendance ?? null"
                             :loading="loading"
                         />
-                    </div>
-                </section>
 
-                <!-- Zone Détail -->
-                <section
-                    class="px-4 pb-6 space-y-3"
-                    aria-label="Détail"
-                >
-                    <div class="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
-                        <button
-                            type="button"
-                            class="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-gray-50 transition-colors"
-                            :aria-expanded="showUniqueUsers"
-                            @click="showUniqueUsers = !showUniqueUsers"
-                        >
-                            <span class="font-semibold text-sm text-gray-800">Utilisateurs connectés</span>
-                            <ChevronDown
-                                class="size-4 text-gray-400 transition-transform"
-                                :class="showUniqueUsers ? 'rotate-180' : ''"
-                            />
-                        </button>
-                        <div
-                            v-if="showUniqueUsers"
-                            class="border-t border-gray-100 pt-3"
-                        >
-                            <MarketingUniqueUsersPanel :period="selectedPeriod" />
-                        </div>
-                    </div>
+                        <MarketingStripeRevenueSummary
+                            :kpis="overview?.revenue ?? null"
+                            :loading="loading"
+                        />
 
-                    <div
-                        v-if="canManageUnverifiedEmails"
-                        class="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden"
+                        <MarketingFunnelPanel
+                            :conversion="overview?.conversion ?? null"
+                            :journey="overview?.journey_emails ?? null"
+                            :partners="overview?.partners ?? null"
+                            :acquisition="overview?.acquisition ?? null"
+                            :loading="loading"
+                        />
+                    </section>
+
+                    <!-- Zone Tendances -->
+                    <section
+                        class="grid grid-cols-1 lg:grid-cols-2 gap-4 min-w-0"
+                        aria-label="Tendances"
                     >
-                        <button
-                            type="button"
-                            class="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-gray-50 transition-colors"
-                            :aria-expanded="showUnverified"
-                            @click="showUnverified = !showUnverified"
-                        >
-                            <span class="font-semibold text-sm text-gray-800">Emails non vérifiés</span>
-                            <ChevronDown
-                                class="size-4 text-gray-400 transition-transform"
-                                :class="showUnverified ? 'rotate-180' : ''"
+                        <div class="min-w-0 rounded-md border border-gray-100 bg-white p-3 shadow-sm">
+                            <h3 class="mb-2 font-semibold text-sm text-gray-800">
+                                Connexions par jour
+                            </h3>
+                            <div
+                                v-if="loading"
+                                class="h-64 rounded-md bg-gray-100 animate-pulse"
                             />
-                        </button>
-                        <div
-                            v-if="showUnverified"
-                            class="border-t border-gray-100 pt-3"
-                        >
-                            <MarketingUnverifiedEmailsPanel />
+                            <ClientOnly v-else-if="attendanceChartData.length > 0">
+                                <LineChart
+                                    :data="attendanceChartData"
+                                    index="day"
+                                    :categories="['logins', 'unique_users']"
+                                    :colors="['var(--chart-1, #2563eb)', 'var(--chart-2, #16a34a)']"
+                                    :legend-labels="['Connexions', 'Utilisateurs uniques']"
+                                    class="w-full h-64 max-w-full"
+                                />
+                            </ClientOnly>
+                            <p
+                                v-else
+                                class="text-sm text-gray-500 rounded-md border border-dashed p-4 h-64 flex items-center justify-center"
+                            >
+                                Aucune connexion enregistrée sur la période.
+                            </p>
                         </div>
-                    </div>
-                </section>
+
+                        <div class="min-w-0 rounded-md border border-gray-100 bg-white p-3 shadow-sm">
+                            <MarketingTopScreensChart
+                                :screens="overview?.top_screens ?? []"
+                                :loading="loading"
+                            />
+                        </div>
+                    </section>
+
+                    <!-- Zone Détail -->
+                    <section
+                        class="space-y-3 min-w-0"
+                        aria-label="Détail"
+                    >
+                        <div class="rounded-md border border-gray-100 bg-white overflow-hidden shadow-sm">
+                            <button
+                                type="button"
+                                class="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-gray-50 transition-colors"
+                                :aria-expanded="showUniqueUsers"
+                                @click="showUniqueUsers = !showUniqueUsers"
+                            >
+                                <span class="font-semibold text-sm text-gray-800">Utilisateurs connectés</span>
+                                <ChevronDown
+                                    class="size-4 text-gray-400 transition-transform shrink-0"
+                                    :class="showUniqueUsers ? 'rotate-180' : ''"
+                                />
+                            </button>
+                            <div
+                                v-if="showUniqueUsers"
+                                class="border-t border-gray-100 p-4 min-w-0 overflow-x-auto"
+                            >
+                                <MarketingUniqueUsersPanel :period="selectedPeriod" />
+                            </div>
+                        </div>
+
+                        <div
+                            v-if="canManageUnverifiedEmails"
+                            class="rounded-md border border-gray-100 bg-white overflow-hidden shadow-sm"
+                        >
+                            <button
+                                type="button"
+                                class="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-gray-50 transition-colors"
+                                :aria-expanded="showUnverified"
+                                @click="showUnverified = !showUnverified"
+                            >
+                                <span class="font-semibold text-sm text-gray-800">Emails non vérifiés</span>
+                                <ChevronDown
+                                    class="size-4 text-gray-400 transition-transform shrink-0"
+                                    :class="showUnverified ? 'rotate-180' : ''"
+                                />
+                            </button>
+                            <div
+                                v-if="showUnverified"
+                                class="border-t border-gray-100 p-4 min-w-0 overflow-x-auto"
+                            >
+                                <MarketingUnverifiedEmailsPanel />
+                            </div>
+                        </div>
+                    </section>
+                </div>
             </template>
         </DashboardAdminPageContent>
     </div>

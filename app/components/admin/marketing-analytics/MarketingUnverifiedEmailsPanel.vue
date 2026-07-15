@@ -1,5 +1,5 @@
 <template>
-    <section class="px-4 pb-4 space-y-8">
+    <section class="min-w-0 space-y-6">
         <div>
             <div class="flex items-center gap-2 mb-3">
                 <span class="text-xs font-medium text-gray-500 uppercase tracking-wide">En attente</span>

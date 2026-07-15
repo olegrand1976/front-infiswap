@@ -1,6 +1,6 @@
 <template>
-    <div class="grid grid-cols-1 xl:grid-cols-3 gap-3 px-4 pb-4">
-        <section class="bg-white rounded-md shadow-sm border border-gray-100 p-4 xl:col-span-1">
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-3 min-w-0">
+        <section class="min-w-0 rounded-md border border-gray-100 bg-white p-4 shadow-sm">
             <h3 class="font-semibold text-sm text-gray-800 mb-3">
                 Funnel conversion
             </h3>
@@ -37,7 +37,7 @@
             </template>
         </section>
 
-        <section class="bg-white rounded-md shadow-sm border border-gray-100 p-4 xl:col-span-1">
+        <section class="min-w-0 rounded-md border border-gray-100 bg-white p-4 shadow-sm">
             <h3 class="font-semibold text-sm text-gray-800 mb-3">
                 Emails Journey
             </h3>
@@ -70,7 +70,7 @@
             </template>
         </section>
 
-        <section class="bg-white rounded-md shadow-sm border border-gray-100 p-4 xl:col-span-1">
+        <section class="min-w-0 rounded-md border border-gray-100 bg-white p-4 shadow-sm">
             <h3 class="font-semibold text-sm text-gray-800 mb-3">
                 Partenaires (30 j)
             </h3>

@@ -1,17 +1,92 @@
 <template>
-    <div class="px-4 pb-2 space-y-3">
-        <DashboardStatCardAdminGroup
-            title="Aujourd'hui"
-            :items="todayItems"
-            :loading="loading"
-            parent-class=""
-        />
-        <DashboardStatCardAdminGroup
-            title="Période"
-            :items="periodItems"
-            :loading="loading"
-            parent-class=""
-        />
+    <div class="space-y-4">
+        <div>
+            <h3 class="mb-2 text-sm font-semibold text-gray-800">
+                Aujourd'hui
+            </h3>
+            <div
+                v-if="loading"
+                class="grid grid-cols-2 lg:grid-cols-4 gap-3"
+            >
+                <div
+                    v-for="i in 4"
+                    :key="i"
+                    class="h-20 rounded-md bg-gray-100 animate-pulse"
+                />
+            </div>
+            <div
+                v-else
+                class="grid grid-cols-2 lg:grid-cols-4 gap-3"
+            >
+                <div
+                    v-for="item in todayItems"
+                    :key="item.label"
+                    class="flex items-center gap-3 rounded-md border border-gray-100 bg-white p-3 shadow-sm min-w-0"
+                >
+                    <div
+                        class="shrink-0 rounded-md p-2 text-white"
+                        :class="item.colorClass"
+                    >
+                        <component
+                            :is="item.icon"
+                            class="size-4"
+                        />
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-xl font-bold tabular-nums text-gray-900 leading-tight">
+                            {{ item.value }}
+                        </p>
+                        <p class="text-xs text-gray-500 truncate">
+                            {{ item.label }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="mb-2 text-sm font-semibold text-gray-800">
+                Période
+            </h3>
+            <div
+                v-if="loading"
+                class="grid grid-cols-2 gap-3"
+            >
+                <div
+                    v-for="i in 2"
+                    :key="i"
+                    class="h-20 rounded-md bg-gray-100 animate-pulse"
+                />
+            </div>
+            <div
+                v-else
+                class="grid grid-cols-2 gap-3"
+            >
+                <div
+                    v-for="item in periodItems"
+                    :key="item.label"
+                    class="flex items-center gap-3 rounded-md border border-gray-100 bg-white p-3 shadow-sm min-w-0"
+                >
+                    <div
+                        class="shrink-0 rounded-md p-2 text-white"
+                        :class="item.colorClass"
+                    >
+                        <component
+                            :is="item.icon"
+                            class="size-4"
+                        />
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-xl font-bold tabular-nums text-gray-900 leading-tight">
+                            {{ item.value }}
+                        </p>
+                        <p class="text-xs text-gray-500 truncate">
+                            {{ item.label }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 

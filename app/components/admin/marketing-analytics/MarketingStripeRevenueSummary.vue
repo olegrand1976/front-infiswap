@@ -1,12 +1,12 @@
 <template>
-    <section class="px-4 pb-4">
+    <section class="min-w-0">
         <div
             v-if="loading"
             class="h-24 rounded-md bg-gray-100 animate-pulse"
         />
         <div
             v-else
-            class="bg-white rounded-md shadow-sm border border-gray-100 p-4"
+            class="rounded-md border border-gray-100 bg-gray-50/60 p-4"
         >
             <div class="flex flex-wrap items-baseline justify-between gap-2 mb-3">
                 <h3 class="font-semibold text-sm text-gray-800">
