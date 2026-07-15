@@ -10,6 +10,12 @@ abstract final class AppColors {
   static const Color onMint = Color(0xFF020617);
 
   static const Color onCoral = Color(0xFFFFFFFF);
+
+  static const Color urgent = Color(0xFFE11D48);
+
+  static const Color mission = Color(0xFF6D28D9);
+
+  static const Color boostGold = Color(0xFFFBBF24);
 }
 
 @immutable
