@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/api/api_exception.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../applications/data/applications_list_notifier.dart';
 import '../../applications/data/applications_repository.dart';
 import '../../auth/providers/auth_session_provider.dart';
 import '../models/replacement_item.dart';
@@ -74,6 +75,7 @@ class _ReplacementDetailScreenState
       }
       if (!mounted) return;
       setState(() => _status = _ApplyStatus.applied);
+      ref.read(applicationsListProvider.notifier).refresh();
     } on ApiException catch (error) {
       if (!mounted) return;
       if (error.isPlatformAccessRequired) {
@@ -100,9 +102,27 @@ class _ReplacementDetailScreenState
     }
   }
 
+  _ApplyStatus _effectiveStatus(WidgetRef ref) {
+    if (_status != _ApplyStatus.idle) {
+      return _status;
+    }
+    if (item.isMission) {
+      // Aucun endpoint ne liste encore les candidatures aux missions
+      // (table mission_responses séparée) : on ne peut pas détecter un
+      // "déjà candidaté" ici tant que le backend n'expose pas cette liste.
+      return _ApplyStatus.idle;
+    }
+    final alreadyApplied = ref.watch(applicationsListProvider).maybeWhen(
+          data: (list) => list.any((application) => application.replacement.id == item.id),
+          orElse: () => false,
+        );
+    return alreadyApplied ? _ApplyStatus.applied : _ApplyStatus.idle;
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
+    final effectiveStatus = _effectiveStatus(ref);
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -202,11 +222,11 @@ class _ReplacementDetailScreenState
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _status == _ApplyStatus.idle ? _apply : null,
+                  onPressed: effectiveStatus == _ApplyStatus.idle ? _apply : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: colors.primary,
                     foregroundColor: colors.onPrimary,
-                    disabledBackgroundColor: _status == _ApplyStatus.applied
+                    disabledBackgroundColor: effectiveStatus == _ApplyStatus.applied
                         ? AppColors.mint
                         : colors.primary,
                     disabledForegroundColor: Colors.white,
@@ -215,7 +235,7 @@ class _ReplacementDetailScreenState
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: _ApplyButtonLabel(status: _status),
+                  child: _ApplyButtonLabel(status: effectiveStatus),
                 ),
               ),
             ),
