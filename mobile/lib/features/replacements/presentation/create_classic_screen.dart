@@ -14,7 +14,6 @@ import 'widgets/platform_access_sheet.dart';
 
 const _validRoleKeys = ['nurse', 'caregiver', 'midwife'];
 
-// Create classic replacement screen
 class CreateClassicScreen extends ConsumerStatefulWidget {
   const CreateClassicScreen({super.key});
 
@@ -275,7 +274,7 @@ class _CreateClassicScreenState extends ConsumerState<CreateClassicScreen> {
                     decoration: BoxDecoration(
                       color: colors.card,
                       border: Border.all(color: colors.border),
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
                       children: [
@@ -295,31 +294,10 @@ class _CreateClassicScreenState extends ConsumerState<CreateClassicScreen> {
                     ),
                   ),
                 ),
-              InkWell(
-                onTap: _addPeriod,
-                borderRadius: BorderRadius.circular(999),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 13),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: colors.primaryOutline, width: 1.4),
-                    borderRadius: BorderRadius.circular(999),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.add, size: 16, color: colors.primary),
-                      const SizedBox(width: 6),
-                      Text(
-                        'Ajouter période',
-                        style: TextStyle(
-                          color: colors.primary,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 13,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+              OutlinedButton.icon(
+                onPressed: _addPeriod,
+                icon: const Icon(Icons.add, size: 16),
+                label: const Text('Ajouter période'),
               ),
             ],
           ),
@@ -329,10 +307,7 @@ class _CreateClassicScreenState extends ConsumerState<CreateClassicScreen> {
           child: ElevatedButton(
             onPressed: _goToDetails,
             style: ElevatedButton.styleFrom(
-              backgroundColor: colors.primary,
-              foregroundColor: colors.onPrimary,
-              padding: const EdgeInsets.symmetric(vertical: 15),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
             ),
             child: const Text('Suivant'),
           ),
@@ -353,9 +328,11 @@ class _CreateClassicScreenState extends ConsumerState<CreateClassicScreen> {
               const _FieldLabel('Créneau — Matin'),
               const SizedBox(height: 7),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
                     child: _TimeField(
+                      label: 'Début',
                       value: _morningStart,
                       onTap: () => _pickTime(
                         initial: _morningStart,
@@ -366,6 +343,7 @@ class _CreateClassicScreenState extends ConsumerState<CreateClassicScreen> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: _TimeField(
+                      label: 'Fin',
                       value: _morningEnd,
                       onTap: () => _pickTime(
                         initial: _morningEnd,
@@ -379,9 +357,11 @@ class _CreateClassicScreenState extends ConsumerState<CreateClassicScreen> {
               const _FieldLabel('Créneau — Soir'),
               const SizedBox(height: 7),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
                     child: _TimeField(
+                      label: 'Début',
                       value: _eveningStart,
                       onTap: () => _pickTime(
                         initial: _eveningStart,
@@ -392,6 +372,7 @@ class _CreateClassicScreenState extends ConsumerState<CreateClassicScreen> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: _TimeField(
+                      label: 'Fin',
                       value: _eveningEnd,
                       onTap: () => _pickTime(
                         initial: _eveningEnd,
@@ -402,30 +383,32 @@ class _CreateClassicScreenState extends ConsumerState<CreateClassicScreen> {
                 ],
               ),
               const SizedBox(height: 16),
-              const _FieldLabel('Patients / jour'),
-              const SizedBox(height: 7),
               TextField(
                 controller: _patientCountController,
                 keyboardType: TextInputType.number,
-                decoration: _pillDecoration(colors, hint: 'Ex. 4'),
+                decoration: const InputDecoration(
+                  labelText: 'Patients / jour',
+                  hintText: 'Ex. 4',
+                  prefixIcon: Icon(Icons.groups_outlined),
+                ),
               ),
               const SizedBox(height: 16),
-              const _FieldLabel('Codes postaux'),
-              const SizedBox(height: 7),
               _TagField(
                 controller: _zipController,
+                label: 'Codes postaux',
                 hint: 'Ex. 1000',
+                icon: Icons.location_on_outlined,
                 keyboardType: TextInputType.number,
                 tags: _zipCodes,
                 onAdd: _addZip,
                 onRemove: (tag) => setState(() => _zipCodes = _zipCodes.where((z) => z != tag).toList()),
               ),
               const SizedBox(height: 16),
-              const _FieldLabel('Villes (optionnel)'),
-              const SizedBox(height: 7),
               _TagField(
                 controller: _cityController,
+                label: 'Villes (optionnel)',
                 hint: 'Ex. Bruxelles',
+                icon: Icons.location_city_outlined,
                 tags: _cities,
                 onAdd: _addCity,
                 onRemove: (tag) => setState(() => _cities = _cities.where((c) => c != tag).toList()),
@@ -479,23 +462,13 @@ class _CreateClassicScreenState extends ConsumerState<CreateClassicScreen> {
                 ),
               ],
               const SizedBox(height: 16),
-              const _FieldLabel('Description'),
-              const SizedBox(height: 7),
               TextField(
                 controller: _commentController,
                 maxLines: 4,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
+                  labelText: 'Description',
                   hintText: 'Décrivez en quelques mots votre demande de remplacement…',
-                  filled: true,
-                  fillColor: colors.inputBackground,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide(color: colors.inputBorder),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide(color: colors.inputBorder),
-                  ),
+                  alignLabelWithHint: true,
                 ),
               ),
             ],
@@ -509,8 +482,6 @@ class _CreateClassicScreenState extends ConsumerState<CreateClassicScreen> {
                 child: OutlinedButton(
                   onPressed: () => setState(() => _step = 0),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: colors.textPrimary,
-                    side: BorderSide(color: colors.border),
                     padding: const EdgeInsets.symmetric(vertical: 15),
                   ),
                   child: const Text('Retour'),
@@ -522,10 +493,7 @@ class _CreateClassicScreenState extends ConsumerState<CreateClassicScreen> {
                 child: ElevatedButton(
                   onPressed: _submitting ? null : _submit,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: colors.primary,
-                    foregroundColor: colors.onPrimary,
                     padding: const EdgeInsets.symmetric(vertical: 15),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                   ),
                   child: _submitting
                       ? SizedBox(
@@ -565,26 +533,6 @@ class _StepDot extends StatelessWidget {
   }
 }
 
-InputDecoration _pillDecoration(AppPalette colors, {String? hint}) {
-  return InputDecoration(
-    hintText: hint,
-    filled: true,
-    fillColor: colors.inputBackground,
-    contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(999),
-      borderSide: BorderSide(color: colors.inputBorder),
-    ),
-    enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(999),
-      borderSide: BorderSide(color: colors.inputBorder),
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(999),
-      borderSide: BorderSide(color: colors.primary),
-    ),
-  );
-}
 
 class _FieldLabel extends StatelessWidget {
   const _FieldLabel(this.label);
@@ -607,8 +555,9 @@ class _FieldLabel extends StatelessWidget {
 }
 
 class _TimeField extends StatelessWidget {
-  const _TimeField({required this.value, required this.onTap});
+  const _TimeField({required this.label, required this.value, required this.onTap});
 
+  final String label;
   final TimeOfDay? value;
   final VoidCallback onTap;
 
@@ -618,25 +567,17 @@ class _TimeField extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(999),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
-        decoration: BoxDecoration(
-          color: colors.inputBackground,
-          border: Border.all(color: colors.inputBorder),
-          borderRadius: BorderRadius.circular(999),
+      borderRadius: BorderRadius.circular(12),
+      child: InputDecorator(
+        decoration: InputDecoration(
+          labelText: label,
+          prefixIcon: const Icon(Icons.schedule),
         ),
-        child: Row(
-          children: [
-            Icon(Icons.schedule, size: 16, color: colors.primary),
-            const SizedBox(width: 8),
-            Text(
-              value != null ? formatTimeOfDay(value!) : '--:--',
-              style: TextStyle(
-                color: value != null ? colors.textPrimary : colors.textSecondary,
-              ),
-            ),
-          ],
+        child: Text(
+          value != null ? formatTimeOfDay(value!) : '--:--',
+          style: TextStyle(
+            color: value != null ? colors.textPrimary : colors.textSecondary,
+          ),
         ),
       ),
     );
@@ -646,7 +587,9 @@ class _TimeField extends StatelessWidget {
 class _TagField extends StatelessWidget {
   const _TagField({
     required this.controller,
+    required this.label,
     required this.hint,
+    required this.icon,
     required this.tags,
     required this.onAdd,
     required this.onRemove,
@@ -654,7 +597,9 @@ class _TagField extends StatelessWidget {
   });
 
   final TextEditingController controller;
+  final String label;
   final String hint;
+  final IconData icon;
   final List<String> tags;
   final VoidCallback onAdd;
   final void Function(String tag) onRemove;
@@ -675,7 +620,11 @@ class _TagField extends StatelessWidget {
                 keyboardType: keyboardType,
                 textInputAction: TextInputAction.done,
                 onSubmitted: (_) => onAdd(),
-                decoration: _pillDecoration(colors, hint: hint),
+                decoration: InputDecoration(
+                  labelText: label,
+                  hintText: hint,
+                  prefixIcon: Icon(icon),
+                ),
               ),
             ),
             const SizedBox(width: 8),

@@ -14,7 +14,6 @@ import 'widgets/platform_access_sheet.dart';
 
 const _validRoleKeys = ['nurse', 'caregiver', 'midwife'];
 
-// Create immediate replacement screen
 class CreateImmediateScreen extends ConsumerStatefulWidget {
   const CreateImmediateScreen({super.key});
 
@@ -202,7 +201,7 @@ class _CreateImmediateScreenState extends ConsumerState<CreateImmediateScreen> {
                     decoration: BoxDecoration(
                       color: colors.primaryMuted,
                       border: Border.all(color: colors.border),
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -225,6 +224,7 @@ class _CreateImmediateScreenState extends ConsumerState<CreateImmediateScreen> {
                   ),
                   const SizedBox(height: 20),
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
                         child: _TimeField(
@@ -244,19 +244,21 @@ class _CreateImmediateScreenState extends ConsumerState<CreateImmediateScreen> {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  const _FieldLabel('Nombre de patients'),
-                  const SizedBox(height: 7),
                   TextField(
                     controller: _patientCountController,
                     keyboardType: TextInputType.number,
-                    decoration: _pillDecoration(colors, hint: 'Ex. 3'),
+                    decoration: const InputDecoration(
+                      labelText: 'Nombre de patients',
+                      hintText: 'Ex. 3',
+                      prefixIcon: Icon(Icons.groups_outlined),
+                    ),
                   ),
                   const SizedBox(height: 16),
-                  const _FieldLabel('Codes postaux'),
-                  const SizedBox(height: 7),
                   _TagField(
                     controller: _zipController,
+                    label: 'Codes postaux',
                     hint: 'Ex. 1000',
+                    icon: Icons.location_on_outlined,
                     keyboardType: TextInputType.number,
                     tags: _zipCodes,
                     onAdd: _addZip,
@@ -264,11 +266,11 @@ class _CreateImmediateScreenState extends ConsumerState<CreateImmediateScreen> {
                         setState(() => _zipCodes = _zipCodes.where((z) => z != tag).toList()),
                   ),
                   const SizedBox(height: 16),
-                  const _FieldLabel('Villes'),
-                  const SizedBox(height: 7),
                   _TagField(
                     controller: _cityController,
+                    label: 'Villes',
                     hint: 'Ex. Bruxelles',
+                    icon: Icons.location_city_outlined,
                     tags: _cities,
                     onAdd: _addCity,
                     onRemove: (tag) =>
@@ -328,12 +330,7 @@ class _CreateImmediateScreenState extends ConsumerState<CreateImmediateScreen> {
                   ElevatedButton(
                     onPressed: _submitting ? null : _submit,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: colors.primary,
-                      foregroundColor: colors.onPrimary,
                       padding: const EdgeInsets.symmetric(vertical: 15),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
                     ),
                     child: _submitting
                         ? SizedBox(
@@ -354,27 +351,6 @@ class _CreateImmediateScreenState extends ConsumerState<CreateImmediateScreen> {
       ),
     );
   }
-}
-
-InputDecoration _pillDecoration(AppPalette colors, {String? hint}) {
-  return InputDecoration(
-    hintText: hint,
-    filled: true,
-    fillColor: colors.inputBackground,
-    contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(999),
-      borderSide: BorderSide(color: colors.inputBorder),
-    ),
-    enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(999),
-      borderSide: BorderSide(color: colors.inputBorder),
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(999),
-      borderSide: BorderSide(color: colors.primary),
-    ),
-  );
 }
 
 class _FieldLabel extends StatelessWidget {
@@ -408,36 +384,21 @@ class _TimeField extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _FieldLabel(label),
-        const SizedBox(height: 7),
-        InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(999),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
-            decoration: BoxDecoration(
-              color: colors.inputBackground,
-              border: Border.all(color: colors.inputBorder),
-              borderRadius: BorderRadius.circular(999),
-            ),
-            child: Row(
-              children: [
-                Icon(Icons.schedule, size: 16, color: colors.primary),
-                const SizedBox(width: 8),
-                Text(
-                  value != null ? formatTimeOfDay(value!) : '--:--',
-                  style: TextStyle(
-                    color: value != null ? colors.textPrimary : colors.textSecondary,
-                  ),
-                ),
-              ],
-            ),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: InputDecorator(
+        decoration: InputDecoration(
+          labelText: label,
+          prefixIcon: const Icon(Icons.schedule),
+        ),
+        child: Text(
+          value != null ? formatTimeOfDay(value!) : '--:--',
+          style: TextStyle(
+            color: value != null ? colors.textPrimary : colors.textSecondary,
           ),
         ),
-      ],
+      ),
     );
   }
 }
@@ -445,7 +406,9 @@ class _TimeField extends StatelessWidget {
 class _TagField extends StatelessWidget {
   const _TagField({
     required this.controller,
+    required this.label,
     required this.hint,
+    required this.icon,
     required this.tags,
     required this.onAdd,
     required this.onRemove,
@@ -453,7 +416,9 @@ class _TagField extends StatelessWidget {
   });
 
   final TextEditingController controller;
+  final String label;
   final String hint;
+  final IconData icon;
   final List<String> tags;
   final VoidCallback onAdd;
   final void Function(String tag) onRemove;
@@ -474,7 +439,11 @@ class _TagField extends StatelessWidget {
                 keyboardType: keyboardType,
                 textInputAction: TextInputAction.done,
                 onSubmitted: (_) => onAdd(),
-                decoration: _pillDecoration(colors, hint: hint),
+                decoration: InputDecoration(
+                  labelText: label,
+                  hintText: hint,
+                  prefixIcon: Icon(icon),
+                ),
               ),
             ),
             const SizedBox(width: 8),

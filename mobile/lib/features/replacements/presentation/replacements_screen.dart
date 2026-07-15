@@ -374,7 +374,7 @@ class _SearchPill extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(12),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
@@ -383,7 +383,7 @@ class _SearchPill extends StatelessWidget {
             color: isActive ? colors.primaryOutline : colors.divider,
             width: isActive ? 1.4 : 1,
           ),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(color: colors.shadow, blurRadius: 12, offset: const Offset(0, 4)),
           ],
@@ -451,14 +451,14 @@ class _TypeTabs extends StatelessWidget {
 
           return InkWell(
             onTap: () => onSelect(key),
-            borderRadius: BorderRadius.circular(999),
+            borderRadius: BorderRadius.circular(12),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 14),
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: isOn ? colors.textPrimary : colors.card,
                 border: Border.all(color: isOn ? colors.textPrimary : colors.divider),
-                borderRadius: BorderRadius.circular(999),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
                 replacementTypeLabels[key]!,
@@ -679,8 +679,6 @@ class _MetaRow extends StatelessWidget {
   }
 }
 
-/// 5 étoiles pleines, décoratives — indicateur de mise en avant payante,
-/// pas une note (`ReplacementBoostService` ne calcule pas de score).
 class _BoostStars extends StatelessWidget {
   const _BoostStars({this.size = 18});
 

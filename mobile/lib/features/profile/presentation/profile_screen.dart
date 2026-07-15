@@ -171,9 +171,6 @@ class ProfileScreen extends ConsumerWidget {
                         foregroundColor: AppColors.coral,
                         side: const BorderSide(color: AppColors.coral),
                         padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
                       ),
                       icon: const Icon(Icons.logout),
                       label: const Text('Se déconnecter'),

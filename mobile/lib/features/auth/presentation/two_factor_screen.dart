@@ -171,7 +171,7 @@ class _TwoFactorScreenState extends ConsumerState<TwoFactorScreen> {
                       const SizedBox(height: 24),
                       DecoratedBox(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(12),
                           color: colors.primary,
                           boxShadow: [
                             BoxShadow(

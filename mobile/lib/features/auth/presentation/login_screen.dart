@@ -240,7 +240,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                       DecoratedBox(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(12),
                           color: colors.primary,
                           boxShadow: [
                             BoxShadow(
