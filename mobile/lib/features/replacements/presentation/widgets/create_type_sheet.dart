@@ -66,20 +66,6 @@ class CreateTypeSheet extends StatelessWidget {
               child: Column(
                 children: [
                   _TypeOption(
-                    icon: Icons.calendar_today_outlined,
-                    title: 'Classique',
-                    subtitle: 'Planifiez une période à l\'avance',
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).push(
-                        MaterialPageRoute<void>(
-                          builder: (_) => const CreateClassicScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  Divider(height: 1, color: colors.divider),
-                  _TypeOption(
                     icon: Icons.bolt_outlined,
                     title: 'Rapide',
                     subtitle: "Besoin d'aide dès aujourd'hui",
@@ -93,6 +79,20 @@ class CreateTypeSheet extends StatelessWidget {
                       );
                     },
                   ),
+                  _TypeOption(
+                    icon: Icons.calendar_today_outlined,
+                    title: 'Classique',
+                    subtitle: 'Planifiez une période à l\'avance',
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const CreateClassicScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  Divider(height: 1, color: colors.divider),
                 ],
               ),
             ),
@@ -159,7 +159,8 @@ class _TypeOption extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       subtitle,
-                      style: TextStyle(color: colors.textSecondary, fontSize: 12.5),
+                      style: TextStyle(
+                          color: colors.textSecondary, fontSize: 12.5),
                     ),
                   ],
                 ),
