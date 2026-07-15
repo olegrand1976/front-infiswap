@@ -40,8 +40,20 @@ export async function fillRegistrationForm(page: Page, data: RegistrationFormDat
     }
     await expect(belgiumCheckbox).toBeChecked();
 
-    await form.getByRole('combobox').filter({ hasText: 'Catégorie professionnelle' }).click();
-    await page.getByRole('option', { name: 'Indépendant(e)' }).click();
+    // Le <Select> radix est portalisé : en CI headless, un simple clic trigger + clic
+    // option peut ne pas committer la valeur (race d'animation), laissant
+    // professionalCategory vide et le bouton désactivé. On réessaie l'ouverture jusqu'à
+    // ce que l'option soit réellement visible, puis on vérifie que le trigger reflète
+    // bien la sélection.
+    const categoryTrigger = form.getByRole('combobox').filter({ hasText: 'Catégorie professionnelle' });
+    await categoryTrigger.scrollIntoViewIfNeeded();
+    const independentOption = page.getByRole('option', { name: 'Indépendant(e)' });
+    await expect(async () => {
+        await categoryTrigger.click();
+        await expect(independentOption).toBeVisible({ timeout: 2_000 });
+    }).toPass({ timeout: 15_000 });
+    await independentOption.click();
+    await expect(form.getByRole('combobox').filter({ hasText: 'Indépendant(e)' })).toBeVisible();
 
     const charteCheckbox = form.getByRole('checkbox', { name: 'charte de bonne conduite' });
     await charteCheckbox.scrollIntoViewIfNeeded();
