@@ -55,6 +55,7 @@ abstract final class ReplacementMapper {
       hasConfirmedSubstitute: json['has_confirmed_substitute'] == true,
       responseCount: _parseInt(json['response_count']) ?? 0,
       createdAt: DateTime.tryParse(json['created_at']?.toString() ?? ''),
+      boostedUntil: DateTime.tryParse(json['boosted_until']?.toString() ?? ''),
     );
   }
 
@@ -143,7 +144,6 @@ abstract final class ReplacementMapper {
       return null;
     }
 
-    // Certains payloads gardent des backslashes JSON.
     value = value.replaceAll('\\', '/');
 
     if (value.startsWith('http://') || value.startsWith('https://')) {
@@ -271,7 +271,6 @@ abstract final class ReplacementMapper {
         .toList();
   }
 
-  /// Parse zip_codes / cities même si l'API renvoie une string JSON ou CSV.
   static List<String> _normalizeStringList(Object? raw) {
     final values = <String>[];
 
@@ -320,7 +319,7 @@ abstract final class ReplacementMapper {
             return values;
           }
         } catch (_) {
-          // fallback below
+          // ignore
         }
       }
       addToken(text);

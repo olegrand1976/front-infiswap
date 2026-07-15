@@ -9,6 +9,7 @@ import '../../auth/providers/auth_session_provider.dart';
 import '../models/replacement_item.dart';
 import 'widgets/mission_avatar.dart';
 import 'widgets/platform_access_sheet.dart';
+import 'widgets/replacement_boost_sheet.dart';
 
 enum _ApplyStatus { idle, loading, applied }
 
@@ -274,26 +275,91 @@ class _OwnerFooter extends StatelessWidget {
       MyReplacementStatus.open => (colors.pendingBg, colors.pendingFg),
     };
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-      decoration: BoxDecoration(
-        color: background,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.groups_outlined, size: 18, color: foreground),
-          const SizedBox(width: 8),
-          Text(
-            '${myReplacementStatusLabel(status)} · ${item.responseCount} candidature${item.responseCount > 1 ? 's' : ''}',
-            style: TextStyle(
-                color: foreground, fontSize: 14, fontWeight: FontWeight.w700),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+          decoration: BoxDecoration(
+            color: background,
+            borderRadius: BorderRadius.circular(12),
           ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.groups_outlined, size: 18, color: foreground),
+              const SizedBox(width: 8),
+              Text(
+                '${myReplacementStatusLabel(status)} · ${item.responseCount} candidature${item.responseCount > 1 ? 's' : ''}',
+                style: TextStyle(color: foreground, fontSize: 14, fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
+        ),
+        if (status == MyReplacementStatus.open) ...[
+          const SizedBox(height: 10),
+          if (item.isBoosted)
+            _BoostStatusRow(item: item)
+          else
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: () => ReplacementBoostSheet.show(context, item),
+                icon: Icon(Icons.trending_up, color: colors.primary, size: 18),
+                label: Text(
+                  'Mettre en avant',
+                  style: TextStyle(color: colors.primary, fontWeight: FontWeight.w700),
+                ),
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: colors.primaryOutline),
+                  padding: const EdgeInsets.symmetric(vertical: 13),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+              ),
+            ),
         ],
-      ),
+      ],
     );
+  }
+}
+
+class _BoostStatusRow extends StatelessWidget {
+  const _BoostStatusRow({required this.item});
+
+  final ReplacementItem item;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final until = item.boostedUntil;
+
+    return Row(
+      children: [
+        const Icon(Icons.bolt, size: 16, color: AppColors.boostGold),
+        const SizedBox(width: 6),
+        Expanded(
+          child: Text(
+            until != null
+                ? 'Mise en avant active jusqu\'au ${_formatDate(until)}'
+                : 'Mise en avant active',
+            style: TextStyle(color: colors.textSecondary, fontSize: 12.5, fontWeight: FontWeight.w500),
+          ),
+        ),
+        TextButton(
+          onPressed: () => ReplacementBoostSheet.show(context, item),
+          style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: const Size(0, 0)),
+          child: Text(
+            'Prolonger',
+            style: TextStyle(color: colors.primary, fontWeight: FontWeight.w700, fontSize: 12.5),
+          ),
+        ),
+      ],
+    );
+  }
+
+  static String _formatDate(DateTime date) {
+    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
   }
 }
 

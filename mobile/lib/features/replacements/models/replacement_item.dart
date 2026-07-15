@@ -19,6 +19,7 @@ class ReplacementItem {
     this.hasConfirmedSubstitute = false,
     this.responseCount = 0,
     this.createdAt,
+    this.boostedUntil,
   });
 
   final String id;
@@ -41,6 +42,7 @@ class ReplacementItem {
   final bool hasConfirmedSubstitute;
   final int responseCount;
   final DateTime? createdAt;
+  final DateTime? boostedUntil;
 
   String get zipCodesLabel {
     if (zipCodes.isEmpty) {
