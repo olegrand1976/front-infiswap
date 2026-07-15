@@ -12,78 +12,50 @@ class HomeQuickActions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors = context.appColors;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Actions rapides',
-          style: TextStyle(
-            color: colors.textPrimary,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
+    return SizedBox(
+      height: 40,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        clipBehavior: Clip.none,
+        children: [
+          _QuickActionPill(
+            icon: Icons.search,
+            label: 'Rechercher',
+            accent: HomeDecorations.accentCoral(context),
+            onTap: () => ref.read(shellTabIndexProvider.notifier).state = 1,
           ),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: _QuickActionCard(
-                icon: Icons.search,
-                label: 'Rechercher',
-                subtitle: 'Trouver un remplacement',
-                accent: HomeDecorations.accentCoral(context),
-                onTap: () => ref.read(shellTabIndexProvider.notifier).state = 1,
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: _QuickActionCard(
-                icon: Icons.add_circle_outline,
-                label: 'Créer',
-                subtitle: 'Créer une annonce',
-                accent: HomeDecorations.accentMint(context),
-                onTap: () => CreateTypeSheet.show(context),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
-        Row(
-          children: [
-            Expanded(
-              child: _QuickActionCard(
-                icon: Icons.send_outlined,
-                label: 'Mes candidatures',
-                subtitle: 'Suivre mes demandes',
-                accent: HomeDecorations.accentCoral(context),
-                onTap: () => context.push('/applications'),
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: _QuickActionCard(
-                icon: Icons.notifications_outlined,
-                label: 'Notifications',
-                subtitle: 'Voir les alertes',
-                accent: HomeDecorations.accentMint(context),
-                showBadge: true,
-                onTap: () => ref.read(shellTabIndexProvider.notifier).state = 2,
-              ),
-            ),
-          ],
-        ),
-      ],
+          const SizedBox(width: 8),
+          _QuickActionPill(
+            icon: Icons.add_circle_outline,
+            label: 'Créer',
+            accent: HomeDecorations.accentMint(context),
+            onTap: () => CreateTypeSheet.show(context),
+          ),
+          const SizedBox(width: 8),
+          _QuickActionPill(
+            icon: Icons.send_outlined,
+            label: 'Candidatures',
+            accent: HomeDecorations.accentCoral(context),
+            onTap: () => context.push('/applications'),
+          ),
+          const SizedBox(width: 8),
+          _QuickActionPill(
+            icon: Icons.notifications_outlined,
+            label: 'Notifications',
+            accent: HomeDecorations.accentMint(context),
+            showBadge: true,
+            onTap: () => ref.read(shellTabIndexProvider.notifier).state = 2,
+          ),
+        ],
+      ),
     );
   }
 }
 
-class _QuickActionCard extends StatelessWidget {
-  const _QuickActionCard({
+class _QuickActionPill extends StatelessWidget {
+  const _QuickActionPill({
     required this.icon,
     required this.label,
-    required this.subtitle,
     required this.accent,
     required this.onTap,
     this.showBadge = false,
@@ -91,7 +63,6 @@ class _QuickActionCard extends StatelessWidget {
 
   final IconData icon;
   final String label;
-  final String subtitle;
   final Color accent;
   final VoidCallback onTap;
   final bool showBadge;
@@ -99,72 +70,60 @@ class _QuickActionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
+    final dark = HomeDecorations.isDark(context);
 
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(999),
         child: Container(
-          padding: const EdgeInsets.fromLTRB(12, 14, 10, 14),
-          decoration: HomeDecorations.card(context, accent: accent),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          padding: const EdgeInsets.fromLTRB(6, 6, 14, 6),
+          decoration: BoxDecoration(
+            color: colors.card,
+            borderRadius: BorderRadius.circular(999),
+            border: Border.all(
+              color: dark ? colors.primaryOutline.withValues(alpha: 0.45) : colors.border,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
+              Stack(
+                clipBehavior: Clip.none,
+                alignment: Alignment.center,
                 children: [
                   Container(
-                    width: 36,
-                    height: 36,
+                    width: 26,
+                    height: 26,
                     decoration: BoxDecoration(
                       color: accent.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(10),
+                      shape: BoxShape.circle,
                     ),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Icon(icon, color: accent, size: 20),
-                        if (showBadge)
-                          Positioned(
-                            top: 4,
-                            right: 4,
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: const BoxDecoration(
-                                color: AppColors.coral,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                          ),
-                      ],
+                    child: Icon(icon, color: accent, size: 13),
+                  ),
+                  if (showBadge)
+                    Positioned(
+                      top: -1,
+                      right: -1,
+                      child: Container(
+                        width: 8,
+                        height: 8,
+                        decoration: const BoxDecoration(
+                          color: AppColors.coral,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
                     ),
-                  ),
-                  const Spacer(),
-                  Icon(
-                    Icons.chevron_right,
-                    color: colors.textSecondary,
-                    size: 20,
-                  ),
                 ],
               ),
-              const SizedBox(height: 12),
+              const SizedBox(width: 8),
               Text(
                 label,
                 style: TextStyle(
                   color: colors.textPrimary,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                subtitle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: colors.textSecondary,
-                  fontSize: 11,
+                  fontSize: 11.5,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ],

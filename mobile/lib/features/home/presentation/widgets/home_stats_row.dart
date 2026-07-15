@@ -15,36 +15,36 @@ class HomeStatsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: _StatCard(
-            value: _formatCount(stats.applicationsCount),
-            label: 'Candidatures',
-            icon: Icons.assignment_outlined,
-            accent: HomeDecorations.accentCoral(context),
-            onTap: () => context.push('/applications'),
+    final colors = context.appColors;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 13),
+      decoration: HomeDecorations.card(context),
+      child: Row(
+        children: [
+          Expanded(
+            child: _StatCell(
+              value: _formatCount(stats.applicationsCount),
+              label: 'CANDIDATURES',
+              onTap: () => context.push('/applications'),
+            ),
           ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: _StatCard(
-            value: _formatCount(stats.acceptedCount),
-            label: 'Acceptées',
-            icon: Icons.check_circle_outline,
-            accent: HomeDecorations.accentMint(context),
+          _StatDivider(color: colors.divider),
+          Expanded(
+            child: _StatCell(
+              value: _formatCount(stats.acceptedCount),
+              label: 'ACCEPTÉES',
+            ),
           ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: _StatCard(
-            value: _formatCount(stats.createdCount),
-            label: 'Publiés',
-            icon: Icons.campaign_outlined,
-            accent: HomeDecorations.accentCoral(context),
+          _StatDivider(color: colors.divider),
+          Expanded(
+            child: _StatCell(
+              value: _formatCount(stats.createdCount),
+              label: 'PUBLIÉS',
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -56,68 +56,76 @@ class HomeStatsRow extends StatelessWidget {
   }
 }
 
-class _StatCard extends StatelessWidget {
-  const _StatCard({
+class _StatCell extends StatelessWidget {
+  const _StatCell({
     required this.value,
     required this.label,
-    required this.icon,
-    required this.accent,
     this.onTap,
   });
 
   final String value;
   final String label;
-  final IconData icon;
-  final Color accent;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
 
+    final content = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          value,
+          style: TextStyle(
+            color: colors.textPrimary,
+            fontSize: 19,
+            fontWeight: FontWeight.w800,
+            height: 1,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: colors.textSecondary,
+            fontSize: 9,
+            fontWeight: FontWeight.w600,
+            letterSpacing: .2,
+          ),
+        ),
+      ],
+    );
+
+    if (onTap == null) {
+      return content;
+    }
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(10, 14, 10, 12),
-          decoration: HomeDecorations.card(context, accent: accent),
-          child: Column(
-            children: [
-              Text(
-                value,
-                style: TextStyle(
-                  color: accent,
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  height: 1,
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                label,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: colors.textSecondary,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: accent.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(icon, color: accent, size: 18),
-              ),
-            ],
-          ),
+        borderRadius: BorderRadius.circular(10),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 2),
+          child: content,
         ),
       ),
+    );
+  }
+}
+
+class _StatDivider extends StatelessWidget {
+  const _StatDivider({required this.color});
+
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 1,
+      margin: const EdgeInsets.symmetric(vertical: 2),
+      color: color,
     );
   }
 }

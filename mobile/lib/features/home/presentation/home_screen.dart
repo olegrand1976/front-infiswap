@@ -70,10 +70,10 @@ class HomeScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 20),
                   const HomeSearchBar(),
-                  const SizedBox(height: 20),
-                  HomeStatsRow(stats: dashboard.stats),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 16),
                   const HomeQuickActions(),
+                  const SizedBox(height: 16),
+                  HomeStatsRow(stats: dashboard.stats),
                   const SizedBox(height: 24),
                   HomeReplacementsRail(
                     items: _replacementsRailItems(summary),
@@ -101,7 +101,8 @@ const _replacementsRailTargetCount = 6;
 // Boosted first, always — then top up with the most recent open
 // replacements (deduplicated) until the rail has a decent number of cards,
 // since boosted alone is often just one or two items.
-List<ReplacementItem> _replacementsRailItems(DashboardReplacementsSummary summary) {
+List<ReplacementItem> _replacementsRailItems(
+    DashboardReplacementsSummary summary) {
   final items = <ReplacementItem>[...summary.boostedReplacements];
   final seenIds = items.map((item) => item.id).toSet();
 

@@ -41,7 +41,8 @@ class HomeReplacementsRail extends ConsumerWidget {
               separatorBuilder: (_, __) => const SizedBox(width: 10),
               itemBuilder: (context, index) {
                 final item = items[index];
-                return _ReplacementMiniCard(item: item, onTap: () => onCardTap(item));
+                return _ReplacementMiniCard(
+                    item: item, onTap: () => onCardTap(item));
               },
             ),
           ),
@@ -84,7 +85,8 @@ class HomeMissionsRail extends ConsumerWidget {
               separatorBuilder: (_, __) => const SizedBox(width: 10),
               itemBuilder: (context, index) {
                 final item = items[index];
-                return _MissionMiniCard(item: item, onTap: () => onCardTap(item));
+                return _MissionMiniCard(
+                    item: item, onTap: () => onCardTap(item));
               },
             ),
           ),
@@ -94,7 +96,8 @@ class HomeMissionsRail extends ConsumerWidget {
 }
 
 class _RailHeader extends StatelessWidget {
-  const _RailHeader({required this.title, required this.total, required this.onSeeAll});
+  const _RailHeader(
+      {required this.title, required this.total, required this.onSeeAll});
 
   final String title;
   final int total;
@@ -111,12 +114,18 @@ class _RailHeader extends StatelessWidget {
           children: [
             Text(
               title,
-              style: TextStyle(color: colors.textPrimary, fontSize: 15, fontWeight: FontWeight.w700),
+              style: TextStyle(
+                  color: colors.textPrimary,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700),
             ),
             const SizedBox(width: 6),
             Text(
               '· $total',
-              style: TextStyle(color: colors.textSecondary, fontSize: 12, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                  color: colors.textSecondary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600),
             ),
           ],
         ),
@@ -124,7 +133,9 @@ class _RailHeader extends StatelessWidget {
           onPressed: onSeeAll,
           child: Text(
             'Voir tout',
-            style: TextStyle(color: HomeDecorations.accentMint(context), fontWeight: FontWeight.w600),
+            style: TextStyle(
+                color: HomeDecorations.accentMint(context),
+                fontWeight: FontWeight.w600),
           ),
         ),
       ],
@@ -193,7 +204,10 @@ class _ReplacementMiniCard extends StatelessWidget {
                 item.role,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(color: colors.textPrimary, fontSize: 12.5, fontWeight: FontWeight.w700),
+                style: TextStyle(
+                    color: colors.textPrimary,
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w700),
               ),
               const SizedBox(height: 2),
               Text(
@@ -205,14 +219,16 @@ class _ReplacementMiniCard extends StatelessWidget {
               const Spacer(),
               Row(
                 children: [
-                  Icon(Icons.calendar_today_outlined, size: 11, color: colors.textSecondary),
+                  Icon(Icons.calendar_today_outlined,
+                      size: 11, color: colors.textSecondary),
                   const SizedBox(width: 4),
                   Expanded(
                     child: Text(
                       item.dateLabel,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: colors.textSecondary, fontSize: 10),
+                      style:
+                          TextStyle(color: colors.textSecondary, fontSize: 10),
                     ),
                   ),
                 ],
@@ -243,7 +259,8 @@ class _MissionMiniCard extends StatelessWidget {
         child: Container(
           width: 158,
           padding: const EdgeInsets.all(12),
-          decoration: HomeDecorations.card(context, accent: AppColors.mission, radius: 16),
+          decoration: HomeDecorations.card(context,
+              accent: AppColors.mission, radius: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -253,7 +270,10 @@ class _MissionMiniCard extends StatelessWidget {
                 item.title,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(color: colors.textPrimary, fontSize: 12.5, fontWeight: FontWeight.w700),
+                style: TextStyle(
+                    color: colors.textPrimary,
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w700),
               ),
               const SizedBox(height: 2),
               Text(
@@ -265,14 +285,16 @@ class _MissionMiniCard extends StatelessWidget {
               const Spacer(),
               Row(
                 children: [
-                  Icon(Icons.calendar_today_outlined, size: 11, color: colors.textSecondary),
+                  Icon(Icons.calendar_today_outlined,
+                      size: 11, color: colors.textSecondary),
                   const SizedBox(width: 4),
                   Expanded(
                     child: Text(
                       item.dateLabel,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: colors.textSecondary, fontSize: 10),
+                      style:
+                          TextStyle(color: colors.textSecondary, fontSize: 10),
                     ),
                   ),
                 ],
@@ -298,10 +320,15 @@ class _MiniTypeBadge extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-      decoration: BoxDecoration(color: background, borderRadius: BorderRadius.circular(7)),
+      decoration: BoxDecoration(
+          color: background, borderRadius: BorderRadius.circular(7)),
       child: Text(
         isUrgent ? 'Urgent' : 'Classique',
-        style: TextStyle(color: foreground, fontSize: 9, fontWeight: FontWeight.w800, letterSpacing: .2),
+        style: TextStyle(
+            color: foreground,
+            fontSize: 9,
+            fontWeight: FontWeight.w800,
+            letterSpacing: .2),
       ),
     );
   }
