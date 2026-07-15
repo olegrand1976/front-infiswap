@@ -11,6 +11,8 @@
             class="sidebar-content flex flex-col gap-4 bg-white p-2"
         >
             <SidebarGroup
+                v-for="section in navigationSections"
+                :key="section.label || 'main'"
                 :class="
                     cn('rounded-xl pb-4', {
                         'bg-white': isAdmin,
@@ -18,10 +20,16 @@
                     })
                 "
             >
+                <SidebarGroupLabel
+                    v-if="section.label"
+                    class="px-2 text-xs uppercase tracking-wide text-neutral-500"
+                >
+                    {{ section.label }}
+                </SidebarGroupLabel>
                 <SidebarGroupContent class="mx-auto mt-2 flex flex-col gap-2 lg:w-44 xl:w-52">
                     <SidebarMenu>
                         <SidebarMenuItem
-                            v-for="item in navigationItems"
+                            v-for="item in section.items"
                             :key="item.route"
                         >
                             <Collapsible
@@ -236,6 +244,8 @@ if (!isInstitution.value) {
     await getProducts(page.value, perPage.value);
 }
 
+type StaffRole = 'super_admin' | 'admin' | 'manager' | 'community_manager' | 'sale_representative';
+
 interface NavigationItem {
     label: string;
     route: string;
@@ -243,7 +253,65 @@ interface NavigationItem {
     children?: NavigationItem[];
     visible?: boolean;
     external?: boolean;
+    roles?: StaffRole[];
 }
+
+interface NavigationSection {
+    label: string;
+    roles: StaffRole[];
+    items: NavigationItem[];
+}
+
+const canShowItem = (
+    item: NavigationItem,
+    currentRole: StaffRole,
+    sectionRoles: StaffRole[],
+): boolean => {
+    if (item.visible === false) {
+        return false;
+    }
+
+    const allowedRoles = item.roles ?? sectionRoles;
+
+    return allowedRoles.includes(currentRole);
+};
+
+const resolveNavigationItems = (
+    items: NavigationItem[],
+    currentRole: StaffRole,
+    sectionRoles: StaffRole[],
+): NavigationItem[] => {
+    const resolved: NavigationItem[] = [];
+
+    for (const item of items) {
+        if (item.children?.length) {
+            const children = resolveNavigationItems(item.children, currentRole, sectionRoles);
+
+            if (children.length === 0) {
+                continue;
+            }
+
+            if (!canShowItem(item, currentRole, sectionRoles) && item.roles) {
+                continue;
+            }
+
+            if (item.visible === false) {
+                continue;
+            }
+
+            resolved.push({ ...item, children });
+            continue;
+        }
+
+        if (!canShowItem(item, currentRole, sectionRoles)) {
+            continue;
+        }
+
+        resolved.push(item);
+    }
+
+    return resolved;
+};
 
 const contactChildren = computed<NavigationItem[]>(() => [
     {
@@ -263,7 +331,6 @@ const crmChildren = computed<NavigationItem[]>(() => [
         label: 'Suivi commercial',
         route: '/dashboard/admin/users/crm',
         icon: UserCheck,
-        visible: true,
     },
     {
         label: 'Récap activité',
@@ -301,9 +368,6 @@ const crmChildren = computed<NavigationItem[]>(() => [
         icon: Euro,
         visible: isSuperAdmin.value || isAdmin.value,
     },
-].filter(item => item.visible !== false));
-
-const documentationChildren = computed<NavigationItem[]>(() => [
     {
         label: 'Bon de commande vierge',
         route: '/dashboard/admin/crm/documentation/blank-purchase-order',
@@ -314,7 +378,7 @@ const documentationChildren = computed<NavigationItem[]>(() => [
         route: '/dashboard/admin/crm/documentation/general-terms',
         icon: FileText,
     },
-]);
+].filter(item => item.visible !== false));
 
 const nurseNavigationItems: NavigationItem[] = [
     {
@@ -386,155 +450,192 @@ const nurseNavigationItems: NavigationItem[] = [
     },
 ];
 
-const adminNavigationItems = computed<NavigationItem[]>(() => [
+const adminNavigationSections = computed<NavigationSection[]>(() => [
     {
-        label: 'Tableau de bord',
-        route: '/dashboard',
-        icon: LayoutGrid,
-        visible: !isManager.value,
+        label: 'Vue d\'ensemble',
+        roles: ['super_admin', 'admin', 'community_manager'],
+        items: [
+            {
+                label: 'Tableau de bord',
+                route: '/dashboard',
+                icon: LayoutGrid,
+            },
+        ],
     },
     {
-        label: 'Suivi inscriptions',
-        route: '/dashboard/admin/registrations',
-        icon: BarChart3,
-        visible: true,
+        label: 'Opérations',
+        roles: ['super_admin', 'admin', 'community_manager', 'manager'],
+        items: [
+            {
+                label: 'Remplacements',
+                route: '/dashboard/admin/replacements',
+                icon: RefreshCw,
+                children: [
+                    {
+                        label: 'Liste',
+                        route: '/dashboard/admin/replacements',
+                        icon: RefreshCw,
+                    },
+                    {
+                        label: 'Intérêt pour remplacement',
+                        route: '/dashboard/admin/replacements/interest',
+                        icon: List,
+                    },
+                ],
+            },
+            {
+                label: 'Suivi inscriptions',
+                route: '/dashboard/admin/registrations',
+                icon: BarChart3,
+            },
+            {
+                label: 'Binômes',
+                route: '/dashboard/admin/partners',
+                icon: UserSearch,
+                roles: ['super_admin', 'admin', 'manager'],
+            },
+        ],
     },
     {
-        label: 'Remplacements',
-        route: '/dashboard/admin/replacements',
-        icon: RefreshCw,
-        visible: true,
+        label: 'Utilisateurs & réseau',
+        roles: ['super_admin', 'admin', 'manager', 'community_manager'],
+        items: [
+            {
+                label: 'Utilisateurs',
+                route: '/dashboard/admin/users',
+                icon: Users,
+                roles: ['super_admin', 'admin', 'community_manager', 'manager'],
+            },
+            {
+                label: 'Institutions',
+                route: '/dashboard/admin/institutions',
+                icon: FileText,
+                roles: ['super_admin', 'admin', 'manager'],
+            },
+            {
+                label: 'Groupement',
+                route: '/dashboard/admin/groups',
+                icon: Users,
+                roles: ['super_admin', 'admin', 'manager'],
+            },
+            {
+                label: 'Type de soins',
+                route: '/dashboard/admin/care-types',
+                icon: ShieldCheck,
+                roles: ['super_admin', 'admin'],
+            },
+            {
+                label: 'Contacts',
+                route: '/dashboard/admin/contacts/infiswap',
+                icon: Inbox,
+                roles: ['super_admin', 'admin', 'manager'],
+                children: contactChildren.value,
+            },
+        ],
     },
     {
-        label: 'Intérêt pour remplacement',
-        route: '/dashboard/admin/replacements/interest',
-        icon: List,
-        visible: true,
+        label: 'Commercial',
+        roles: ['super_admin', 'admin', 'community_manager', 'sale_representative'],
+        items: [
+            {
+                label: 'CRM',
+                route: '/dashboard/admin/users/crm',
+                icon: UserCheck,
+                children: crmChildren.value,
+            },
+            {
+                label: 'Contrats NURSTECH',
+                route: '/dashboard/admin/contracts/nurstech',
+                icon: Euro,
+                visible: isSuperAdmin.value || isSaleRepresentative.value,
+            },
+            {
+                label: 'Produits',
+                route: '/dashboard/admin/products',
+                icon: ShoppingBag,
+                roles: ['super_admin', 'admin', 'sale_representative'],
+            },
+            {
+                label: 'Suivi marketing',
+                route: '/dashboard/admin/marketing-analytics',
+                icon: BarChart3,
+                visible: canAccessMarketingAnalytics.value,
+            },
+        ],
     },
     {
-        label: 'Binômes',
-        route: '/dashboard/admin/partners',
-        icon: UserSearch,
-        visible: true,
+        label: 'Contenu plateforme',
+        roles: ['super_admin', 'admin', 'community_manager', 'manager'],
+        items: [
+            {
+                label: 'Accueil',
+                route: '/dashboard/admin/home-management',
+                icon: Wrench,
+                roles: ['super_admin', 'admin', 'community_manager', 'manager'],
+            },
+            {
+                label: 'Tutoriels',
+                route: '/dashboard/admin/tutorials',
+                icon: CirclePlay,
+                roles: ['super_admin', 'admin', 'manager'],
+            },
+        ],
     },
     {
-        label: 'Utilisateurs',
-        route: '/dashboard/admin/users',
-        icon: Users,
-        visible: true,
+        label: 'Monétisation',
+        roles: ['super_admin', 'admin', 'manager'],
+        items: [
+            {
+                label: 'Abonnement',
+                route: '/dashboard/admin/subscription-plans',
+                icon: Euro,
+            },
+            {
+                label: 'Paiements Stripe',
+                route: '/dashboard/admin/stripe-payments',
+                icon: CreditCard,
+            },
+        ],
     },
     {
-        label: 'Accueil',
-        route: '/dashboard/admin/home-management',
-        icon: Wrench,
-        visible: true,
+        label: 'Suivi & analytics',
+        roles: ['super_admin', 'admin', 'manager'],
+        items: [
+            {
+                label: 'Suivi des liens',
+                route: '/dashboard/admin/stats',
+                icon: Link,
+            },
+        ],
     },
     {
-        label: 'CRM',
-        route: '/dashboard/admin/users/crm',
-        icon: UserCheck,
-        visible: crmChildren.value.length > 0,
-        children: crmChildren.value,
+        label: 'Technique',
+        roles: ['super_admin', 'admin'],
+        items: [
+            {
+                label: 'Mails',
+                route: '/dashboard/admin/mails',
+                icon: Mail,
+            },
+            {
+                label: 'Alertes',
+                route: '/dashboard/admin/alerts',
+                icon: ShieldAlert,
+            },
+            {
+                label: 'AI - Configuration',
+                route: '/dashboard/admin/ai-settings',
+                icon: Sparkles,
+                visible: isSuperAdmin.value,
+            },
+            {
+                label: 'Logs',
+                route: '/dashboard/admin/monitoring-errors',
+                icon: ClipboardList,
+            },
+        ],
     },
-    {
-        label: 'Documentation',
-        route: '/dashboard/admin/crm/documentation',
-        icon: ClipboardList,
-        visible: isSuperAdmin.value || isAdmin.value || isCommunityManager.value || isSaleRepresentative.value,
-        children: documentationChildren.value,
-    },
-    {
-        label: 'Institutions',
-        route: '/dashboard/admin/institutions',
-        icon: FileText,
-        visible: true,
-    },
-    {
-        label: 'Type de soins',
-        route: '/dashboard/admin/care-types',
-        icon: ShieldCheck,
-        visible: true,
-    },
-    {
-        label: 'Contacts',
-        route: '/dashboard/admin/contacts/infiswap',
-        icon: Inbox,
-        visible: true,
-        children: contactChildren.value,
-    },
-    {
-        label: 'Mails',
-        route: '/dashboard/admin/mails',
-        icon: Mail,
-        visible: isSuperAdmin.value || isAdmin.value,
-    },
-    {
-        label: 'Contrats NURSTECH',
-        route: '/dashboard/admin/contracts/nurstech',
-        icon: Euro,
-        visible: isSuperAdmin.value || isSaleRepresentative.value,
-    },
-    {
-        label: 'Tutoriels',
-        route: '/dashboard/admin/tutorials',
-        icon: CirclePlay,
-        visible: true,
-    },
-    {
-        label: 'Groupement',
-        route: '/dashboard/admin/groups',
-        icon: Users,
-        visible: true,
-    },
-    {
-        label: 'Abonnement',
-        route: '/dashboard/admin/subscription-plans',
-        icon: Euro,
-        visible: isSuperAdmin.value || isAdmin.value || isManager.value,
-    },
-    {
-        label: 'Paiements Stripe',
-        route: '/dashboard/admin/stripe-payments',
-        icon: CreditCard,
-        visible: isSuperAdmin.value || isAdmin.value || isManager.value,
-    },
-    {
-        label: 'Produits',
-        route: '/dashboard/admin/products',
-        icon: ShoppingBag,
-        visible: true,
-    },
-    {
-        label: 'Suivi des liens',
-        route: '/dashboard/admin/stats',
-        icon: Link,
-        visible: true,
-    },
-    {
-        label: 'Suivi marketing',
-        route: '/dashboard/admin/marketing-analytics',
-        icon: BarChart3,
-        visible: canAccessMarketingAnalytics.value,
-    },
-    {
-        label: 'Alertes',
-        route: '/dashboard/admin/alerts',
-        icon: ShieldAlert,
-        visible: isSuperAdmin.value || isAdmin.value,
-    },
-    {
-        label: 'AI - Configuration',
-        route: '/dashboard/admin/ai-settings',
-        icon: Sparkles,
-        visible: isSuperAdmin.value,
-    },
-    {
-        label: 'Logs',
-        route: '/dashboard/admin/monitoring-errors',
-        icon: ClipboardList,
-        visible: isSuperAdmin.value || isAdmin.value,
-    },
-].filter(i => i.visible !== false));
+]);
 
 const institutionNavigationItems: NavigationItem[] = [
     {
@@ -597,51 +698,32 @@ const role = computed(() => {
     return 'nurse';
 });
 
-const navigationItems = computed(() => {
-    const items = adminNavigationItems.value;
-
-    switch (role.value) {
-        case 'super_admin':
-        case 'admin':
-            return items;
-        case 'institution':
-            return institutionNavigationItems.filter(
-                i => i.visible !== false,
-            );
-        case 'manager':
-            return items.filter(
-                i =>
-                    !i.route.includes('/users/crm')
-                    && !i.route.includes('/care-types'),
-            );
-        case 'community_manager':
-            return items.filter(
-                i =>
-                    i.route === '/dashboard'
-                    || i.route.includes('/registrations')
-                    || i.route.includes('/replacements')
-                    || i.route.includes('/replacements/interest')
-                    || i.route.includes('/users')
-                    || i.route.includes('/users/crm')
-                    || i.route.includes('/crm/documentation')
-                    || i.route.includes('/home-management')
-                    || i.route.includes('/marketing-analytics'),
-            );
-        case 'sale_representative':
-            return items.filter(
-                i =>
-                    i.route.includes('/users/crm')
-                    || i.route.includes('/crm/documentation')
-                    || i.route.includes('/products')
-                    || i.route.includes('/contracts/nurstech')
-                    || i.route.includes('/contracts/institutions')
-                    || i.route.includes('/marketing-analytics'),
-            );
-        case 'collaborator':
-        case 'medical':
-        default:
-            return nurseNavigationItems;
+const navigationSections = computed(() => {
+    if (role.value === 'institution') {
+        return [{
+            label: '',
+            roles: [] as StaffRole[],
+            items: institutionNavigationItems.filter(i => i.visible !== false),
+        }];
     }
+
+    if (role.value === 'collaborator' || role.value === 'medical' || role.value === 'nurse') {
+        return [{
+            label: '',
+            roles: [] as StaffRole[],
+            items: nurseNavigationItems,
+        }];
+    }
+
+    const currentRole = role.value as StaffRole;
+
+    return adminNavigationSections.value
+        .filter(section => section.roles.includes(currentRole))
+        .map(section => ({
+            ...section,
+            items: resolveNavigationItems(section.items, currentRole, section.roles),
+        }))
+        .filter(section => section.items.length > 0);
 });
 
 const route = useRoute();
