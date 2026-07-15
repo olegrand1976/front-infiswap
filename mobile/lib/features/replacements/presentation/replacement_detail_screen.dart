@@ -16,9 +16,15 @@ class ReplacementDetailScreen extends ConsumerStatefulWidget {
   const ReplacementDetailScreen({
     super.key,
     required this.item,
+    this.isOwner = false,
   });
 
   final ReplacementItem item;
+
+  /// true si l'annonce a été ouverte depuis « Mes remplacements » — dans ce
+  /// cas le CTA de candidature n'a pas de sens (on ne postule pas à sa
+  /// propre annonce).
+  final bool isOwner;
 
   @override
   ConsumerState<ReplacementDetailScreen> createState() =>
@@ -92,7 +98,8 @@ class _ReplacementDetailScreenState
         return;
       }
       setState(() => _status = _ApplyStatus.idle);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
     } catch (_) {
       if (!mounted) return;
       setState(() => _status = _ApplyStatus.idle);
@@ -107,13 +114,11 @@ class _ReplacementDetailScreenState
       return _status;
     }
     if (item.isMission) {
-      // Aucun endpoint ne liste encore les candidatures aux missions
-      // (table mission_responses séparée) : on ne peut pas détecter un
-      // "déjà candidaté" ici tant que le backend n'expose pas cette liste.
       return _ApplyStatus.idle;
     }
     final alreadyApplied = ref.watch(applicationsListProvider).maybeWhen(
-          data: (list) => list.any((application) => application.replacement.id == item.id),
+          data: (list) =>
+              list.any((application) => application.replacement.id == item.id),
           orElse: () => false,
         );
     return alreadyApplied ? _ApplyStatus.applied : _ApplyStatus.idle;
@@ -217,30 +222,76 @@ class _ReplacementDetailScreenState
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: effectiveStatus == _ApplyStatus.idle ? _apply : null,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: colors.primary,
-                    foregroundColor: colors.onPrimary,
-                    disabledBackgroundColor: effectiveStatus == _ApplyStatus.applied
-                        ? AppColors.mint
-                        : colors.primary,
-                    disabledForegroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+            if (widget.isOwner)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                child: _OwnerFooter(item: item),
+              )
+            else
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed:
+                        effectiveStatus == _ApplyStatus.idle ? _apply : null,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: colors.primary,
+                      foregroundColor: colors.onPrimary,
+                      disabledBackgroundColor:
+                          effectiveStatus == _ApplyStatus.applied
+                              ? AppColors.mint
+                              : colors.primary,
+                      disabledForegroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
+                    child: _ApplyButtonLabel(status: effectiveStatus),
                   ),
-                  child: _ApplyButtonLabel(status: effectiveStatus),
                 ),
               ),
-            ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _OwnerFooter extends StatelessWidget {
+  const _OwnerFooter({required this.item});
+
+  final ReplacementItem item;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final status = myReplacementStatus(item);
+    final (background, foreground) = switch (status) {
+      MyReplacementStatus.filled => (colors.successBg, colors.successFg),
+      MyReplacementStatus.closed => (colors.dangerBg, colors.dangerFg),
+      MyReplacementStatus.open => (colors.pendingBg, colors.pendingFg),
+    };
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.groups_outlined, size: 18, color: foreground),
+          const SizedBox(width: 8),
+          Text(
+            '${myReplacementStatusLabel(status)} · ${item.responseCount} candidature${item.responseCount > 1 ? 's' : ''}',
+            style: TextStyle(
+                color: foreground, fontSize: 14, fontWeight: FontWeight.w700),
+          ),
+        ],
       ),
     );
   }

@@ -15,6 +15,10 @@ class ReplacementItem {
     this.isMission = false,
     this.institutionName,
     this.institutionLogoUrl,
+    this.status = 'open',
+    this.hasConfirmedSubstitute = false,
+    this.responseCount = 0,
+    this.createdAt,
   });
 
   final String id;
@@ -33,13 +37,37 @@ class ReplacementItem {
   final String? institutionName;
   final String? institutionLogoUrl;
 
-  /// Affichage liste : codes postaux uniquement.
+  final String status;
+  final bool hasConfirmedSubstitute;
+  final int responseCount;
+  final DateTime? createdAt;
+
   String get zipCodesLabel {
     if (zipCodes.isEmpty) {
       return 'CP non précisé';
     }
     return zipCodes.join(', ');
   }
+}
+
+enum MyReplacementStatus { open, filled, closed }
+
+MyReplacementStatus myReplacementStatus(ReplacementItem item) {
+  if (item.hasConfirmedSubstitute) {
+    return MyReplacementStatus.filled;
+  }
+  if (item.status == 'closed') {
+    return MyReplacementStatus.closed;
+  }
+  return MyReplacementStatus.open;
+}
+
+String myReplacementStatusLabel(MyReplacementStatus status) {
+  return switch (status) {
+    MyReplacementStatus.open => 'Ouvert',
+    MyReplacementStatus.filled => 'Pourvu',
+    MyReplacementStatus.closed => 'Fermé',
+  };
 }
 
 class ReplacementPeriod {

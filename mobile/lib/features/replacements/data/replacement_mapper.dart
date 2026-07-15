@@ -51,7 +51,21 @@ abstract final class ReplacementMapper {
       isUrgent: json['type']?.toString() == 'immediate',
       isBoosted: _isActivelyBoosted(json),
       isMission: false,
+      status: json['status']?.toString() ?? 'open',
+      hasConfirmedSubstitute: json['has_confirmed_substitute'] == true,
+      responseCount: _parseInt(json['response_count']) ?? 0,
+      createdAt: DateTime.tryParse(json['created_at']?.toString() ?? ''),
     );
+  }
+
+  static int? _parseInt(Object? value) {
+    if (value is int) {
+      return value;
+    }
+    if (value is String) {
+      return int.tryParse(value);
+    }
+    return null;
   }
 
   static ReplacementItem _fromMission(

@@ -25,11 +25,22 @@ class ReplacementsRepository {
     return page.items;
   }
 
-  // `type: 'other'` is a valid FilterReplacementRequest value that is not
-  // '' or 'nurse', so SearchMergedService excludes missions from this call
-  // (see $includeMissions) while the replacements query behaves as default.
-  // That gives an exact replacements-only total via subtraction below,
-  // instead of guessing from a possibly-truncated page.
+  Future<List<ReplacementItem>> fetchMyReplacements() async {
+    final page = await _fetchMergedPage({
+      'type': 'me',
+      'filters': {'type': 'all', 'role': 'all', 'status': 'all'},
+      'days': <String>[],
+      'cities': <String>[],
+      'zipCodes': <String>[],
+      'provinces': <String>[],
+      'country': 'be',
+      'page': 1,
+      'perPage': 50,
+      'groupByProvince': false,
+    });
+    return page.items;
+  }
+
   Future<DashboardReplacementsSummary> fetchDashboardSummary() async {
     final pages = await Future.wait([
       _fetchMergedPage(_dashboardBody(type: 'other')),
