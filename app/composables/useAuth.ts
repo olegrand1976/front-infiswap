@@ -112,9 +112,16 @@ export const useAuth = () => {
 
     const loading = useState<boolean>('loading', () => false);
 
-    async function refresh() {
+    async function refresh(tokenOverride?: string) {
         try {
-            user.value = await $fetchCurrentUser();
+            if (tokenOverride) {
+                user.value = await $apifetch('/api/user', {
+                    headers: { Authorization: `Bearer ${tokenOverride}` },
+                });
+            }
+            else {
+                user.value = await $fetchCurrentUser();
+            }
         }
         catch (error) {
             user.value = null;
@@ -136,8 +143,7 @@ export const useAuth = () => {
 
             if (response.token) {
                 authToken.value = response.token;
-                await nextTick();
-                await refresh();
+                await refresh(response.token);
 
                 if (!user.value) {
                     throw createError({
@@ -166,9 +172,12 @@ export const useAuth = () => {
     }
 
     async function register(credentials) {
+        let registeredToken: string | undefined;
+
         return $apifetch('/api/register', { method: 'post', body: credentials })
             .then((response) => {
                 if (response?.token) {
+                    registeredToken = response.token;
                     authToken.value = response.token;
                 }
             })
@@ -183,7 +192,7 @@ export const useAuth = () => {
                         query: { email },
                     });
                 }, 1500);
-                return refresh();
+                return refresh(registeredToken);
             })
             .catch((error) => { throw error; });
     }
@@ -289,8 +298,7 @@ export const useAuth = () => {
         });
 
         authToken.value = response.token;
-        await nextTick();
-        await refresh();
+        await refresh(response.token);
         return navigateTo(safeLoginRedirectPath(redirectPath));
     };
 
