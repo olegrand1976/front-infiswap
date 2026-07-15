@@ -112,9 +112,32 @@ const columns: ColumnDef<MarketingUniqueUser>[] = [
         cell: ({ row }) => h('div', accountTypeLabelFor(String(row.getValue('account_type')))),
     },
     {
+        accessorKey: 'created_at',
+        header: 'Inscrit le',
+        cell: ({ row }) => {
+            const value = row.getValue('created_at');
+            return h('div', { class: 'text-center' }, value ? formatRelativeDate(String(value)) : '—');
+        },
+    },
+    {
         accessorKey: 'logins',
-        header: 'Connexions',
+        header: 'Connexions (période)',
         cell: ({ row }) => h('div', { class: 'text-center' }, String(row.getValue('logins'))),
+    },
+    {
+        accessorKey: 'logins_7d',
+        header: 'Connexions 7j',
+        cell: ({ row }) => h('div', { class: 'text-center' }, String(row.getValue('logins_7d'))),
+    },
+    {
+        accessorKey: 'logins_30d',
+        header: 'Connexions 30j',
+        cell: ({ row }) => h('div', { class: 'text-center' }, String(row.getValue('logins_30d'))),
+    },
+    {
+        accessorKey: 'logins_90d',
+        header: 'Connexions 90j',
+        cell: ({ row }) => h('div', { class: 'text-center' }, String(row.getValue('logins_90d'))),
     },
     {
         accessorKey: 'last_login_at',

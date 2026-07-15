@@ -34,7 +34,11 @@ export type MarketingUniqueUser = {
     full_name: string;
     email: string;
     account_type: 'nurse' | 'institution';
+    created_at: string | null;
     logins: number;
+    logins_7d: number;
+    logins_30d: number;
+    logins_90d: number;
     last_login_at: string;
 };
 
@@ -45,6 +49,7 @@ export type MarketingUnverifiedUser = {
     account_type: string;
     created_at: string | null;
     can_resend: boolean;
+    last_resend_at: string | null;
 };
 
 export type MarketingAnalyticsOverview = {

@@ -64,6 +64,14 @@ function accountTypeLabel(value: string): string {
     return value === 'institution' ? 'Institution' : 'Infirmière';
 }
 
+function resendTooltip(user: MarketingUnverifiedUser): string {
+    if (user.last_resend_at) {
+        return 'Relance déjà envoyée, disponible après 2 jours';
+    }
+
+    return 'Disponible 2 jours après l\'inscription';
+}
+
 async function handleResend(user: MarketingUnverifiedUser) {
     if (!user.can_resend || resendingId.value === user.id) {
         return;
@@ -115,6 +123,14 @@ const columns: ColumnDef<MarketingUnverifiedUser>[] = [
         },
     },
     {
+        accessorKey: 'last_resend_at',
+        header: 'Dernière relance',
+        cell: ({ row }) => {
+            const value = row.getValue('last_resend_at');
+            return h('div', { class: 'text-center' }, value ? formatRelativeDate(String(value)) : '—');
+        },
+    },
+    {
         id: 'actions',
         header: 'Action',
         cell: ({ row }) => {
@@ -134,7 +150,7 @@ const columns: ColumnDef<MarketingUnverifiedUser>[] = [
 
             return h(TooltipProvider, {}, () => h(Tooltip, {}, () => [
                 h(TooltipTrigger, { asChild: true }, () => h('div', { class: 'flex justify-end' }, [button])),
-                h(TooltipContent, {}, () => 'Disponible après 2 jours'),
+                h(TooltipContent, {}, () => resendTooltip(user)),
             ]));
         },
         enableSorting: false,
