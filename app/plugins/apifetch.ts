@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { $fetch } from 'ofetch';
+import { buildApiRequestHeaders, readRequestHeaders } from '~/lib/apiFetchHeaders';
 import { LANGUAGE } from '~/lib/constants';
 import { useAuthTokenCookie } from '~/lib/authTokenCookie';
 import { resolveApiBaseUrl } from '~/lib/resolveApiBaseUrl';
@@ -9,33 +10,6 @@ import {
     defineNuxtPlugin,
     type NuxtApp,
 } from '#app';
-
-function readRequestHeaders(raw: unknown): Record<string, string> {
-    if (!raw) {
-        return {};
-    }
-
-    if (raw instanceof Headers) {
-        return Object.fromEntries(raw.entries());
-    }
-
-    if (Array.isArray(raw)) {
-        return Object.fromEntries(raw);
-    }
-
-    return { ...(raw as Record<string, string>) };
-}
-
-function extractBearerToken(authorization?: string): string | undefined {
-    if (!authorization) {
-        return undefined;
-    }
-
-    const match = authorization.match(/^Bearer\s+(.+)$/i);
-    const token = match?.[1]?.trim();
-
-    return token || undefined;
-}
 
 export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
     const runtimeConfig = useRuntimeConfig();
@@ -49,21 +23,11 @@ export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
             options.baseURL = resolveApiBaseUrl(runtimeConfig);
 
             const incoming = readRequestHeaders(options.headers);
-            const token = extractBearerToken(incoming.Authorization)
-                ?? (authToken.value ? String(authToken.value) : undefined);
-
-            const headers: Record<string, string> = {
-                'Accept': 'application/json',
-                'Accept-Language': languageCookie.value ?? 'fr',
-                ...incoming,
-            };
-
-            if (token) {
-                headers.Authorization = `Bearer ${token}`;
-            }
-            else {
-                delete headers.Authorization;
-            }
+            const headers = buildApiRequestHeaders(
+                incoming,
+                authToken.value,
+                languageCookie.value ?? 'fr',
+            );
 
             if (!(options.body instanceof FormData)) {
                 headers['Content-Type'] = 'application/json';
