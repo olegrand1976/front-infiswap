@@ -26,6 +26,7 @@ export const useAuth = () => {
     const isManager = hasAccountType(['manager']);
     const isCommunityManager = hasAccountType(['community_manager']);
     const isSaleRepresentative = hasAccountType(['sale_representative']);
+    const canAccessMarketingAnalytics = computed(() => isAdmin.value || isCommunityManager.value || isSaleRepresentative.value);
     const isMedical = hasAccountType(['nurse', 'caregiver', 'midwife', 'collaborator']);
     const isInstitution = computed((): boolean => {
         return user.value?.type === 'institution';
@@ -636,6 +637,7 @@ export const useAuth = () => {
         switchContext,
         isCommunityManager,
         isSaleRepresentative,
+        canAccessMarketingAnalytics,
         isCollaborator,
         isDeveloper,
         isManager,

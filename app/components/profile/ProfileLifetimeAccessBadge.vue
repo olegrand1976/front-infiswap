@@ -109,28 +109,9 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <NuxtLink
-        v-if="showUnpaidHint"
-        to="/acces-plan"
-        class="relative inline-flex shrink-0 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-        title="Activer l'accès réseau — 9,90 €"
-    >
-        <slot />
-        <span
-            class="absolute -bottom-0.5 -right-0.5 z-10 flex items-center justify-center rounded-full border-white bg-gray-200 shadow-md ring-1 ring-gray-300/80"
-            :class="unpaidBadgeClass"
-            aria-label="Accès réseau non activé"
-        >
-            <Medal
-                :class="iconClass"
-                class="text-gray-400"
-                aria-hidden="true"
-            />
-        </span>
-    </NuxtLink>
     <div
-        v-else
         class="relative inline-flex shrink-0"
+        :title="showUnpaidHint ? 'Accès réseau non activé — 9,90 €' : undefined"
     >
         <slot />
 
@@ -141,7 +122,20 @@ onBeforeUnmount(() => {
         />
 
         <span
-            v-if="showPaidBadge"
+            v-if="showUnpaidHint"
+            class="absolute -bottom-0.5 -right-0.5 z-10 flex items-center justify-center rounded-full border-white bg-gray-200 shadow-md ring-1 ring-gray-300/80"
+            :class="unpaidBadgeClass"
+            aria-label="Accès réseau non activé"
+        >
+            <Medal
+                :class="iconClass"
+                class="text-gray-400"
+                aria-hidden="true"
+            />
+        </span>
+
+        <span
+            v-else-if="showPaidBadge"
             class="absolute -bottom-0.5 -right-0.5 z-10 flex items-center justify-center rounded-full border-white bg-gradient-to-br from-amber-400 via-yellow-500 to-amber-600 shadow-md ring-1 ring-amber-300/80"
             :class="[badgeClass, { 'lifetime-badge-reveal': isAnimating }]"
             title="Inscription validée à vie — accès InfiSwap permanent"
