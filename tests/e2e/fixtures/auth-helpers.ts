@@ -1,4 +1,4 @@
-import type { Locator, Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 import type { RegistrationFormData } from './test-data';
 
 function visibleRegistrationForm(page: Page): Locator {
@@ -31,19 +31,30 @@ export async function fillRegistrationForm(page: Page, data: RegistrationFormDat
     const belgiumCheckbox = workingCountriesBlock.getByRole('checkbox').first();
     await belgiumCheckbox.scrollIntoViewIfNeeded();
 
-    if (!(await belgiumCheckbox.isChecked())) {
+    // La Belgique est pré-cochée via SSR (useCountry). On force l'état "coché" de
+    // façon déterministe : un simple toggle décocherait le pays et invaliderait le
+    // formulaire selon le timing d'hydratation.
+    await expect(belgiumCheckbox).toBeVisible();
+    if ((await belgiumCheckbox.getAttribute('aria-checked')) !== 'true') {
         await belgiumCheckbox.click();
     }
+    await expect(belgiumCheckbox).toBeChecked();
 
     await form.getByRole('combobox').filter({ hasText: 'Catégorie professionnelle' }).click();
     await page.getByRole('option', { name: 'Indépendant(e)' }).click();
 
-    const charteLabel = form.locator('label').filter({ hasText: 'charte de bonne conduite' });
-    await charteLabel.getByRole('checkbox').click();
+    const charteCheckbox = form.getByRole('checkbox', { name: 'charte de bonne conduite' });
+    await charteCheckbox.scrollIntoViewIfNeeded();
+    if ((await charteCheckbox.getAttribute('aria-checked')) !== 'true') {
+        await charteCheckbox.click();
+    }
+    await expect(charteCheckbox).toBeChecked();
 }
 
 export async function submitRegistration(page: Page): Promise<void> {
-    await visibleRegistrationForm(page).getByRole('button', { name: "S'inscrire" }).click();
+    const submitButton = visibleRegistrationForm(page).getByRole('button', { name: "S'inscrire" });
+    await expect(submitButton).toBeEnabled({ timeout: 15_000 });
+    await submitButton.click();
 }
 
 export async function cleanupE2eUsers(apiUrl: string): Promise<void> {
