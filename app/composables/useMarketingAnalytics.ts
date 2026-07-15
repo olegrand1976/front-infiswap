@@ -2,6 +2,8 @@ import type { StripePaymentKpis } from '@/composables/useStripePaymentsAdmin';
 
 export type MarketingAnalyticsPeriod = '7d' | '30d' | '90d';
 
+export type MarketingAccountTypeFilter = 'all' | 'nurse' | 'institution';
+
 export type MarketingAccountTypeBreakdown = {
     logins: number;
     unique_users: number;
@@ -25,6 +27,24 @@ export type MarketingTopScreen = {
     route_path: string;
     views: number;
     unique_users: number;
+};
+
+export type MarketingUniqueUser = {
+    id: number;
+    full_name: string;
+    email: string;
+    account_type: 'nurse' | 'institution';
+    logins: number;
+    last_login_at: string;
+};
+
+export type MarketingUnverifiedUser = {
+    id: number;
+    full_name: string;
+    email: string;
+    account_type: string;
+    created_at: string | null;
+    can_resend: boolean;
 };
 
 export type MarketingAnalyticsOverview = {
@@ -68,6 +88,12 @@ export const MARKETING_ANALYTICS_PERIODS = [
     { value: '90d' as const, label: '90 jours' },
 ];
 
+export const MARKETING_ACCOUNT_TYPE_FILTERS = [
+    { value: 'all' as const, label: 'Tous' },
+    { value: 'nurse' as const, label: 'Infirmières' },
+    { value: 'institution' as const, label: 'Institutions' },
+];
+
 export const useMarketingAnalytics = () => {
     const { $apifetch } = useNuxtApp();
 
@@ -79,7 +105,46 @@ export const useMarketingAnalytics = () => {
         return response.data;
     };
 
+    const getUniqueUsers = async (
+        period: MarketingAnalyticsPeriod = '30d',
+        accountType: MarketingAccountTypeFilter = 'all',
+        page = 1,
+        perPage = 25,
+    ) => {
+        const params = new URLSearchParams({
+            period,
+            account_type: accountType,
+            page: String(page),
+            per_page: String(perPage),
+        });
+
+        return await $apifetch<{ users: MarketingUniqueUser[]; count: number }>(
+            `api/admin/marketing-analytics/unique-users?${params.toString()}`,
+        );
+    };
+
+    const getUnverifiedEmails = async (page = 1, perPage = 25) => {
+        const params = new URLSearchParams({
+            page: String(page),
+            per_page: String(perPage),
+        });
+
+        return await $apifetch<{ users: MarketingUnverifiedUser[]; count: number }>(
+            `api/admin/marketing-analytics/unverified-emails?${params.toString()}`,
+        );
+    };
+
+    const resendVerification = async (userId: number) => {
+        return await $apifetch<{ message: string; sent_at: string }>(
+            `api/admin/marketing-analytics/unverified-emails/${userId}/resend-verification`,
+            { method: 'POST' },
+        );
+    };
+
     return {
         getOverview,
+        getUniqueUsers,
+        getUnverifiedEmails,
+        resendVerification,
     };
 };

@@ -29,6 +29,10 @@
                     :loading="loading"
                 />
 
+                <MarketingUniqueUsersPanel :period="selectedPeriod" />
+
+                <MarketingUnverifiedEmailsPanel v-if="canManageUnverifiedEmails" />
+
                 <DashboardStatCardAdminGroup
                     title="Acquisition"
                     :items="acquisitionItems"
@@ -74,7 +78,7 @@
                     :loading="loading"
                 />
 
-                <StripePaymentKpiCards
+                <MarketingStripeRevenueSummary
                     :kpis="overview?.revenue ?? null"
                     :loading="loading"
                 />
@@ -87,8 +91,10 @@
 import { UserPlus } from 'lucide-vue-next';
 import MarketingAttendanceKpiCards from '@/components/admin/marketing-analytics/MarketingAttendanceKpiCards.vue';
 import MarketingFunnelPanel from '@/components/admin/marketing-analytics/MarketingFunnelPanel.vue';
+import MarketingStripeRevenueSummary from '@/components/admin/marketing-analytics/MarketingStripeRevenueSummary.vue';
 import MarketingTopScreensChart from '@/components/admin/marketing-analytics/MarketingTopScreensChart.vue';
-import StripePaymentKpiCards from '@/components/subscription/StripePaymentKpiCards.vue';
+import MarketingUniqueUsersPanel from '@/components/admin/marketing-analytics/MarketingUniqueUsersPanel.vue';
+import MarketingUnverifiedEmailsPanel from '@/components/admin/marketing-analytics/MarketingUnverifiedEmailsPanel.vue';
 import { LineChart } from '@/components/ui/chart-line';
 import {
     MARKETING_ANALYTICS_PERIODS,
@@ -106,8 +112,10 @@ definePageMeta({
 
 const { canAccessMarketingAnalytics } = useAuth();
 const { getOverview } = useMarketingAnalytics();
+const user = useUser();
 
 const canAccess = canAccessMarketingAnalytics;
+const canManageUnverifiedEmails = computed(() => user.value?.roles?.includes('administrator') ?? false);
 
 onMounted(() => {
     if (!canAccess.value) {
