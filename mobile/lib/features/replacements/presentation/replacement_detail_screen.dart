@@ -1,16 +1,104 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/api/api_exception.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../applications/data/applications_repository.dart';
+import '../../auth/providers/auth_session_provider.dart';
 import '../models/replacement_item.dart';
 import 'widgets/mission_avatar.dart';
+import 'widgets/platform_access_sheet.dart';
 
-class ReplacementDetailScreen extends StatelessWidget {
+enum _ApplyStatus { idle, loading, applied }
+
+class ReplacementDetailScreen extends ConsumerStatefulWidget {
   const ReplacementDetailScreen({
     super.key,
     required this.item,
   });
 
   final ReplacementItem item;
+
+  @override
+  ConsumerState<ReplacementDetailScreen> createState() =>
+      _ReplacementDetailScreenState();
+}
+
+class _ReplacementDetailScreenState
+    extends ConsumerState<ReplacementDetailScreen> {
+  _ApplyStatus _status = _ApplyStatus.idle;
+
+  ReplacementItem get item => widget.item;
+
+  int? get _userId {
+    final id = ref.read(authSessionProvider)?.user['id'];
+    if (id is int) {
+      return id;
+    }
+    if (id is String) {
+      return int.tryParse(id);
+    }
+    return null;
+  }
+
+  Future<void> _apply() async {
+    if (_status != _ApplyStatus.idle) {
+      return;
+    }
+
+    final userId = _userId;
+    if (userId == null) {
+      return;
+    }
+
+    setState(() => _status = _ApplyStatus.loading);
+
+    final repository = ref.read(applicationsRepositoryProvider);
+
+    try {
+      if (item.isMission) {
+        final missionId = int.tryParse(item.id.replaceFirst('mission-', ''));
+        if (missionId == null) {
+          throw StateError('Identifiant de mission invalide.');
+        }
+        await repository.applyToMission(missionId: missionId, userId: userId);
+      } else {
+        final replacementId = int.tryParse(item.id);
+        if (replacementId == null) {
+          throw StateError('Identifiant de remplacement invalide.');
+        }
+        await repository.applyToReplacement(
+          replacementId: replacementId,
+          userId: userId,
+        );
+      }
+      if (!mounted) return;
+      setState(() => _status = _ApplyStatus.applied);
+    } on ApiException catch (error) {
+      if (!mounted) return;
+      if (error.isPlatformAccessRequired) {
+        setState(() => _status = _ApplyStatus.idle);
+        await PlatformAccessSheet.show(context);
+        return;
+      }
+      var message = error.message;
+      if (error.errors != null && error.errors!.isNotEmpty) {
+        message = error.errors!.values.first.first;
+      }
+      if (message.toLowerCase().contains('déjà')) {
+        setState(() => _status = _ApplyStatus.applied);
+        return;
+      }
+      setState(() => _status = _ApplyStatus.idle);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _status = _ApplyStatus.idle);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Une erreur est survenue.')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,29 +202,20 @@ class ReplacementDetailScreen extends StatelessWidget {
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text('Candidature bientôt disponible'),
-                        backgroundColor: colors.card,
-                      ),
-                    );
-                  },
+                  onPressed: _status == _ApplyStatus.idle ? _apply : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: colors.primary,
                     foregroundColor: colors.onPrimary,
+                    disabledBackgroundColor: _status == _ApplyStatus.applied
+                        ? AppColors.mint
+                        : colors.primary,
+                    disabledForegroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(28),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text(
-                    'Je suis intéressé(e)',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
+                  child: _ApplyButtonLabel(status: _status),
                 ),
               ),
             ),
@@ -144,6 +223,44 @@ class ReplacementDetailScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _ApplyButtonLabel extends StatelessWidget {
+  const _ApplyButtonLabel({required this.status});
+
+  final _ApplyStatus status;
+
+  @override
+  Widget build(BuildContext context) {
+    switch (status) {
+      case _ApplyStatus.idle:
+        return const Text(
+          'Je suis intéressé(e)',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+        );
+      case _ApplyStatus.loading:
+        return const SizedBox(
+          width: 22,
+          height: 22,
+          child: CircularProgressIndicator(
+            strokeWidth: 2.4,
+            valueColor: AlwaysStoppedAnimation(Colors.white),
+          ),
+        );
+      case _ApplyStatus.applied:
+        return const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.check_circle, size: 20, color: Colors.white),
+            SizedBox(width: 8),
+            Text(
+              'Candidature envoyée',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+            ),
+          ],
+        );
+    }
   }
 }
 

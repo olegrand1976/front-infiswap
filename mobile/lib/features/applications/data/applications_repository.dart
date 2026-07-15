@@ -35,6 +35,37 @@ class ApplicationsRepository {
         )
         .toList();
   }
+
+  Future<void> applyToReplacement({
+    required int replacementId,
+    required int userId,
+    String? comment,
+  }) {
+    return _api.post<Map<String, dynamic>>(
+      '/replacement-responses/send',
+      data: {
+        'replacementId': replacementId,
+        'respondedBy': userId,
+        'institutionId': null,
+        if (comment != null && comment.isNotEmpty) 'comment': comment,
+      },
+    );
+  }
+
+  Future<void> applyToMission({
+    required int missionId,
+    required int userId,
+    String? description,
+  }) {
+    return _api.post<Map<String, dynamic>>(
+      '/institution/missions/responses',
+      data: {
+        'mission_id': missionId,
+        'responded_by': userId,
+        if (description != null && description.isNotEmpty) 'description': description,
+      },
+    );
+  }
 }
 
 final applicationsRepositoryProvider = Provider<ApplicationsRepository>((ref) {

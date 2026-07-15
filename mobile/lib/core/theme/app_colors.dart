@@ -35,6 +35,12 @@ class AppPalette extends ThemeExtension<AppPalette> {
     required this.primaryMuted,
     required this.primaryOutline,
     required this.shadow,
+    required this.successBg,
+    required this.successFg,
+    required this.pendingBg,
+    required this.pendingFg,
+    required this.dangerBg,
+    required this.dangerFg,
   });
 
   final Color background;
@@ -55,6 +61,13 @@ class AppPalette extends ThemeExtension<AppPalette> {
 
   final Color shadow;
 
+  final Color successBg;
+  final Color successFg;
+  final Color pendingBg;
+  final Color pendingFg;
+  final Color dangerBg;
+  final Color dangerFg;
+
   static const light = AppPalette(
     background: Color(0xFFF1F5F9),
     card: Color(0xFFFFFFFF),
@@ -70,6 +83,12 @@ class AppPalette extends ThemeExtension<AppPalette> {
     primaryMuted: Color(0xFFFFE4E6),
     primaryOutline: Color(0xFFFB7185),
     shadow: Color(0x1A0F172A),
+    successBg: Color(0xFFD1FAE5),
+    successFg: Color(0xFF047857),
+    pendingBg: Color(0xFFFEF3C7),
+    pendingFg: Color(0xFFB45309),
+    dangerBg: Color(0xFFFEE2E2),
+    dangerFg: Color(0xFFB91C1C),
   );
 
   static const dark = AppPalette(
@@ -87,6 +106,12 @@ class AppPalette extends ThemeExtension<AppPalette> {
     primaryMuted: Color(0x1F34D399),
     primaryOutline: Color(0x8034D399),
     shadow: Color(0x00000000),
+    successBg: Color(0x2934D399),
+    successFg: Color(0xFF6EE7B7),
+    pendingBg: Color(0x29F59E0B),
+    pendingFg: Color(0xFFFBBF24),
+    dangerBg: Color(0x29E11D48),
+    dangerFg: Color(0xFFFB7185),
   );
 
   @override
@@ -105,6 +130,12 @@ class AppPalette extends ThemeExtension<AppPalette> {
     Color? primaryMuted,
     Color? primaryOutline,
     Color? shadow,
+    Color? successBg,
+    Color? successFg,
+    Color? pendingBg,
+    Color? pendingFg,
+    Color? dangerBg,
+    Color? dangerFg,
   }) {
     return AppPalette(
       background: background ?? this.background,
@@ -121,6 +152,12 @@ class AppPalette extends ThemeExtension<AppPalette> {
       primaryMuted: primaryMuted ?? this.primaryMuted,
       primaryOutline: primaryOutline ?? this.primaryOutline,
       shadow: shadow ?? this.shadow,
+      successBg: successBg ?? this.successBg,
+      successFg: successFg ?? this.successFg,
+      pendingBg: pendingBg ?? this.pendingBg,
+      pendingFg: pendingFg ?? this.pendingFg,
+      dangerBg: dangerBg ?? this.dangerBg,
+      dangerFg: dangerFg ?? this.dangerFg,
     );
   }
 
@@ -144,6 +181,12 @@ class AppPalette extends ThemeExtension<AppPalette> {
       primaryMuted: Color.lerp(primaryMuted, other.primaryMuted, t)!,
       primaryOutline: Color.lerp(primaryOutline, other.primaryOutline, t)!,
       shadow: Color.lerp(shadow, other.shadow, t)!,
+      successBg: Color.lerp(successBg, other.successBg, t)!,
+      successFg: Color.lerp(successFg, other.successFg, t)!,
+      pendingBg: Color.lerp(pendingBg, other.pendingBg, t)!,
+      pendingFg: Color.lerp(pendingFg, other.pendingFg, t)!,
+      dangerBg: Color.lerp(dangerBg, other.dangerBg, t)!,
+      dangerFg: Color.lerp(dangerFg, other.dangerFg, t)!,
     );
   }
 }

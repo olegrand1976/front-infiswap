@@ -87,23 +87,28 @@ class ProfileScreen extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.send_outlined,
-                        color: colors.primary,
-                      ),
-                      title: Text(
-                        'Mes candidatures',
-                        style: TextStyle(
-                          color: colors.textPrimary,
-                          fontWeight: FontWeight.w500,
+                    child: Material(
+                      type: MaterialType.transparency,
+                      borderRadius: BorderRadius.circular(16),
+                      clipBehavior: Clip.antiAlias,
+                      child: ListTile(
+                        leading: Icon(
+                          Icons.send_outlined,
+                          color: colors.primary,
                         ),
+                        title: Text(
+                          'Mes candidatures',
+                          style: TextStyle(
+                            color: colors.textPrimary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        trailing: Icon(
+                          Icons.chevron_right,
+                          color: colors.textSecondary,
+                        ),
+                        onTap: () => context.push('/applications'),
                       ),
-                      trailing: Icon(
-                        Icons.chevron_right,
-                        color: colors.textSecondary,
-                      ),
-                      onTap: () => context.push('/applications'),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -125,36 +130,41 @@ class ProfileScreen extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    child: SwitchListTile(
-                      contentPadding: EdgeInsets.zero,
-                      secondary: Icon(
-                        isDark
-                            ? Icons.dark_mode_outlined
-                            : Icons.light_mode_outlined,
-                        color: colors.primary,
-                      ),
-                      title: Text(
-                        'Thème sombre',
-                        style: TextStyle(
-                          color: colors.textPrimary,
-                          fontWeight: FontWeight.w500,
+                    child: Material(
+                      type: MaterialType.transparency,
+                      borderRadius: BorderRadius.circular(16),
+                      clipBehavior: Clip.antiAlias,
+                      child: SwitchListTile(
+                        contentPadding: EdgeInsets.zero,
+                        secondary: Icon(
+                          isDark
+                              ? Icons.dark_mode_outlined
+                              : Icons.light_mode_outlined,
+                          color: colors.primary,
                         ),
-                      ),
-                      subtitle: Text(
-                        themeSubtitle,
-                        style: TextStyle(
-                          color: colors.textSecondary,
-                          fontSize: 13,
+                        title: Text(
+                          'Thème sombre',
+                          style: TextStyle(
+                            color: colors.textPrimary,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
+                        subtitle: Text(
+                          themeSubtitle,
+                          style: TextStyle(
+                            color: colors.textSecondary,
+                            fontSize: 13,
+                          ),
+                        ),
+                        activeThumbColor: colors.onPrimary,
+                        activeTrackColor: colors.primary,
+                        value: isDark,
+                        onChanged: (value) {
+                          ref.read(themeModeProvider.notifier).setThemeMode(
+                                value ? ThemeMode.dark : ThemeMode.light,
+                              );
+                        },
                       ),
-                      activeThumbColor: colors.onPrimary,
-                      activeTrackColor: colors.primary,
-                      value: isDark,
-                      onChanged: (value) {
-                        ref.read(themeModeProvider.notifier).setThemeMode(
-                              value ? ThemeMode.dark : ThemeMode.light,
-                            );
-                      },
                     ),
                   ),
                   const SizedBox(height: 24),

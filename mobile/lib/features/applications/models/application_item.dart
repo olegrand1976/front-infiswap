@@ -30,3 +30,19 @@ const applicationStatusLabels = <String, String>{
 String applicationStatusLabel(String status) {
   return applicationStatusLabels[status] ?? status;
 }
+
+enum ApplicationStatusBucket { pending, success, danger }
+
+ApplicationStatusBucket applicationStatusBucket(String status) {
+  switch (status) {
+    case 'confirmed':
+    case 'chat_enabled':
+      return ApplicationStatusBucket.success;
+    case 'refused':
+    case 'canceled':
+    case 'cancelled':
+      return ApplicationStatusBucket.danger;
+    default:
+      return ApplicationStatusBucket.pending;
+  }
+}

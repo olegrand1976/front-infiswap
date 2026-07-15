@@ -22,18 +22,18 @@ class ApplicationCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         child: Container(
-          padding: const EdgeInsets.all(14),
+          padding: const EdgeInsets.all(13),
           decoration: BoxDecoration(
             color: colors.card,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: colors.border),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: colors.divider),
             boxShadow: [
               BoxShadow(
                 color: colors.shadow,
-                blurRadius: 8,
-                offset: const Offset(0, 2),
+                blurRadius: 14,
+                offset: const Offset(0, 6),
               ),
             ],
           ),
@@ -47,49 +47,83 @@ class ApplicationCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        _TypeBadge(isUrgent: replacement.isUrgent),
+                        const SizedBox(height: 8),
                         Text(
                           'Remplacement du ${replacement.dateLabel}',
                           style: TextStyle(
                             color: colors.textPrimary,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
+                            fontSize: 13.5,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
-                        if (replacement.isUrgent) ...[
-                          const SizedBox(height: 6),
-                          const _UrgentChip(),
-                        ],
+                        const SizedBox(height: 2),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.pin_drop_outlined,
+                              size: 12,
+                              color: colors.primary,
+                            ),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                [
+                                  replacement.zipCodesLabel,
+                                  if (replacement.cities.isNotEmpty)
+                                    replacement.cities.join(', '),
+                                ].join(' · '),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: colors.textSecondary,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
-                  _StatusChip(
-                    label: item.statusLabel,
-                    status: item.status,
-                  ),
+                  const SizedBox(width: 8),
+                  _StatusChip(label: item.statusLabel, status: item.status),
                 ],
               ),
-              const SizedBox(height: 10),
-              if (item.patientCount != null)
-                _InfoLine(
-                  label: 'Patients',
-                  value: item.patientCount.toString(),
+              if (item.patientCount != null) ...[
+                const SizedBox(height: 9),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+                  decoration: BoxDecoration(
+                    border: Border(top: BorderSide(color: colors.divider)),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.groups_outlined,
+                        size: 12,
+                        color: colors.primary,
+                      ),
+                      const SizedBox(width: 5),
+                      Text(
+                        '${item.patientCount} patient${item.patientCount! > 1 ? 's' : ''}',
+                        style: TextStyle(
+                          color: colors.textPrimary,
+                          fontSize: 10.5,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              _InfoLine(
-                label: 'Codes postaux',
-                value: replacement.zipCodesLabel,
-              ),
-              if (replacement.cities.isNotEmpty)
-                _InfoLine(
-                  label: 'Villes',
-                  value: replacement.cities.join(', '),
-                ),
+              ],
               if (item.appliedAt != null) ...[
-                const SizedBox(height: 8),
+                const SizedBox(height: 6),
                 Text(
-                  'Candidature envoyée le ${_formatDate(item.appliedAt!)}',
+                  'Envoyée le ${_formatDate(item.appliedAt!)}',
                   style: TextStyle(
                     color: colors.textSecondary,
-                    fontSize: 12,
+                    fontSize: 10,
                   ),
                 ),
               ],
@@ -119,29 +153,23 @@ class ApplicationCard extends StatelessWidget {
   }
 }
 
-class _InfoLine extends StatelessWidget {
-  const _InfoLine({required this.label, required this.value});
+class _TypeBadge extends StatelessWidget {
+  const _TypeBadge({required this.isUrgent});
 
-  final String label;
-  final String value;
+  final bool isUrgent;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
+    final background = isUrgent ? AppColors.urgent : colors.background;
+    final foreground = isUrgent ? Colors.white : colors.textSecondary;
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
-      child: RichText(
-        text: TextSpan(
-          style: TextStyle(color: colors.textPrimary, fontSize: 13),
-          children: [
-            TextSpan(
-              text: '$label : ',
-              style: const TextStyle(fontWeight: FontWeight.w600),
-            ),
-            TextSpan(text: value),
-          ],
-        ),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+      decoration: BoxDecoration(color: background, borderRadius: BorderRadius.circular(7)),
+      child: Text(
+        isUrgent ? 'Urgent' : 'Classique',
+        style: TextStyle(color: foreground, fontSize: 9, fontWeight: FontWeight.w800, letterSpacing: .2),
       ),
     );
   }
@@ -155,57 +183,25 @@ class _StatusChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (background, foreground) = _colorsForStatus(status);
+    final colors = context.appColors;
+    final (background, foreground) = switch (applicationStatusBucket(status)) {
+      ApplicationStatusBucket.success => (colors.successBg, colors.successFg),
+      ApplicationStatusBucket.danger => (colors.dangerBg, colors.dangerFg),
+      ApplicationStatusBucket.pending => (colors.pendingBg, colors.pendingFg),
+    };
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
       decoration: BoxDecoration(
         color: background,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(999),
       ),
       child: Text(
         label,
         style: TextStyle(
           color: foreground,
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
-  }
-
-  static (Color, Color) _colorsForStatus(String status) {
-    switch (status) {
-      case 'confirmed':
-      case 'chat_enabled':
-        return (const Color(0xFFD1FAE5), const Color(0xFF047857));
-      case 'refused':
-      case 'canceled':
-      case 'cancelled':
-        return (const Color(0xFFFEE2E2), const Color(0xFFB91C1C));
-      default:
-        return (const Color(0xFFFEF3C7), const Color(0xFFB45309));
-    }
-  }
-}
-
-class _UrgentChip extends StatelessWidget {
-  const _UrgentChip();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(
-        color: AppColors.coral,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: const Text(
-        'URGENT',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 10,
-          fontWeight: FontWeight.bold,
+          fontSize: 9.5,
+          fontWeight: FontWeight.w800,
         ),
       ),
     );
