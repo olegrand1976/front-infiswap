@@ -7,6 +7,29 @@ test.describe('Connexion', () => {
         await page.goto('/login');
     });
 
+    test('login envoie un Bearer valide sur /api/user et persiste après reload', async ({ page }) => {
+        const email = process.env.E2E_LOGIN_EMAIL;
+        const password = process.env.E2E_LOGIN_PASSWORD;
+
+        test.skip(!email || !password, 'E2E_LOGIN_EMAIL / E2E_LOGIN_PASSWORD non configurés');
+
+        const userRequestAuthorizations: string[] = [];
+        page.on('request', (request) => {
+            if (request.method() === 'GET' && request.url().includes('/api/user')) {
+                userRequestAuthorizations.push(request.headers().authorization ?? '');
+            }
+        });
+
+        await fillLoginForm(page, email!, password!);
+        await submitLogin(page);
+
+        await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
+        expect(userRequestAuthorizations.some((value) => /^Bearer .+/.test(value))).toBe(true);
+
+        await page.reload();
+        await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
+    });
+
     test('login réussi redirige vers le dashboard', async ({ page, context }) => {
         const email = process.env.E2E_LOGIN_EMAIL;
         const password = process.env.E2E_LOGIN_PASSWORD;

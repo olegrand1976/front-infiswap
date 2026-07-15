@@ -47,6 +47,7 @@ jobs:
       cloudbuild_config: ${{ steps.env.outputs.cloudbuild_config }}
       web_service: ${{ steps.env.outputs.web_service }}
       web_public_url: ${{ steps.env.outputs.web_public_url }}
+      api_public_url: ${{ steps.env.outputs.api_public_url }}
       skip_baseline: ${{ steps.env.outputs.skip_baseline }}
     steps:
       - name: Resolve target environment
@@ -68,12 +69,14 @@ jobs:
               echo "cloudbuild_config=infra/gcp/cloudbuild-prod-web-only.yaml" >> "$GITHUB_OUTPUT"
               echo "web_service=infiswap-web-prod" >> "$GITHUB_OUTPUT"
               echo "web_public_url=https://infiswap.be" >> "$GITHUB_OUTPUT"
+              echo "api_public_url=https://back.infiswap.be" >> "$GITHUB_OUTPUT"
               ;;
             staging)
               gate_ref="staging"
               echo "cloudbuild_config=infra/gcp/cloudbuild-web-only.yaml" >> "$GITHUB_OUTPUT"
               echo "web_service=infiswap-web-staging" >> "$GITHUB_OUTPUT"
               echo "web_public_url=https://infiswap.ll-it-sc.be" >> "$GITHUB_OUTPUT"
+              echo "api_public_url=https://api-infiswap.ll-it-sc.be" >> "$GITHUB_OUTPUT"
               ;;
             *)
               echo "::error::Cible inconnue: $target"
@@ -85,9 +88,44 @@ jobs:
           echo "front_branch=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
           echo "skip_baseline=${skip_baseline}" >> "$GITHUB_OUTPUT"
 
+  quality-gate:
+    name: Vitest + build (front)
+    needs: resolve-env
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout front
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Run Vitest
+        run: npm run test -- --run
+
+      - name: Build
+        env:
+          NODE_ENV: production
+          NODE_OPTIONS: --max_old_space_size=4096
+          NUXT_PUBLIC_API_URL: ${{ needs.resolve-env.outputs.api_public_url }}
+          NUXT_PUBLIC_FRONT_END_URL: ${{ needs.resolve-env.outputs.web_public_url }}
+          API_URL: ${{ needs.resolve-env.outputs.api_public_url }}
+          FRONT_END_URL: ${{ needs.resolve-env.outputs.web_public_url }}
+        run: |
+          npm run build
+          test -f .output/server/index.mjs
+
   deploy:
     name: Cloud Build → front GCP
-    needs: resolve-env
+    needs: [resolve-env, quality-gate]
     runs-on: ubuntu-latest
     timeout-minutes: 45
 
