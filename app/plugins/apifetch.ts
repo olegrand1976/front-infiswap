@@ -10,6 +10,33 @@ import {
     type NuxtApp,
 } from '#app';
 
+function readRequestHeaders(raw: unknown): Record<string, string> {
+    if (!raw) {
+        return {};
+    }
+
+    if (raw instanceof Headers) {
+        return Object.fromEntries(raw.entries());
+    }
+
+    if (Array.isArray(raw)) {
+        return Object.fromEntries(raw);
+    }
+
+    return { ...(raw as Record<string, string>) };
+}
+
+function extractBearerToken(authorization?: string): string | undefined {
+    if (!authorization) {
+        return undefined;
+    }
+
+    const match = authorization.match(/^Bearer\s+(.+)$/i);
+    const token = match?.[1]?.trim();
+
+    return token || undefined;
+}
+
 export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
     const runtimeConfig = useRuntimeConfig();
     const languageCookie = useCookie(LANGUAGE);
@@ -21,12 +48,22 @@ export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
         async onRequest({ options }) {
             options.baseURL = resolveApiBaseUrl(runtimeConfig);
 
+            const incoming = readRequestHeaders(options.headers);
+            const token = extractBearerToken(incoming.Authorization)
+                ?? (authToken.value ? String(authToken.value) : undefined);
+
             const headers: Record<string, string> = {
                 'Accept': 'application/json',
-                'Authorization': `Bearer ${authToken.value ?? ''}`,
                 'Accept-Language': languageCookie.value ?? 'fr',
-                ...(options?.headers as Record<string, string> | undefined),
+                ...incoming,
             };
+
+            if (token) {
+                headers.Authorization = `Bearer ${token}`;
+            }
+            else {
+                delete headers.Authorization;
+            }
 
             if (!(options.body instanceof FormData)) {
                 headers['Content-Type'] = 'application/json';
