@@ -211,6 +211,20 @@
                             </SelectContent>
                         </Select>
 
+                        <NuxtLink
+                            v-if="showPlatformAccessCta"
+                            to="/acces-plan"
+                            class="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 px-2.5 py-1.5 text-xs font-bold text-white shadow-md ring-2 ring-amber-400/40 hover:from-amber-600 hover:to-amber-700 sm:px-3.5 sm:py-2 sm:text-sm"
+                            @click="onPlatformAccessHeaderClick"
+                        >
+                            <Medal
+                                class="size-3.5 shrink-0 sm:size-4"
+                                aria-hidden="true"
+                            />
+                            <span class="hidden sm:inline">Accès réseau —</span>
+                            9,90 €
+                        </NuxtLink>
+
                         <DropdownMenu>
                             <DropdownMenuTrigger class="flex shrink-0 items-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
                                 <ProfileLifetimeAccessBadge session-consumer>
@@ -273,15 +287,9 @@
                                 Réactiver Mon réseau InfiSwap
                             </DropdownMenuItem>
                             <DropdownMenuItem as-child>
-                                <NuxtLink to="/acces-plan">Accès plateforme</NuxtLink>
+                                <NuxtLink :to="settingsRoute">Paramètres</NuxtLink>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                                v-if="user?.account_type != 'nurse' && user?.account_type != 'caregiver' && user?.account_type != 'midwife'"
-                                as-child
-                            >
-                                <NuxtLink to="/dashboard/settings">Paramètres</NuxtLink>
-                            </DropdownMenuItem>
                             <DropdownMenuItem
                                 class="hover:bg-primary"
                                 @click="logout"
@@ -330,7 +338,7 @@ import { useRuntimeConfig } from '#app';
 import type { AccountType, User } from '~/lib/types';
 import { cn } from '@/lib/utils';
 import { getRole, getShortDisplayName } from '~/lib/utils';
-import { showsPaidNetworkAccessBadge } from '~/utils/platformAccess';
+import { hasPaidPlatformAccess, isSubjectToPlatformAccessPayment, showsPaidNetworkAccessBadge } from '~/utils/platformAccess';
 import { mapCelebrationVariantToReviewSource } from '~/utils/googleReview';
 
 const { isAdmin, hasChangedAvatar } = useAuth();
@@ -373,6 +381,18 @@ const reportDescription = ref('');
 const displayFullName = computed(() => user.value?.full_name || 'xxx XXX');
 const displayShortName = computed(() => getShortDisplayName(user.value) || displayFullName.value);
 const showNetworkMemberBadge = computed(() => showsPaidNetworkAccessBadge(user.value));
+const showPlatformAccessCta = computed(() =>
+    isSubjectToPlatformAccessPayment(user.value) && !hasPaidPlatformAccess(user.value),
+);
+const settingsRoute = computed(() =>
+    user.value?.type === 'institution' ? '/dashboard/institution/settings' : '/dashboard/settings',
+);
+
+const { trackEvent } = useProductAnalytics();
+
+function onPlatformAccessHeaderClick() {
+    trackEvent('platform_access_cta_click', { source: 'header' });
+}
 
 const { activeCelebration, dismissCelebration } = usePurchaseCelebration();
 const { activeEngagement, requestEngagement } = usePostSuccessEngagement();
