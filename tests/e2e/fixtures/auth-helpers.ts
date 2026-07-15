@@ -17,15 +17,15 @@ export async function submitLogin(page: Page): Promise<void> {
 export async function fillRegistrationForm(page: Page, data: RegistrationFormData): Promise<void> {
     const form = visibleRegistrationForm(page);
 
-    await form.getByPlaceholder('Nom *').fill(data.lastname);
-    await form.getByPlaceholder('Prénoms *').fill(data.firstname);
-    await form.getByPlaceholder('Email *').fill(data.email);
-    await form.getByPlaceholder('N° de téléphone *').fill(data.phoneNumber);
-    await form.getByPlaceholder('Mot de passe *').fill(data.password);
-    await form.getByPlaceholder('Confirmation mot de passe *').fill(data.password);
-    await form.getByPlaceholder('Rue *').fill(data.street);
-    await form.getByPlaceholder('Code postal *').fill(data.zipCode);
-    await form.getByPlaceholder('Ville *').fill(data.city);
+    await form.getByPlaceholder('Nom *', { exact: true }).fill(data.lastname);
+    await form.getByPlaceholder('Prénoms *', { exact: true }).fill(data.firstname);
+    await form.getByPlaceholder('Email *', { exact: true }).fill(data.email);
+    await form.getByPlaceholder('N° de téléphone *', { exact: true }).fill(data.phoneNumber);
+    await form.getByPlaceholder('Mot de passe *', { exact: true }).fill(data.password);
+    await form.getByPlaceholder('Confirmation mot de passe *', { exact: true }).fill(data.password);
+    await form.getByPlaceholder('Rue *', { exact: true }).fill(data.street);
+    await form.getByPlaceholder('Code postal *', { exact: true }).fill(data.zipCode);
+    await form.getByPlaceholder('Ville *', { exact: true }).fill(data.city);
 
     const belgiumCheckbox = form.locator('label').filter({ hasText: 'Belgique' }).getByRole('checkbox');
     if (!(await belgiumCheckbox.isChecked())) {
