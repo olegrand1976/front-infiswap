@@ -2,6 +2,44 @@
     <div class="space-y-6">
         <DashboardOnboardingServicesBanner />
 
+        <section
+            aria-label="Statistiques remplacements"
+            class="grid grid-cols-2 sm:grid-cols-4 gap-3"
+        >
+            <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
+                <p class="text-[11px] uppercase tracking-wide text-gray-500">
+                    Postés (mois)
+                </p>
+                <p class="text-2xl font-bold text-primary tabular-nums mt-0.5">
+                    {{ reports?.me ?? 0 }}
+                </p>
+            </div>
+            <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
+                <p class="text-[11px] uppercase tracking-wide text-gray-500">
+                    Acceptés (mois)
+                </p>
+                <p class="text-2xl font-bold text-success tabular-nums mt-0.5">
+                    {{ reports?.accepted ?? 0 }}
+                </p>
+            </div>
+            <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
+                <p class="text-[11px] uppercase tracking-wide text-gray-500">
+                    Réponses (mois)
+                </p>
+                <p class="text-2xl font-bold text-indigo-600 tabular-nums mt-0.5">
+                    {{ reports?.total ?? 0 }}
+                </p>
+            </div>
+            <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
+                <p class="text-[11px] uppercase tracking-wide text-gray-500">
+                    Parrainages
+                </p>
+                <p class="text-2xl font-bold text-amber-600 tabular-nums mt-0.5">
+                    {{ reports?.referrals ?? 0 }}
+                </p>
+            </div>
+        </section>
+
         <section class="grid items-center grid-cols-1 gap-4">
             <NurstechPresentation />
 

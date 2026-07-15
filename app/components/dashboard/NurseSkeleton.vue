@@ -1,8 +1,11 @@
 <template>
     <div class="space-y-6">
-        <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
-            <Skeleton class="h-36 rounded-lg bg-white shadow-md" />
-            <Skeleton class="h-36 rounded-lg bg-white shadow-md" />
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <Skeleton
+                v-for="i in 4"
+                :key="i"
+                class="h-20 rounded-md bg-white shadow-sm"
+            />
         </div>
 
         <div class="mx-8 hidden gap-4 lg:grid lg:grid-cols-4">
