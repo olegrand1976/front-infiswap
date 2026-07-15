@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../replacements/presentation/widgets/create_type_sheet.dart';
 import '../../../shell/providers/shell_tab_index_provider.dart';
 import 'home_decorations.dart';
 
@@ -43,13 +44,7 @@ class HomeQuickActions extends ConsumerWidget {
                 label: 'Créer',
                 subtitle: 'Créer une annonce',
                 accent: HomeDecorations.accentMint(context),
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Création bientôt disponible'),
-                    ),
-                  );
-                },
+                onTap: () => CreateTypeSheet.show(context),
               ),
             ),
           ],

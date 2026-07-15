@@ -7,6 +7,7 @@ import '../data/replacements_list_notifier.dart';
 import '../models/replacement_item.dart';
 import 'replacement_detail_screen.dart';
 import 'widgets/active_search_chips.dart';
+import 'widgets/create_type_sheet.dart';
 import 'widgets/mission_avatar.dart';
 import 'widgets/replacement_filters_modal.dart';
 import 'widgets/replacement_search_modal.dart';
@@ -64,11 +65,7 @@ class ReplacementsScreen extends ConsumerWidget {
                     );
                   },
                 ),
-                onCreateTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content:
-                          Text('Création remplacement bientôt disponible.')));
-                },
+                onCreateTap: () => CreateTypeSheet.show(context),
               ),
             ),
             const ActiveSearchChips(),
