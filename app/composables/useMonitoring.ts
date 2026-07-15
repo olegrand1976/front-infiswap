@@ -1,4 +1,5 @@
 import { useNuxtApp, useState } from '#app';
+import { getErrorMessage } from '~/lib/utils';
 
 type AlertRecipient = {
     email: string;
@@ -24,6 +25,9 @@ export const useMonitoring = () => {
     const isLoadingLaravelLogs = useState<boolean>('monitoringLaravelLogsLoading', () => false);
     const laravelLogs = useState<LaravelLogEntry[]>('monitoringLaravelLogs', () => []);
     const laravelLogsTotal = useState<number>('monitoringLaravelLogsTotal', () => 0);
+    const laravelLogsMessage = useState<string | null>('monitoringLaravelLogsMessage', () => null);
+    const laravelLogsError = useState<string | null>('monitoringLaravelLogsError', () => null);
+    const laravelLogsSource = useState<string | null>('monitoringLaravelLogsSource', () => null);
 
     const getDatabaseAlertRecipients = async () => {
         loading.value = true;
@@ -81,15 +85,26 @@ export const useMonitoring = () => {
         }
     };
 
-    const getLaravelLogErrors = async (limit = 50) => {
+    const getLaravelLogErrors = async (limit = 50, options: { bustCache?: boolean } = {}) => {
         isLoadingLaravelLogs.value = true;
+        laravelLogsError.value = null;
         try {
             const response = await $apifetch('/api/admin/monitoring/errors/laravel-log', {
-                params: { limit },
+                params: {
+                    limit,
+                    ...(options.bustCache ? { _ts: Date.now() } : {}),
+                },
+                cache: 'no-store',
             });
             laravelLogs.value = response.data ?? [];
             laravelLogsTotal.value = response.total ?? 0;
+            laravelLogsMessage.value = response.message ?? null;
+            laravelLogsSource.value = response.source ?? null;
             return response;
+        }
+        catch (error) {
+            laravelLogsError.value = getErrorMessage(error);
+            throw error;
         }
         finally {
             isLoadingLaravelLogs.value = false;
@@ -100,6 +115,9 @@ export const useMonitoring = () => {
         recipients,
         laravelLogs,
         laravelLogsTotal,
+        laravelLogsMessage,
+        laravelLogsError,
+        laravelLogsSource,
         loading,
         isLoadingLaravelLogs,
         getDatabaseAlertRecipients,
