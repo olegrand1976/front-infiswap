@@ -316,7 +316,7 @@ class _MiniTypeBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final background = isUrgent ? AppColors.urgent : colors.background;
-    final foreground = isUrgent ? Colors.white : colors.textSecondary;
+    final foreground = isUrgent ? AppColors.onUrgent : colors.textSecondary;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),

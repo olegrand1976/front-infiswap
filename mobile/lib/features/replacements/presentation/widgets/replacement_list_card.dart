@@ -191,7 +191,7 @@ class ReplacementBoostStars extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: List.generate(
         5,
-        (_) => Icon(Icons.star, size: size, color: const Color(0xFFFBBF24)),
+        (_) => Icon(Icons.star, size: size, color: AppColors.boostGold),
       ),
     );
   }
@@ -211,12 +211,12 @@ class ReplacementUrgentBadge extends StatelessWidget {
       child: const Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.campaign_outlined, size: 12, color: Colors.white),
+          Icon(Icons.campaign_outlined, size: 12, color: AppColors.onCoral),
           SizedBox(width: 3),
           Text(
             'Urgent',
             style: TextStyle(
-              color: Colors.white,
+              color: AppColors.onCoral,
               fontSize: 10,
               fontWeight: FontWeight.w600,
             ),

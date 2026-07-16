@@ -276,7 +276,7 @@ class _ReplacementBoostSheetState extends ConsumerState<ReplacementBoostSheet> {
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2.2,
                                       valueColor:
-                                          AlwaysStoppedAnimation(Colors.white),
+                                          AlwaysStoppedAnimation(AppColors.white),
                                     ),
                                   )
                                 : Text(

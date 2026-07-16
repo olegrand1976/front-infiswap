@@ -432,17 +432,10 @@ class _Avatar extends StatelessWidget {
   final String name;
   final String initials;
 
-  static const _palette = [
-    (Color(0xFFEDE9FE), Color(0xFF6D28D9)),
-    (Color(0xFFFEF3C7), Color(0xFFB45309)),
-    (Color(0xFFD1FAE5), Color(0xFF047857)),
-    (Color(0xFFFFE4E6), Color(0xFFB91C1C)),
-    (Color(0xFFE2E8F0), Color(0xFF475569)),
-  ];
-
   @override
   Widget build(BuildContext context) {
-    final (bg, fg) = _palette[name.hashCode.abs() % _palette.length];
+    const palette = AppColors.avatarPalette;
+    final (bg, fg) = palette[name.hashCode.abs() % palette.length];
 
     return Container(
       width: 42,

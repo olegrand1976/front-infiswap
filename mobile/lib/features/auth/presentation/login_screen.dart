@@ -73,9 +73,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         SnackBar(
           content: Text(
             error.message,
-            style: const TextStyle(color: Colors.white),
+            style: const TextStyle(color: AppColors.onCoral),
           ),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.coral,
         ),
       );
     } finally {

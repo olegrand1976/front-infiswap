@@ -15,11 +15,11 @@ class AppTheme {
       primary: palette.primary,
       onPrimary: palette.onPrimary,
       secondary: palette.secondary,
-      onSecondary: isLight ? AppColors.onMint : Colors.white,
+      onSecondary: isLight ? AppColors.onMint : AppColors.onCoral,
       surface: palette.background,
       onSurface: palette.textPrimary,
       error: AppColors.coral,
-      onError: Colors.white,
+      onError: AppColors.onCoral,
       outline: palette.border,
     );
 

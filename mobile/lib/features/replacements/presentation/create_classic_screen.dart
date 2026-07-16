@@ -104,7 +104,7 @@ class _CreateClassicScreenState extends ConsumerState<CreateClassicScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: isError ? Colors.red.shade600 : null,
+        backgroundColor: isError ? AppColors.coral : null,
       ),
     );
   }

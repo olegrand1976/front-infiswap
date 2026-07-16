@@ -244,7 +244,7 @@ class _ReplacementDetailScreenState
                           effectiveStatus == _ApplyStatus.applied
                               ? AppColors.mint
                               : colors.primary,
-                      disabledForegroundColor: Colors.white,
+                      disabledForegroundColor: AppColors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -396,14 +396,14 @@ class _ApplyButtonLabel extends StatelessWidget {
           height: 22,
           child: CircularProgressIndicator(
             strokeWidth: 2.4,
-            valueColor: AlwaysStoppedAnimation(Colors.white),
+            valueColor: AlwaysStoppedAnimation(AppColors.white),
           ),
         );
       case _ApplyStatus.applied:
         return const Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.check_circle, size: 20, color: Colors.white),
+            Icon(Icons.check_circle, size: 20, color: AppColors.white),
             SizedBox(width: 8),
             Text(
               'Candidature envoyée',
@@ -951,11 +951,11 @@ class _BoostStars extends StatelessWidget {
     return const Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(Icons.star, size: 18, color: Color(0xFFFBBF24)),
-        Icon(Icons.star, size: 18, color: Color(0xFFFBBF24)),
-        Icon(Icons.star, size: 18, color: Color(0xFFFBBF24)),
-        Icon(Icons.star, size: 18, color: Color(0xFFFBBF24)),
-        Icon(Icons.star, size: 18, color: Color(0xFFFBBF24)),
+        Icon(Icons.star, size: 18, color: AppColors.boostGold),
+        Icon(Icons.star, size: 18, color: AppColors.boostGold),
+        Icon(Icons.star, size: 18, color: AppColors.boostGold),
+        Icon(Icons.star, size: 18, color: AppColors.boostGold),
+        Icon(Icons.star, size: 18, color: AppColors.boostGold),
       ],
     );
   }
@@ -975,12 +975,12 @@ class _UrgentBadge extends StatelessWidget {
       child: const Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.campaign_outlined, size: 12, color: Colors.white),
+          Icon(Icons.campaign_outlined, size: 12, color: AppColors.onCoral),
           SizedBox(width: 4),
           Text(
             'Urgent',
             style: TextStyle(
-              color: Colors.white,
+              color: AppColors.onCoral,
               fontSize: 11,
               fontWeight: FontWeight.w600,
             ),

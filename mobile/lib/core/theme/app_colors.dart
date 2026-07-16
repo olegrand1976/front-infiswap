@@ -13,9 +13,23 @@ abstract final class AppColors {
 
   static const Color urgent = Color(0xFFE11D48);
 
+  static const Color onUrgent = Color(0xFFFFFFFF);
+
   static const Color mission = Color(0xFF6D28D9);
 
+  static const Color onMission = Color(0xFFFFFFFF);
+
   static const Color boostGold = Color(0xFFFBBF24);
+
+  static const Color white = Color(0xFFFFFFFF);
+
+  static const List<(Color, Color)> avatarPalette = [
+    (Color(0xFFEDE9FE), Color(0xFF6D28D9)),
+    (Color(0xFFFEF3C7), Color(0xFFB45309)),
+    (Color(0xFFD1FAE5), Color(0xFF047857)),
+    (Color(0xFFFFE4E6), Color(0xFFB91C1C)),
+    (Color(0xFFE2E8F0), Color(0xFF475569)),
+  ];
 }
 
 @immutable

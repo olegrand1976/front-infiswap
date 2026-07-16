@@ -605,12 +605,12 @@ class _TypeBadge extends StatelessWidget {
       icon = Icons.school_outlined;
       label = 'Mission';
       background = AppColors.mission;
-      foreground = Colors.white;
+      foreground = AppColors.onMission;
     } else if (item.isUrgent) {
       icon = Icons.bolt;
       label = 'Urgent';
       background = AppColors.urgent;
-      foreground = Colors.white;
+      foreground = AppColors.onUrgent;
     } else {
       icon = Icons.calendar_today_outlined;
       label = 'Classique';
