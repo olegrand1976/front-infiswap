@@ -44,16 +44,33 @@ class SubscriptionRepository {
   Future<String> createReplacementBoostCheckout({
     required int replacementId,
     required int planId,
+    required String platform,
+    String? returnOrigin,
   }) async {
     final response = await _api.post<Map<String, dynamic>>(
       '/subscription/replacements/$replacementId/boost',
-      data: {'plan_id': planId},
+      data: {
+        'plan_id': planId,
+        'platform': platform,
+        if (returnOrigin != null) 'return_origin': returnOrigin,
+      },
     );
     final url = response.data?['url']?.toString();
     if (url == null || url.isEmpty) {
       throw ApiException(message: 'Lien de paiement indisponible.');
     }
     return url;
+  }
+
+  Future<bool> confirmReplacementBoost({
+    required int replacementId,
+    required String sessionId,
+  }) async {
+    final response = await _api.post<Map<String, dynamic>>(
+      '/subscription/replacements/$replacementId/boost/confirm',
+      data: {'session_id': sessionId},
+    );
+    return response.data?['status']?.toString() == 'active';
   }
 }
 

@@ -1,12 +1,17 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show PlatformException;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 
 import '../../../../core/api/api_exception.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../subscription/data/subscription_repository.dart';
 import '../../../subscription/models/boost_plan.dart';
+import '../../data/my_replacements_list_notifier.dart';
 import '../../models/replacement_item.dart';
+
+const _boostCallbackScheme = 'infiswapmobile';
 
 class ReplacementBoostSheet extends ConsumerStatefulWidget {
   const ReplacementBoostSheet({super.key, required this.item});
@@ -30,6 +35,7 @@ class ReplacementBoostSheet extends ConsumerStatefulWidget {
 class _ReplacementBoostSheetState extends ConsumerState<ReplacementBoostSheet> {
   int? _selectedPlanId;
   bool _loading = false;
+  String? _pendingWebCheckoutUrl;
 
   Future<void> _confirm(List<BoostPlan> plans) async {
     if (_loading || plans.isEmpty) {
@@ -43,26 +49,93 @@ class _ReplacementBoostSheetState extends ConsumerState<ReplacementBoostSheet> {
 
     setState(() => _loading = true);
 
+    final repository = ref.read(subscriptionRepositoryProvider);
+
     try {
-      final url = await ref
-          .read(subscriptionRepositoryProvider)
-          .createReplacementBoostCheckout(
-            replacementId: replacementId,
-            planId: planId,
-          );
-      final launched =
-          await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-      if (!mounted) return;
-      if (launched) {
-        Navigator.of(context).pop();
-      } else {
-        setState(() => _loading = false);
+      final checkoutUrl = await repository.createReplacementBoostCheckout(
+        replacementId: replacementId,
+        planId: planId,
+        platform: 'mobile',
+        returnOrigin: kIsWeb ? Uri.base.origin : null,
+      );
+
+      if (kIsWeb) {
+        if (!mounted) return;
+        setState(() {
+          _pendingWebCheckoutUrl = checkoutUrl;
+          _loading = false;
+        });
+        return;
       }
+
+      await _openAndAwaitResult(checkoutUrl, replacementId);
     } on ApiException catch (error) {
       if (!mounted) return;
       setState(() => _loading = false);
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(error.message)));
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _loading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Une erreur est survenue.')),
+      );
+    }
+  }
+
+  Future<void> _openAndAwaitResult(
+      String checkoutUrl, int replacementId) async {
+    setState(() {
+      _loading = true;
+      _pendingWebCheckoutUrl = null;
+    });
+
+    final repository = ref.read(subscriptionRepositoryProvider);
+
+    try {
+      final callback = await FlutterWebAuth2.authenticate(
+        url: checkoutUrl,
+        callbackUrlScheme: kIsWeb ? 'https' : _boostCallbackScheme,
+      );
+
+      final params = Uri.parse(callback).queryParameters;
+      final sessionId = params['session_id'];
+
+      if (params['status'] == 'success' && sessionId != null) {
+        final confirmed = await repository.confirmReplacementBoost(
+          replacementId: replacementId,
+          sessionId: sessionId,
+        );
+        ref.invalidate(myReplacementsListProvider);
+        if (!mounted) return;
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              confirmed
+                  ? 'Mise en avant activée.'
+                  : 'Paiement reçu, activation en cours — actualisez dans quelques instants.',
+            ),
+          ),
+        );
+        return;
+      }
+
+      if (!mounted) return;
+      setState(() => _loading = false);
+    } on ApiException catch (error) {
+      if (!mounted) return;
+      setState(() => _loading = false);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(error.message)));
+    } on PlatformException catch (error) {
+      if (!mounted) return;
+      setState(() => _loading = false);
+      if (error.code != 'CANCELED') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(error.message ?? 'Le paiement a échoué.')),
+        );
+      }
     } catch (_) {
       if (!mounted) return;
       setState(() => _loading = false);
@@ -183,7 +256,14 @@ class _ReplacementBoostSheetState extends ConsumerState<ReplacementBoostSheet> {
                         Expanded(
                           flex: 2,
                           child: ElevatedButton(
-                            onPressed: _loading ? null : () => _confirm(plans),
+                            onPressed: _loading
+                                ? null
+                                : _pendingWebCheckoutUrl != null
+                                    ? () => _openAndAwaitResult(
+                                          _pendingWebCheckoutUrl!,
+                                          int.parse(widget.item.id),
+                                        )
+                                    : () => _confirm(plans),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: colors.primary,
                               foregroundColor: colors.onPrimary,
@@ -199,7 +279,11 @@ class _ReplacementBoostSheetState extends ConsumerState<ReplacementBoostSheet> {
                                           AlwaysStoppedAnimation(Colors.white),
                                     ),
                                   )
-                                : const Text('Continuer'),
+                                : Text(
+                                    _pendingWebCheckoutUrl != null
+                                        ? 'Payer maintenant'
+                                        : 'Continuer',
+                                  ),
                           ),
                         ),
                       ],
