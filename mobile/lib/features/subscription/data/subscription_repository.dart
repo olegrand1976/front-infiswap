@@ -25,8 +25,8 @@ class SubscriptionRepository {
   }
 
   Future<List<BoostPlan>> fetchReplacementBoostPlans() async {
-    final response =
-        await _api.get<Map<String, dynamic>>('/subscription/boosts/replacement');
+    final response = await _api
+        .get<Map<String, dynamic>>('/subscription/boosts/replacement');
     final plans = response.data?['plans'];
     if (plans is! List) {
       return const [];
@@ -41,9 +41,6 @@ class SubscriptionRepository {
         .toList();
   }
 
-  /// Retourne l'URL de checkout Stripe hébergée — l'app mobile n'intègre pas
-  /// le SDK Stripe, elle ouvre ce lien dans le navigateur (comme pour
-  /// l'accès plateforme).
   Future<String> createReplacementBoostCheckout({
     required int replacementId,
     required int planId,
