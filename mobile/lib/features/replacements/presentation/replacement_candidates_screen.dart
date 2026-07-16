@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/api/api_exception.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_radii.dart';
 import '../data/replacement_candidates_notifier.dart';
 import '../models/replacement_candidate.dart';
 import '../models/replacement_item.dart';
@@ -484,7 +485,6 @@ class _ActionsRow extends StatelessWidget {
                   foregroundColor: colors.dangerFg,
                   side: BorderSide(color: colors.dangerFg.withValues(alpha: 0.4)),
                   padding: const EdgeInsets.symmetric(vertical: 10),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
                 ),
                 child: const Text('Refuser', style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700)),
               ),
@@ -497,7 +497,6 @@ class _ActionsRow extends StatelessWidget {
                   backgroundColor: colors.primary,
                   foregroundColor: colors.onPrimary,
                   padding: const EdgeInsets.symmetric(vertical: 10),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
                 ),
                 child: const Text('Accepter', style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700)),
               ),
@@ -521,7 +520,6 @@ class _ActionsRow extends StatelessWidget {
                     foregroundColor: colors.textPrimary,
                     side: BorderSide(color: colors.border),
                     padding: const EdgeInsets.symmetric(vertical: 10),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
                   ),
                 ),
               ),
@@ -534,7 +532,6 @@ class _ActionsRow extends StatelessWidget {
                   foregroundColor: colors.dangerFg,
                   side: BorderSide(color: colors.dangerFg.withValues(alpha: 0.4)),
                   padding: const EdgeInsets.symmetric(vertical: 10),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
                 ),
                 child: const Text("Annuler l'acceptation",
                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
@@ -575,14 +572,14 @@ class _IconButton extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(11),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         child: Container(
           width: 38,
           height: 38,
           alignment: Alignment.center,
           decoration: BoxDecoration(
             border: Border.all(color: colors.border),
-            borderRadius: BorderRadius.circular(11),
+            borderRadius: BorderRadius.circular(AppRadii.md),
           ),
           child: Icon(icon, size: 16, color: colors.textPrimary),
         ),

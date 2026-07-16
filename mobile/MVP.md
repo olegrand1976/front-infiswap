@@ -1,6 +1,5 @@
 Replacement tasks : 
-update (saved)
-delete
+autoload search replacement
 re-post
 release
 relaunch interested

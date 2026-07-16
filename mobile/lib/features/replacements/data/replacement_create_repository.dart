@@ -59,6 +59,11 @@ class ReplacementCreateRepository {
       data: payload.toJson(),
     );
   }
+
+  // Delete a posted replacement
+  Future<void> deleteReplacement(int replacementId) async {
+    await _api.delete<void>('/replacements/$replacementId');
+  }
 }
 
 final replacementCreateRepositoryProvider =

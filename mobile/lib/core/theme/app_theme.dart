@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'app_colors.dart';
+import 'app_radii.dart';
 
 class AppTheme {
   static ThemeData light() => _build(Brightness.light, AppPalette.light);
@@ -56,19 +57,19 @@ class AppTheme {
         prefixIconColor: palette.primary,
         suffixIconColor: palette.textSecondary,
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadii.md),
           borderSide: BorderSide(color: palette.inputBorder, width: 1.2),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadii.md),
           borderSide: BorderSide(color: palette.primary, width: 1.6),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadii.md),
           borderSide: const BorderSide(color: AppColors.coral),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadii.md),
           borderSide: const BorderSide(color: AppColors.coral, width: 1.5),
         ),
       ),
@@ -81,7 +82,7 @@ class AppTheme {
           foregroundColor: palette.onPrimary,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppRadii.md),
           ),
         ),
       ),
@@ -91,13 +92,13 @@ class AppTheme {
           side: BorderSide(color: palette.border),
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppRadii.md),
           ),
         ),
       ),
       chipTheme: ChipThemeData(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadii.md),
           side: BorderSide(color: palette.border),
         ),
       ),
@@ -112,7 +113,7 @@ class AppTheme {
         color: palette.card,
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppRadii.lg),
           side: BorderSide(color: palette.border),
         ),
       ),

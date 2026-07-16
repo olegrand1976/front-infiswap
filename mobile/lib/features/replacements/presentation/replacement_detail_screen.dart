@@ -6,6 +6,8 @@ import '../../../core/theme/app_colors.dart';
 import '../../applications/data/applications_list_notifier.dart';
 import '../../applications/data/applications_repository.dart';
 import '../../auth/providers/auth_session_provider.dart';
+import '../data/my_replacements_list_notifier.dart';
+import '../data/replacement_create_repository.dart';
 import '../models/replacement_item.dart';
 import 'edit_replacement_screen.dart';
 import 'replacement_candidates_screen.dart';
@@ -24,6 +26,9 @@ class ReplacementDetailScreen extends ConsumerStatefulWidget {
 
   final ReplacementItem item;
 
+  /// true si l'annonce a été ouverte depuis « Mes remplacements » — dans ce
+  /// cas le CTA de candidature n'a pas de sens (on ne postule pas à sa
+  /// propre annonce).
   final bool isOwner;
 
   @override
@@ -244,9 +249,6 @@ class _ReplacementDetailScreenState
                               : colors.primary,
                       disabledForegroundColor: AppColors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
                     ),
                     child: _ApplyButtonLabel(status: effectiveStatus),
                   ),
@@ -259,13 +261,71 @@ class _ReplacementDetailScreenState
   }
 }
 
-class _OwnerFooter extends StatelessWidget {
+class _OwnerFooter extends ConsumerWidget {
   const _OwnerFooter({required this.item});
 
   final ReplacementItem item;
 
+  Future<void> _delete(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        final dialogColors = dialogContext.appColors;
+        return AlertDialog(
+          backgroundColor: dialogColors.card,
+          title: Text("Supprimer l'annonce ?",
+              style: TextStyle(color: dialogColors.textPrimary)),
+          content: Text(
+            'Cette action est définitive. Les candidatures reçues seront également supprimées.',
+            style: TextStyle(color: dialogColors.textSecondary),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: Text('Annuler',
+                  style: TextStyle(color: dialogColors.textSecondary)),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: const Text('Supprimer',
+                  style: TextStyle(
+                      color: AppColors.coral, fontWeight: FontWeight.w700)),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed != true || !context.mounted) {
+      return;
+    }
+
+    try {
+      final replacementId = int.parse(item.id);
+      await ref
+          .read(replacementCreateRepositoryProvider)
+          .deleteReplacement(replacementId);
+      if (!context.mounted) return;
+      ref.read(myReplacementsListProvider.notifier).refresh();
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Annonce supprimée')),
+      );
+    } on ApiException catch (error) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error.message), backgroundColor: AppColors.coral),
+      );
+    } catch (_) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Une erreur est survenue.')),
+      );
+    }
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.appColors;
     final status = myReplacementStatus(item);
     final (background, foreground) = switch (status) {
@@ -336,8 +396,6 @@ class _OwnerFooter extends StatelessWidget {
               style: OutlinedButton.styleFrom(
                 side: BorderSide(color: colors.primaryOutline),
                 padding: const EdgeInsets.symmetric(vertical: 13),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
               ),
             ),
           ),
@@ -360,11 +418,23 @@ class _OwnerFooter extends StatelessWidget {
                 style: OutlinedButton.styleFrom(
                   side: BorderSide(color: colors.primaryOutline),
                   padding: const EdgeInsets.symmetric(vertical: 13),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
                 ),
               ),
             ),
+        ],
+        if (!item.isMission) ...[
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            child: TextButton.icon(
+              onPressed: () => _delete(context, ref),
+              icon: const Icon(Icons.delete_outline, color: AppColors.coral, size: 18),
+              label: const Text(
+                "Supprimer l'annonce",
+                style: TextStyle(color: AppColors.coral, fontWeight: FontWeight.w700),
+              ),
+            ),
+          ),
         ],
       ],
     );
