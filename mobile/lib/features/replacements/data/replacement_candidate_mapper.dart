@@ -30,10 +30,27 @@ abstract final class ReplacementCandidateMapper {
       respondentZipCode: respondent['zip_code']?.toString(),
       respondentPhone: respondent['phone_number']?.toString(),
       respondentEmail: respondent['email']?.toString(),
+      identifierNumber: respondent['identifier_number']?.toString(),
       distanceKm: _parseDouble(json['distance_km']),
       comment: json['comment']?.toString().trim(),
       respondedAt: DateTime.tryParse(json['created_at']?.toString() ?? ''),
+      bio: json['bio']?.toString().trim(),
+      skills: _parseSkills(json['skills']),
+      availability: json['availability']?.toString(),
+      memberSince: DateTime.tryParse(json['member_since']?.toString() ?? ''),
+      completedReplacementsCount: _parseInt(json['completed_replacements_count']),
+      isVerified: json['is_verified'] == true,
     );
+  }
+
+  static List<String> _parseSkills(Object? raw) {
+    if (raw is! List) {
+      return const [];
+    }
+    return raw
+        .map((item) => item.toString().trim())
+        .where((item) => item.isNotEmpty)
+        .toList();
   }
 
   static Map<String, dynamic>? _asMap(Object? value) {

@@ -7,8 +7,7 @@ import '../../../core/theme/app_colors.dart';
 import '../data/replacement_candidates_notifier.dart';
 import '../models/replacement_candidate.dart';
 import '../models/replacement_item.dart';
-
-enum _Filter { all, pending, accepted, closed }
+import 'replacement_candidate_detail_screen.dart';
 
 class ReplacementCandidatesScreen extends ConsumerStatefulWidget {
   const ReplacementCandidatesScreen({super.key, required this.item});
@@ -22,9 +21,18 @@ class ReplacementCandidatesScreen extends ConsumerStatefulWidget {
 
 class _ReplacementCandidatesScreenState
     extends ConsumerState<ReplacementCandidatesScreen> {
-  _Filter _filter = _Filter.all;
-
   int get _replacementId => int.tryParse(widget.item.id) ?? 0;
+
+  Future<void> _openDetail(ReplacementCandidate candidate) {
+    return Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => ReplacementCandidateDetailScreen(
+          item: widget.item,
+          candidate: candidate,
+        ),
+      ),
+    );
+  }
 
   Future<void> _confirmAndUpdate({
     required ReplacementCandidate candidate,
@@ -179,8 +187,18 @@ class _ReplacementCandidatesScreenState
                   onRetry: notifier.refresh,
                 ),
                 data: (candidates) {
-                  final counts = _countByBucket(candidates);
-                  final filtered = _applyFilter(candidates, _filter);
+                  if (candidates.isEmpty) {
+                    return RefreshIndicator(
+                      color: colors.primary,
+                      onRefresh: notifier.refresh,
+                      child: ListView(
+                        padding: const EdgeInsets.symmetric(vertical: 40),
+                        children: const [_EmptyState()],
+                      ),
+                    );
+                  }
+
+                  final sorted = _sortedByBucket(candidates);
 
                   return RefreshIndicator(
                     color: colors.primary,
@@ -188,29 +206,20 @@ class _ReplacementCandidatesScreenState
                     child: ListView(
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
                       children: [
-                        _FilterRow(
-                          selected: _filter,
-                          total: candidates.length,
-                          counts: counts,
-                          onSelected: (filter) => setState(() => _filter = filter),
-                        ),
-                        const SizedBox(height: 12),
-                        if (filtered.isEmpty)
-                          const _EmptyState()
-                        else
-                          for (final candidate in filtered) ...[
-                            _CandidateCard(
-                              candidate: candidate,
-                              onAccept: () => _accept(candidate),
-                              onRefuse: () => _refuse(candidate),
-                              onCancelAcceptance: () => _cancelAcceptance(candidate),
-                              onReexamine: () => _reexamine(candidate),
-                              onCall: candidate.respondentPhone != null
-                                  ? () => _call(candidate.respondentPhone!)
-                                  : null,
-                            ),
-                            const SizedBox(height: 12),
-                          ],
+                        for (final candidate in sorted) ...[
+                          _CandidateCard(
+                            candidate: candidate,
+                            onTap: () => _openDetail(candidate),
+                            onAccept: () => _accept(candidate),
+                            onRefuse: () => _refuse(candidate),
+                            onCancelAcceptance: () => _cancelAcceptance(candidate),
+                            onReexamine: () => _reexamine(candidate),
+                            onCall: candidate.respondentPhone != null
+                                ? () => _call(candidate.respondentPhone!)
+                                : null,
+                          ),
+                          const SizedBox(height: 12),
+                        ],
                       ],
                     ),
                   );
@@ -223,138 +232,27 @@ class _ReplacementCandidatesScreenState
     );
   }
 
-  static Map<ReplacementCandidateBucket, int> _countByBucket(
-    List<ReplacementCandidate> candidates,
-  ) {
-    final counts = {
-      ReplacementCandidateBucket.pending: 0,
-      ReplacementCandidateBucket.accepted: 0,
-      ReplacementCandidateBucket.closed: 0,
-    };
-    for (final candidate in candidates) {
-      final bucket = replacementCandidateBucket(candidate.status);
-      counts[bucket] = (counts[bucket] ?? 0) + 1;
-    }
-    return counts;
-  }
+  static const _bucketOrder = {
+    ReplacementCandidateBucket.accepted: 0,
+    ReplacementCandidateBucket.pending: 1,
+    ReplacementCandidateBucket.closed: 2,
+  };
 
-  static List<ReplacementCandidate> _applyFilter(
-    List<ReplacementCandidate> candidates,
-    _Filter filter,
-  ) {
-    if (filter == _Filter.all) {
-      return candidates;
-    }
-    final bucket = switch (filter) {
-      _Filter.pending => ReplacementCandidateBucket.pending,
-      _Filter.accepted => ReplacementCandidateBucket.accepted,
-      _Filter.closed => ReplacementCandidateBucket.closed,
-      _Filter.all => throw StateError('unreachable'),
-    };
-    return candidates
-        .where((candidate) => replacementCandidateBucket(candidate.status) == bucket)
-        .toList();
-  }
-}
-
-class _FilterRow extends StatelessWidget {
-  const _FilterRow({
-    required this.selected,
-    required this.total,
-    required this.counts,
-    required this.onSelected,
-  });
-
-  final _Filter selected;
-  final int total;
-  final Map<ReplacementCandidateBucket, int> counts;
-  final ValueChanged<_Filter> onSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          _FilterChip(
-            label: 'Tous',
-            count: total,
-            selected: selected == _Filter.all,
-            onTap: () => onSelected(_Filter.all),
-          ),
-          const SizedBox(width: 8),
-          _FilterChip(
-            label: 'En attente',
-            count: counts[ReplacementCandidateBucket.pending] ?? 0,
-            selected: selected == _Filter.pending,
-            onTap: () => onSelected(_Filter.pending),
-          ),
-          const SizedBox(width: 8),
-          _FilterChip(
-            label: 'Acceptés',
-            count: counts[ReplacementCandidateBucket.accepted] ?? 0,
-            selected: selected == _Filter.accepted,
-            onTap: () => onSelected(_Filter.accepted),
-          ),
-          const SizedBox(width: 8),
-          _FilterChip(
-            label: 'Refusés',
-            count: counts[ReplacementCandidateBucket.closed] ?? 0,
-            selected: selected == _Filter.closed,
-            onTap: () => onSelected(_Filter.closed),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _FilterChip extends StatelessWidget {
-  const _FilterChip({
-    required this.label,
-    required this.count,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final String label;
-  final int count;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(999),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          decoration: BoxDecoration(
-            color: selected ? colors.primaryMuted : Colors.transparent,
-            borderRadius: BorderRadius.circular(999),
-            border: Border.all(color: selected ? colors.primaryOutline : colors.border),
-          ),
-          child: Text(
-            '$label ($count)',
-            style: TextStyle(
-              color: selected ? colors.primary : colors.textSecondary,
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ),
-      ),
-    );
+  static List<ReplacementCandidate> _sortedByBucket(List<ReplacementCandidate> candidates) {
+    final sorted = List<ReplacementCandidate>.of(candidates);
+    sorted.sort((a, b) {
+      final bucketA = _bucketOrder[replacementCandidateBucket(a.status)] ?? 1;
+      final bucketB = _bucketOrder[replacementCandidateBucket(b.status)] ?? 1;
+      return bucketA.compareTo(bucketB);
+    });
+    return sorted;
   }
 }
 
 class _CandidateCard extends StatelessWidget {
   const _CandidateCard({
     required this.candidate,
+    required this.onTap,
     required this.onAccept,
     required this.onRefuse,
     required this.onCancelAcceptance,
@@ -363,6 +261,7 @@ class _CandidateCard extends StatelessWidget {
   });
 
   final ReplacementCandidate candidate;
+  final VoidCallback onTap;
   final VoidCallback onAccept;
   final VoidCallback onRefuse;
   final VoidCallback onCancelAcceptance;
@@ -373,6 +272,7 @@ class _CandidateCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final bucket = replacementCandidateBucket(candidate.status);
+    final isAccepted = bucket == ReplacementCandidateBucket.accepted;
     final (statusBg, statusFg) = switch (bucket) {
       ReplacementCandidateBucket.accepted => (colors.successBg, colors.successFg),
       ReplacementCandidateBucket.closed => (colors.dangerBg, colors.dangerFg),
@@ -382,82 +282,117 @@ class _CandidateCard extends StatelessWidget {
     return Opacity(
       opacity: bucket == ReplacementCandidateBucket.closed ? 0.6 : 1,
       child: Container(
-        padding: const EdgeInsets.fromLTRB(14, 14, 14, 12),
         decoration: BoxDecoration(
           color: colors.card,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: bucket == ReplacementCandidateBucket.accepted
-                ? colors.successFg
-                : colors.border,
-            width: bucket == ReplacementCandidateBucket.accepted ? 1.4 : 1,
+            color: isAccepted ? colors.successFg : colors.border,
+            width: isAccepted ? 1.6 : 1,
           ),
           boxShadow: [
-            BoxShadow(color: colors.shadow, blurRadius: 10, offset: const Offset(0, 3)),
+            BoxShadow(
+              color: colors.shadow,
+              blurRadius: isAccepted ? 16 : 10,
+              offset: const Offset(0, 3),
+            ),
           ],
         ),
+        clipBehavior: Clip.antiAlias,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _Avatar(name: candidate.respondentName, initials: candidate.initials),
-                const SizedBox(width: 10),
-                Expanded(
+            if (isAccepted)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                color: colors.successBg,
+                child: Row(
+                  children: [
+                    Icon(Icons.check_circle, size: 14, color: colors.successFg),
+                    const SizedBox(width: 6),
+                    Text(
+                      'Candidat retenu pour ce remplacement',
+                      style: TextStyle(color: colors.successFg, fontSize: 11, fontWeight: FontWeight.w800),
+                    ),
+                  ],
+                ),
+              ),
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: onTap,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(14, 12, 14, 0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        candidate.respondentName,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: colors.textPrimary,
-                          fontSize: 13.5,
-                          fontWeight: FontWeight.w700,
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _Avatar(name: candidate.respondentName, initials: candidate.initials),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  candidate.respondentName,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: colors.textPrimary,
+                                    fontSize: 13.5,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                const SizedBox(height: 3),
+                                Text(
+                                  _metaLine(candidate),
+                                  style: TextStyle(color: colors.textSecondary, fontSize: 11),
+                                ),
+                              ],
+                            ),
+                          ),
+                          if (!isAccepted)
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+                              decoration:
+                                  BoxDecoration(color: statusBg, borderRadius: BorderRadius.circular(999)),
+                              child: Text(
+                                candidate.statusLabel,
+                                style: TextStyle(color: statusFg, fontSize: 9.5, fontWeight: FontWeight.w800),
+                              ),
+                            ),
+                          Icon(Icons.chevron_right, size: 18, color: colors.textSecondary),
+                        ],
+                      ),
+                      if (candidate.comment != null && candidate.comment!.isNotEmpty) ...[
+                        const SizedBox(height: 10),
+                        Text(
+                          candidate.comment!,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(color: colors.textSecondary, fontSize: 12, height: 1.4),
                         ),
-                      ),
-                      const SizedBox(height: 3),
-                      Text(
-                        _metaLine(candidate),
-                        style: TextStyle(color: colors.textSecondary, fontSize: 11),
-                      ),
+                      ],
+                      const SizedBox(height: 11),
+                      Divider(color: colors.divider, height: 1),
                     ],
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                  decoration: BoxDecoration(color: statusBg, borderRadius: BorderRadius.circular(999)),
-                  child: Text(
-                    candidate.statusLabel,
-                    style: TextStyle(color: statusFg, fontSize: 9.5, fontWeight: FontWeight.w800),
-                  ),
-                ),
-              ],
-            ),
-            if (candidate.comment != null && candidate.comment!.isNotEmpty) ...[
-              const SizedBox(height: 10),
-              Text(
-                candidate.comment!,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(color: colors.textSecondary, fontSize: 12, height: 1.4),
               ),
-            ],
-            Padding(
-              padding: const EdgeInsets.only(top: 11),
-              child: Divider(color: colors.divider, height: 1),
             ),
-            const SizedBox(height: 10),
-            _ActionsRow(
-              bucket: bucket,
-              canViewContact: candidate.canViewContact,
-              onAccept: onAccept,
-              onRefuse: onRefuse,
-              onCancelAcceptance: onCancelAcceptance,
-              onReexamine: onReexamine,
-              onCall: onCall,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(14, 10, 14, 12),
+              child: _ActionsRow(
+                bucket: bucket,
+                canViewContact: candidate.canViewContact,
+                onAccept: onAccept,
+                onRefuse: onRefuse,
+                onCancelAcceptance: onCancelAcceptance,
+                onReexamine: onReexamine,
+                onCall: onCall,
+              ),
             ),
           ],
         ),

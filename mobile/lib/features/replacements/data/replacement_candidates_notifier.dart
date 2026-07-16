@@ -26,20 +26,9 @@ class ReplacementCandidatesNotifier
       state = AsyncData([
         for (final candidate in current)
           if (candidate.responseId == responseId)
-            ReplacementCandidate(
-              responseId: candidate.responseId,
+            candidate.copyWith(
               status: status,
               statusLabel: replacementCandidateStatusLabel(status),
-              respondentName: candidate.respondentName,
-              canViewContact: candidate.canViewContact,
-              respondentAvatarUrl: candidate.respondentAvatarUrl,
-              respondentCity: candidate.respondentCity,
-              respondentZipCode: candidate.respondentZipCode,
-              respondentPhone: candidate.respondentPhone,
-              respondentEmail: candidate.respondentEmail,
-              distanceKm: candidate.distanceKm,
-              comment: candidate.comment,
-              respondedAt: candidate.respondedAt,
             )
           else
             candidate,
