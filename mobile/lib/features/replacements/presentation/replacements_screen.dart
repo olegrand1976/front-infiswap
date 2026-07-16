@@ -8,7 +8,6 @@ import '../models/replacement_item.dart';
 import '../models/replacement_search_params.dart';
 import 'replacement_detail_screen.dart';
 import 'widgets/active_search_chips.dart';
-import 'widgets/create_type_sheet.dart';
 import 'widgets/mission_avatar.dart';
 import 'widgets/replacement_filters_modal.dart';
 import 'widgets/replacement_search_modal.dart';
@@ -60,12 +59,6 @@ class _ReplacementsScreenState extends ConsumerState<ReplacementsScreen> {
 
     return Scaffold(
       backgroundColor: colors.background,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => CreateTypeSheet.show(context),
-        backgroundColor: colors.primary,
-        foregroundColor: colors.onPrimary,
-        child: const Icon(Icons.add),
-      ),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
