@@ -7,6 +7,7 @@ import '../../applications/data/applications_list_notifier.dart';
 import '../../applications/data/applications_repository.dart';
 import '../../auth/providers/auth_session_provider.dart';
 import '../models/replacement_item.dart';
+import 'edit_replacement_screen.dart';
 import 'replacement_candidates_screen.dart';
 import 'widgets/mission_avatar.dart';
 import 'widgets/platform_access_sheet.dart';
@@ -23,9 +24,6 @@ class ReplacementDetailScreen extends ConsumerStatefulWidget {
 
   final ReplacementItem item;
 
-  /// true si l'annonce a été ouverte depuis « Mes remplacements » — dans ce
-  /// cas le CTA de candidature n'a pas de sens (on ne postule pas à sa
-  /// propre annonce).
   final bool isOwner;
 
   @override
@@ -302,7 +300,10 @@ class _OwnerFooter extends StatelessWidget {
                   const SizedBox(width: 8),
                   Text(
                     '${myReplacementStatusLabel(status)} · ${item.responseCount} candidature${item.responseCount > 1 ? 's' : ''}',
-                    style: TextStyle(color: foreground, fontSize: 14, fontWeight: FontWeight.w700),
+                    style: TextStyle(
+                        color: foreground,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(width: 6),
                   Icon(Icons.chevron_right, size: 18, color: foreground),
@@ -311,6 +312,36 @@ class _OwnerFooter extends StatelessWidget {
             ),
           ),
         ),
+        if (status == MyReplacementStatus.open && !item.isMission) ...[
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () async {
+                final updated = await Navigator.of(context).push<bool>(
+                  MaterialPageRoute<bool>(
+                    builder: (_) => EditReplacementScreen(item: item),
+                  ),
+                );
+                if (updated == true && context.mounted) {
+                  Navigator.of(context).pop();
+                }
+              },
+              icon: Icon(Icons.edit_outlined, color: colors.primary, size: 18),
+              label: Text(
+                "Modifier l'annonce",
+                style: TextStyle(
+                    color: colors.primary, fontWeight: FontWeight.w700),
+              ),
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: colors.primaryOutline),
+                padding: const EdgeInsets.symmetric(vertical: 13),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+              ),
+            ),
+          ),
+        ],
         if (status == MyReplacementStatus.open) ...[
           const SizedBox(height: 10),
           if (item.isBoosted)
@@ -323,12 +354,14 @@ class _OwnerFooter extends StatelessWidget {
                 icon: Icon(Icons.trending_up, color: colors.primary, size: 18),
                 label: Text(
                   'Mettre en avant',
-                  style: TextStyle(color: colors.primary, fontWeight: FontWeight.w700),
+                  style: TextStyle(
+                      color: colors.primary, fontWeight: FontWeight.w700),
                 ),
                 style: OutlinedButton.styleFrom(
                   side: BorderSide(color: colors.primaryOutline),
                   padding: const EdgeInsets.symmetric(vertical: 13),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
                 ),
               ),
             ),
@@ -357,15 +390,22 @@ class _BoostStatusRow extends StatelessWidget {
             until != null
                 ? 'Mise en avant active jusqu\'au ${_formatDate(until)}'
                 : 'Mise en avant active',
-            style: TextStyle(color: colors.textSecondary, fontSize: 12.5, fontWeight: FontWeight.w500),
+            style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 12.5,
+                fontWeight: FontWeight.w500),
           ),
         ),
         TextButton(
           onPressed: () => ReplacementBoostSheet.show(context, item),
-          style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: const Size(0, 0)),
+          style: TextButton.styleFrom(
+              padding: EdgeInsets.zero, minimumSize: const Size(0, 0)),
           child: Text(
             'Prolonger',
-            style: TextStyle(color: colors.primary, fontWeight: FontWeight.w700, fontSize: 12.5),
+            style: TextStyle(
+                color: colors.primary,
+                fontWeight: FontWeight.w700,
+                fontSize: 12.5),
           ),
         ),
       ],
