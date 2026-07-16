@@ -20,11 +20,10 @@ class ReplacementsRepository {
   final ApiClient _api;
   final AppConfig _config;
 
-  Future<List<ReplacementItem>> fetchMergedList(
+  Future<ReplacementSearchPage> fetchSearchPage(
     ReplacementSearchParams params,
-  ) async {
-    final page = await _fetchMergedPage(params.toApiBody());
-    return page.items;
+  ) {
+    return _fetchMergedPage(params.toApiBody());
   }
 
   Future<List<ReplacementItem>> fetchMyReplacements() async {
@@ -111,7 +110,9 @@ class ReplacementsRepository {
     };
   }
 
-  Future<_MergedPage> _fetchMergedPage(Map<String, dynamic> body) async {
+  Future<ReplacementSearchPage> _fetchMergedPage(
+    Map<String, dynamic> body,
+  ) async {
     final response = await _api.post<Map<String, dynamic>>(
       '/replacements/search/merged',
       data: body,
@@ -139,12 +140,12 @@ class ReplacementsRepository {
     final total =
         int.tryParse(replacements['total']?.toString() ?? '') ?? items.length;
 
-    return _MergedPage(items: items, total: total);
+    return ReplacementSearchPage(items: items, total: total);
   }
 }
 
-class _MergedPage {
-  const _MergedPage({required this.items, required this.total});
+class ReplacementSearchPage {
+  const ReplacementSearchPage({required this.items, required this.total});
 
   final List<ReplacementItem> items;
   final int total;

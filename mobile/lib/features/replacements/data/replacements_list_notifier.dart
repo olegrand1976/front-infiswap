@@ -4,23 +4,62 @@ import '../models/replacement_item.dart';
 import '../models/replacement_search_params.dart';
 import 'replacements_repository.dart';
 
+final replacementsLoadingMoreProvider = StateProvider<bool>((ref) => false);
+
 class ReplacementsListNotifier extends AsyncNotifier<List<ReplacementItem>> {
   ReplacementSearchParams _params = ReplacementSearchParams.defaults;
+  bool _hasMore = true;
 
   ReplacementSearchParams get params => _params;
+  bool get hasMore => _hasMore;
 
   @override
   Future<List<ReplacementItem>> build() async {
-    final repository = ref.watch(replacementsRepositoryProvider);
-    return repository.fetchMergedList(_params);
+    _params = _params.copyWith(page: 1);
+    final page = await ref
+        .watch(replacementsRepositoryProvider)
+        .fetchSearchPage(_params);
+    _hasMore = page.items.length < page.total;
+    return page.items;
   }
 
   Future<void> applyParams(ReplacementSearchParams params) async {
-    _params = params;
+    _params = params.copyWith(page: 1);
+    _hasMore = true;
     state = const AsyncLoading();
-    state = await AsyncValue.guard(
-      () => ref.read(replacementsRepositoryProvider).fetchMergedList(_params),
-    );
+    state = await AsyncValue.guard(() async {
+      final page = await ref
+          .read(replacementsRepositoryProvider)
+          .fetchSearchPage(_params);
+      _hasMore = page.items.length < page.total;
+      return page.items;
+    });
+  }
+
+  Future<void> loadMore() async {
+    if (!_hasMore || ref.read(replacementsLoadingMoreProvider)) {
+      return;
+    }
+    final current = state.valueOrNull;
+    if (current == null) {
+      return;
+    }
+
+    ref.read(replacementsLoadingMoreProvider.notifier).state = true;
+    try {
+      final nextParams = _params.copyWith(page: _params.page + 1);
+      final page = await ref
+          .read(replacementsRepositoryProvider)
+          .fetchSearchPage(nextParams);
+      _params = nextParams;
+      final merged = [...current, ...page.items];
+      _hasMore = merged.length < page.total;
+      state = AsyncData(merged);
+    } catch (_) {
+      // Silent: the user can retry by scrolling again; the existing list stays intact.
+    } finally {
+      ref.read(replacementsLoadingMoreProvider.notifier).state = false;
+    }
   }
 
   Future<void> applySearch({

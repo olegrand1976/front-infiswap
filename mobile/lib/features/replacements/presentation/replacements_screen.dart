@@ -13,13 +13,43 @@ import 'widgets/mission_avatar.dart';
 import 'widgets/replacement_filters_modal.dart';
 import 'widgets/replacement_search_modal.dart';
 
-class ReplacementsScreen extends ConsumerWidget {
+class ReplacementsScreen extends ConsumerStatefulWidget {
   const ReplacementsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ReplacementsScreen> createState() =>
+      _ReplacementsScreenState();
+}
+
+class _ReplacementsScreenState extends ConsumerState<ReplacementsScreen> {
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    final threshold = _scrollController.position.maxScrollExtent - 300;
+    if (_scrollController.position.pixels >= threshold) {
+      ref.read(replacementsListProvider.notifier).loadMore();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final colors = context.appColors;
     final asyncList = ref.watch(replacementsListProvider);
+    final isLoadingMore = ref.watch(replacementsLoadingMoreProvider);
     final notifier = ref.read(replacementsListProvider.notifier);
     final params = notifier.params;
     final resultCount = asyncList.maybeWhen(
@@ -117,10 +147,21 @@ class ReplacementsScreen extends ConsumerWidget {
                     color: colors.primary,
                     onRefresh: notifier.refresh,
                     child: ListView.separated(
+                      controller: _scrollController,
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 96),
-                      itemCount: items.length,
+                      itemCount: items.length + (isLoadingMore ? 1 : 0),
                       separatorBuilder: (_, __) => const SizedBox(height: 10),
                       itemBuilder: (context, index) {
+                        if (index >= items.length) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: colors.primary,
+                              ),
+                            ),
+                          );
+                        }
                         final item = items[index];
                         return _ReplacementCard(
                           item: item,
