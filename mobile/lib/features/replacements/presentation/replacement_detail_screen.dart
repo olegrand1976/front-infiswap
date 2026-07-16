@@ -7,6 +7,7 @@ import '../../applications/data/applications_list_notifier.dart';
 import '../../applications/data/applications_repository.dart';
 import '../../auth/providers/auth_session_provider.dart';
 import '../models/replacement_item.dart';
+import 'replacement_candidates_screen.dart';
 import 'widgets/mission_avatar.dart';
 import 'widgets/platform_access_sheet.dart';
 import 'widgets/replacement_boost_sheet.dart';
@@ -278,23 +279,36 @@ class _OwnerFooter extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-          decoration: BoxDecoration(
-            color: background,
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
             borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.groups_outlined, size: 18, color: foreground),
-              const SizedBox(width: 8),
-              Text(
-                '${myReplacementStatusLabel(status)} · ${item.responseCount} candidature${item.responseCount > 1 ? 's' : ''}',
-                style: TextStyle(color: foreground, fontSize: 14, fontWeight: FontWeight.w700),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => ReplacementCandidatesScreen(item: item),
               ),
-            ],
+            ),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+              decoration: BoxDecoration(
+                color: background,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.groups_outlined, size: 18, color: foreground),
+                  const SizedBox(width: 8),
+                  Text(
+                    '${myReplacementStatusLabel(status)} · ${item.responseCount} candidature${item.responseCount > 1 ? 's' : ''}',
+                    style: TextStyle(color: foreground, fontSize: 14, fontWeight: FontWeight.w700),
+                  ),
+                  const SizedBox(width: 6),
+                  Icon(Icons.chevron_right, size: 18, color: foreground),
+                ],
+              ),
+            ),
           ),
         ),
         if (status == MyReplacementStatus.open) ...[

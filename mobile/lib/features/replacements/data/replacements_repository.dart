@@ -4,8 +4,10 @@ import '../../../core/api/api_client.dart';
 import '../../../core/api/api_exception.dart';
 import '../../../core/config/app_config.dart';
 import '../models/dashboard_replacements_summary.dart';
+import '../models/replacement_candidate.dart';
 import '../models/replacement_item.dart';
 import '../models/replacement_search_params.dart';
+import 'replacement_candidate_mapper.dart';
 import 'replacement_mapper.dart';
 
 class ReplacementsRepository {
@@ -39,6 +41,37 @@ class ReplacementsRepository {
       'groupByProvince': false,
     });
     return page.items;
+  }
+
+  Future<List<ReplacementCandidate>> fetchCandidates(int replacementId) async {
+    final response = await _api.get<Map<String, dynamic>>(
+      '/replacement-responses/$replacementId',
+    );
+
+    final data = response.data?['responses'];
+    if (data is! List) {
+      return const [];
+    }
+
+    return data
+        .whereType<Map>()
+        .map(
+          (item) => ReplacementCandidateMapper.fromJson(
+            item.map((key, value) => MapEntry(key.toString(), value)),
+            storageBaseUrl: _config.apiBaseUrl,
+          ),
+        )
+        .toList();
+  }
+
+  Future<void> updateCandidateStatus({
+    required int responseId,
+    required String status,
+  }) {
+    return _api.put<Map<String, dynamic>>(
+      '/replacement-responses/$responseId/update-status',
+      data: {'status': status},
+    );
   }
 
   Future<DashboardReplacementsSummary> fetchDashboardSummary() async {

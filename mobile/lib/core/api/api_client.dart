@@ -64,6 +64,13 @@ class ApiClient {
     return _request(() => _dio.post<T>(path, data: data));
   }
 
+  Future<Response<T>> put<T>(
+    String path, {
+    Object? data,
+  }) async {
+    return _request(() => _dio.put<T>(path, data: data));
+  }
+
   Future<Response<T>> _request<T>(Future<Response<T>> Function() call) async {
     try {
       return await call();
