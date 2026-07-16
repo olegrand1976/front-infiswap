@@ -16,6 +16,7 @@ dependencies:
   flutter_web_auth_2: ^4.1.0
   go_router: ^14.8.1
   url_launcher: ^6.3.2
+  flutter_launcher_icons: ^0.14.4
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -25,3 +26,8 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/logo.png
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/infiswap_icon.png"
