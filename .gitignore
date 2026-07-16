@@ -15,3 +15,7 @@ launch-docker.sh
 .qodo
 android
 ios
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

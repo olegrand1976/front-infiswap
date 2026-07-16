@@ -23,6 +23,7 @@
                         type="text"
                         placeholder="John Doe"
                         class="w-full border border-gray-300 rounded text-sm py-1.5 px-2 focus:outline-none focus:ring-1 focus:ring-primary mt-1.5"
+                        @focus="onFirstFocus"
                     >
                 </div>
                 <div class="mt-4">
@@ -82,10 +83,11 @@
         >
             <div class="mb-4">
                 <Textarea
-                    v-model="description"
+                    v-model="contact.description"
                     class="w-full border border-gray-300 rounded-md p-3 text-sm focus:outline-primary transition"
                     rows="3"
                     placeholder="Votre message..."
+                    @focus="onFirstFocus"
                 />
             </div>
 
@@ -102,51 +104,29 @@
                     Annuler
                 </button>
 
-                <button
+                <Button
+                    :in-progress="inProgressLoggedIn"
                     class="px-4 py-2 bg-primary text-white text-sm rounded hover:bg-primary/90 transition"
-                    @click="submitHistory"
+                    @click="submitLoggedIn"
                 >
                     Nous contacter
-                </button>
+                </Button>
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { reactive } from 'vue';
+import type { User } from '~/lib/types';
 
-const { createHistory, submitContact } = useService();
+const { submitContact } = useService();
 const { $toast } = useNuxtApp();
-const { trackPartnerFormStart, trackPartnerFormSubmit } = usePartnerServices();
+const { trackPartnerFormStartOnce, trackPartnerFormSubmit } = usePartnerServices();
+const { onFirstFocus } = trackPartnerFormStartOnce('nurstech', 'dashboard_modal');
 const emit = defineEmits(['close']);
 const { isLoggedIn } = useAuth();
-
-const description = ref('');
-
-onMounted(() => {
-    trackPartnerFormStart('nurstech', 'dashboard_modal');
-});
-
-const submitHistory = async () => {
-    try {
-        trackPartnerFormSubmit('nurstech', 'dashboard_modal');
-        await createHistory({ product: 'Nurstech', description: description.value });
-        $toast({
-            description: 'Votre demande a été transmise à NursTech avec succès.',
-        });
-        description.value = '';
-        emit('close');
-    }
-    catch (error) {
-        const message = error?.data?.message || error?.message || 'Une erreur est survenue.';
-        $toast({
-            description: message,
-            status: 'error',
-            variant: 'destructive',
-        });
-    }
-};
+const user = useState<User | null>('user');
 
 const contact = reactive({
     product: 'NursTech',
@@ -157,6 +137,20 @@ const contact = reactive({
     captcha: false,
 });
 
+function prefillFromUser() {
+    if (!user.value) {
+        return;
+    }
+
+    contact.name = user.value.full_name ?? `${user.value.firstname ?? ''} ${user.value.lastname ?? ''}`.trim();
+    contact.email = user.value.email ?? '';
+    contact.phone = user.value.phone_number ?? '';
+}
+
+onMounted(() => {
+    prefillFromUser();
+});
+
 const { submit, inProgress } = useSubmit(async () => {
     try {
         trackPartnerFormSubmit('nurstech', 'dashboard_modal_guest');
@@ -165,6 +159,28 @@ const { submit, inProgress } = useSubmit(async () => {
         $toast({
             description: 'Votre demande de contact a été transmise à NursTech avec succès.',
         });
+        emit('close');
+    }
+    catch (error) {
+        const message = error?.data?.message || error?.message || 'Une erreur est survenue.';
+        $toast({
+            description: message,
+            status: 'error',
+            variant: 'destructive',
+        });
+    }
+});
+
+const { submit: submitLoggedIn, inProgress: inProgressLoggedIn } = useSubmit(async () => {
+    try {
+        prefillFromUser();
+        trackPartnerFormSubmit('nurstech', 'dashboard_modal');
+        await submitContact(contact);
+
+        $toast({
+            description: 'Votre demande de contact a été transmise à NursTech avec succès.',
+        });
+        contact.description = '';
         emit('close');
     }
     catch (error) {

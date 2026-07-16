@@ -71,3 +71,79 @@ export async function waitForAuthReady(timeoutMs = 5000): Promise<boolean> {
 
     return authReady.value;
 }
+
+export type StripeProductReturnZone = 'platform' | 'boost' | 'contract' | 'sponsorship';
+
+export interface StripeProductReturn {
+    zone: StripeProductReturnZone;
+    sessionId: string;
+    outcome: 'success' | 'cancel';
+}
+
+/** Détecte un retour Stripe simulé ou réel depuis la query. */
+export function parseStripeProductReturn(query: Record<string, unknown>): StripeProductReturn | null {
+    const sessionId = extractStripeSessionId(query);
+
+    if (!sessionId || !isStripeCheckoutSessionId(sessionId)) {
+        return null;
+    }
+
+    if (query.sponsorship === 'success') {
+        return { zone: 'sponsorship', sessionId, outcome: 'success' };
+    }
+
+    if (query.boost === 'success') {
+        return { zone: 'boost', sessionId, outcome: 'success' };
+    }
+
+    if (query.boost === 'cancel') {
+        return { zone: 'boost', sessionId, outcome: 'cancel' };
+    }
+
+    if (query.contract === 'success') {
+        return { zone: 'contract', sessionId, outcome: 'success' };
+    }
+
+    if (query.contract === 'cancel') {
+        return { zone: 'contract', sessionId, outcome: 'cancel' };
+    }
+
+    return { zone: 'platform', sessionId, outcome: 'success' };
+}
+
+/** Nettoie les paramètres de retour Stripe avant navigation replace. */
+export function stripStripeReturnQuery(query: Record<string, unknown>): Record<string, unknown> {
+    const next = { ...query };
+    delete next.session_id;
+    delete next.sponsorship;
+    delete next.boost;
+    delete next.contract;
+
+    return next;
+}
+
+/** Préserve le retour Stripe dans l'URL de login. */
+export function buildLoginRedirectWithStripeReturn(path: string, query: Record<string, unknown>): string {
+    const stripeReturn = parseStripeProductReturn(query);
+
+    if (!stripeReturn) {
+        return safeLoginRedirectPath(path);
+    }
+
+    const params = new URLSearchParams();
+    params.set('session_id', stripeReturn.sessionId);
+
+    if (stripeReturn.zone === 'sponsorship') {
+        params.set('sponsorship', 'success');
+    }
+    else if (stripeReturn.zone === 'boost') {
+        params.set('boost', stripeReturn.outcome);
+    }
+    else if (stripeReturn.zone === 'contract') {
+        params.set('contract', stripeReturn.outcome);
+    }
+
+    const separator = path.includes('?') ? '&' : '?';
+
+    return `${safeLoginRedirectPath(path)}${separator}${params.toString()}`;
+}

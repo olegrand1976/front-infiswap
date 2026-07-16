@@ -55,7 +55,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowUpDown } from 'lucide-vue-next';
+import { ArrowUpDown, Medal } from 'lucide-vue-next';
 import { h } from 'vue';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
@@ -64,6 +64,7 @@ import { formatPhoneNumber } from '~/lib/utils';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
 import { PERPAGE } from '~/lib/constants';
 import { Switch } from '~/components/ui/switch';
+import { hasPaidPlatformAccess, isNurseSubjectToPlatformAccessPayment } from '~/utils/platformAccess';
 
 useHead({ title: 'Inscriptions au cours d\'une période' });
 
@@ -256,28 +257,30 @@ const columns: ColumnDef<User>[] = [
         },
     },
     {
-        accessorKey: 'ambassador',
-        header: 'Inficoncept',
+        accessorKey: 'platform_access_paid_at',
+        header: 'Réseau à vie',
         cell: ({ row }) => {
             const user = row.original as User;
 
-            const currentValue = (() => {
-                const mods = user.last_product_modifications ?? [];
-                const found = mods.find(p => (p.product_name || '').toLowerCase().includes('inficoncept'));
-                if (found !== undefined && found.activate !== undefined && found.activate !== null) {
-                    return Number(found.activate);
-                }
-                if (user.ambassador !== undefined && user.ambassador !== null) {
-                    return Number(user.ambassador);
-                }
-                return 0;
-            })();
+            if (!isNurseSubjectToPlatformAccessPayment(user)) {
+                return h('div', { class: 'text-center text-muted-foreground' }, '—');
+            }
+
+            if (!hasPaidPlatformAccess(user)) {
+                return h('div', { class: 'text-center text-muted-foreground' }, '—');
+            }
+
             return h('div', { class: 'flex justify-center' }, [
-                h(Switch, {
-                    class: 'mx-auto text-center',
-                    checked: currentValue === 1,
-                    disabled: true,
-                }),
+                h('span', {
+                    class: 'inline-flex size-7 items-center justify-center rounded-full border-2 border-white bg-gradient-to-br from-amber-400 via-yellow-500 to-amber-600 shadow-md ring-1 ring-amber-300/80',
+                    title: 'Inscription validée à vie — accès InfiSwap permanent',
+                    'aria-label': 'Inscription validée à vie — accès InfiSwap permanent',
+                }, [
+                    h(Medal, {
+                        class: 'size-3.5 text-white drop-shadow-sm',
+                        'aria-hidden': 'true',
+                    }),
+                ]),
             ]);
         },
         enableSorting: false,

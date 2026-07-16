@@ -10,7 +10,7 @@
         <template v-else>
             <div
                 v-if="isAdmin || isCommunityManager"
-                class="mb-4 space-y-8"
+                class="mb-4 space-y-4"
             >
                 <DashboardAdminDashboard />
             </div>

@@ -95,6 +95,19 @@ export function usePostSuccessEngagement() {
         await finishEngagement();
     }
 
+    const authWatchRegistered = useState('postSuccessEngagementAuthWatch', () => false);
+
+    if (import.meta.client && !authWatchRegistered.value) {
+        authWatchRegistered.value = true;
+
+        watch(user, (nextUser) => {
+            if (!nextUser) {
+                activeEngagement.value = null;
+                pendingNavigation.value = null;
+            }
+        });
+    }
+
     return {
         activeEngagement,
         pendingNavigation,

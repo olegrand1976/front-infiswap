@@ -11,3 +11,8 @@ export type PartnerCampaign = {
     period: string;
     cta_path: string;
 };
+
+export const PARTNER_PRODUCT_API_NAMES: Record<PartnerProduct, string> = {
+    nurstech: 'NursTech',
+    nursassur: 'NursAssur',
+};

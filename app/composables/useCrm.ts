@@ -21,6 +21,13 @@ type GetCrmPlusResult = {
     fromCache: boolean;
 };
 
+export type CrmPartnerClickPlacementRow = {
+    placement: string;
+    nurstech: number;
+    nursassur: number;
+    total: number;
+};
+
 export type CrmActivityKpis = {
     total: number;
     registered_this_month: number;
@@ -31,6 +38,7 @@ export type CrmActivityKpis = {
     partner_nursassur_clicks_30d?: number;
     partner_nurstech_contacts_30d?: number;
     partner_nursassur_contacts_30d?: number;
+    partner_clicks_by_placement_30d?: CrmPartnerClickPlacementRow[];
     total_sales?: number;
     with_active_subscription?: number;
     with_signed_bc?: number;

@@ -545,7 +545,7 @@
 <script lang="ts" setup>
 import type { PartnerProduct } from '~/utils/partnerServices';
 
-const { trackPartnerImpression, trackPartnerCtaClick } = usePartnerServices();
+const { trackPartnerImpression, trackPartnerCtaClick, registerPartnerClickFromProduct } = usePartnerServices();
 
 useHead({
     title: 'Services',
@@ -569,5 +569,6 @@ onMounted(() => {
 
 function onServicesLearnMore(product: PartnerProduct) {
     trackPartnerCtaClick(product, 'services_section', 'learn_more', 'services');
+    registerPartnerClickFromProduct(product, 'services', 'services_section');
 }
 </script>

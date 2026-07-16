@@ -17,8 +17,9 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         try {
             return await $apifetch('/api/user');
         }
-        catch (error: { data?: { code?: string }; status?: number }) {
-            if (error?.data?.code === 'institution_deleted') {
+        catch (error: { data?: { code?: string }; status?: number; statusCode?: number }) {
+            const status = error?.status ?? error?.statusCode;
+            if (status === 401 || status === 403 || error?.data?.code === 'institution_deleted') {
                 token.value = null;
             }
 
@@ -26,13 +27,11 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         }
     };
 
-    if (!user.value) {
-        if (token.value) {
-            user.value = await fetchCurrentUser();
-        }
-        else {
-            user.value = null;
-        }
+    if (!token.value) {
+        user.value = null;
+    }
+    else if (!user.value) {
+        user.value = await fetchCurrentUser();
     }
 
     authReady.value = true;

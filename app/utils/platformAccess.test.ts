@@ -7,6 +7,7 @@ import {
     isPlatformAccessRole,
     isRegisteredAfterPlatformAccessCutoff,
     isSubjectToPlatformAccessPayment,
+    isNurseSubjectToPlatformAccessPayment,
     resolvePlatformAccessPromptAction,
     validateCreateReplacementForm,
     validateImmediateReplacementForm,
@@ -113,6 +114,21 @@ describe('platformAccess', () => {
         expect(isSubjectToPlatformAccessPayment({
             roles: ['collaborator'],
             created_at: '2026-07-02T10:00:00',
+        })).toBe(false);
+    });
+
+    it('detects nurse-only post-cutoff registration for admin registrations column', () => {
+        expect(isNurseSubjectToPlatformAccessPayment({
+            roles: ['nurse'],
+            created_at: '2026-07-02T10:00:00',
+        })).toBe(true);
+        expect(isNurseSubjectToPlatformAccessPayment({
+            roles: ['caregiver'],
+            created_at: '2026-07-02T10:00:00',
+        })).toBe(false);
+        expect(isNurseSubjectToPlatformAccessPayment({
+            roles: ['nurse'],
+            created_at: '2026-06-15T10:00:00',
         })).toBe(false);
     });
 

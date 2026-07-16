@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { HeartHandshake, Star } from 'lucide-vue-next';
+import { HeartHandshake, Star, X } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import {
     getGoogleReviewCopy,
@@ -19,6 +19,7 @@ const {
 } = usePostSuccessEngagement();
 const { plans, loadingPlans, checkoutLoading, fetchPlans, checkout } = useSponsorship();
 const { trackEvent } = useProductAnalytics();
+const { $toast } = useNuxtApp();
 
 const titleId = `success-engagement-title-${useId()}`;
 const markingReview = ref(false);
@@ -40,8 +41,14 @@ async function handleReviewClick() {
     markingReview.value = true;
 
     try {
-        window.open(GOOGLE_REVIEW_URL, '_blank', 'noopener,noreferrer');
         await markReviewLeft(source.value);
+        window.open(GOOGLE_REVIEW_URL, '_blank', 'noopener,noreferrer');
+    }
+    catch {
+        $toast({
+            title: 'Impossible d\'enregistrer votre réponse. Réessayez ou reconnectez-vous.',
+            variant: 'destructive',
+        });
     }
     finally {
         markingReview.value = false;
@@ -78,11 +85,22 @@ watch(source, (nextSource) => {
 <template>
     <div
         v-if="source"
-        class="max-w-lg mx-auto text-center py-10 lg:py-12 px-4 space-y-8 animate-in fade-in duration-500"
+        class="relative flex min-h-[100dvh] w-full max-w-lg flex-col px-4 pb-6 pt-14 text-center"
         role="dialog"
         aria-modal="true"
         :aria-labelledby="titleId"
     >
+        <button
+            type="button"
+            class="fixed right-4 top-4 z-[120] rounded-full border border-border/60 bg-white p-2 text-muted-foreground shadow-sm transition hover:bg-muted hover:text-foreground"
+            aria-label="Fermer"
+            :disabled="markingReview || checkoutLoading"
+            @click="dismissEngagement"
+        >
+            <X class="size-5" />
+        </button>
+
+        <div class="flex flex-1 flex-col justify-center space-y-8 overflow-y-auto animate-in fade-in duration-500">
         <template v-if="shouldShowReviewSection && reviewCopy">
             <div class="space-y-6">
                 <div class="inline-flex items-center gap-2 rounded-full bg-amber-400/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-amber-700">
@@ -176,14 +194,17 @@ watch(source, (nextSource) => {
                 </Button>
             </div>
         </div>
+        </div>
 
-        <Button
-            variant="ghost"
-            class="w-full max-w-xs mx-auto text-muted-foreground"
-            :disabled="markingReview || checkoutLoading"
-            @click="dismissEngagement"
-        >
-            Plus tard
-        </Button>
+        <div class="sticky bottom-0 z-10 border-t border-border/60 bg-white/95 pt-4 backdrop-blur-sm">
+            <Button
+                variant="ghost"
+                class="w-full max-w-xs mx-auto text-muted-foreground"
+                :disabled="markingReview || checkoutLoading"
+                @click="dismissEngagement"
+            >
+                Plus tard
+            </Button>
+        </div>
     </div>
 </template>

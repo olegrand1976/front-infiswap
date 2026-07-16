@@ -12,10 +12,24 @@
         </DashboardAdminPageHeader>
 
         <DashboardAdminPageContent class="space-y-6">
-            <div class="bg-white rounded-lg border p-4 text-sm text-gray-600">
-                <span class="font-medium text-gray-800">Laravel.log:</span>
-                {{ laravelLogsTotal }} entree(s) trouvee(s),
-                {{ laravelLogs.length }} affichee(s).
+            <div class="bg-white rounded-lg border p-4 text-sm text-gray-600 space-y-2">
+                <div>
+                    <span class="font-medium text-gray-800">Laravel.log:</span>
+                    {{ laravelLogsTotal }} entree(s) trouvee(s),
+                    {{ laravelLogs.length }} affichee(s).
+                </div>
+                <p
+                    v-if="laravelLogsMessage"
+                    class="text-amber-700"
+                >
+                    {{ laravelLogsMessage }}
+                </p>
+                <p
+                    v-if="laravelLogsError"
+                    class="text-destructive"
+                >
+                    {{ laravelLogsError }}
+                </p>
             </div>
 
             <div class="relative min-h-[220px]">
@@ -67,7 +81,7 @@
                         v-if="laravelLogs.length === 0"
                         class="bg-white rounded-lg border p-8 text-center text-gray-500"
                     >
-                        Aucune entree detectee dans laravel.log.
+                        {{ emptyStateLabel }}
                     </div>
                 </div>
             </div>
@@ -78,6 +92,7 @@
 <script setup lang="ts">
 import RollingLoader from '~/components/RollingLoader.vue';
 import { formatToDMY } from '~/composables/useDate';
+import { getErrorMessage } from '~/lib/utils';
 
 definePageMeta({
     layout: 'dashboard',
@@ -87,9 +102,13 @@ definePageMeta({
 useHead({ title: 'logs - Laravel' });
 
 const { isAdmin, isDeveloper } = useAuth();
+const { $toast } = useNuxtApp();
 const {
     laravelLogs,
     laravelLogsTotal,
+    laravelLogsMessage,
+    laravelLogsError,
+    laravelLogsSource,
     isLoadingLaravelLogs,
     getLaravelLogErrors,
 } = useMonitoring();
@@ -98,12 +117,25 @@ if (!isAdmin.value && !isDeveloper.value) {
     await navigateTo('/dashboard/admin', { replace: true });
 }
 
-const fetchData = async () => {
-    await getLaravelLogErrors(50);
+const emptyStateLabel = computed(() => {
+    if (laravelLogsSource.value === 'cache') {
+        return 'Aucune erreur monitorée en cache pour le moment.';
+    }
+
+    return 'Aucune entree detectee dans laravel.log.';
+});
+
+const fetchData = async (options: { bustCache?: boolean } = {}) => {
+    try {
+        await getLaravelLogErrors(50, options);
+    }
+    catch (error) {
+        $toast.error(getErrorMessage(error));
+    }
 };
 
 const refresh = async () => {
-    await fetchData();
+    await fetchData({ bustCache: true });
 };
 
 type LogLevelTone = 'error' | 'warning' | 'info' | 'debug' | 'neutral';

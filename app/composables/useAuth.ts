@@ -26,6 +26,7 @@ export const useAuth = () => {
     const isManager = hasAccountType(['manager']);
     const isCommunityManager = hasAccountType(['community_manager']);
     const isSaleRepresentative = hasAccountType(['sale_representative']);
+    const canAccessMarketingAnalytics = computed(() => isAdmin.value || isCommunityManager.value || isSaleRepresentative.value);
     const isMedical = hasAccountType(['nurse', 'caregiver', 'midwife', 'collaborator']);
     const isInstitution = computed((): boolean => {
         return user.value?.type === 'institution';
@@ -112,22 +113,29 @@ export const useAuth = () => {
 
     const loading = useState<boolean>('loading', () => false);
 
-    async function refresh() {
+    async function refresh(tokenOverride?: string) {
         try {
-            user.value = await $fetchCurrentUser();
+            if (tokenOverride) {
+                user.value = await $apifetch('/api/user', {
+                    headers: { Authorization: `Bearer ${tokenOverride}` },
+                });
+            }
+            else {
+                user.value = await $fetchCurrentUser();
+            }
         }
-        catch {
+        catch (error) {
             user.value = null;
-        }
 
-        if (!user.value && authToken.value) {
-            authToken.value = null;
+            const err = error as { status?: number; statusCode?: number };
+            const status = err.status ?? err.statusCode;
+            if (status === 401 || status === 403) {
+                authToken.value = null;
+            }
         }
     }
 
     async function login(credentials: { identifier: string; password: string }) {
-        if (isLoggedIn.value) return;
-
         try {
             const response = await $apifetch('api/login', {
                 method: 'post',
@@ -136,8 +144,14 @@ export const useAuth = () => {
 
             if (response.token) {
                 authToken.value = response.token;
-                await nextTick();
-                await refresh();
+                await refresh(response.token);
+
+                if (!user.value) {
+                    throw createError({
+                        statusMessage: 'Connexion impossible. Veuillez réessayer.',
+                    });
+                }
+
                 return;
             }
 
@@ -159,9 +173,12 @@ export const useAuth = () => {
     }
 
     async function register(credentials) {
+        let registeredToken: string | undefined;
+
         return $apifetch('/api/register', { method: 'post', body: credentials })
             .then((response) => {
                 if (response?.token) {
+                    registeredToken = response.token;
                     authToken.value = response.token;
                 }
             })
@@ -176,7 +193,7 @@ export const useAuth = () => {
                         query: { email },
                     });
                 }, 1500);
-                return refresh();
+                return refresh(registeredToken);
             })
             .catch((error) => { throw error; });
     }
@@ -185,18 +202,24 @@ export const useAuth = () => {
         loading.value = true;
 
         try {
-            await $apifetch(`/api/email/verify/${id}/${hash}`, {
+            const data = await $apifetch(`/api/email/verify/${id}/${hash}`, {
                 method: 'POST',
             });
 
             toast.success('Compte validé avec succès.');
 
-            return true;
+            return {
+                success: true,
+                email: data?.user?.email as string | undefined,
+            };
         }
         catch (err) {
             toast.error('Une erreur s\'est produite lors de la validation de votre compte. Merci de réessayer plus tard.');
 
-            throw new Error(err);
+            return {
+                success: false,
+                email: undefined,
+            };
         }
         finally {
             loading.value = false;
@@ -210,14 +233,10 @@ export const useAuth = () => {
     }
 
     async function registerImmediate(credentials) {
-        return $apifetch('/api/register-immediate', { method: 'post', body: credentials })
-            .then((response) => {
-                authToken.value = response.token;
-            })
-            .then(() => {
-                toast.success('Inscription rapide réussie');
-            })
-            .catch((error) => { throw error; });
+        const response = await $apifetch('/api/register-immediate', { method: 'post', body: credentials });
+        toast.success('Inscription rapide réussie');
+
+        return response;
     }
 
     async function resendEmailVerification(email: string) {
@@ -280,8 +299,7 @@ export const useAuth = () => {
         });
 
         authToken.value = response.token;
-        await nextTick();
-        await refresh();
+        await refresh(response.token);
         return navigateTo(safeLoginRedirectPath(redirectPath));
     };
 
@@ -619,6 +637,7 @@ export const useAuth = () => {
         switchContext,
         isCommunityManager,
         isSaleRepresentative,
+        canAccessMarketingAnalytics,
         isCollaborator,
         isDeveloper,
         isManager,

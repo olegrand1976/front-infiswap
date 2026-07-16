@@ -37,7 +37,7 @@
 <script setup lang="ts">
 import type { PartnerProduct } from '~/utils/partnerServices';
 
-const { trackPartnerImpression, trackPartnerCtaClick } = usePartnerServices();
+const { trackPartnerImpression, trackPartnerCtaClick, registerPartnerClickFromProduct } = usePartnerServices();
 
 onMounted(() => {
     trackPartnerImpression('nurstech', 'home_partners', 'home');
@@ -46,5 +46,6 @@ onMounted(() => {
 
 function onDiscover(product: PartnerProduct) {
     trackPartnerCtaClick(product, 'home_partners', 'discover', 'home');
+    registerPartnerClickFromProduct(product, 'home', 'home_partners');
 }
 </script>
