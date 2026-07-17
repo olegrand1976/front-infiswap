@@ -68,8 +68,8 @@
                                 <span class="text-foreground/80">Pour toujours.</span>
                             </h1>
                             <p class="text-gray-600 text-base lg:text-lg leading-relaxed max-w-lg mx-auto lg:mx-0">
-                                Rejoignez le réseau InfiSwap pour publier vos remplacements et répondre aux annonces.
-                                Un seul paiement unique vous donne un accès permanent à toute la communauté.
+                                Accès réseau — paiement unique, à vie. Publiez vos remplacements et postulez aux annonces.
+                                Contribution unique pour les nouvelles inscrites — sans abonnement.
                             </p>
                         </div>
 
@@ -93,8 +93,17 @@
                                 <p class="text-sm font-semibold text-gray-800">
                                     Membres inscrits
                                 </p>
-                                <p class="text-xs text-gray-500">
-                                    Professionnels actifs en Belgique et en France
+                                <p
+                                    v-if="formattedMatchedCount"
+                                    class="text-xs text-gray-500"
+                                >
+                                    {{ formattedMatchedCount }}+ remplacements déjà réalisés sur le réseau
+                                </p>
+                                <p
+                                    v-else
+                                    class="text-xs text-gray-500"
+                                >
+                                    Professionnels en Belgique et en France
                                 </p>
                             </div>
                         </div>
@@ -124,7 +133,7 @@
 
                         <p class="hidden lg:flex items-center gap-2 text-sm text-gray-500">
                             <ShieldCheck class="w-4 h-4 text-success shrink-0" />
-                            Paiement sécurisé par Stripe · Accès activé immédiatement
+                            Paiement sécurisé par Stripe · Activation sous quelques secondes
                         </p>
                     </div>
 
@@ -190,7 +199,7 @@
                                         class="text-center text-xs text-gray-400 leading-relaxed"
                                     >
                                         En cliquant, vous serez redirigé vers un paiement sécurisé.
-                                        Votre accès sera activé dès la confirmation.
+                                        Votre accès sera activé sous quelques secondes après confirmation.
                                     </p>
                                 </div>
                             </div>
@@ -297,6 +306,7 @@ import {
     LIFETIME_CELEBRATION_SEEN_KEY,
     PROCESSED_ACCESS_SESSION_KEY,
 } from '~/utils/purchaseCelebration';
+import { sanitizePlatformAccessTrigger } from '~/utils/platformAccessCopy';
 import { useAuthTokenCookie } from '~/lib/authTokenCookie';
 
 useHead({
@@ -324,11 +334,18 @@ const {
     confirmAccess,
     hasPlatformAccess,
 } = useSubscription();
+const { trackEvent } = useProductAnalytics();
 
-const { getKpiValue, fetchStats, loading: statsLoading } = usePlatformStats();
+const { getKpiValue, fetchStats, loading: statsLoading, stats } = usePlatformStats();
 
 const membersCount = computed(() => getKpiValue('members_total'));
 const formattedMembersCount = computed(() => membersCount.value.toLocaleString('fr-BE'));
+const formattedMatchedCount = computed(() => {
+    const count = Math.round(stats.value.matched_replacements_total);
+
+    return count > 0 ? count.toLocaleString('fr-BE') : '';
+});
+const accessTrigger = computed(() => sanitizePlatformAccessTrigger(route.query.trigger));
 
 const hasAccess = ref(false);
 const showSuccessCelebration = ref(false);
@@ -576,6 +593,10 @@ const processStripeReturn = async () => {
             confirmFailed.value = false;
             await refresh();
             triggerLifetimeBadgeReveal();
+            trackEvent('platform_access_paid', {
+                trigger: accessTrigger.value,
+                source: 'acces_plan',
+            });
 
             if (hasSeenLifetimeCelebration(sessionId)) {
                 return navigateTo(redirectTo.value, { replace: true });
@@ -603,6 +624,8 @@ watch(() => route.query.session_id, () => {
     }
 }, { immediate: true });
 
+const autoCheckoutStarted = ref(false);
+
 onMounted(async () => {
     if (!extractStripeSessionId(route.query) && user.value) {
         hasAccess.value = await hasPlatformAccess();
@@ -610,6 +633,20 @@ onMounted(async () => {
 
     if (import.meta.client) {
         await processSponsorshipStripeReturn();
+    }
+
+    if (
+        import.meta.client
+        && route.query.checkout === '1'
+        && !extractStripeSessionId(route.query)
+        && !hasAccess.value
+        && !autoCheckoutStarted.value
+    ) {
+        autoCheckoutStarted.value = true;
+        if (!accessPlan.value) {
+            await getAccessPlan();
+        }
+        await handlePurchase();
     }
 });
 
@@ -653,7 +690,11 @@ const handlePurchase = async () => {
     purchasing.value = true;
 
     try {
-        const response = await purchaseAccess(accessPlan.value.stripe_price_id);
+        const response = await purchaseAccess(accessPlan.value.stripe_price_id, {
+            redirectTo: redirectTo.value,
+            trigger: accessTrigger.value,
+            source: route.query.checkout === '1' ? 'acces_plan_auto' : 'acces_plan',
+        });
 
         if (response?.url) {
             window.location.href = response.url;

@@ -87,7 +87,7 @@ watch(showPartnerBanner, (visible) => {
 });
 
 function onAccessClick() {
-    trackEvent('platform_access_cta_click', { source: 'banner' });
+    trackEvent('platform_access_cta_click', { source: 'banner', trigger: 'banner' });
 }
 
 function onPartnerBannerClick() {
@@ -117,8 +117,8 @@ function onPartnerBannerClick() {
                     aria-hidden="true"
                 />
                 <span>
-                    Rejoignez le réseau pour publier et répondre aux remplacements —
-                    <strong>accès à vie 9,90 €</strong>
+                    Accès réseau — paiement unique <strong>9,90 €</strong>, à vie —
+                    pour publier et candidater
                 </span>
             </div>
             <NuxtLink

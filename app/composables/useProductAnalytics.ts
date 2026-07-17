@@ -5,6 +5,8 @@ type ProductEventName =
     | 'email_cta_clicked'
     | 'platform_access_impression'
     | 'platform_access_cta_click'
+    | 'platform_access_checkout_started'
+    | 'platform_access_paid'
     | 'onboarding_banner_click'
     | 'referral_dashboard_copy'
     | 'boost_impression'

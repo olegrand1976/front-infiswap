@@ -432,7 +432,10 @@ const handleAccessCta = async () => {
 
     purchasing.value = true;
     try {
-        const response = await purchaseAccess(accessPlan.value.stripe_price_id);
+        const response = await purchaseAccess(accessPlan.value.stripe_price_id, {
+            trigger: 'direct',
+            source: 'pricing',
+        });
         if (response?.url) {
             window.location.href = response.url;
         }

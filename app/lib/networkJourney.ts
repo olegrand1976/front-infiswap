@@ -218,7 +218,7 @@ export const JOURNEY_TIPS: JourneyTipDefinition[] = [
     { id: 'publish', text: 'Publiez votre propre remplacement quand vous cherchez de l\'aide — le réseau répond rapidement.', category: 'Action', questId: 'first_action', minLevel: 2 },
     { id: 'notif', text: 'Activez les alertes email pour être prévenue dès qu\'une annonce correspond à votre zone.', category: 'Notifications', questId: 'notif_on' },
     { id: 'notif2', text: 'Les notifications vous évitent de rater une mission qui correspond à votre profil.', category: 'Notifications', questId: 'notif_on' },
-    { id: 'access', text: 'L\'accès réseau à vie vous permet de publier et répondre sur le réseau InfiSwap.', category: 'Accès réseau', questId: 'discover_access', audience: 'post_cutoff_only' },
+    { id: 'access', text: 'Accès réseau — paiement unique 9,90 €, à vie : publiez et candidatez sans abonnement.', category: 'Accès réseau', questId: 'discover_access', audience: 'post_cutoff_only' },
     { id: 'legacy', text: 'Votre compte existant bénéficie déjà de l\'accès au réseau — profitez-en pour explorer les nouvelles annonces.', category: 'Réseau', audience: 'legacy_only', minLevel: 1 },
     { id: 'filter', text: 'Filtrez les remplacements par période et code postal pour gagner du temps.', category: 'Navigation', minLevel: 2 },
     { id: 'profile', text: 'Un profil complet inspire confiance aux collègues qui consultent vos réponses.', category: 'Profil', minLevel: 3 },

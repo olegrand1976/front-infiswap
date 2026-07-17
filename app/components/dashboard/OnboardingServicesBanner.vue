@@ -44,6 +44,7 @@ onMounted(async () => {
 
 function handlePrimaryClick() {
     trackEvent('onboarding_banner_click', { target: 'acces_plan' });
+    trackEvent('platform_access_cta_click', { source: 'onboarding_banner', trigger: 'onboarding_banner' });
 }
 
 function handleDismiss() {
@@ -68,19 +69,19 @@ function handleDismiss() {
         <div class="flex flex-col gap-4 pr-8 md:flex-row md:items-center md:justify-between">
             <div class="space-y-2">
                 <p class="text-xs font-semibold uppercase tracking-wide text-primary">
-                    Accès réseau premium
+                    Accès réseau — paiement unique, à vie
                 </p>
                 <h2 class="text-lg font-bold text-foreground md:text-xl">
-                    Rejoignez le réseau n°1 — 9,90 €, accès à vie
+                    Publiez et postulez — 9,90 € une fois
                 </h2>
                 <p class="max-w-2xl text-sm text-muted-foreground">
-                    Publiez vos remplacements et répondez aux annonces près de chez vous.
-                    Un seul paiement, sans abonnement.
+                    Dès que vous publiez ou candidatez, un accès unique débloque le réseau.
+                    Sans abonnement.
                 </p>
                 <div class="flex items-center gap-2 text-sm font-medium text-primary">
                     <Users class="size-4 shrink-0" />
-                    <span v-if="statsLoading">… membres actifs</span>
-                    <span v-else>{{ membersCount.toLocaleString('fr-BE') }}+ membres actifs</span>
+                    <span v-if="statsLoading">… membres inscrits</span>
+                    <span v-else>{{ membersCount.toLocaleString('fr-BE') }}+ membres inscrits</span>
                 </div>
             </div>
 

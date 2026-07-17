@@ -391,7 +391,7 @@ const settingsRoute = computed(() =>
 const { trackEvent } = useProductAnalytics();
 
 function onPlatformAccessHeaderClick() {
-    trackEvent('platform_access_cta_click', { source: 'header' });
+    trackEvent('platform_access_cta_click', { source: 'header', trigger: 'header' });
 }
 
 const { activeCelebration, dismissCelebration } = usePurchaseCelebration();

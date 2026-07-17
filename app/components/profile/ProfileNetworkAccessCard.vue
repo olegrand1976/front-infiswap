@@ -19,8 +19,8 @@ onMounted(() => {
 });
 
 function activateAccess() {
-    trackEvent('platform_access_cta_click', { source: 'settings' });
-    redirectToAccesPlan('/dashboard/settings');
+    trackEvent('platform_access_cta_click', { source: 'settings', trigger: 'settings' });
+    redirectToAccesPlan('/dashboard/settings', { trigger: 'settings' });
 }
 </script>
 
@@ -41,7 +41,7 @@ function activateAccess() {
                     Accès réseau non activé
                 </h2>
                 <p class="text-sm text-muted-foreground">
-                    Publiez vos remplacements, répondez aux annonces et affichez le badge membre sur votre profil.
+                    Accès réseau — paiement unique 9,90 €, à vie. Publiez, postulez et affichez le badge membre — sans abonnement.
                 </p>
             </div>
         </div>

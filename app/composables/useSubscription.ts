@@ -15,15 +15,28 @@ export type ConfirmBoostResult = {
     planDays: number | null;
 };
 
+/** Intention qui ouvre le paywall / le checkout (analytics + copy). */
+export type PlatformAccessTrigger =
+    | 'create'
+    | 'apply'
+    | 'banner'
+    | 'header'
+    | 'settings'
+    | 'onboarding_banner'
+    | 'quest'
+    | 'direct';
+
 export const useSubscription = () => {
     const { $apifetch, $toast } = useNuxtApp();
     const { refresh } = useAuth();
+    const { trackEvent } = useProductAnalytics();
 
     const accessPlan = useState<AccessPlan | null>('accessPlan', () => null);
     const loading = useState<boolean>('subscriptionLoading', () => false);
     const current = useState<ActiveAccess | null>('currentAccess', () => null);
     const platformAccessModalOpen = useState<boolean>('platformAccessModalOpen', () => false);
     const platformAccessRedirectTo = useState<string | null>('platformAccessRedirectTo', () => null);
+    const platformAccessTrigger = useState<PlatformAccessTrigger | null>('platformAccessTrigger', () => null);
     const user = useUser();
     const route = useRoute();
 
@@ -61,25 +74,48 @@ export const useSubscription = () => {
         return response.status === 'active';
     };
 
-    const redirectToAccesPlan = async (redirectTo?: string) => {
+    const redirectToAccesPlan = async (
+        redirectTo?: string,
+        options?: { checkout?: boolean; trigger?: PlatformAccessTrigger },
+    ) => {
+        const query: Record<string, string> = {
+            redirectTo: safeReturnPath(redirectTo ?? route.fullPath),
+        };
+
+        if (options?.checkout) {
+            query.checkout = '1';
+        }
+
+        if (options?.trigger) {
+            query.trigger = options.trigger;
+        }
+
         await navigateTo({
             path: '/acces-plan',
-            query: { redirectTo: safeReturnPath(redirectTo ?? route.fullPath) },
+            query,
         });
     };
 
-    const openPlatformAccessModal = (redirectTo?: string | null) => {
+    const openPlatformAccessModal = (
+        redirectTo?: string | null,
+        trigger: PlatformAccessTrigger = 'direct',
+    ) => {
         platformAccessRedirectTo.value = redirectTo ?? safeReturnPath(route.fullPath);
+        platformAccessTrigger.value = trigger;
         platformAccessModalOpen.value = true;
     };
 
     const closePlatformAccessModal = () => {
         platformAccessModalOpen.value = false;
         platformAccessRedirectTo.value = null;
+        platformAccessTrigger.value = null;
     };
 
     /** Opens the payment modal when cotisation is required; call after form validation. */
-    const promptPlatformAccessIfRequired = async (redirectTo?: string): Promise<boolean> => {
+    const promptPlatformAccessIfRequired = async (
+        redirectTo?: string,
+        trigger: PlatformAccessTrigger = 'direct',
+    ): Promise<boolean> => {
         if (bypassesPlatformAccess()) {
             return true;
         }
@@ -105,13 +141,16 @@ export const useSubscription = () => {
             return false;
         }
 
-        openPlatformAccessModal(redirectTo ?? safeReturnPath(route.fullPath));
+        openPlatformAccessModal(redirectTo ?? safeReturnPath(route.fullPath), trigger);
 
         return false;
     };
 
-    const requirePlatformAccess = async (redirectTo?: string): Promise<boolean> => {
-        return promptPlatformAccessIfRequired(redirectTo);
+    const requirePlatformAccess = async (
+        redirectTo?: string,
+        trigger: PlatformAccessTrigger = 'direct',
+    ): Promise<boolean> => {
+        return promptPlatformAccessIfRequired(redirectTo, trigger);
     };
 
     const isPlatformAccessError = (error: unknown): boolean => {
@@ -134,7 +173,10 @@ export const useSubscription = () => {
         }
     };
 
-    const purchaseAccess = async (priceId: string): Promise<CheckoutResponse | null> => {
+    const purchaseAccess = async (
+        priceId: string,
+        options?: { redirectTo?: string | null; trigger?: PlatformAccessTrigger | string | null; source?: string },
+    ): Promise<CheckoutResponse | null> => {
         if (!user.value) {
             await navigateTo({
                 path: '/login',
@@ -153,11 +195,21 @@ export const useSubscription = () => {
 
         loading.value = true;
         try {
+            const trigger = options?.trigger
+                ?? platformAccessTrigger.value
+                ?? String(route.query.trigger ?? 'direct');
+
+            trackEvent('platform_access_checkout_started', {
+                source: options?.source ?? 'acces_plan',
+                trigger,
+            });
+
             return await $apifetch<CheckoutResponse>('api/subscription/create', {
                 method: 'POST',
                 body: {
                     priceId,
-                    redirectTo: safeReturnPath(route.query.redirectTo),
+                    redirectTo: safeReturnPath(options?.redirectTo ?? route.query.redirectTo),
+                    trigger,
                 },
             });
         }
@@ -282,6 +334,7 @@ export const useSubscription = () => {
         accessPlan,
         platformAccessModalOpen,
         platformAccessRedirectTo,
+        platformAccessTrigger,
         getAccessPlan,
         purchaseAccess,
         confirmAccess,

@@ -35,7 +35,7 @@ export const useReplacements = () => {
         }
         catch (err) {
             if (isPlatformAccessError(err)) {
-                openPlatformAccessModal();
+                openPlatformAccessModal(undefined, 'create');
                 return null;
             }
 
@@ -165,7 +165,7 @@ export const useReplacements = () => {
         }
         catch (err) {
             if (isPlatformAccessError(err)) {
-                openPlatformAccessModal();
+                openPlatformAccessModal(undefined, 'create');
                 return false;
             }
 
@@ -401,7 +401,7 @@ export const sendResponse = () => {
     const isDisabled = useState('replacementResponseIsDisabled', () => false);
 
     const submitResponse = async (formData) => {
-        if (!(await requirePlatformAccess(route.fullPath))) {
+        if (!(await requirePlatformAccess(route.fullPath, 'apply'))) {
             return false;
         }
 
@@ -419,7 +419,7 @@ export const sendResponse = () => {
         }
         catch (e) {
             if (isPlatformAccessError(e)) {
-                openPlatformAccessModal(route.fullPath);
+                openPlatformAccessModal(route.fullPath, 'apply');
                 return false;
             }
 

@@ -147,22 +147,21 @@
 
                 <div
                     v-if="showNetworkAccessPromo"
-                    class="flex flex-col w-full overflow-hidden bg-white border-2 rounded-lg shadow-sm border-amber-400"
+                    class="flex flex-col w-full overflow-hidden bg-white border-2 rounded-lg shadow-sm border-primary"
                 >
-                    <div class="p-3 text-sm font-bold tracking-wide text-center text-white uppercase bg-amber-500">
-                        Boost remplacement
+                    <div class="p-3 text-sm font-bold tracking-wide text-center text-white uppercase bg-primary">
+                        Accès réseau
                     </div>
                     <div class="p-4 space-y-3">
                         <p class="text-sm text-gray-700">
-                            Mettez votre annonce en tête de liste — dès 2 € pour 3 jours.
+                            Accès réseau — paiement unique 9,90 €, à vie. Publiez et postulez sans abonnement.
                         </p>
-                        <NuxtLink to="/pricing">
-                            <button
-                                class="w-full py-2 text-sm font-semibold text-white transition rounded bg-amber-500 hover:bg-amber-500/90"
-                                @click="trackBoostClick"
-                            >
-                                Découvrir le Boost
-                            </button>
+                        <NuxtLink
+                            to="/acces-plan?trigger=banner"
+                            class="block w-full py-2 text-center text-sm font-semibold text-white transition rounded bg-success hover:bg-success/90"
+                            @click="trackNetworkAccessClick"
+                        >
+                            Activer mon accès
                         </NuxtLink>
                     </div>
                 </div>
@@ -418,8 +417,8 @@ async function copyReferralLink() {
     $toast({ description: 'Lien copié avec succès' });
 }
 
-function trackBoostClick() {
-    trackEvent('boost_cta_click', { source: 'nurse_dashboard_services' });
+function trackNetworkAccessClick() {
+    trackEvent('platform_access_cta_click', { source: 'nurse_dashboard_services', trigger: 'banner' });
 }
 
 const arePreferencesEmpty = () => {
