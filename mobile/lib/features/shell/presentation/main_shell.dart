@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radii.dart';
 import '../../home/presentation/home_screen.dart';
+import '../../notifications/data/notifications_list_notifier.dart';
 import '../../notifications/presentation/notifications_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 import '../../replacements/presentation/replacements_screen.dart';
@@ -12,8 +13,6 @@ import '../providers/shell_tab_index_provider.dart';
 
 class MainShell extends ConsumerWidget {
   const MainShell({super.key});
-
-  static const int _notificationCount = 3;
 
   static const List<Widget> _pages = [
     HomeScreen(),
@@ -26,6 +25,10 @@ class MainShell extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.appColors;
     final currentIndex = ref.watch(shellTabIndexProvider);
+    final unreadCount = ref.watch(unreadNotificationCountProvider).maybeWhen(
+          data: (count) => count,
+          orElse: () => 0,
+        );
 
     void selectTab(int index) =>
         ref.read(shellTabIndexProvider.notifier).state = index;
@@ -94,7 +97,7 @@ class MainShell extends ConsumerWidget {
                               activeIcon: Icons.notifications,
                               label: 'Notifications',
                               active: currentIndex == 2,
-                              badgeCount: _notificationCount,
+                              badgeCount: unreadCount,
                               onTap: () => selectTab(2),
                             ),
                             _NavTab(

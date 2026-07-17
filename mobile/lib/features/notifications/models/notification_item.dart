@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class NotificationItem {
   const NotificationItem({
     required this.id,
@@ -114,5 +116,30 @@ NotificationContent notificationContentFor(NotificationItem item) {
         title: has('title') ? field('title') : 'Notification',
         body: field('body'),
       );
+  }
+}
+
+IconData notificationIconFor(String type) {
+  switch (type) {
+    case 'replacement.new':
+    case 'mission.new':
+      return Icons.campaign_outlined;
+    case 'replacement.response':
+    case 'mission.candidate':
+      return Icons.groups_outlined;
+    case 'replacement.accepted':
+    case 'mission.accepted':
+      return Icons.check_circle_outline;
+    case 'replacement.refused':
+    case 'mission.rejected':
+      return Icons.cancel_outlined;
+    case 'replacement.canceled':
+      return Icons.undo_outlined;
+    case 'replacement.closed':
+      return Icons.lock_outline;
+    case 'partnership.request':
+      return Icons.handshake_outlined;
+    default:
+      return Icons.notifications_outlined;
   }
 }
