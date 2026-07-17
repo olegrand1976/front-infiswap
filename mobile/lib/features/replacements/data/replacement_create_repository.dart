@@ -64,6 +64,12 @@ class ReplacementCreateRepository {
   Future<void> deleteReplacement(int replacementId) async {
     await _api.delete<void>('/replacements/$replacementId');
   }
+
+  // Release a filled replacement: unassign the confirmed substitute and reopen it for new candidatures.
+  Future<void> release(int replacementId) async {
+    await _api
+        .put<Map<String, dynamic>>('/replacements/$replacementId/release');
+  }
 }
 
 final replacementCreateRepositoryProvider =

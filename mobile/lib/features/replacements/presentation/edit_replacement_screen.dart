@@ -13,17 +13,22 @@ import '../models/replacement_item.dart';
 import 'widgets/create_form_fields.dart';
 
 class EditReplacementScreen extends ConsumerStatefulWidget {
-  const EditReplacementScreen({super.key, required this.item});
+  const EditReplacementScreen({
+    super.key,
+    required this.item,
+    this.isRepost = false,
+  });
 
   final ReplacementItem item;
+
+  final bool isRepost;
 
   @override
   ConsumerState<EditReplacementScreen> createState() =>
       _EditReplacementScreenState();
 }
 
-class _EditReplacementScreenState
-    extends ConsumerState<EditReplacementScreen> {
+class _EditReplacementScreenState extends ConsumerState<EditReplacementScreen> {
   bool _loading = true;
   bool _submitting = false;
   String? _loadError;
@@ -65,9 +70,8 @@ class _EditReplacementScreenState
 
     try {
       final id = int.parse(widget.item.id);
-      final data = await ref
-          .read(replacementCreateRepositoryProvider)
-          .fetchForEdit(id);
+      final data =
+          await ref.read(replacementCreateRepositoryProvider).fetchForEdit(id);
       if (!mounted) return;
       setState(() {
         _data = data;
@@ -205,7 +209,7 @@ class _EditReplacementScreenState
     final payload = UpdateReplacementPayload(
       userId: data.userId,
       visibility: data.visibility,
-      status: data.status,
+      status: widget.isRepost ? 'open' : data.status,
       type: data.type,
       experienceYears: data.experienceYears,
       periods: _periods,
@@ -226,7 +230,10 @@ class _EditReplacementScreenState
       if (!mounted) return;
       ref.read(myReplacementsListProvider.notifier).refresh();
       Navigator.of(context).pop(true);
-      _showSnack('Annonce mise à jour', isError: false);
+      _showSnack(
+        widget.isRepost ? 'Annonce republiée' : 'Annonce mise à jour',
+        isError: false,
+      );
     } on ApiException catch (error) {
       var message = error.message;
       if (error.errors != null && error.errors!.isNotEmpty) {
@@ -259,7 +266,9 @@ class _EditReplacementScreenState
                   ),
                   Expanded(
                     child: Text(
-                      "Modifier l'annonce",
+                      widget.isRepost
+                          ? "Republier l'annonce"
+                          : "Modifier l'annonce",
                       style: TextStyle(
                         color: colors.textPrimary,
                         fontSize: 17,
@@ -509,7 +518,7 @@ class _EditReplacementScreenState
                         color: colors.onPrimary,
                       ),
                     )
-                  : const Text('Enregistrer'),
+                  : Text(widget.isRepost ? 'Republier' : 'Enregistrer'),
             ),
           ),
         ),

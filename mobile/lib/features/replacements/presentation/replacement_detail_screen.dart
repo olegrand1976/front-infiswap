@@ -26,9 +26,6 @@ class ReplacementDetailScreen extends ConsumerStatefulWidget {
 
   final ReplacementItem item;
 
-  /// true si l'annonce a été ouverte depuis « Mes remplacements » — dans ce
-  /// cas le CTA de candidature n'a pas de sens (on ne postule pas à sa
-  /// propre annonce).
   final bool isOwner;
 
   @override
@@ -314,7 +311,68 @@ class _OwnerFooter extends ConsumerWidget {
     } on ApiException catch (error) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error.message), backgroundColor: AppColors.coral),
+        SnackBar(
+            content: Text(error.message), backgroundColor: AppColors.coral),
+      );
+    } catch (_) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Une erreur est survenue.')),
+      );
+    }
+  }
+
+  Future<void> _release(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        final dialogColors = dialogContext.appColors;
+        return AlertDialog(
+          backgroundColor: dialogColors.card,
+          title: Text('Libérer ce remplacement ?',
+              style: TextStyle(color: dialogColors.textPrimary)),
+          content: Text(
+            'Le remplaçant confirmé sera désengagé et l\'annonce redeviendra ouverte aux candidatures.',
+            style: TextStyle(color: dialogColors.textSecondary),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: Text('Annuler',
+                  style: TextStyle(color: dialogColors.textSecondary)),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: Text('Libérer',
+                  style: TextStyle(
+                      color: dialogColors.primary,
+                      fontWeight: FontWeight.w700)),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed != true || !context.mounted) {
+      return;
+    }
+
+    try {
+      final replacementId = int.parse(item.id);
+      await ref
+          .read(replacementCreateRepositoryProvider)
+          .release(replacementId);
+      if (!context.mounted) return;
+      ref.read(myReplacementsListProvider.notifier).refresh();
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Remplacement libéré')),
+      );
+    } on ApiException catch (error) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(error.message), backgroundColor: AppColors.coral),
       );
     } catch (_) {
       if (!context.mounted) return;
@@ -400,6 +458,56 @@ class _OwnerFooter extends ConsumerWidget {
             ),
           ),
         ],
+        if (status == MyReplacementStatus.closed && !item.isMission) ...[
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () async {
+                final updated = await Navigator.of(context).push<bool>(
+                  MaterialPageRoute<bool>(
+                    builder: (_) =>
+                        EditReplacementScreen(item: item, isRepost: true),
+                  ),
+                );
+                if (updated == true && context.mounted) {
+                  Navigator.of(context).pop();
+                }
+              },
+              icon: Icon(Icons.campaign_outlined,
+                  color: colors.primary, size: 18),
+              label: Text(
+                "Republier l'annonce",
+                style: TextStyle(
+                    color: colors.primary, fontWeight: FontWeight.w700),
+              ),
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: colors.primaryOutline),
+                padding: const EdgeInsets.symmetric(vertical: 13),
+              ),
+            ),
+          ),
+        ],
+        if (status == MyReplacementStatus.filled && !item.isMission) ...[
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () => _release(context, ref),
+              icon: Icon(Icons.lock_open_outlined,
+                  color: colors.primary, size: 18),
+              label: Text(
+                'Libérer le remplacement',
+                style: TextStyle(
+                    color: colors.primary, fontWeight: FontWeight.w700),
+              ),
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: colors.primaryOutline),
+                padding: const EdgeInsets.symmetric(vertical: 13),
+              ),
+            ),
+          ),
+        ],
         if (status == MyReplacementStatus.open) ...[
           const SizedBox(height: 10),
           if (item.isBoosted)
@@ -428,10 +536,12 @@ class _OwnerFooter extends ConsumerWidget {
             width: double.infinity,
             child: TextButton.icon(
               onPressed: () => _delete(context, ref),
-              icon: const Icon(Icons.delete_outline, color: AppColors.coral, size: 18),
+              icon: const Icon(Icons.delete_outline,
+                  color: AppColors.coral, size: 18),
               label: const Text(
                 "Supprimer l'annonce",
-                style: TextStyle(color: AppColors.coral, fontWeight: FontWeight.w700),
+                style: TextStyle(
+                    color: AppColors.coral, fontWeight: FontWeight.w700),
               ),
             ),
           ),
