@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -30,8 +31,15 @@ class PushNotificationService {
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
   bool _initialized = false;
 
+  // Push (FCM) is only wired for Android/iOS — web push would need a VAPID
+  // key and a service worker, out of scope for now.
+  String? get platformName {
+    if (kIsWeb) return null;
+    return defaultTargetPlatform == TargetPlatform.iOS ? 'ios' : 'android';
+  }
+
   Future<void> initialize() async {
-    if (_initialized) return;
+    if (_initialized || kIsWeb) return;
     _initialized = true;
 
     await _localNotifications.initialize(
@@ -61,7 +69,7 @@ class PushNotificationService {
     }
   }
 
-  Future<String?> getToken() => _messaging.getToken();
+  Future<String?> getToken() => kIsWeb ? Future.value(null) : _messaging.getToken();
 
   Stream<String> get onTokenRefresh => _messaging.onTokenRefresh;
 
