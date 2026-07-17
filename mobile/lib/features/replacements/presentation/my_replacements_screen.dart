@@ -9,13 +9,43 @@ import '../models/replacement_item.dart';
 import 'replacement_detail_screen.dart';
 import 'widgets/replacement_list_card.dart';
 
-class MyReplacementsScreen extends ConsumerWidget {
+class MyReplacementsScreen extends ConsumerStatefulWidget {
   const MyReplacementsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MyReplacementsScreen> createState() =>
+      _MyReplacementsScreenState();
+}
+
+class _MyReplacementsScreenState extends ConsumerState<MyReplacementsScreen> {
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    final threshold = _scrollController.position.maxScrollExtent - 300;
+    if (_scrollController.position.pixels >= threshold) {
+      ref.read(myReplacementsListProvider.notifier).loadMore();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final colors = context.appColors;
     final asyncList = ref.watch(myReplacementsListProvider);
+    final isLoadingMore = ref.watch(myReplacementsLoadingMoreProvider);
     final notifier = ref.read(myReplacementsListProvider.notifier);
     final canPop = Navigator.of(context).canPop();
 
@@ -92,6 +122,7 @@ class MyReplacementsScreen extends ConsumerWidget {
                     color: colors.primary,
                     onRefresh: notifier.refresh,
                     child: ListView(
+                      controller: _scrollController,
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                       children: [
                         _StatsStrip(total: items.length, counts: counts),
@@ -112,6 +143,15 @@ class MyReplacementsScreen extends ConsumerWidget {
                           ),
                           const SizedBox(height: 10),
                         ],
+                        if (isLoadingMore)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: colors.primary,
+                              ),
+                            ),
+                          ),
                       ],
                     ),
                   );

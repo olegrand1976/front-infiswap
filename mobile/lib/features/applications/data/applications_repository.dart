@@ -15,25 +15,33 @@ class ApplicationsRepository {
   final ApiClient _api;
   final AppConfig _config;
 
-  Future<List<ApplicationItem>> fetchApplied(int userId) async {
+  Future<ApplicationsPage> fetchApplied(
+    int userId, {
+    int page = 1,
+    int perPage = 25,
+  }) async {
     final response = await _api.get<Map<String, dynamic>>(
       '/replacement-responses/applied/$userId',
+      queryParameters: {'page': page, 'perPage': perPage},
     );
 
     final data = response.data?['data'];
-    if (data is! List) {
-      return const [];
-    }
+    final items = data is List
+        ? data
+            .whereType<Map>()
+            .map(
+              (item) => ApplicationMapper.fromAppliedJson(
+                item.map((key, value) => MapEntry(key.toString(), value)),
+                storageBaseUrl: _config.apiBaseUrl,
+              ),
+            )
+            .toList()
+        : <ApplicationItem>[];
 
-    return data
-        .whereType<Map>()
-        .map(
-          (item) => ApplicationMapper.fromAppliedJson(
-            item.map((key, value) => MapEntry(key.toString(), value)),
-            storageBaseUrl: _config.apiBaseUrl,
-          ),
-        )
-        .toList();
+    final total =
+        int.tryParse(response.data?['total']?.toString() ?? '') ?? items.length;
+
+    return ApplicationsPage(items: items, total: total);
   }
 
   Future<void> applyToReplacement({
@@ -74,3 +82,10 @@ final applicationsRepositoryProvider = Provider<ApplicationsRepository>((ref) {
     config: ref.watch(appConfigProvider),
   );
 });
+
+class ApplicationsPage {
+  const ApplicationsPage({required this.items, required this.total});
+
+  final List<ApplicationItem> items;
+  final int total;
+}

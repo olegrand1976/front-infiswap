@@ -18,11 +18,34 @@ class ApplicationsScreen extends ConsumerStatefulWidget {
 
 class _ApplicationsScreenState extends ConsumerState<ApplicationsScreen> {
   ApplicationStatusBucket? _filter;
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    final threshold = _scrollController.position.maxScrollExtent - 300;
+    if (_scrollController.position.pixels >= threshold) {
+      ref.read(applicationsListProvider.notifier).loadMore();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final asyncList = ref.watch(applicationsListProvider);
+    final isLoadingMore = ref.watch(applicationsLoadingMoreProvider);
     final notifier = ref.read(applicationsListProvider.notifier);
     final canPop = Navigator.of(context).canPop();
 
@@ -105,6 +128,7 @@ class _ApplicationsScreenState extends ConsumerState<ApplicationsScreen> {
                     color: colors.primary,
                     onRefresh: notifier.refresh,
                     child: ListView(
+                      controller: _scrollController,
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                       children: [
                         _StatsStrip(total: items.length, counts: counts),
@@ -144,6 +168,15 @@ class _ApplicationsScreenState extends ConsumerState<ApplicationsScreen> {
                             ),
                             const SizedBox(height: 10),
                           ],
+                        if (isLoadingMore)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: colors.primary,
+                              ),
+                            ),
+                          ),
                       ],
                     ),
                   );

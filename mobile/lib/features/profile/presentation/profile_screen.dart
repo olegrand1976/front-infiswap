@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'dart:math' as math;
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/theme_mode_provider.dart';
@@ -36,21 +37,9 @@ class ProfileScreen extends ConsumerWidget {
               child: ListView(
                 padding: const EdgeInsets.all(16),
                 children: [
-                  Container(
-                    width: double.infinity,
+                  _MenuCard(
+                    colors: colors,
                     padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: colors.card,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: colors.border),
-                      boxShadow: [
-                        BoxShadow(
-                          color: colors.shadow,
-                          blurRadius: 10,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -73,101 +62,37 @@ class ProfileScreen extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: colors.card,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: colors.border),
-                      boxShadow: [
-                        BoxShadow(
-                          color: colors.shadow,
-                          blurRadius: 10,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: Material(
-                      type: MaterialType.transparency,
-                      borderRadius: BorderRadius.circular(16),
-                      clipBehavior: Clip.antiAlias,
-                      child: ListTile(
-                        leading: Icon(
-                          Icons.send_outlined,
-                          color: colors.primary,
-                        ),
-                        title: Text(
-                          'Mes candidatures',
-                          style: TextStyle(
-                            color: colors.textPrimary,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        trailing: Icon(
-                          Icons.chevron_right,
-                          color: colors.textSecondary,
-                        ),
-                        onTap: () => context.push('/applications'),
-                      ),
+
+                  _MenuCard(
+                    colors: colors,
+                    child: _MenuTile(
+                      colors: colors,
+                      icon: Icons.send_outlined,
+                      angle: -math.pi / 6,
+                      nudge: const Offset(1, 1),
+                      title: 'Mes candidatures',
+                      onTap: () => context.push('/applications'),
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: colors.card,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: colors.border),
-                      boxShadow: [
-                        BoxShadow(
-                          color: colors.shadow,
-                          blurRadius: 10,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: Material(
-                      type: MaterialType.transparency,
-                      borderRadius: BorderRadius.circular(16),
-                      clipBehavior: Clip.antiAlias,
-                      child: ListTile(
-                        leading: Icon(
-                          Icons.campaign_outlined,
-                          color: colors.primary,
-                        ),
-                        title: Text(
-                          'Mes remplacements',
-                          style: TextStyle(
-                            color: colors.textPrimary,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        trailing: Icon(
-                          Icons.chevron_right,
-                          color: colors.textSecondary,
-                        ),
-                        onTap: () => context.push('/my-replacements'),
-                      ),
+
+                  _MenuCard(
+                    colors: colors,
+                    child: _MenuTile(
+                      colors: colors,
+                      icon: Icons.campaign_outlined,
+                      nudge: const Offset(0, -1),
+                      title: 'Mes remplacements',
+                      onTap: () => context.push('/my-replacements'),
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Container(
-                    width: double.infinity,
+
+                  _MenuCard(
+                    colors: colors,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
                       vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: colors.card,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: colors.border),
-                      boxShadow: [
-                        BoxShadow(
-                          color: colors.shadow,
-                          blurRadius: 10,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
                     ),
                     child: Material(
                       type: MaterialType.transparency,
@@ -175,11 +100,17 @@ class ProfileScreen extends ConsumerWidget {
                       clipBehavior: Clip.antiAlias,
                       child: SwitchListTile(
                         contentPadding: EdgeInsets.zero,
-                        secondary: Icon(
-                          isDark
-                              ? Icons.dark_mode_outlined
-                              : Icons.light_mode_outlined,
-                          color: colors.primary,
+                        secondary: SizedBox.square(
+                          dimension: 24,
+                          child: Center(
+                            child: Icon(
+                              isDark
+                                  ? Icons.dark_mode_outlined
+                                  : Icons.light_mode_outlined,
+                              size: 22,
+                              color: colors.primary,
+                            ),
+                          ),
                         ),
                         title: Text(
                           'Thème sombre',
@@ -207,6 +138,8 @@ class ProfileScreen extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: 24),
+
+                  // ---------- Déconnexion ----------
                   SizedBox(
                     width: double.infinity,
                     child: OutlinedButton.icon(
@@ -230,6 +163,91 @@ class ProfileScreen extends ConsumerWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _MenuCard extends StatelessWidget {
+  const _MenuCard({
+    required this.colors,
+    required this.child,
+    this.padding,
+  });
+
+  final AppPalette colors;
+  final Widget child;
+  final EdgeInsetsGeometry? padding;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: padding,
+      decoration: BoxDecoration(
+        color: colors.card,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: colors.border),
+        boxShadow: [
+          BoxShadow(
+            color: colors.shadow,
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: child,
+    );
+  }
+}
+
+class _MenuTile extends StatelessWidget {
+  const _MenuTile({
+    required this.colors,
+    required this.icon,
+    required this.title,
+    required this.onTap,
+    this.angle = 0,
+    this.nudge = Offset.zero,
+  });
+
+  final AppPalette colors;
+  final IconData icon;
+  final String title;
+  final VoidCallback onTap;
+  final double angle;
+  final Offset nudge;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      type: MaterialType.transparency,
+      borderRadius: BorderRadius.circular(16),
+      clipBehavior: Clip.antiAlias,
+      child: ListTile(
+        minLeadingWidth: 24,
+        titleAlignment: ListTileTitleAlignment.center,
+        leading: SizedBox.square(
+          dimension: 24,
+          child: Center(
+            child: Transform.translate(
+              offset: nudge,
+              child: Transform.rotate(
+                angle: angle,
+                child: Icon(icon, size: 22, color: colors.primary),
+              ),
+            ),
+          ),
+        ),
+        title: Text(
+          title,
+          style: TextStyle(
+            color: colors.textPrimary,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        trailing: Icon(Icons.chevron_right, color: colors.textSecondary),
+        onTap: onTap,
       ),
     );
   }

@@ -26,8 +26,11 @@ class ReplacementsRepository {
     return _fetchMergedPage(params.toApiBody());
   }
 
-  Future<List<ReplacementItem>> fetchMyReplacements() async {
-    final page = await _fetchMergedPage({
+  Future<ReplacementSearchPage> fetchMyReplacements({
+    int page = 1,
+    int perPage = 25,
+  }) {
+    return _fetchMergedPage({
       'type': 'me',
       'filters': {'type': 'all', 'role': 'all', 'status': 'all'},
       'days': <String>[],
@@ -35,11 +38,10 @@ class ReplacementsRepository {
       'zipCodes': <String>[],
       'provinces': <String>[],
       'country': 'be',
-      'page': 1,
-      'perPage': 50,
+      'page': page,
+      'perPage': perPage,
       'groupByProvince': false,
     });
-    return page.items;
   }
 
   Future<List<ReplacementCandidate>> fetchCandidates(int replacementId) async {
