@@ -62,20 +62,16 @@ class ProfileScreen extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-
                   _MenuCard(
                     colors: colors,
                     child: _MenuTile(
                       colors: colors,
                       icon: Icons.send_outlined,
-                      angle: -math.pi / 6,
-                      nudge: const Offset(1, 1),
                       title: 'Mes candidatures',
                       onTap: () => context.push('/applications'),
                     ),
                   ),
                   const SizedBox(height: 16),
-
                   _MenuCard(
                     colors: colors,
                     child: _MenuTile(
@@ -87,7 +83,6 @@ class ProfileScreen extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-
                   _MenuCard(
                     colors: colors,
                     padding: const EdgeInsets.symmetric(
@@ -138,8 +133,6 @@ class ProfileScreen extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: 24),
-
-                  // ---------- Déconnexion ----------
                   SizedBox(
                     width: double.infinity,
                     child: OutlinedButton.icon(
