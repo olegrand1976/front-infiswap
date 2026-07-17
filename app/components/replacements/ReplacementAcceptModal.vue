@@ -197,6 +197,7 @@ async function acceptWithContract() {
                 <Button
                     variant="outline"
                     class="w-full"
+                    data-testid="replacement-accept-without-contract"
                     :in-progress="accepting"
                     @click="acceptWithoutContract"
                 >

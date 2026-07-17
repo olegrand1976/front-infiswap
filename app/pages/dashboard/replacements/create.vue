@@ -61,6 +61,7 @@
                                     <input
                                         v-model="period.startDate"
                                         type="date"
+                                        data-testid="replacement-period-start"
                                         class="outline-gray-200 rounded-full border border-gray-300 px-3 py-1"
                                         @change="handleManualDateUpdate(index)"
                                     >
@@ -72,6 +73,7 @@
                                     <input
                                         v-model="period.endDate"
                                         type="date"
+                                        data-testid="replacement-period-end"
                                         class="outline-gray-200 rounded-full border border-gray-300 px-3 py-1"
                                         @change="handleManualDateUpdate(index)"
                                     >
@@ -301,9 +303,18 @@
             @update:initial-cities="updateCities"
         />
 
+        <p
+            v-if="showPlatformAccessHint"
+            class="mx-auto mt-12 max-w-md text-center text-sm text-muted-foreground"
+        >
+            {{ platformAccessHintPublish }}
+        </p>
+
         <Button
-            class="flex items-center justify-center mx-auto mt-16 mb-8 2xl:mt-24 w-72"
+            class="flex items-center justify-center mx-auto mb-8 w-72"
+            :class="showPlatformAccessHint ? 'mt-4 2xl:mt-8' : 'mt-16 2xl:mt-24'"
             type="submit"
+            data-testid="replacement-create-submit"
             :in-progress="inProgress"
         >
             Enregistrer
@@ -321,13 +332,22 @@ import { useCareTypes } from '@/composables/useCareTypes';
 import MultiRangeCalendar from '@/components/MultiRangeCalendar.vue';
 import type { User } from '~/lib/types';
 import { goBack } from '~/lib/utils';
-import { validateCreateReplacementForm } from '~/utils/platformAccess';
+import {
+    hasPaidPlatformAccess,
+    isSubjectToPlatformAccessPayment,
+    validateCreateReplacementForm,
+} from '~/utils/platformAccess';
+import { PLATFORM_ACCESS_HINT_PUBLISH } from '~/utils/platformAccessCopy';
 
 const user = useState<User>('user');
 const { getCitiesFomZipCode, getZipCodesFromCity } = useLocation();
 const { careTypes, fetchCareTypes } = useCareTypes();
 const { submitReplacement } = useReplacements();
 const { promptPlatformAccessIfRequired } = useSubscription();
+const showPlatformAccessHint = computed(() =>
+    isSubjectToPlatformAccessPayment(user.value) && !hasPaidPlatformAccess(user.value),
+);
+const platformAccessHintPublish = PLATFORM_ACCESS_HINT_PUBLISH;
 const router = useRouter();
 const { isInstitution } = useAuth();
 const validRoles = ['nurse', 'caregiver', 'midwife'];
@@ -563,7 +583,7 @@ const { submit, inProgress } = useSubmit(
             return;
         }
 
-        if (!(await promptPlatformAccessIfRequired('/dashboard/replacements/create'))) {
+        if (!(await promptPlatformAccessIfRequired('/dashboard/replacements/create', 'create'))) {
             return;
         }
 

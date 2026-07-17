@@ -108,6 +108,7 @@
                                 </Button>
                                 <Button
                                     size="sm"
+                                    data-testid="replacement-accept-open"
                                     class="w-1/2 bg-success hover:bg-success/90"
                                     :class="{ 'opacity-50 cursor-not-allowed': loading }"
                                     @click="openAcceptModal(list)"
