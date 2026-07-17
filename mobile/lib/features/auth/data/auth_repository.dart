@@ -28,9 +28,6 @@ class AuthRepository {
   final void Function() _onSessionCleared;
   bool _tokenRefreshListenerAttached = false;
 
-  // Requests notification permission (first time only), fetches the current
-  // FCM token and registers it with the backend. Never lets a push-specific
-  // failure (denied permission, network hiccup…) break the auth flow.
   Future<void> _registerPushToken() async {
     try {
       await _pushNotificationService.initialize();
@@ -41,7 +38,9 @@ class AuthRepository {
       if (!_tokenRefreshListenerAttached) {
         _tokenRefreshListenerAttached = true;
         _pushNotificationService.onTokenRefresh.listen((newToken) {
-          _deviceTokenRepository.register(newToken, platform).catchError((_) {});
+          _deviceTokenRepository
+              .register(newToken, platform)
+              .catchError((_) {});
         });
       }
 
@@ -54,8 +53,6 @@ class AuthRepository {
     }
   }
 
-  // Unregisters this device's push token, called before clearing the
-  // session on logout. Best-effort, same reasoning as above.
   Future<void> _unregisterPushToken() async {
     try {
       if (_pushNotificationService.platformName == null) return;
