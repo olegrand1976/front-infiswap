@@ -29,6 +29,10 @@ class MainShell extends ConsumerWidget {
           data: (count) => count,
           orElse: () => 0,
         );
+    final newReplacementsCount = ref.watch(newReplacementsCountProvider).maybeWhen(
+          data: (count) => count,
+          orElse: () => 0,
+        );
 
     void selectTab(int index) =>
         ref.read(shellTabIndexProvider.notifier).state = index;
@@ -82,6 +86,7 @@ class MainShell extends ConsumerWidget {
                               activeIcon: Icons.search,
                               label: 'Remplacements',
                               active: currentIndex == 1,
+                              badgeCount: newReplacementsCount,
                               onTap: () => selectTab(1),
                             ),
                           ],

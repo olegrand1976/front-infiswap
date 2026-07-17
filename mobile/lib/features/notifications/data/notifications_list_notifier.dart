@@ -114,10 +114,20 @@ final notificationsListProvider =
   NotificationsListNotifier.new,
 );
 
-// Total unread count, backing the bottom-nav badge.
+// Total unread count, backing the bottom-nav Notifications badge.
 final unreadNotificationCountProvider = FutureProvider.autoDispose<int>((ref) {
   if (ref.watch(authSessionProvider) == null) {
     return 0;
   }
   return ref.watch(notificationsRepositoryProvider).unreadCount();
+});
+
+// Unread "new replacement" count, backing the bottom-nav Remplacements badge.
+final newReplacementsCountProvider = FutureProvider.autoDispose<int>((ref) {
+  if (ref.watch(authSessionProvider) == null) {
+    return 0;
+  }
+  return ref
+      .watch(notificationsRepositoryProvider)
+      .unreadCount(type: 'replacement.new');
 });
