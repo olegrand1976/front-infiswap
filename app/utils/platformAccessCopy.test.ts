@@ -25,6 +25,7 @@ describe('platformAccessCopy', () => {
     it('sanitizes analytics triggers', () => {
         expect(sanitizePlatformAccessTrigger('apply')).toBe('apply');
         expect(sanitizePlatformAccessTrigger('create')).toBe('create');
+        expect(sanitizePlatformAccessTrigger('platform_access_upsell')).toBe('platform_access_upsell');
         expect(sanitizePlatformAccessTrigger('evil')).toBe('direct');
         expect(sanitizePlatformAccessTrigger(undefined)).toBe('direct');
     });

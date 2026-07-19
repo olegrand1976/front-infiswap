@@ -32,6 +32,7 @@ const ALLOWED_TRIGGERS = new Set([
     'onboarding_banner',
     'quest',
     'direct',
+    'platform_access_upsell',
 ]);
 
 /** Normalise le trigger analytics (query / API). */
