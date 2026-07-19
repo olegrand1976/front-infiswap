@@ -86,8 +86,10 @@ const xTickFormat = computed(() => {
 });
 
 const hasData = computed(() => {
-    const valid = Array.isArray(props.data) && props.data.length > 0 && props.data.every(item => item && typeof item === 'object' && 'name' in item);
-    return valid;
+    const indexKey = props.index;
+    return Array.isArray(props.data)
+        && props.data.length > 0
+        && props.data.every(item => item && typeof item === 'object' && indexKey in item);
 });
 </script>
 
