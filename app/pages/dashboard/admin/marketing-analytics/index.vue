@@ -51,6 +51,7 @@
                             :journey="overview?.journey_emails ?? null"
                             :partners="overview?.partners ?? null"
                             :acquisition="overview?.acquisition ?? null"
+                            :period-days="overview?.period.days ?? 30"
                             :loading="loading"
                         />
                     </section>

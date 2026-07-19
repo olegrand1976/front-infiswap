@@ -86,10 +86,22 @@ export type MarketingAnalyticsOverview = {
         total_sends: number;
         by_workflow: Array<{ workflow: string; sends: number }>;
         daily_series: Array<{ day: string; sends: number }>;
+        last_sent_at: string | null;
     };
     partners: {
-        clicks: { nurstech_30d: number; nursassur_30d: number };
-        contacts: { nurstech_30d: number; nursassur_30d: number };
+        window_days: number;
+        clicks: {
+            nurstech: number;
+            nursassur: number;
+            nurstech_30d?: number;
+            nursassur_30d?: number;
+        };
+        contacts: {
+            nurstech: number;
+            nursassur: number;
+            nurstech_30d?: number;
+            nursassur_30d?: number;
+        };
         clicks_by_placement_30d: Array<{ placement: string; nurstech: number; nursassur: number; total: number }>;
         aggregate: Record<string, unknown>;
     };
