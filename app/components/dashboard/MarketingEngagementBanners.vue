@@ -2,8 +2,12 @@
 import { ArrowRight, MessageSquare } from 'lucide-vue-next';
 import type { User } from '~/lib/types';
 
+type NurseResponseItem = {
+    responses?: Array<{ status?: string }>;
+};
+
 const user = useState<User | null>('user');
-const { notifications, getAll } = useNotifications();
+const { $apifetch } = useNuxtApp();
 const {
     activeCampaign,
     fetchActiveCampaign,
@@ -13,6 +17,7 @@ const {
 } = usePartnerServices();
 
 const partnerBannerImpressionSent = ref(false);
+const pendingResponseCount = ref(0);
 
 const isNursAssurEligible = computed(() => {
     const country = user.value?.profile?.country;
@@ -25,12 +30,6 @@ const isNursAssurEligible = computed(() => {
 
     return normalized === 'be' || normalized === 'belgique';
 });
-
-const pendingResponseCount = computed(() =>
-    (notifications.value?.data ?? []).filter(
-        (notification) => notification.type === 'replacement.response' && !notification.read_at,
-    ).length,
-);
 
 const showCandidateBanner = computed(() => pendingResponseCount.value > 0);
 
@@ -49,14 +48,34 @@ const showPartnerBanner = computed(() => {
 const partnerCtaPath = computed(() => activeCampaign.value?.cta_path ?? '/nurstech-by-infiswap');
 const partnerIsNursAssur = computed(() => activeCampaign.value?.featured === 'nursassur');
 
-onMounted(async () => {
-    try {
-        await getAll(1, 25, { unread_only: true });
-    }
-    catch {
-        // optional banner
+async function loadPendingResponseCount() {
+    if (!user.value?.id) {
+        pendingResponseCount.value = 0;
+
+        return;
     }
 
+    try {
+        const response = await $apifetch<{ data?: NurseResponseItem[] }>(
+            `api/replacement-responses/nurse/${user.value.id}`,
+            { method: 'GET' },
+        );
+
+        pendingResponseCount.value = (response.data ?? []).reduce((sum, item) => {
+            const pending = (item.responses ?? []).filter(
+                (candidate) => candidate.status === 'pending',
+            ).length;
+
+            return sum + pending;
+        }, 0);
+    }
+    catch {
+        pendingResponseCount.value = 0;
+    }
+}
+
+onMounted(async () => {
+    await loadPendingResponseCount();
     await fetchActiveCampaign();
 });
 
@@ -98,7 +117,7 @@ function onPartnerBannerClick() {
                 </span>
             </div>
             <NuxtLink
-                to="/dashboard/replacements"
+                to="/dashboard/replacements/responses"
                 class="inline-flex shrink-0 items-center justify-center rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-emerald-700"
             >
                 Voir les candidatures
