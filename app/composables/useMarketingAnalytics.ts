@@ -120,6 +120,42 @@ export const MARKETING_ACCOUNT_TYPE_FILTERS = [
     { value: 'institution' as const, label: 'Institutions' },
 ];
 
+export type JourneyTemplateVariant = {
+    key: string;
+    label: string;
+    subject: string;
+    html: string;
+};
+
+export type JourneyTemplatePreview = {
+    workflow: string;
+    archived: boolean;
+    variants: JourneyTemplateVariant[];
+};
+
+export type JourneySendStats = {
+    sends: number;
+    trackable_sends: number;
+    opens: number;
+    clicks: number;
+    open_rate: number | null;
+    click_rate: number | null;
+};
+
+export type JourneySendRecipient = {
+    id: number;
+    user_id: number;
+    full_name: string;
+    email: string;
+    step: string | null;
+    sent_at: string | null;
+    opened_at: string | null;
+    clicked_at: string | null;
+    open_count: number;
+    click_count: number;
+    trackable: boolean;
+};
+
 export const useMarketingAnalytics = () => {
     const { $apifetch } = useNuxtApp();
 
@@ -129,6 +165,35 @@ export const useMarketingAnalytics = () => {
         );
 
         return response.data;
+    };
+
+    const getJourneyTemplatePreview = async (workflow: string) => {
+        const response = await $apifetch<{ data: JourneyTemplatePreview }>(
+            `api/admin/marketing-analytics/journey-templates/${encodeURIComponent(workflow)}`,
+        );
+
+        return response.data;
+    };
+
+    const getJourneySends = async (
+        workflow: string,
+        period: MarketingAnalyticsPeriod = '30d',
+        page = 1,
+        perPage = 25,
+    ) => {
+        const params = new URLSearchParams({
+            period,
+            page: String(page),
+            per_page: String(perPage),
+        });
+
+        return await $apifetch<{
+            stats: JourneySendStats;
+            users: JourneySendRecipient[];
+            count: number;
+        }>(
+            `api/admin/marketing-analytics/journey-sends/${encodeURIComponent(workflow)}?${params.toString()}`,
+        );
     };
 
     const getUniqueUsers = async (
@@ -181,6 +246,8 @@ export const useMarketingAnalytics = () => {
 
     return {
         getOverview,
+        getJourneyTemplatePreview,
+        getJourneySends,
         getUniqueUsers,
         getUnverifiedEmails,
         resendVerification,

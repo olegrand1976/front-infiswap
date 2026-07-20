@@ -81,10 +81,16 @@
                         v-for="workflow in journey?.by_workflow ?? []"
                         :key="workflow.workflow"
                     >
-                        <span class="inline-flex items-center gap-1.5 rounded-full border border-gray-100 bg-gray-50 px-2.5 py-1 text-xs text-gray-700">
+                        <button
+                            type="button"
+                            data-testid="journey-workflow-kpi"
+                            class="inline-flex items-center gap-1.5 rounded-full border border-gray-100 bg-gray-50 px-2.5 py-1 text-xs text-gray-700 transition-colors hover:border-teal-300 hover:bg-teal-50 hover:text-teal-900"
+                            :aria-label="`Voir le détail ${workflowLabel(workflow.workflow)}`"
+                            @click="openWorkflow(workflow.workflow)"
+                        >
                             <span class="font-medium">{{ workflowLabel(workflow.workflow) }}</span>
                             <span class="font-semibold text-gray-900">{{ workflow.sends }}</span>
-                        </span>
+                        </button>
                     </li>
                     <li
                         v-if="(journey?.by_workflow ?? []).length === 0"
@@ -106,6 +112,9 @@
                         </p>
                     </li>
                 </ul>
+                <p class="mt-2 text-[11px] text-gray-400">
+                    Clic sur un KPI pour template, destinataires et taux open/clic.
+                </p>
             </template>
         </section>
 
@@ -149,11 +158,23 @@
             </div>
         </section>
     </div>
+
+    <MarketingJourneyWorkflowDialog
+        v-model:open="dialogOpen"
+        :workflow="selectedWorkflow"
+        :title="selectedWorkflow ? workflowLabel(selectedWorkflow) : 'Journey'"
+        :period="period"
+    />
 </template>
 
 <script setup lang="ts">
+import MarketingJourneyWorkflowDialog from '@/components/admin/marketing-analytics/MarketingJourneyWorkflowDialog.vue';
 import SettingsFieldHint from '@/components/settings/SettingsFieldHint.vue';
-import type { MarketingAnalyticsOverview } from '@/composables/useMarketingAnalytics';
+import type {
+    MarketingAnalyticsOverview,
+    MarketingAnalyticsPeriod,
+} from '@/composables/useMarketingAnalytics';
+import { journeyWorkflowLabel } from '@/utils/journeyMarketingAnalytics';
 
 const props = withDefaults(defineProps<{
     conversion: MarketingAnalyticsOverview['conversion'] | null;
@@ -161,10 +182,20 @@ const props = withDefaults(defineProps<{
     partners: MarketingAnalyticsOverview['partners'] | null;
     acquisition?: MarketingAnalyticsOverview['acquisition'] | null;
     periodDays?: number;
+    period?: MarketingAnalyticsPeriod;
     loading?: boolean;
 }>(), {
     periodDays: 30,
+    period: '30d',
 });
+
+const dialogOpen = ref(false);
+const selectedWorkflow = ref<string | null>(null);
+
+function openWorkflow(workflow: string) {
+    selectedWorkflow.value = workflow;
+    dialogOpen.value = true;
+}
 
 const funnelItems = computed(() => [
     {
@@ -217,21 +248,8 @@ const partnerItems = computed(() => [
     },
 ]);
 
-const WORKFLOW_LABELS: Record<string, string> = {
-    onboarding: 'Onboarding',
-    platform_access_upsell: 'Upsell accès réseau (archivé)',
-    inactive_promo: 'Promo inactive',
-    warm_inactive: 'Relance tiède',
-    partner_services: 'Partenaires',
-    partner_services_seasonal: 'Partenaires saisonniers',
-    weekly_digest: 'Digest hebdo',
-    poster_inactive: 'Afficheurs inactifs',
-    institution_inactive: 'Institutions inactives',
-    pending_response: 'Candidature en attente',
-};
-
 function workflowLabel(workflow: string): string {
-    return WORKFLOW_LABELS[workflow] ?? workflow;
+    return journeyWorkflowLabel(workflow);
 }
 
 function formatDateTime(value: string): string {
