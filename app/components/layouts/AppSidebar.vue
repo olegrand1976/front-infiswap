@@ -319,11 +319,13 @@ const contactChildren = computed<NavigationItem[]>(() => [
         route: '/dashboard/admin/contacts/infiswap',
         icon: Inbox,
     },
-    ...products.value.map(p => ({
-        label: p.name,
-        route: `/dashboard/admin/contacts/${p.name.toLowerCase()}`,
-        icon: Inbox,
-    })),
+    ...products.value
+        .filter(p => p.name.toLowerCase() !== 'inficoncept')
+        .map(p => ({
+            label: p.name,
+            route: `/dashboard/admin/contacts/${p.name.toLowerCase()}`,
+            icon: Inbox,
+        })),
 ]);
 
 const crmChildren = computed<NavigationItem[]>(() => [

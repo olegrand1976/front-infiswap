@@ -168,6 +168,10 @@ const router = useRouter();
 const type = computed<string>(() => (route.params.type as string) || 'nurstech');
 const typeLabel = computed(() => type.value.charAt(0).toUpperCase() + type.value.slice(1));
 
+if (type.value === 'inficoncept') {
+    await navigateTo('/dashboard/admin/contacts/infiswap');
+}
+
 const perPageCookie = useCookie<number>('contact_per_page');
 const pageCookie = useCookie<number>('contact_page');
 
