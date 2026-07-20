@@ -7,7 +7,7 @@
                 </h3>
                 <SettingsFieldHint
                     label="Funnel conversion"
-                    text="Cohorte des comptes créés sur la période sélectionnée, puis progression vers vérification e-mail et achats (boost, contrat). L’accès réseau 9,90 € est un indicateur historique uniquement. Les pastilles BE/FR comptent les inscriptions avec pays profil Belgique / France."
+                    text="Cohorte des comptes créés sur la période sélectionnée, puis progression vers vérification e-mail et achats (boost, contrat). Les pastilles BE/FR comptent les inscriptions avec pays profil Belgique / France."
                 />
             </div>
             <p class="mb-3 text-xs text-gray-500">
@@ -219,11 +219,6 @@ const funnelItems = computed(() => [
         label: 'Email vérifié',
         value: props.conversion?.email_verified ?? 0,
         hint: 'Parmi ces inscriptions, celles qui ont confirmé leur e-mail.',
-    },
-    {
-        label: 'Accès réseau (historique)',
-        value: props.conversion?.platform_access ?? 0,
-        hint: 'Ancien produit accès réseau (9,90 €) — ventes historiques sur la période.',
     },
     {
         label: 'Boost',
