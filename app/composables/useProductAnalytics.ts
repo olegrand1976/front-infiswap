@@ -20,8 +20,6 @@ type ProductEventName =
     | 'google_review_impression'
     | 'google_review_cta_click'
     | 'google_review_dismiss'
-    | 'sponsorship_impression'
-    | 'sponsorship_tier_click'
     | 'sponsorship_paid'
     | 'nurstech_impression'
     | 'nurstech_cta_click'

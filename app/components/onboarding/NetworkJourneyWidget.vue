@@ -180,7 +180,9 @@ function triggerCelebrationIfNeeded() {
 
     celebrationTimer = setTimeout(() => {
         celebrating.value = false;
-        requestEngagement(journeyJustCompleted ? 'onboarding_complete' : 'onboarding_quest');
+        if (journeyJustCompleted) {
+            requestEngagement('onboarding_complete');
+        }
         celebrationTimer = null;
     }, 2000);
 }
