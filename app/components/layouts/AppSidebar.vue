@@ -48,8 +48,17 @@
                                             class="size-5 opacity-80"
                                         />
                                         <span>{{ item.label }}</span>
+                                        <Badge
+                                            v-if="item.badge"
+                                            class="ml-auto mr-1 h-5 min-w-5 justify-center rounded-full bg-primary px-1.5 text-[0.65rem] text-white"
+                                        >
+                                            {{ item.badge > 99 ? '99+' : item.badge }}
+                                        </Badge>
                                         <ChevronRight
-                                            class="ml-auto size-4 transition-transform group-data-[state=open]/collapsible:rotate-90"
+                                            :class="[
+                                                'size-4 transition-transform group-data-[state=open]/collapsible:rotate-90',
+                                                item.badge ? '' : 'ml-auto',
+                                            ]"
                                         />
                                     </SidebarMenuButton>
                                 </CollapsibleTrigger>
@@ -73,7 +82,13 @@
                                                         :is="subItem.icon"
                                                         class="mr-2 size-4 opacity-80"
                                                     />
-                                                    <span>{{ subItem.label }}</span>
+                                                    <span class="flex-1">{{ subItem.label }}</span>
+                                                    <Badge
+                                                        v-if="subItem.badge"
+                                                        class="ml-2 h-5 min-w-5 justify-center rounded-full bg-primary px-1.5 text-[0.65rem] text-white"
+                                                    >
+                                                        {{ subItem.badge > 99 ? '99+' : subItem.badge }}
+                                                    </Badge>
                                                 </NuxtLink>
                                             </SidebarMenuSubButton>
                                         </SidebarMenuSubItem>
@@ -102,10 +117,10 @@
                                         <span>{{ item.label }}</span>
                                     </div>
                                     <Badge
-                                        v-if="item.route === '/dashboard/admin/contacts'"
-                                        class="ml-2 bg-primary text-white"
+                                        v-if="item.badge"
+                                        class="ml-2 h-5 min-w-5 justify-center rounded-full bg-primary px-1.5 text-[0.65rem] text-white"
                                     >
-                                        5
+                                        {{ item.badge > 99 ? '99+' : item.badge }}
                                     </Badge>
                                 </NuxtLink>
                             </SidebarMenuButton>
@@ -239,10 +254,38 @@ const subMenuButtonClass = (active: boolean) =>
 const perPage = ref(PERPAGE);
 const page = ref(1);
 const { products, getProducts } = useProduct();
+const { unreadCounts, fetchUnreadCounts } = useContact();
 
 if (!isInstitution.value) {
     await getProducts(page.value, perPage.value);
 }
+
+const canSeeContactBadges = computed(() => isSuperAdmin.value || isAdmin.value || isManager.value);
+
+if (canSeeContactBadges.value) {
+    try {
+        await fetchUnreadCounts();
+    }
+    catch {
+        // badges optionnels — ne pas bloquer le sidebar
+    }
+}
+
+const unreadBadgeForRoute = (route: string): number | undefined => {
+    const match = route.match(/\/dashboard\/admin\/contacts\/([^/]+)/);
+    if (!match) {
+        return undefined;
+    }
+
+    const type = match[1].toLowerCase() as keyof typeof unreadCounts.value;
+    if (type === 'total') {
+        return undefined;
+    }
+
+    const count = unreadCounts.value[type] ?? 0;
+
+    return count > 0 ? count : undefined;
+};
 
 type StaffRole = 'super_admin' | 'admin' | 'manager' | 'community_manager' | 'sale_representative';
 
@@ -254,6 +297,7 @@ interface NavigationItem {
     visible?: boolean;
     external?: boolean;
     roles?: StaffRole[];
+    badge?: number;
 }
 
 interface NavigationSection {
@@ -318,14 +362,20 @@ const contactChildren = computed<NavigationItem[]>(() => [
         label: 'Infiswap',
         route: '/dashboard/admin/contacts/infiswap',
         icon: Inbox,
+        badge: unreadBadgeForRoute('/dashboard/admin/contacts/infiswap'),
     },
     ...products.value
         .filter(p => p.name.toLowerCase() !== 'inficoncept')
-        .map(p => ({
-            label: p.name,
-            route: `/dashboard/admin/contacts/${p.name.toLowerCase()}`,
-            icon: Inbox,
-        })),
+        .map(p => {
+            const route = `/dashboard/admin/contacts/${p.name.toLowerCase()}`;
+
+            return {
+                label: p.name,
+                route,
+                icon: Inbox,
+                badge: unreadBadgeForRoute(route),
+            };
+        }),
 ]);
 
 const crmChildren = computed<NavigationItem[]>(() => [
@@ -531,6 +581,7 @@ const adminNavigationSections = computed<NavigationSection[]>(() => [
                 route: '/dashboard/admin/contacts/infiswap',
                 icon: Inbox,
                 roles: ['super_admin', 'admin', 'manager'],
+                badge: unreadCounts.value.total > 0 ? unreadCounts.value.total : undefined,
                 children: contactChildren.value,
             },
         ],

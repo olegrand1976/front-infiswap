@@ -516,6 +516,8 @@ export type Contact = {
     description?: string;
     created_at?: string;
     hasResponded?: boolean;
+    read_at?: string | null;
+    is_read?: boolean;
 };
 
 export type Group = {
