@@ -84,7 +84,12 @@ export type MarketingAnalyticsOverview = {
     };
     journey_emails: {
         total_sends: number;
-        by_workflow: Array<{ workflow: string; sends: number }>;
+        by_workflow: Array<{
+            workflow: string;
+            sends: number;
+            open_rate: number | null;
+            click_rate: number | null;
+        }>;
         daily_series: Array<{ day: string; sends: number }>;
         last_sent_at: string | null;
     };

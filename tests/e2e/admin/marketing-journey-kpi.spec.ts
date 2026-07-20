@@ -46,7 +46,12 @@ function marketingOverviewFixture() {
             },
             journey_emails: {
                 total_sends: 3,
-                by_workflow: [{ workflow: 'warm_inactive', sends: 3 }],
+                by_workflow: [{
+                    workflow: 'warm_inactive',
+                    sends: 3,
+                    open_rate: 50,
+                    click_rate: 50,
+                }],
                 daily_series: [],
                 last_sent_at: new Date().toISOString(),
             },
@@ -148,7 +153,10 @@ test.describe('Admin marketing Journey KPI', () => {
         await page.goto('/dashboard/admin/marketing-analytics');
 
         await expect(page.getByRole('heading', { name: 'Emails Journey' })).toBeVisible({ timeout: 20_000 });
-        await page.getByTestId('journey-workflow-kpi').first().click();
+        const kpi = page.getByTestId('journey-workflow-kpi').first();
+        await expect(kpi.getByText('Open 50 %')).toBeVisible();
+        await expect(kpi.getByText('Clic 50 %')).toBeVisible();
+        await kpi.click();
 
         const dialog = page.getByTestId('journey-workflow-dialog');
         await expect(dialog).toBeVisible();

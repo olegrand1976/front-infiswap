@@ -61,7 +61,7 @@
                 </h3>
                 <SettingsFieldHint
                     label="Emails Journey"
-                    text="Nombre d’e-mails marketing Journey réellement envoyés et enregistrés (table user_journey_sends) sur la période : onboarding, digest, inactive, partenaires, etc. (upsell accès réseau archivé). Un envoi = 1 ligne après succès d’envoi (scheduler daily 14h Europe/Brussels)."
+                    text="Nombre d’e-mails marketing Journey réellement envoyés et enregistrés (table user_journey_sends) sur la période : onboarding, digest, inactive, partenaires, etc. Les workflows archivés sont exclus. Chaque pastille affiche envois + taux d’ouverture / clic (sur envois trackés). Un envoi = 1 ligne après succès d’envoi (scheduler daily 14h Europe/Brussels)."
                 />
             </div>
             <p class="mb-3 text-xs text-gray-500">
@@ -76,7 +76,7 @@
                     <span class="text-lg font-bold text-gray-900">{{ journey?.total_sends ?? 0 }}</span>
                     envois
                 </p>
-                <ul class="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto">
+                <ul class="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto">
                     <li
                         v-for="workflow in journey?.by_workflow ?? []"
                         :key="workflow.workflow"
@@ -84,12 +84,21 @@
                         <button
                             type="button"
                             data-testid="journey-workflow-kpi"
-                            class="inline-flex items-center gap-1.5 rounded-full border border-gray-100 bg-gray-50 px-2.5 py-1 text-xs text-gray-700 transition-colors hover:border-teal-300 hover:bg-teal-50 hover:text-teal-900"
-                            :aria-label="`Voir le détail ${workflowLabel(workflow.workflow)}`"
+                            class="inline-flex flex-col items-start gap-0.5 rounded-md border border-gray-100 bg-gray-50 px-2.5 py-1.5 text-xs text-gray-700 transition-colors hover:border-teal-300 hover:bg-teal-50 hover:text-teal-900"
+                            :aria-label="workflowKpiAriaLabel(workflow)"
                             @click="openWorkflow(workflow.workflow)"
                         >
-                            <span class="font-medium">{{ workflowLabel(workflow.workflow) }}</span>
-                            <span class="font-semibold text-gray-900">{{ workflow.sends }}</span>
+                            <span class="inline-flex items-center gap-1.5">
+                                <span class="font-medium">{{ workflowLabel(workflow.workflow) }}</span>
+                                <span class="font-semibold text-gray-900">{{ workflow.sends }}</span>
+                            </span>
+                            <span
+                                class="inline-flex items-center gap-2 text-[11px] text-gray-500"
+                                aria-hidden="true"
+                            >
+                                <span>Open {{ formatRate(workflow.open_rate) }}</span>
+                                <span>Clic {{ formatRate(workflow.click_rate) }}</span>
+                            </span>
                         </button>
                     </li>
                     <li
@@ -113,7 +122,7 @@
                     </li>
                 </ul>
                 <p class="mt-2 text-[11px] text-gray-400">
-                    Clic sur un KPI pour template, destinataires et taux open/clic.
+                    Clic sur un KPI pour template et destinataires.
                 </p>
             </template>
         </section>
@@ -174,7 +183,10 @@ import type {
     MarketingAnalyticsOverview,
     MarketingAnalyticsPeriod,
 } from '@/composables/useMarketingAnalytics';
-import { journeyWorkflowLabel } from '@/utils/journeyMarketingAnalytics';
+import {
+    formatJourneyEngagementRate,
+    journeyWorkflowLabel,
+} from '@/utils/journeyMarketingAnalytics';
 
 const props = withDefaults(defineProps<{
     conversion: MarketingAnalyticsOverview['conversion'] | null;
@@ -250,6 +262,24 @@ const partnerItems = computed(() => [
 
 function workflowLabel(workflow: string): string {
     return journeyWorkflowLabel(workflow);
+}
+
+function formatRate(rate: number | null | undefined): string {
+    return formatJourneyEngagementRate(rate ?? null);
+}
+
+function workflowKpiAriaLabel(workflow: {
+    workflow: string;
+    sends: number;
+    open_rate?: number | null;
+    click_rate?: number | null;
+}): string {
+    return [
+        `Voir le détail ${workflowLabel(workflow.workflow)}`,
+        `${workflow.sends} envois`,
+        `Open ${formatRate(workflow.open_rate)}`,
+        `Clic ${formatRate(workflow.click_rate)}`,
+    ].join(', ');
 }
 
 function formatDateTime(value: string): string {
