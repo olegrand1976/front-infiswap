@@ -1,16 +1,12 @@
 <script setup lang="ts">
 import { Medal } from 'lucide-vue-next';
-import {
-    hasLifetimeNetworkAccess,
-    hasPaidPlatformAccess,
-    isSubjectToPlatformAccessPayment,
-} from '~/utils/platformAccess';
+import { hasVerifiedMemberBadge } from '~/utils/platformAccess';
 
 const props = withDefaults(
     defineProps<{
         /** sm = avatar header ; lg = photo profil paramètres */
         size?: 'sm' | 'lg';
-        /** Force l'animation de révélation (écran succès paiement). */
+        /** Force l'animation de révélation. */
         reveal?: boolean;
         /** Seule instance autorisée à consommer le flag session (header dashboard). */
         sessionConsumer?: boolean;
@@ -21,11 +17,7 @@ const props = withDefaults(
 const user = useUser();
 const { shouldPlayRevealAnimation, consumeRevealAnimation } = useLifetimeBadgeReveal();
 
-const showPaidBadge = computed(() => hasLifetimeNetworkAccess(user.value));
-
-const showUnpaidHint = computed(() =>
-    isSubjectToPlatformAccessPayment(user.value) && !hasPaidPlatformAccess(user.value),
-);
+const showVerifiedBadge = computed(() => hasVerifiedMemberBadge(user.value));
 
 const isAnimating = ref(false);
 const hasPlayedReveal = ref(false);
@@ -41,12 +33,6 @@ const iconClass = computed(() =>
     props.size === 'lg'
         ? 'size-3.5 sm:size-4'
         : 'size-3 sm:size-3.5',
-);
-
-const unpaidBadgeClass = computed(() =>
-    props.size === 'lg'
-        ? 'size-7 sm:size-8 border-[2.5px]'
-        : 'size-5 sm:size-6 border-2',
 );
 
 function playRevealAnimation(): void {
@@ -67,7 +53,7 @@ function playRevealAnimation(): void {
 }
 
 function tryRevealFromSession(): void {
-    if (props.reveal || !props.sessionConsumer || !showPaidBadge.value || !shouldPlayRevealAnimation()) {
+    if (props.reveal || !props.sessionConsumer || !showVerifiedBadge.value || !shouldPlayRevealAnimation()) {
         return;
     }
 
@@ -76,18 +62,18 @@ function tryRevealFromSession(): void {
 }
 
 function maybePlayPropReveal(): void {
-    if (props.reveal && showPaidBadge.value) {
+    if (props.reveal && showVerifiedBadge.value) {
         playRevealAnimation();
     }
 }
 
-watch([() => props.reveal, showPaidBadge], () => {
+watch([() => props.reveal, showVerifiedBadge], () => {
     if (props.reveal) {
         maybePlayPropReveal();
         return;
     }
 
-    if (props.sessionConsumer && showPaidBadge.value) {
+    if (props.sessionConsumer && showVerifiedBadge.value) {
         tryRevealFromSession();
     }
 });
@@ -109,10 +95,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div
-        class="relative inline-flex shrink-0"
-        :title="showUnpaidHint ? 'Accès réseau non activé — 9,90 €' : undefined"
-    >
+    <div class="relative inline-flex shrink-0">
         <slot />
 
         <span
@@ -122,24 +105,11 @@ onBeforeUnmount(() => {
         />
 
         <span
-            v-if="showUnpaidHint"
-            class="absolute -bottom-0.5 -right-0.5 z-10 flex items-center justify-center rounded-full border-white bg-gray-200 shadow-md ring-1 ring-gray-300/80"
-            :class="unpaidBadgeClass"
-            aria-label="Accès réseau non activé"
-        >
-            <Medal
-                :class="iconClass"
-                class="text-gray-400"
-                aria-hidden="true"
-            />
-        </span>
-
-        <span
-            v-else-if="showPaidBadge"
+            v-if="showVerifiedBadge"
             class="absolute -bottom-0.5 -right-0.5 z-10 flex items-center justify-center rounded-full border-white bg-gradient-to-br from-amber-400 via-yellow-500 to-amber-600 shadow-md ring-1 ring-amber-300/80"
             :class="[badgeClass, { 'lifetime-badge-reveal': isAnimating }]"
-            title="Inscription validée à vie — accès InfiSwap permanent"
-            aria-label="Inscription validée à vie — accès InfiSwap permanent"
+            title="Membre vérifié InfiSwap"
+            aria-label="Membre vérifié InfiSwap"
         >
             <Medal
                 :class="[iconClass, { 'lifetime-badge-reveal-icon': isAnimating }]"
@@ -157,11 +127,8 @@ onBeforeUnmount(() => {
         opacity: 0;
     }
     55% {
-        transform: scale(1.25) rotate(8deg);
+        transform: scale(1.15) rotate(8deg);
         opacity: 1;
-    }
-    75% {
-        transform: scale(0.92) rotate(-4deg);
     }
     100% {
         transform: scale(1) rotate(0deg);
@@ -170,21 +137,22 @@ onBeforeUnmount(() => {
 }
 
 @keyframes lifetime-badge-shine {
-    0%, 100% {
-        filter: drop-shadow(0 0 0 rgba(251, 191, 36, 0));
+    0%,
+    100% {
+        filter: brightness(1);
     }
     50% {
-        filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.9));
+        filter: brightness(1.35);
     }
 }
 
 @keyframes lifetime-badge-ping {
     0% {
         transform: scale(0.6);
-        opacity: 0.8;
+        opacity: 0.7;
     }
     100% {
-        transform: scale(2.2);
+        transform: scale(1.8);
         opacity: 0;
     }
 }

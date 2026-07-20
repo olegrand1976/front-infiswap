@@ -7,12 +7,12 @@
 <script setup lang="ts">
 import Pricing from '@/components/Pricing.vue';
 
-const seoDescription = 'Tarifs InfiSwap : compte gratuit (recherche de remplacements, alertes, consultations), accès plateforme 9,90 € paiement unique (publier, postuler, gérer vos annonces), boost visibilité dès 2 € (3 jours) ou 4,40 € (7 jours) en tête de liste.';
+const seoDescription = 'Tarifs InfiSwap : compte gratuit (recherche, alertes, publication et candidatures aux remplacements), boost visibilité dès 2 € (3 jours) ou 4,40 € (7 jours) en tête de liste.';
 
 useSeoMeta({
-    title: 'Tarifs InfiSwap — Gratuit, Accès 9,90 € & Boost remplacement',
+    title: 'Tarifs InfiSwap — Gratuit & Boost remplacement',
     description: seoDescription,
-    ogTitle: 'Tarifs InfiSwap — Gratuit, Accès 9,90 € & Boost remplacement',
+    ogTitle: 'Tarifs InfiSwap — Gratuit & Boost remplacement',
     ogDescription: seoDescription,
     ogType: 'website',
     twitterCard: 'summary_large_image',

@@ -25,14 +25,14 @@
                     <div
                         v-if="showNetworkMemberBadge"
                         class="flex shrink-0 items-center gap-1.5 rounded-full border border-amber-400/70 bg-gradient-to-r from-amber-50 via-yellow-50 to-amber-100 px-2.5 py-1 shadow-sm sm:px-3 sm:py-1.5"
-                        title="Accès réseau actif — membre InfiSwap"
+                        title="Membre vérifié — InfiSwap"
                     >
                         <Medal
                             class="size-4 shrink-0 text-amber-600 sm:size-4"
                             aria-hidden="true"
                         />
                         <span class="hidden text-xs font-semibold text-amber-900 sm:inline">
-                            Membre réseau
+                            Membre vérifié
                         </span>
                     </div>
                     <div class="relative shrink-0 sm:pr-2">
@@ -211,20 +211,6 @@
                             </SelectContent>
                         </Select>
 
-                        <NuxtLink
-                            v-if="showPlatformAccessCta"
-                            to="/acces-plan"
-                            class="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 px-2.5 py-1.5 text-xs font-bold text-white shadow-md ring-2 ring-amber-400/40 hover:from-amber-600 hover:to-amber-700 sm:px-3.5 sm:py-2 sm:text-sm"
-                            @click="onPlatformAccessHeaderClick"
-                        >
-                            <Medal
-                                class="size-3.5 shrink-0 sm:size-4"
-                                aria-hidden="true"
-                            />
-                            <span class="hidden sm:inline">Accès réseau —</span>
-                            9,90 €
-                        </NuxtLink>
-
                         <DropdownMenu>
                             <DropdownMenuTrigger class="flex shrink-0 items-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
                                 <ProfileLifetimeAccessBadge session-consumer>
@@ -307,11 +293,9 @@
                 <NuxtPage class="min-h-0 flex-1 overflow-x-hidden overflow-y-auto" />
             </div>
         </SidebarInset>
-        <SubscriptionPlatformAccessModal />
-
         <Teleport to="body">
             <div
-                v-if="activeCelebration && activeCelebration.variant !== 'platform_access'"
+                v-if="activeCelebration"
                 class="fixed inset-0 z-[100] flex items-center justify-center bg-white/95 backdrop-blur-sm px-4 overflow-y-auto"
             >
                 <SubscriptionPurchaseCelebration
@@ -338,7 +322,7 @@ import { useRuntimeConfig } from '#app';
 import type { AccountType, User } from '~/lib/types';
 import { cn } from '@/lib/utils';
 import { getRole, getShortDisplayName } from '~/lib/utils';
-import { hasPaidPlatformAccess, isSubjectToPlatformAccessPayment, showsPaidNetworkAccessBadge } from '~/utils/platformAccess';
+import { hasVerifiedMemberBadge } from '~/utils/platformAccess';
 import { mapCelebrationVariantToReviewSource } from '~/utils/googleReview';
 
 const { isAdmin, hasChangedAvatar } = useAuth();
@@ -380,19 +364,10 @@ const reportDescription = ref('');
 
 const displayFullName = computed(() => user.value?.full_name || 'xxx XXX');
 const displayShortName = computed(() => getShortDisplayName(user.value) || displayFullName.value);
-const showNetworkMemberBadge = computed(() => showsPaidNetworkAccessBadge(user.value));
-const showPlatformAccessCta = computed(() =>
-    isSubjectToPlatformAccessPayment(user.value) && !hasPaidPlatformAccess(user.value),
-);
+const showNetworkMemberBadge = computed(() => hasVerifiedMemberBadge(user.value));
 const settingsRoute = computed(() =>
     user.value?.type === 'institution' ? '/dashboard/institution/settings' : '/dashboard/settings',
 );
-
-const { trackEvent } = useProductAnalytics();
-
-function onPlatformAccessHeaderClick() {
-    trackEvent('platform_access_cta_click', { source: 'header', trigger: 'header' });
-}
 
 const { activeCelebration, dismissCelebration } = usePurchaseCelebration();
 const { activeEngagement, requestEngagement } = usePostSuccessEngagement();

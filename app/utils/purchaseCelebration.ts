@@ -1,9 +1,7 @@
 export const PURCHASE_CELEBRATION_SEEN_PREFIX = 'infiswap:celebration_seen:';
 export const PURCHASE_ANALYTICS_SEEN_PREFIX = 'infiswap:analytics_seen:';
-export const PROCESSED_ACCESS_SESSION_KEY = 'infiswap:processed_access_session';
-export const LIFETIME_CELEBRATION_SEEN_KEY = 'infiswap:lifetime_celebration_seen';
 
-export type PurchaseCelebrationVariant = 'platform_access' | 'boost' | 'contract';
+export type PurchaseCelebrationVariant = 'boost' | 'contract';
 
 export interface PurchaseCelebrationPayload {
     variant: PurchaseCelebrationVariant;

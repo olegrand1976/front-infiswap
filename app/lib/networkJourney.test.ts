@@ -73,21 +73,19 @@ describe('networkJourney', () => {
         expect(hasFirstAction({ me: 0, reponded_per_month: [{ month: '2026-06', count: 0 }] })).toBe(false);
     });
 
-    it('excludes discover_access for legacy nurse', () => {
+    it('never includes discover_access quest', () => {
+        expect(getApplicableQuests({
+            roles: ['nurse'],
+            created_at: '2026-07-02T10:00:00',
+            platform_access_paid_at: null,
+        }).map(quest => quest.id)).not.toContain('discover_access');
+
         const legacyUser = {
             roles: ['nurse'],
             created_at: '2026-05-01T10:00:00',
         };
 
         expect(getApplicableQuests(legacyUser).map(quest => quest.id)).not.toContain('discover_access');
-    });
-
-    it('includes discover_access for post-cutoff unpaid nurse', () => {
-        expect(getApplicableQuests({
-            roles: ['nurse'],
-            created_at: '2026-07-02T10:00:00',
-            platform_access_paid_at: null,
-        }).map(quest => quest.id)).toContain('discover_access');
     });
 
     it('bootstraps retroactive quests for active nurse', () => {
@@ -185,12 +183,11 @@ describe('networkJourney', () => {
         expect(synced.xp).toBe(resolveQuestXp(synced.completed_quests));
     });
 
-    it('filters post-cutoff tips for legacy users', () => {
-        const legacyUser = { roles: ['nurse'], created_at: '2026-05-01T10:00:00' };
-        const tips = filterJourneyTips(legacyUser, resolveLevel(0), null, []);
+    it('never includes retired access or legacy paywall tips', () => {
+        const tips = filterJourneyTips(nurseUser, resolveLevel(0), null, []);
 
         expect(tips.map(t => t.id)).not.toContain('access');
-        expect(tips.map(t => t.id)).toContain('legacy');
+        expect(tips.map(t => t.id)).not.toContain('legacy');
     });
 
     it('resolves deterministic tip of the day', () => {

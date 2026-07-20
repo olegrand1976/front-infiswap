@@ -32,7 +32,6 @@ describe('googleReview', () => {
     });
 
     it('maps celebration variants to review sources', () => {
-        expect(mapCelebrationVariantToReviewSource('platform_access')).toBe('platform_access');
         expect(mapCelebrationVariantToReviewSource('boost')).toBe('boost');
         expect(mapCelebrationVariantToReviewSource('contract')).toBe('contract');
     });

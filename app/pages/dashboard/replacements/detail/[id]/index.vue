@@ -319,12 +319,6 @@
                     class="flex flex-col items-center justify-center gap-2"
                     @submit="submit"
                 >
-                    <p
-                        v-if="showPlatformAccessHint"
-                        class="max-w-sm text-center text-sm text-muted-foreground"
-                    >
-                        {{ platformAccessHintApply }}
-                    </p>
                     <Button
                         type="submit"
                         size="lg"
@@ -430,12 +424,6 @@ import {
 } from '~/utils/purchaseCelebration';
 import { useDetailReplacement, sendResponse } from '~/composables/useReplacements';
 import { useInstitutions } from '~/composables/useInstitution';
-import {
-    hasPaidPlatformAccess,
-    isSubjectToPlatformAccessPayment,
-} from '~/utils/platformAccess';
-import { PLATFORM_ACCESS_HINT_APPLY } from '~/utils/platformAccessCopy';
-
 const user = useState('user');
 const route = useRoute();
 const router = useRouter();
@@ -445,11 +433,6 @@ const showBoostOffer = ref(false);
 const boostModalOpen = ref(false);
 const { triggerCelebration } = usePurchaseCelebration();
 const { confirmBoost } = useSubscription();
-const showPlatformAccessHint = computed(() =>
-    isSubjectToPlatformAccessPayment(user.value) && !hasPaidPlatformAccess(user.value),
-);
-const platformAccessHintApply = PLATFORM_ACCESS_HINT_APPLY;
-
 function trackBoostPaidOnce(sessionId: string, planDays: number | null) {
     if (!import.meta.client) {
         return;

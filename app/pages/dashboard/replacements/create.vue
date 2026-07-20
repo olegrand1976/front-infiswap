@@ -303,16 +303,8 @@
             @update:initial-cities="updateCities"
         />
 
-        <p
-            v-if="showPlatformAccessHint"
-            class="mx-auto mt-12 max-w-md text-center text-sm text-muted-foreground"
-        >
-            {{ platformAccessHintPublish }}
-        </p>
-
         <Button
-            class="flex items-center justify-center mx-auto mb-8 w-72"
-            :class="showPlatformAccessHint ? 'mt-4 2xl:mt-8' : 'mt-16 2xl:mt-24'"
+            class="flex items-center justify-center mx-auto mb-8 mt-16 w-72 2xl:mt-24"
             type="submit"
             data-testid="replacement-create-submit"
             :in-progress="inProgress"
@@ -332,22 +324,12 @@ import { useCareTypes } from '@/composables/useCareTypes';
 import MultiRangeCalendar from '@/components/MultiRangeCalendar.vue';
 import type { User } from '~/lib/types';
 import { goBack } from '~/lib/utils';
-import {
-    hasPaidPlatformAccess,
-    isSubjectToPlatformAccessPayment,
-    validateCreateReplacementForm,
-} from '~/utils/platformAccess';
-import { PLATFORM_ACCESS_HINT_PUBLISH } from '~/utils/platformAccessCopy';
+import { validateCreateReplacementForm } from '~/utils/platformAccess';
 
 const user = useState<User>('user');
 const { getCitiesFomZipCode, getZipCodesFromCity } = useLocation();
 const { careTypes, fetchCareTypes } = useCareTypes();
 const { submitReplacement } = useReplacements();
-const { promptPlatformAccessIfRequired } = useSubscription();
-const showPlatformAccessHint = computed(() =>
-    isSubjectToPlatformAccessPayment(user.value) && !hasPaidPlatformAccess(user.value),
-);
-const platformAccessHintPublish = PLATFORM_ACCESS_HINT_PUBLISH;
 const router = useRouter();
 const { isInstitution } = useAuth();
 const validRoles = ['nurse', 'caregiver', 'midwife'];
@@ -580,10 +562,6 @@ const { submit, inProgress } = useSubmit(
 
         if (validationError) {
             toast.error(validationError);
-            return;
-        }
-
-        if (!(await promptPlatformAccessIfRequired('/dashboard/replacements/create', 'create'))) {
             return;
         }
 

@@ -1,7 +1,11 @@
 <script setup lang="ts">
 definePageMeta({
     middleware: [
-        defineNuxtRouteMiddleware(() => navigateTo('/acces-plan', { replace: true })),
+        defineNuxtRouteMiddleware(() => navigateTo('/dashboard', { replace: true })),
     ],
 });
 </script>
+
+<template>
+    <div />
+</template>

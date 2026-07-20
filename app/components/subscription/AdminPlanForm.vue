@@ -176,7 +176,7 @@ const boostIntervalOptions = [
 ] as const;
 
 const typeLabel = (value: string) =>
-    value === 'boost' ? 'Mise en avant' : 'Accès plateforme';
+    value === 'boost' ? 'Mise en avant' : 'Accès plateforme (historique)';
 
 const intervalLabel = (value: string, durationDays?: number | null) => {
     if (value === 'one_time') {
@@ -188,7 +188,7 @@ const intervalLabel = (value: string, durationDays?: number | null) => {
 
 const form = reactive({
     name: '',
-    type: 'platform_access' as StripePlanAdmin['type'],
+    type: 'boost' as StripePlanAdmin['type'],
     feature: 'replacement' as string | undefined,
     interval: 'one_time' as string,
     duration_days: 3,
@@ -201,11 +201,11 @@ const form = reactive({
 });
 
 watch(isBoostMode, (boost) => {
-    form.type = boost ? 'boost' : 'platform_access';
-    form.feature = boost ? props.feature : undefined;
-    form.interval = boost ? 'one_time' : 'one_time';
-    form.amount = boost ? 2 : 15;
-    form.duration_days = boost ? 3 : 7;
+    form.type = 'boost';
+    form.feature = boost ? props.feature : 'replacement';
+    form.interval = 'one_time';
+    form.amount = 2;
+    form.duration_days = 3;
 }, { immediate: true });
 
 const applyPlan = (plan: StripePlanAdmin) => {

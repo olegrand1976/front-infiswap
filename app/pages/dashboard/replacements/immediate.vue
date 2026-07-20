@@ -258,16 +258,8 @@
                     </div>
                 </div>
 
-                <p
-                    v-if="showPlatformAccessHint"
-                    class="mx-auto mt-8 max-w-md text-center text-sm text-muted-foreground"
-                >
-                    {{ platformAccessHintPublish }}
-                </p>
-
                 <Button
-                    class="mb-12 w-80 flex justify-center items-center mx-auto"
-                    :class="showPlatformAccessHint ? 'mt-4' : 'my-12'"
+                    class="my-12 mb-12 w-80 flex justify-center items-center mx-auto"
                     type="submit"
                     :in-progress="inProgress"
                 >
@@ -284,12 +276,7 @@ import { InputTime } from '@/components/ui/input-time';
 import InputTagManager from '@/components/InputTagManager.vue';
 import type { CountryCode, User } from '~/lib/types';
 import { goBack } from '~/lib/utils';
-import {
-    hasPaidPlatformAccess,
-    isSubjectToPlatformAccessPayment,
-    validateImmediateReplacementForm,
-} from '~/utils/platformAccess';
-import { PLATFORM_ACCESS_HINT_PUBLISH } from '~/utils/platformAccessCopy';
+import { validateImmediateReplacementForm } from '~/utils/platformAccess';
 import { Form } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import {
@@ -319,11 +306,6 @@ const hasMultipleValidRoles = computed(() => {
 const { careTypes, fetchCareTypes } = useCareTypes();
 const { $toast } = useNuxtApp();
 const { sendUrgentReplacement } = useReplacements();
-const { promptPlatformAccessIfRequired } = useSubscription();
-const showPlatformAccessHint = computed(() =>
-    isSubjectToPlatformAccessPayment(user.value) && !hasPaidPlatformAccess(user.value),
-);
-const platformAccessHintPublish = PLATFORM_ACCESS_HINT_PUBLISH;
 const { getCitiesFomZipCode, getZipCodesFromCity } = useLocation();
 const countryCode = computed<CountryCode>(() => {
     const country = (
@@ -438,10 +420,6 @@ const { submit, inProgress } = useSubmit(async () => {
             variant: 'destructive',
             description: validationError,
         });
-        return;
-    }
-
-    if (!(await promptPlatformAccessIfRequired('/dashboard/replacements/immediate', 'create'))) {
         return;
     }
 

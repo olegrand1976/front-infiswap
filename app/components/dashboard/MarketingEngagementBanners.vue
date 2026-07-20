@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import { ArrowRight, Medal, MessageSquare } from 'lucide-vue-next';
-import { hasPaidPlatformAccess, isSubjectToPlatformAccessPayment } from '~/utils/platformAccess';
+import { ArrowRight, MessageSquare } from 'lucide-vue-next';
 import type { User } from '~/lib/types';
 
 const user = useState<User | null>('user');
 const { notifications, getAll } = useNotifications();
-const { showWidget: showNetworkJourneyWidget } = useNetworkJourney();
-const { trackEvent } = useProductAnalytics();
 const {
     activeCampaign,
     fetchActiveCampaign,
@@ -29,28 +26,16 @@ const isNursAssurEligible = computed(() => {
     return normalized === 'be' || normalized === 'belgique';
 });
 
-const showAccessBanner = computed(() =>
-    isSubjectToPlatformAccessPayment(user.value)
-    && !hasPaidPlatformAccess(user.value)
-    && !showNetworkJourneyWidget.value,
-);
-
 const pendingResponseCount = computed(() =>
     (notifications.value?.data ?? []).filter(
         (notification) => notification.type === 'replacement.response' && !notification.read_at,
     ).length,
 );
 
-const showCandidateBanner = computed(() =>
-    pendingResponseCount.value > 0 && !showAccessBanner.value,
-);
+const showCandidateBanner = computed(() => pendingResponseCount.value > 0);
 
 const showPartnerBanner = computed(() => {
-    if (!activeCampaign.value || showAccessBanner.value || showCandidateBanner.value) {
-        return false;
-    }
-
-    if (isSubjectToPlatformAccessPayment(user.value) && hasPaidPlatformAccess(user.value)) {
+    if (!activeCampaign.value || showCandidateBanner.value) {
         return false;
     }
 
@@ -72,10 +57,6 @@ onMounted(async () => {
         // optional banner
     }
 
-    if (showAccessBanner.value) {
-        trackEvent('platform_access_impression', { source: 'banner' });
-    }
-
     await fetchActiveCampaign();
 });
 
@@ -85,10 +66,6 @@ watch(showPartnerBanner, (visible) => {
         partnerBannerImpressionSent.value = true;
     }
 });
-
-function onAccessClick() {
-    trackEvent('platform_access_cta_click', { source: 'banner', trigger: 'banner' });
-}
 
 function onPartnerBannerClick() {
     trackPartnerBannerClick();
@@ -104,34 +81,11 @@ function onPartnerBannerClick() {
 
 <template>
     <div
-        v-if="showAccessBanner || showCandidateBanner || showPartnerBanner"
+        v-if="showCandidateBanner || showPartnerBanner"
         class="mx-6 mt-4 space-y-2"
     >
         <div
-            v-if="showAccessBanner"
-            class="flex flex-col gap-2 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900 sm:flex-row sm:items-center sm:justify-between"
-        >
-            <div class="flex items-start gap-2">
-                <Medal
-                    class="mt-0.5 size-5 shrink-0 text-amber-600"
-                    aria-hidden="true"
-                />
-                <span>
-                    Accès réseau — paiement unique <strong>9,90 €</strong>, à vie —
-                    pour publier et candidater
-                </span>
-            </div>
-            <NuxtLink
-                to="/acces-plan"
-                class="inline-flex shrink-0 items-center justify-center rounded-md bg-amber-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-amber-700"
-                @click="onAccessClick"
-            >
-                Découvrir
-            </NuxtLink>
-        </div>
-
-        <div
-            v-else-if="showCandidateBanner"
+            v-if="showCandidateBanner"
             class="flex flex-col gap-2 rounded-lg border border-emerald-300 bg-emerald-50 px-4 py-3 text-sm text-emerald-900 sm:flex-row sm:items-center sm:justify-between"
         >
             <div class="flex items-start gap-2">

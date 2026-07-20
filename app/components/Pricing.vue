@@ -12,12 +12,12 @@
                     <span class="text-primary">pensés pour votre pratique</span>
                 </h1>
                 <p class="mt-5 text-gray-600 text-base lg:text-lg leading-relaxed">
-                    Explorez les opportunités gratuitement. Débloquez la publication et les candidatures avec l'accès
-                    plateforme. Boostez une annonce ponctuellement pour gagner en visibilité.
+                    Inscription gratuite pour explorer le réseau, publier et candidater.
+                    Boostez une annonce ponctuellement pour gagner en visibilité.
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto items-stretch">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 max-w-4xl mx-auto items-stretch">
                 <article class="relative flex flex-col rounded-xl border border-success/20 bg-white shadow-lg shadow-success/5 overflow-hidden transition-transform duration-300 hover:-translate-y-1">
                     <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-success/80 via-success to-emerald-400" />
                     <div class="p-7 lg:p-8 flex flex-col flex-1">
@@ -81,66 +81,6 @@
                                 to="/login"
                                 class="text-primary hover:underline"
                             >Se connecter</NuxtLink>
-                        </p>
-                    </div>
-                </article>
-
-                <article class="relative flex flex-col rounded-xl border border-primary/15 bg-white shadow-xl shadow-primary/5 overflow-hidden transition-transform duration-300 hover:-translate-y-1 lg:scale-[1.02] lg:z-10">
-                    <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-primary via-primary/80 to-success" />
-                    <span class="absolute top-4 right-4 px-2.5 py-0.5 rounded-full bg-primary text-white text-[10px] font-bold uppercase tracking-wide">
-                        Populaire
-                    </span>
-                    <div class="p-7 lg:p-8 flex flex-col flex-1">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-11 h-11 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
-                                <KeyRound class="w-5 h-5 text-primary" />
-                            </div>
-                            <div>
-                                <p class="text-xs font-semibold uppercase tracking-wide text-primary">
-                                    Essentiel
-                                </p>
-                                <h2 class="text-xl font-bold text-gray-900">
-                                    Accès InfiSwap
-                                </h2>
-                            </div>
-                        </div>
-
-                        <div class="lg:min-h-[5.25rem] mb-4">
-                            <div class="flex items-end gap-1">
-                                <span class="text-5xl font-bold text-gray-900 tracking-tight leading-none">
-                                    {{ formatAmount(accessPlan?.amount, '9,90') }}
-                                </span>
-                                <span class="text-2xl font-semibold text-gray-700 mb-1">€</span>
-                            </div>
-                            <p class="mt-2 text-sm text-gray-500">
-                                Paiement unique · accès permanent
-                            </p>
-                        </div>
-
-                        <p class="text-gray-600 text-sm leading-relaxed mb-6 lg:min-h-[4.5rem]">
-                            {{ accessDescription }}
-                        </p>
-
-                        <ul class="space-y-3 mb-8 flex-1">
-                            <li
-                                v-for="item in accessFeatures"
-                                :key="item"
-                                class="flex items-start gap-2.5 text-sm text-gray-700"
-                            >
-                                <CircleCheck class="w-4 h-4 text-success shrink-0 mt-0.5" />
-                                <span>{{ item }}</span>
-                            </li>
-                        </ul>
-
-                        <Button
-                            class="w-full font-semibold bg-primary rounded hover:bg-primary/90 h-11"
-                            :in-progress="purchasing"
-                            @click="handleAccessCta"
-                        >
-                            {{ user ? 'Obtenir mon accès' : 'Créer un compte et accéder' }}
-                        </Button>
-                        <p class="text-center text-xs text-gray-400 mt-3">
-                            Paiement sécurisé · Activation immédiate
                         </p>
                     </div>
                 </article>
@@ -228,8 +168,8 @@
                         Un parcours progressif
                     </p>
                     <p class="text-xs text-gray-500 mt-2 leading-relaxed">
-                        Créez un compte gratuit pour explorer les remplacements, activez l'accès à 9,90 €
-                        pour publier ou postuler, puis boostez une annonce dès 2 € (3 jours) si besoin.
+                        Créez un compte gratuit pour explorer, publier et postuler.
+                        Boostez une annonce dès 2 € (3 jours) si vous voulez plus de visibilité.
                     </p>
                 </div>
             </div>
@@ -238,7 +178,7 @@
                 <h3 class="text-center text-lg font-semibold text-gray-800 mb-8">
                     Comment ça marche ?
                 </h3>
-                <div class="grid grid-cols-4 gap-4 text-center">
+                <div class="grid grid-cols-3 gap-4 text-center">
                     <div
                         v-for="tip in tips"
                         :key="tip.title"
@@ -282,7 +222,6 @@ import {
     CircleX,
     Gift,
     HeartHandshake,
-    KeyRound,
     Rocket,
     Search,
     ShieldCheck,
@@ -290,22 +229,11 @@ import {
     Zap,
 } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
-import { useSubscription } from '~/composables/useSubscription';
 
 const { $apifetch } = useNuxtApp();
 const user = useUser();
-const { purchaseAccess } = useSubscription();
-
-const purchasing = ref(false);
 
 type PricingPlansResponse = {
-    access: {
-        name?: string;
-        amount?: string | number;
-        currency?: string;
-        description?: string | null;
-        stripe_price_id?: string;
-    } | null;
     boosts: {
         replacement: {
             label?: string;
@@ -327,15 +255,13 @@ const { data: plansData } = await useAsyncData('pricing-plans', async () => {
         return await $apifetch<PricingPlansResponse>('api/subscription/plans');
     }
     catch {
-        return { access: null, boosts: { replacement: null, replacement_plans: [] } } satisfies PricingPlansResponse;
+        return { boosts: { replacement: null, replacement_plans: [] } } satisfies PricingPlansResponse;
     }
 });
 
-const accessPlan = computed(() => plansData.value?.access ?? null);
 const boostPlan = computed(() => plansData.value?.boosts?.replacement ?? null);
 const boostPlans = computed(() => plansData.value?.boosts?.replacement_plans ?? []);
 
-const DEFAULT_ACCESS_DESCRIPTION = 'Passez à l\'action : publiez vos besoins et candidatez aux remplacements qui vous correspondent.';
 const DEFAULT_BOOST_DESCRIPTION = 'Mettez votre annonce en tête des recherches et augmentez votre visibilité auprès des remplaçants disponibles.';
 
 const isUsableDescription = (value?: string | null) => {
@@ -344,12 +270,6 @@ const isUsableDescription = (value?: string | null) => {
     if (trimmed.length < 12) return false;
     return !/(.)\1{5,}/.test(trimmed);
 };
-
-const accessDescription = computed(() => (
-    isUsableDescription(accessPlan.value?.description)
-        ? accessPlan.value!.description!
-        : DEFAULT_ACCESS_DESCRIPTION
-));
 
 const boostDescription = computed(() => (
     isUsableDescription(boostPlan.value?.description)
@@ -363,24 +283,11 @@ const freeFeatures = [
     { label: 'Alertes et notifications personnalisées', available: true },
     { label: 'Filtres par zone, dates et type de soins', available: true },
     { label: 'Aperçu des détails avant de postuler', available: true },
-    { label: 'Publier et gérer vos remplacements', available: false },
-    { label: 'Postuler aux annonces qui vous intéressent', available: false },
-    { label: 'Modifier ou fermer vos publications', available: false },
-    { label: 'Publier un remplacement urgent', available: false },
+    { label: 'Publier et gérer vos remplacements', available: true },
+    { label: 'Postuler aux annonces qui vous intéressent', available: true },
+    { label: 'Modifier ou fermer vos publications', available: true },
+    { label: 'Publier un remplacement urgent', available: true },
     { label: 'Mise en avant en tête de liste', available: false },
-];
-
-const accessFeatures = [
-    'Rechercher les remplacements disponibles',
-    'Consulter les annonces et missions institution',
-    'Alertes et notifications personnalisées',
-    'Filtres par zone, dates et type de soins',
-    'Aperçu des détails avant de postuler',
-    'Publier et gérer vos remplacements',
-    'Postuler aux annonces qui vous intéressent',
-    'Modifier ou fermer vos publications',
-    'Publier un remplacement urgent',
-    'Accès permanent — paiement unique',
 ];
 
 const boostFeatures = [
@@ -395,12 +302,7 @@ const tips = [
     {
         icon: Gift,
         title: 'Gratuit',
-        text: 'Parfait pour surveiller le marché et recevoir les bonnes opportunités, sans payer.',
-    },
-    {
-        icon: KeyRound,
-        title: 'Accès 9,90 €',
-        text: 'Indispensable dès que vous souhaitez publier une annonce ou postuler à une offre.',
+        text: 'Parfait pour surveiller le marché, publier et postuler, sans abonnement.',
     },
     {
         icon: Rocket,
@@ -410,7 +312,7 @@ const tips = [
     {
         icon: Search,
         title: 'Progressif',
-        text: 'Commencez gratuitement, activez l\'accès quand vous êtes prêt à passer à l\'action.',
+        text: 'Commencez gratuitement, boostez une annonce quand vous voulez plus de visibilité.',
     },
 ];
 
@@ -419,30 +321,6 @@ const formatAmount = (amount?: string | number | null, fallback = '—') => {
     const num = Number(amount);
     if (Number.isNaN(num)) return String(amount);
     return num.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-};
-
-const handleAccessCta = async () => {
-    if (!user.value) {
-        return navigateTo('/register');
-    }
-
-    if (!accessPlan.value?.stripe_price_id) {
-        return navigateTo('/acces-plan');
-    }
-
-    purchasing.value = true;
-    try {
-        const response = await purchaseAccess(accessPlan.value.stripe_price_id, {
-            trigger: 'direct',
-            source: 'pricing',
-        });
-        if (response?.url) {
-            window.location.href = response.url;
-        }
-    }
-    finally {
-        purchasing.value = false;
-    }
 };
 
 const handleBoostCta = () => {

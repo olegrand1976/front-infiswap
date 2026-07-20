@@ -11,19 +11,27 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({ layout: 'dashboard', middleware: ['admin'] });
+definePageMeta({
+    layout: 'dashboard',
+    middleware: [
+        'admin',
+        (to) => {
+            const raw = typeof to.query.tab === 'string' ? to.query.tab.trim() : '';
+            const tab = raw || 'boost_replacement';
 
-const route = useRoute();
+            if (tab !== 'boost_replacement') {
+                return navigateTo({
+                    path: '/dashboard/admin/subscription-plans',
+                    query: { tab: 'access' },
+                });
+            }
+        },
+    ],
+});
 
-const tabKey = computed(() => (route.query.tab as string) || 'access');
-const mode = computed<'access' | 'boost'>(() =>
-    tabKey.value === 'boost_replacement' ? 'boost' : 'access',
-);
-const feature = computed(() => (mode.value === 'boost' ? 'replacement' : undefined));
-
-const pageTitle = computed(() =>
-    mode.value === 'boost' ? 'Nouveau plan boost remplacement' : 'Nouveau plan d\'accès',
-);
+const pageTitle = 'Nouveau plan boost remplacement';
+const mode = 'boost' as const;
+const feature = 'replacement';
 
 useHead({ title: pageTitle });
 </script>

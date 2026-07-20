@@ -1,7 +1,5 @@
 import {
-    hasPaidPlatformAccess,
     isPlatformAccessRole,
-    isSubjectToPlatformAccessPayment,
     resolvePlatformAccessRoles,
 } from '../utils/platformAccess';
 
@@ -10,8 +8,7 @@ export type QuestId =
     | 'browse_list'
     | 'view_detail'
     | 'first_action'
-    | 'notif_on'
-    | 'discover_access';
+    | 'notif_on';
 
 export interface Quest {
     id: QuestId;
@@ -80,7 +77,6 @@ export interface JourneyState {
     welcomeMessage: string;
     isComplete: boolean;
     isVisible: boolean;
-    includeDiscoverAccess: boolean;
     nudge: JourneyNudge | null;
     tip: JourneyTip | null;
 }
@@ -96,15 +92,12 @@ export interface JourneyNudge {
     message: string;
 }
 
-export type JourneyTipAudience = 'all' | 'post_cutoff_only' | 'legacy_only';
-
 export interface JourneyTipDefinition {
     id: string;
     text: string;
     category: string;
     questId?: QuestId;
     minLevel?: number;
-    audience?: JourneyTipAudience;
 }
 
 export const JOURNEY_LEVELS: JourneyLevel[] = [
@@ -181,15 +174,6 @@ export const QUESTS: Quest[] = [
         order: 3,
     },
     {
-        id: 'discover_access',
-        title: 'Découvrir l\'accès réseau',
-        cta: 'Découvrir l\'accès réseau',
-        xp: 40,
-        route: '/acces-plan',
-        optional: true,
-        order: 4,
-    },
-    {
         id: 'first_action',
         title: 'Répondre ou publier un remplacement',
         cta: 'Passer à l\'action',
@@ -218,8 +202,6 @@ export const JOURNEY_TIPS: JourneyTipDefinition[] = [
     { id: 'publish', text: 'Publiez votre propre remplacement quand vous cherchez de l\'aide — le réseau répond rapidement.', category: 'Action', questId: 'first_action', minLevel: 2 },
     { id: 'notif', text: 'Activez les alertes email pour être prévenue dès qu\'une annonce correspond à votre zone.', category: 'Notifications', questId: 'notif_on' },
     { id: 'notif2', text: 'Les notifications vous évitent de rater une mission qui correspond à votre profil.', category: 'Notifications', questId: 'notif_on' },
-    { id: 'access', text: 'Accès réseau — paiement unique 9,90 €, à vie : publiez et candidatez sans abonnement.', category: 'Accès réseau', questId: 'discover_access', audience: 'post_cutoff_only' },
-    { id: 'legacy', text: 'Votre compte existant bénéficie déjà de l\'accès au réseau — profitez-en pour explorer les nouvelles annonces.', category: 'Réseau', audience: 'legacy_only', minLevel: 1 },
     { id: 'filter', text: 'Filtrez les remplacements par période et code postal pour gagner du temps.', category: 'Navigation', minLevel: 2 },
     { id: 'profile', text: 'Un profil complet inspire confiance aux collègues qui consultent vos réponses.', category: 'Profil', minLevel: 3 },
     { id: 'regular', text: 'Revenez régulièrement sur le dashboard : InfiSwap s\'améliore pour vous chaque jour.', category: 'Habitude', minLevel: 1 },
@@ -298,16 +280,8 @@ function isQuestId(value: unknown): value is QuestId {
     return typeof value === 'string' && QUESTS.some(quest => quest.id === value);
 }
 
-export function shouldIncludeDiscoverAccessQuest(user: JourneyUser | null | undefined): boolean {
-    return isSubjectToPlatformAccessPayment(user) && !hasPaidPlatformAccess(user);
-}
-
 export function getApplicableQuests(user: JourneyUser | null | undefined): Quest[] {
-    const includeDiscoverAccess = shouldIncludeDiscoverAccessQuest(user);
-
-    return QUESTS
-        .filter(quest => includeDiscoverAccess || quest.id !== 'discover_access')
-        .sort((a, b) => a.order - b.order);
+    return [...QUESTS].sort((a, b) => a.order - b.order);
 }
 
 export function arePreferencesConfigured(user: JourneyUser | null | undefined): boolean {
@@ -376,10 +350,6 @@ export function detectSignalCompletedQuests(
 
     if (hasNotificationsEnabled(user)) {
         completed.push('notif_on');
-    }
-
-    if (hasPaidPlatformAccess(user) || onboarding.visited_routes.includes('/acces-plan')) {
-        completed.push('discover_access');
     }
 
     return completed;
@@ -514,10 +484,6 @@ export function trackRouteVisit(
         visited.add(normalized);
     }
 
-    if (normalized === '/acces-plan') {
-        visited.add('/acces-plan');
-    }
-
     return {
         ...onboarding,
         visited_routes: Array.from(visited),
@@ -541,31 +507,13 @@ export function getNudgeThresholdDays(nudgeCount: number): number {
     return 30;
 }
 
-export function isTipVisibleForUser(tip: JourneyTipDefinition, user: JourneyUser | null | undefined): boolean {
-    const audience = tip.audience ?? 'all';
-
-    if (audience === 'post_cutoff_only') {
-        return isSubjectToPlatformAccessPayment(user);
-    }
-
-    if (audience === 'legacy_only') {
-        return !isSubjectToPlatformAccessPayment(user);
-    }
-
-    return true;
-}
-
 export function filterJourneyTips(
-    user: JourneyUser | null | undefined,
+    _user: JourneyUser | null | undefined,
     level: JourneyLevel,
     nextQuest: Quest | null,
     completedQuests: QuestId[],
 ): JourneyTipDefinition[] {
     return JOURNEY_TIPS.filter((tip) => {
-        if (!isTipVisibleForUser(tip, user)) {
-            return false;
-        }
-
         if (tip.minLevel && level.level < tip.minLevel) {
             return false;
         }
@@ -823,7 +771,6 @@ export function resolveJourneyState(
         welcomeMessage: resolveWelcomeMessage(completedCount, totalQuests),
         isComplete,
         isVisible,
-        includeDiscoverAccess: shouldIncludeDiscoverAccessQuest(user),
         nudge,
         tip,
     };

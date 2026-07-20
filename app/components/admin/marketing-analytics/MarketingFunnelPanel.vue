@@ -7,7 +7,7 @@
                 </h3>
                 <SettingsFieldHint
                     label="Funnel conversion"
-                    text="Cohorte des comptes créés sur la période sélectionnée, puis progression vers vérification e-mail et achats (accès réseau, boost, contrat). Les pastilles BE/FR comptent les inscriptions avec pays profil Belgique / France."
+                    text="Cohorte des comptes créés sur la période sélectionnée, puis progression vers vérification e-mail et achats (boost, contrat). L’accès réseau 9,90 € est un indicateur historique uniquement. Les pastilles BE/FR comptent les inscriptions avec pays profil Belgique / France."
                 />
             </div>
             <p class="mb-3 text-xs text-gray-500">
@@ -61,7 +61,7 @@
                 </h3>
                 <SettingsFieldHint
                     label="Emails Journey"
-                    text="Nombre d’e-mails marketing Journey réellement envoyés et enregistrés (table user_journey_sends) sur la période : onboarding, upsell accès réseau, digest, inactive, partenaires, etc. Un envoi = 1 ligne après succès d’envoi (scheduler daily 14h Europe/Brussels)."
+                    text="Nombre d’e-mails marketing Journey réellement envoyés et enregistrés (table user_journey_sends) sur la période : onboarding, digest, inactive, partenaires, etc. (upsell accès réseau archivé). Un envoi = 1 ligne après succès d’envoi (scheduler daily 14h Europe/Brussels)."
                 />
             </div>
             <p class="mb-3 text-xs text-gray-500">
@@ -178,9 +178,9 @@ const funnelItems = computed(() => [
         hint: 'Parmi ces inscriptions, celles qui ont confirmé leur e-mail.',
     },
     {
-        label: 'Accès réseau',
+        label: 'Accès réseau (historique)',
         value: props.conversion?.platform_access ?? 0,
-        hint: 'Inscriptions de la période ayant payé l’accès réseau (9,90 € à vie).',
+        hint: 'Ancien produit accès réseau (9,90 €) — ventes historiques sur la période.',
     },
     {
         label: 'Boost',
@@ -219,7 +219,7 @@ const partnerItems = computed(() => [
 
 const WORKFLOW_LABELS: Record<string, string> = {
     onboarding: 'Onboarding',
-    platform_access_upsell: 'Upsell accès réseau',
+    platform_access_upsell: 'Upsell accès réseau (archivé)',
     inactive_promo: 'Promo inactive',
     warm_inactive: 'Relance tiède',
     partner_services: 'Partenaires',

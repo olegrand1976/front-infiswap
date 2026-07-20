@@ -16,11 +16,10 @@ test.describe('Retours Stripe simulés', () => {
         await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
     });
 
-    test('acces-plan accepte un retour platform simulé', async ({ page }) => {
+    test('acces-plan redirige vers le dashboard (produit retiré)', async ({ page }) => {
         await page.goto(`/acces-plan?session_id=${SIMULATED_SESSION}`);
 
-        await expect(page).toHaveURL(/\/acces-plan/, { timeout: 15_000 });
-        await expect(page.getByRole('heading', { name: /accès/i }).first()).toBeVisible({ timeout: 15_000 });
+        await expect(page).toHaveURL(/\/dashboard/, { timeout: 15_000 });
     });
 
     test('dashboard accepte un retour sponsoring simulé', async ({ page }) => {

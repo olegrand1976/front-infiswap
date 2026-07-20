@@ -39,15 +39,6 @@
 </template>
 
 <script setup lang="ts">
-import { hasPaidPlatformAccess, isSubjectToPlatformAccessPayment } from '~/utils/platformAccess';
-import type { User } from '~/lib/types';
-
-const user = useState<User | null>('user');
-
-const showNetworkAccessPromo = computed(() =>
-    isSubjectToPlatformAccessPayment(user.value) && !hasPaidPlatformAccess(user.value),
-);
-
 type QuickAction = {
     title: string;
     description: string;
@@ -103,18 +94,6 @@ const actions = computed((): QuickAction[] => {
             secondaryClass: 'text-orange-700',
         },
     ];
-
-    if (showNetworkAccessPromo.value) {
-        base.push({
-            title: 'Membre réseau',
-            description: 'Publiez et répondez — accès à vie 9,90 €.',
-            cta: 'Devenir membre',
-            to: '/acces-plan',
-            borderClass: 'border-primary',
-            headerClass: 'bg-primary',
-            ctaClass: 'bg-primary hover:bg-primary/90',
-        });
-    }
 
     return base;
 });

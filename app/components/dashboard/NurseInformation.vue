@@ -1,7 +1,5 @@
 <template>
     <div class="space-y-6">
-        <DashboardOnboardingServicesBanner />
-
         <section
             aria-label="Statistiques remplacements"
             class="grid grid-cols-2 sm:grid-cols-4 gap-3"
@@ -142,27 +140,6 @@
                         >
                             Copier mon lien de parrainage
                         </button>
-                    </div>
-                </div>
-
-                <div
-                    v-if="showNetworkAccessPromo"
-                    class="flex flex-col w-full overflow-hidden bg-white border-2 rounded-lg shadow-sm border-primary"
-                >
-                    <div class="p-3 text-sm font-bold tracking-wide text-center text-white uppercase bg-primary">
-                        Accès réseau
-                    </div>
-                    <div class="p-4 space-y-3">
-                        <p class="text-sm text-gray-700">
-                            Accès réseau — paiement unique 9,90 €, à vie. Publiez et postulez sans abonnement.
-                        </p>
-                        <NuxtLink
-                            to="/acces-plan?trigger=banner"
-                            class="block w-full py-2 text-center text-sm font-semibold text-white transition rounded bg-success hover:bg-success/90"
-                            @click="trackNetworkAccessClick"
-                        >
-                            Activer mon accès
-                        </NuxtLink>
                     </div>
                 </div>
 
@@ -364,7 +341,6 @@ import { LineChart } from '@/components/ui/chart-line';
 import InputPreferences from '@/components/InputPreferences.vue';
 import InputTagManager from '~/components/InputTagManager.vue';
 import type { UserSettings, Patient } from '~/lib/types';
-import { hasPaidPlatformAccess, isSubjectToPlatformAccessPayment } from '~/utils/platformAccess';
 
 type MonthlyReport = {
     month: string;
@@ -392,10 +368,6 @@ const newlyAddedValue = ref<string>('');
 const configDialog = ref(false);
 const { $toast } = useNuxtApp();
 
-const showNetworkAccessPromo = computed(() =>
-    isSubjectToPlatformAccessPayment(user.value) && !hasPaidPlatformAccess(user.value),
-);
-
 const config = useRuntimeConfig();
 const { trackEvent } = useProductAnalytics();
 
@@ -415,10 +387,6 @@ async function copyReferralLink() {
     await navigator.clipboard.writeText(referralShareUrl.value);
     trackReferralCopy();
     $toast({ description: 'Lien copié avec succès' });
-}
-
-function trackNetworkAccessClick() {
-    trackEvent('platform_access_cta_click', { source: 'nurse_dashboard_services', trigger: 'banner' });
 }
 
 const arePreferencesEmpty = () => {
