@@ -292,6 +292,37 @@
                                             </Select>
                                         </div>
 
+                                        <div
+                                            v-if="showEducationLevelSettings"
+                                            class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full"
+                                        >
+                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
+                                                Niveau d'études
+                                                <SettingsFieldHint
+                                                    variant="onPrimary"
+                                                    :text="SETTINGS_TOOLTIPS.educationLevel"
+                                                    label="Niveau d'études"
+                                                />
+                                            </p>
+                                            <Select v-model="formPersonalInfo.educationLevel">
+                                                <SelectTrigger
+                                                    class="w-full text-black bg-gray-100 sm:bg-transparent text-nowrap border-none"
+                                                    position="right"
+                                                >
+                                                    <SelectValue :value="formPersonalInfo.educationLevel" />
+                                                </SelectTrigger>
+                                                <SelectContent class="border-none">
+                                                    <SelectItem
+                                                        v-for="level in educationLevelOptions"
+                                                        :key="level.value"
+                                                        :value="level.value"
+                                                    >
+                                                        {{ level.label }}
+                                                    </SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+
                                         <div class="flex flex-col sm:flex-row justify-end items-center space-y-2 sm:space-y-0 sm:space-x-8 pt-6">
                                             <Button
                                                 variant="secondary"
@@ -443,9 +474,9 @@
                                 </div>
                                 <p
                                     class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded"
-                                    :class="{ 'text-gray-400': !user?.identifier_number }"
+                                    :class="{ 'text-gray-400': !hasRealIdentifierDisplay }"
                                 >
-                                    {{ user.identifier_number || '19960116' }}
+                                    {{ identifierDisplayLabel }}
                                 </p>
                             </div>
 
@@ -518,6 +549,29 @@
                                 </div>
                                 <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
                                     {{ formattedCategory || ' - ' }}
+                                </p>
+                            </div>
+
+                            <div
+                                v-if="showEducationLevelSettings"
+                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
+                                @click="personalInfoDialog = true"
+                            >
+                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
+                                    <label
+                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
+                                    >
+                                        <GraduationCap class="text-white w-5" />
+                                        <span>Niveau d'études</span>
+                                        <SettingsFieldHint
+                                            variant="onPrimary"
+                                            :text="SETTINGS_TOOLTIPS.educationLevel"
+                                            label="Niveau d'études"
+                                        />
+                                    </label>
+                                </div>
+                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
+                                    {{ formattedEducationLevel || ' - ' }}
                                 </p>
                             </div>
                         </div>
@@ -1629,7 +1683,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeft, BellRing, Building2, Calendar, CircleUser, IdCard, Mail, Map, MapPin, Phone, ShieldCheck, Smartphone, SquarePen, Trash2, UserPlus, Users, Wrench } from 'lucide-vue-next';
+import { ArrowLeft, BellRing, Building2, Calendar, CircleUser, GraduationCap, IdCard, Mail, Map, MapPin, Phone, ShieldCheck, Smartphone, SquarePen, Trash2, UserPlus, Users, Wrench } from 'lucide-vue-next';
 import { getErrorMessage, goBack } from '~/lib/utils';
 import { useRuntimeConfig } from '#app';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -1640,6 +1694,7 @@ import { useSubmit } from '~/composables/useSubmit';
 import FileUpload from '~/components/ui/form/FileUpload.vue';
 import type { User, UserSettings } from '~/lib/types';
 import { SETTINGS_TOOLTIPS } from '~/utils/settingsTooltips';
+import { EDUCATION_LEVEL_OPTIONS, educationLevelLabel, hasRealIdentifier, isBelgiumCountryCode } from '~/utils/educationLevel';
 
 const { $toast } = useNuxtApp();
 
@@ -1704,6 +1759,26 @@ const formattedCategory = computed(() => {
     }
 });
 
+const educationLevelOptions = EDUCATION_LEVEL_OPTIONS;
+
+const showEducationLevelSettings = computed(() => (
+    user.value?.roles?.includes('nurse')
+    && isBelgiumCountryCode(user.value?.country ?? user.value?.profile?.country)
+));
+
+const formattedEducationLevel = computed(() => (
+    educationLevelLabel(user.value?.education_level) ?? ''
+));
+
+const hasRealIdentifierDisplay = computed(() => hasRealIdentifier(user.value));
+
+const identifierDisplayLabel = computed(() => {
+    if (user.value?.identifier_unavailable || !hasRealIdentifierDisplay.value) {
+        return 'Pas de numéro INAMI renseigné';
+    }
+    return user.value?.identifier_number || 'Pas de numéro INAMI renseigné';
+});
+
 const formattedCountry = computed(() => {
     if (user.value.profile && user.value.profile.country && user.value.profile?.country == 'be') {
         return 'Belgique';
@@ -1747,6 +1822,7 @@ const formPersonalInfo = reactive({
     phoneNumber: user.value.phone_number,
     gender: user.value.gender,
     professionalCategory: user.value.professional_category,
+    educationLevel: user.value.education_level ?? '',
 });
 
 const formAddress = reactive({
@@ -1760,19 +1836,35 @@ const formAddress = reactive({
 
 const updateInfoUser = async () => {
     try {
-        await updateUser(formPersonalInfo);
+        const response = await updateUser({
+            ...formPersonalInfo,
+            educationLevel: formPersonalInfo.educationLevel || null,
+        });
 
-        user.value = {
-            ...user.value,
-            lastname: formPersonalInfo.lastname,
-            firstname: formPersonalInfo.firstname,
-            date_of_birth: formPersonalInfo.dateOfBirth,
-            email: formPersonalInfo.email,
-            identifier_number: formPersonalInfo.identifierNumber,
-            phone_number: formPersonalInfo.phoneNumber,
-            gender: formPersonalInfo.gender,
-            professional_category: formPersonalInfo.professionalCategory,
-        };
+        if (response?.user) {
+            user.value = {
+                ...user.value,
+                ...response.user,
+            };
+            formPersonalInfo.identifierNumber = response.user.identifier_number ?? '';
+            formPersonalInfo.educationLevel = response.user.education_level ?? '';
+        }
+        else {
+            user.value = {
+                ...user.value,
+                lastname: formPersonalInfo.lastname,
+                firstname: formPersonalInfo.firstname,
+                date_of_birth: formPersonalInfo.dateOfBirth,
+                email: formPersonalInfo.email,
+                identifier_number: formPersonalInfo.identifierNumber || null,
+                phone_number: formPersonalInfo.phoneNumber,
+                gender: formPersonalInfo.gender,
+                professional_category: formPersonalInfo.professionalCategory,
+                education_level: formPersonalInfo.educationLevel || null,
+                education_level_label: educationLevelLabel(formPersonalInfo.educationLevel),
+                has_real_identifier: Boolean(formPersonalInfo.identifierNumber),
+            };
+        }
 
         $toast({
             description: 'Mise à jour effectué avec succès',

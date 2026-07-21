@@ -490,6 +490,38 @@
 
                 <div class="space-y-2">
                     <label class="text-gray-500 font-medium">
+                        Niveau d'études
+                        <span class="text-xs font-normal text-muted-foreground">(optionnel)</span>
+                    </label>
+                    <Select v-model="requiredEducationLevelModel">
+                        <SelectTrigger
+                            class="flex w-full space-x-4 text-sm justify-start items-center rounded-md border-2 border-gray-300"
+                            position="right"
+                        >
+                            <SelectValue
+                                :placeholder="educationLevelPlaceholder"
+                                class="text-nowrap w-full text-sm ml-3 my-auto"
+                            />
+                        </SelectTrigger>
+                        <SelectContent class="border border-none">
+                            <SelectGroup>
+                                <SelectItem value="__none__">
+                                    <span class="text-gray-400">Aucun</span>
+                                </SelectItem>
+                                <SelectItem
+                                    v-for="level in educationLevelOptions"
+                                    :key="level.value"
+                                    :value="level.value"
+                                >
+                                    <span class="xl:text-sm sm:text-xs">{{ level.label }}</span>
+                                </SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-gray-500 font-medium">
                         Description <span class="text-gray-400 text-sm">(optionnel)</span>
                     </label>
                     <Textarea
@@ -656,6 +688,7 @@ import { Briefcase, Building2, Inbox, MapPin, Phone, Plus, RefreshCw, Trash2 } f
 /* eslint-disable @typescript-eslint/no-explicit-any, no-prototype-builtins, @typescript-eslint/no-unused-vars */
 import { toast } from 'vue-sonner';
 import type { Mission, User } from '~/lib/types';
+import { EDUCATION_LEVEL_OPTIONS, educationLevelLabel } from '~/utils/educationLevel';
 import {
     Dialog,
     DialogContent,
@@ -692,6 +725,7 @@ const props = defineProps({
             description: '',
             status: '',
             required_diploma: '',
+            required_education_level: null,
             is_long_term: false,
             availabilities: [],
             pool_id: undefined,
@@ -867,10 +901,24 @@ const formData = reactive({
     days_per_month: props.mission?.days_per_month || undefined,
     service_id: props.mission?.service_id || lastServiceId || (dataServices.value.length === 1 ? dataServices.value[0].id : undefined),
     required_diploma: props.mission?.required_diploma || '',
+    required_education_level: props.mission?.required_education_level || null,
     is_long_term: props.mission?.is_long_term || false,
     availabilities: props.mission?.availabilities ? [...props.mission.availabilities] : [],
     pool_id: props.mission?.pool_id || undefined,
 });
+
+const educationLevelOptions = EDUCATION_LEVEL_OPTIONS;
+
+const requiredEducationLevelModel = computed({
+    get: () => formData.required_education_level || '__none__',
+    set: (value: string) => {
+        formData.required_education_level = value === '__none__' ? null : value;
+    },
+});
+
+const educationLevelPlaceholder = computed(() => (
+    educationLevelLabel(formData.required_education_level) || 'Sélectionner un niveau (optionnel)'
+));
 
 watch(() => formData.start_date, (newDate) => {
     if (newDate && isRecurring.value && selectedDays.value.length === 0) {

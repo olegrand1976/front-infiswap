@@ -75,6 +75,12 @@
                                         :user="response.responder"
                                         class="font-medium text-gray-700"
                                     />
+                                    <p
+                                        v-if="response.responder.education_level_label"
+                                        class="text-xs text-gray-500 mt-0.5"
+                                    >
+                                        {{ response.responder.education_level_label }}
+                                    </p>
                                     <div
                                         v-if="response.responder.stars > 0"
                                         class="flex items-center gap-0.5 mt-0.5"
@@ -182,6 +188,12 @@
                                     <span class="text-[10px] font-bold text-yellow-600">{{ response.responder.stars }}</span>
                                 </div>
                             </div>
+                            <p
+                                v-if="response.responder.education_level_label"
+                                class="text-xs text-gray-500"
+                            >
+                                {{ response.responder.education_level_label }}
+                            </p>
                             <p class="text-xs text-gray-500">
                                 {{ formatToDMY(response.responded_at) }}
                             </p>

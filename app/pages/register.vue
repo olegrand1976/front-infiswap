@@ -575,6 +575,46 @@
                         </div>
 
                         <div
+                            v-if="showEducationLevel"
+                            class="mt-3 sm:mt-4 lg:mt-5 xl:mt-6"
+                        >
+                            <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
+                                Niveau d'études <span class="text-red-500">*</span>
+                            </label>
+                            <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
+                                <Select v-model="formData.educationLevel">
+                                    <SelectTrigger
+                                        class="flex justify-between items-center rounded-full border-2 border-gray-300"
+                                        position="right"
+                                    >
+                                        <GraduationCap class="text-primary w-10 h-10" />
+                                        <SelectValue
+                                            placeholder="Niveau d'études *"
+                                            class="ml-3 block w-full"
+                                        />
+                                    </SelectTrigger>
+                                    <SelectContent class="border border-none w-full">
+                                        <SelectGroup>
+                                            <div
+                                                v-for="level in educationLevelOptions"
+                                                :key="level.value"
+                                                class="flex justify-center items-center -ms-3 w-full"
+                                            >
+                                                <SelectItem :value="level.value">
+                                                    <div class="flex w-full">
+                                                        <div class="sm:text-xs xl:text-sm">
+                                                            {{ level.label }}
+                                                        </div>
+                                                    </div>
+                                                </SelectItem>
+                                            </div>
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
+
+                        <div
                             v-if="formData.accountType != 'institution'"
                             class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm"
                         >
@@ -1211,6 +1251,46 @@
                                 </Select>
                             </div>
                         </div>
+
+                        <div
+                            v-if="showEducationLevel"
+                            class="mt-3 sm:mt-4 lg:mt-5 xl:mt-6"
+                        >
+                            <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
+                                Niveau d'études <span class="text-red-500">*</span>
+                            </label>
+                            <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
+                                <Select v-model="formData.educationLevel">
+                                    <SelectTrigger
+                                        class="flex justify-between items-center rounded-full border-2 border-gray-300"
+                                        position="right"
+                                    >
+                                        <GraduationCap class="text-primary w-10 h-10" />
+                                        <SelectValue
+                                            placeholder="Niveau d'études *"
+                                            class="ml-3 block w-full"
+                                        />
+                                    </SelectTrigger>
+                                    <SelectContent class="border border-none w-full">
+                                        <SelectGroup>
+                                            <div
+                                                v-for="level in educationLevelOptions"
+                                                :key="level.value"
+                                                class="flex justify-center items-center -ms-3 w-full"
+                                            >
+                                                <SelectItem :value="level.value">
+                                                    <div class="flex w-full">
+                                                        <div class="sm:text-xs xl:text-sm">
+                                                            {{ level.label }}
+                                                        </div>
+                                                    </div>
+                                                </SelectItem>
+                                            </div>
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
                     </div>
                     <div
                         v-if="formData.accountType != 'institution'"
@@ -1290,7 +1370,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowRight, Building2, Check, CircleChevronDown, CircleUser, IdCard, Inbox, Lock, Mail, MapPin, Phone, Users } from 'lucide-vue-next';
+import { ArrowRight, Building2, Check, CircleChevronDown, CircleUser, GraduationCap, IdCard, Inbox, Lock, Mail, MapPin, Phone, Users } from 'lucide-vue-next';
+import { EDUCATION_LEVEL_OPTIONS, isBelgiumCountryCode } from '~/utils/educationLevel';
 import InstitutionPricing from '~/components/register/InstitutionPricing.vue';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
 import BackButton from '~/components/ui/back-button/BackButton.vue';
@@ -1424,6 +1505,8 @@ const professionalCategory = [
     },
 ];
 
+const educationLevelOptions = EDUCATION_LEVEL_OPTIONS;
+
 const { country } = useCountry();
 
 const representGroup = ref(false);
@@ -1456,8 +1539,21 @@ const formData = reactive({
     zipCodesArray: [],
     citiesArray: [],
     professionalCategory: '',
+    educationLevel: '' as '' | 'a1' | 'a2',
     radiusKm: '',
     groupName: '',
+});
+
+const showEducationLevel = computed(() => (
+    formData.accountType !== 'institution'
+    && formData.role === 'nurse'
+    && isBelgiumCountryCode(formData.address.country)
+));
+
+watch(showEducationLevel, (visible) => {
+    if (!visible) {
+        formData.educationLevel = '';
+    }
 });
 
 watch(
@@ -1516,6 +1612,10 @@ const canSubmit = computed(() => {
         return false;
     }
 
+    if (showEducationLevel.value && !formData.educationLevel) {
+        return false;
+    }
+
     return true;
 });
 
@@ -1530,6 +1630,7 @@ function buildRegistrationPayload() {
         phoneNumber: trimOrNull(formData.phoneNumber),
         identifierNumber: trimOrNull(formData.identifierNumber),
         professionalCategory: formData.professionalCategory || null,
+        educationLevel: formData.educationLevel || null,
         companyNumber: trimOrNull(formData.companyNumber),
         zipCodes: formData.zipCodesArray.join(', '),
         cities: formData.citiesArray.join(', '),

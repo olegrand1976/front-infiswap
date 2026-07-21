@@ -97,6 +97,10 @@ export type User = {
     site?: boolean | number;
     ambassador?: boolean | number;
     professional_category?: string | null;
+    education_level?: 'a1' | 'a2' | null;
+    education_level_label?: string | null;
+    identifier_unavailable?: boolean;
+    has_real_identifier?: boolean;
     comment_crm?: string | null;
     historic_activity?: UserActivity;
     contact_date?: string;
@@ -282,6 +286,7 @@ export interface Nurse {
     user_id: string;
     full_name: string;
     zip_code: string;
+    education_level?: 'a1' | 'a2' | null;
     user: User;
 }
 
@@ -607,6 +612,8 @@ export type Mission = {
     description: string;
     status: 'open' | 'in_progress' | 'completed' | 'cancelled';
     required_diploma: string;
+    required_education_level?: 'a1' | 'a2' | null;
+    required_education_level_label?: string | null;
     is_long_term?: boolean;
     availabilities?: { day: string; start_time?: string; end_time?: string; morning_start_at?: string; morning_end_at?: string; afternoon_start_at?: string; afternoon_end_at?: string }[];
     pool_id?: number | null;

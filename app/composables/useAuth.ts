@@ -255,6 +255,31 @@ export const useAuth = () => {
         });
     };
 
+    async function updateEducationLevel(educationLevel: 'a1' | 'a2') {
+        const response = await $apifetch(`/api/users/${user.value.id}/education-level`, {
+            method: 'put',
+            body: { educationLevel },
+        });
+        if (response?.user) {
+            user.value = { ...user.value, ...response.user };
+        }
+        return response;
+    }
+
+    async function updateIdentifier(payload: {
+        identifierNumber?: string | null;
+        identifierUnavailable?: boolean;
+    }) {
+        const response = await $apifetch(`/api/users/${user.value.id}/identifier`, {
+            method: 'put',
+            body: payload,
+        });
+        if (response?.user) {
+            user.value = { ...user.value, ...response.user };
+        }
+        return response;
+    }
+
     async function updateAddressUser(formData) {
         return await $apifetch(`/api/users/${user.value.id}/update-address`, {
             method: 'put',
@@ -650,6 +675,8 @@ export const useAuth = () => {
         registerImmediate,
         resendEmailVerification,
         updateUser,
+        updateEducationLevel,
+        updateIdentifier,
         updateAddressUser,
         updatePasswordUser,
         updateAvatarUser,

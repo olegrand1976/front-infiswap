@@ -148,6 +148,14 @@
                                     <p class="text-sm font-semibold text-gray-800 mt-0.5">
                                         {{ mission.required_diploma || 'Non spécifié' }}
                                     </p>
+                                    <template v-if="mission.required_education_level_label">
+                                        <p class="text-[11px] text-gray-400 font-medium mt-2">
+                                            Niveau d'études
+                                        </p>
+                                        <p class="text-sm font-semibold text-gray-800 mt-0.5">
+                                            {{ mission.required_education_level_label }}
+                                        </p>
+                                    </template>
                                 </div>
                             </div>
 

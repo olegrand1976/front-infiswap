@@ -314,18 +314,18 @@
             class="flex justify-center mt-12"
         >
             <div class="flex flex-row items-center space-x-32">
-                <Form
+                    <Form
                     v-if="replacement?.candidate == false"
                     class="flex flex-col items-center justify-center gap-2"
-                    @submit="submit"
+                    @submit="onInterestClick"
                 >
                     <Button
                         type="submit"
                         size="lg"
                         data-testid="replacement-apply-submit"
                         class="bg-primary text-white rounded-xl px-6 py-2 shadow hover:bg-primary/90 transition"
-                        :disabled="isDisabled || inProgress"
-                        :in-progress="inProgress"
+                        :disabled="isDisabled || inProgress || identifierSaving"
+                        :in-progress="inProgress || identifierSaving"
                     >
                         Je suis intéressé(e)
                     </Button>
@@ -405,6 +405,40 @@
             :replacement="replacement"
             @cancelled="onBoostCancelled"
         />
+
+        <Dialog v-model:open="inamiPromptOpen">
+            <DialogContent class="sm:max-w-md">
+                <DialogHeader>
+                    <DialogTitle>Numéro INAMI</DialogTitle>
+                    <DialogDescription>
+                        Votre numéro INAMI n'est pas renseigné. Vous pouvez le saisir maintenant (optionnel) ou indiquer que vous ne l'avez pas à disposition.
+                    </DialogDescription>
+                </DialogHeader>
+                <div class="space-y-4 py-2">
+                    <Input
+                        v-model="inamiDraft"
+                        placeholder="Numéro INAMI"
+                        inputmode="numeric"
+                    />
+                    <div class="flex flex-col gap-2 sm:flex-row sm:justify-end">
+                        <Button
+                            variant="secondary"
+                            :disabled="identifierSaving"
+                            @click="confirmInamiUnavailable"
+                        >
+                            Je ne l'ai pas à disposition
+                        </Button>
+                        <Button
+                            :disabled="identifierSaving"
+                            :in-progress="identifierSaving"
+                            @click="confirmInamiNumber"
+                        >
+                            Continuer
+                        </Button>
+                    </div>
+                </div>
+            </DialogContent>
+        </Dialog>
     </div>
 </template>
 
@@ -424,13 +458,19 @@ import {
 } from '~/utils/purchaseCelebration';
 import { useDetailReplacement, sendResponse } from '~/composables/useReplacements';
 import { useInstitutions } from '~/composables/useInstitution';
+import { hasRealIdentifier, isBelgiumCountryCode } from '~/utils/educationLevel';
+
 const user = useState('user');
 const route = useRoute();
 const router = useRouter();
 const { $toast } = useNuxtApp();
+const { updateIdentifier } = useAuth();
 const replacementId = route.params.id;
 const showBoostOffer = ref(false);
 const boostModalOpen = ref(false);
+const inamiPromptOpen = ref(false);
+const inamiDraft = ref('');
+const identifierSaving = ref(false);
 const { triggerCelebration } = usePurchaseCelebration();
 const { confirmBoost } = useSubscription();
 function trackBoostPaidOnce(sessionId: string, planDays: number | null) {
@@ -708,6 +748,80 @@ const {
         },
     },
 );
+
+const needsInamiPrompt = computed(() => {
+    if (isInstitution.value) {
+        return false;
+    }
+    if (!user.value?.roles?.includes('nurse')) {
+        return false;
+    }
+    if (!isBelgiumCountryCode(user.value?.country ?? user.value?.profile?.country)) {
+        return false;
+    }
+    if (user.value?.identifier_unavailable) {
+        return false;
+    }
+    return !hasRealIdentifier(user.value);
+});
+
+async function onInterestClick() {
+    if (needsInamiPrompt.value) {
+        inamiDraft.value = '';
+        inamiPromptOpen.value = true;
+        return;
+    }
+    await submit();
+}
+
+async function confirmInamiUnavailable() {
+    identifierSaving.value = true;
+    try {
+        await updateIdentifier({ identifierUnavailable: true });
+        inamiPromptOpen.value = false;
+        await submit();
+    }
+    catch (error) {
+        console.error(error);
+        $toast({
+            title: 'Erreur',
+            description: 'Impossible d\'enregistrer cette information.',
+            variant: 'destructive',
+        });
+    }
+    finally {
+        identifierSaving.value = false;
+    }
+}
+
+async function confirmInamiNumber() {
+    const value = inamiDraft.value.trim();
+    identifierSaving.value = true;
+    try {
+        if (value) {
+            await updateIdentifier({
+                identifierNumber: value,
+                identifierUnavailable: false,
+            });
+        }
+        else {
+            await updateIdentifier({ identifierUnavailable: true });
+        }
+        inamiPromptOpen.value = false;
+        await submit();
+    }
+    catch (error) {
+        console.error(error);
+        $toast({
+            title: 'Erreur',
+            description: 'Numéro INAMI invalide ou déjà utilisé.',
+            variant: 'destructive',
+        });
+    }
+    finally {
+        identifierSaving.value = false;
+    }
+}
 
 const formatDate = (isoString) => {
     if (!isoString) return '';

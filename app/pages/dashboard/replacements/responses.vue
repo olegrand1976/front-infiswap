@@ -251,7 +251,9 @@
                         Numéro {{ identifierLabel }}
                     </h5>
                     <p class="ps-4">
-                        {{ getRespondent(selectedUser)?.identifier_number }}
+                        {{ getRespondent(selectedUser)?.identifier_unavailable || !getRespondent(selectedUser)?.identifier_number
+                            ? 'Pas de numéro INAMI renseigné'
+                            : getRespondent(selectedUser)?.identifier_number }}
                     </p>
                 </div>
 
