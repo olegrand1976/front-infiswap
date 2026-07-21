@@ -46,7 +46,7 @@ async function save() {
 <template>
     <Dialog :open="open">
         <DialogContent
-            class="sm:max-w-md [&>button]:hidden"
+            class="sm:max-w-md [&>button.absolute]:hidden"
             @escape-key-down.prevent
             @pointer-down-outside.prevent
             @interact-outside.prevent
@@ -72,20 +72,24 @@ async function save() {
                         v-model="selectedLevel"
                         type="radio"
                         class="accent-primary"
+                        name="education-level-gate"
                         :value="level.value"
                     >
                     <span class="font-medium text-gray-800">{{ level.label }}</span>
                 </label>
             </div>
 
-            <Button
-                class="w-full"
-                :disabled="!selectedLevel || saving"
-                :in-progress="saving"
-                @click="save"
-            >
-                Enregistrer
-            </Button>
+            <div class="pt-2">
+                <Button
+                    type="button"
+                    class="w-full"
+                    :disabled="!selectedLevel || saving"
+                    :in-progress="saving"
+                    @click="save"
+                >
+                    Valider
+                </Button>
+            </div>
         </DialogContent>
     </Dialog>
 </template>
