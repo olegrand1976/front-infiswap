@@ -9,42 +9,54 @@
 
 <script setup lang="ts">
 import type { NursesMapPoint } from '@/composables/useNursesMap';
-import type { Map as LeafletMap, LayerGroup } from 'leaflet';
+import type { Circle, LayerGroup, Map as LeafletMap } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 const props = defineProps<{
     points: NursesMapPoint[];
+    institutionPoints: NursesMapPoint[];
     countryLabel: string;
 }>();
 
 const mapEl = ref<HTMLElement | null>(null);
 const ariaLabel = computed(
-    () => `Carte des infirmières — ${props.countryLabel}`,
+    () => `Carte soignants et prospects institutions — ${props.countryLabel}`,
 );
 
 let map: LeafletMap | null = null;
-let markersLayer: LayerGroup | null = null;
+let nursesLayer: LayerGroup | null = null;
+let institutionsLayer: LayerGroup | null = null;
+let focusCircle: Circle | null = null;
+let focusActive = false;
+
+const escapeHtml = (value: string): string =>
+    value
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 
 const markerRadius = (count: number): number =>
     Math.min(8 + Math.sqrt(count) * 4, 32);
 
 const renderMarkers = async () => {
-    if (!map || !markersLayer) {
+    if (!map || !nursesLayer || !institutionsLayer) {
         return;
     }
 
     const L = await import('leaflet');
-    markersLayer.clearLayers();
-
-    if (props.points.length === 0) {
-        return;
-    }
+    nursesLayer.clearLayers();
+    institutionsLayer.clearLayers();
 
     const bounds: [number, number][] = [];
 
     for (const point of props.points) {
         const latLng: [number, number] = [point.latitude, point.longitude];
         bounds.push(latLng);
+
+        const zip = escapeHtml(String(point.zip));
+        const city = escapeHtml(String(point.city));
 
         L.circleMarker(latLng, {
             radius: markerRadius(point.count),
@@ -54,12 +66,67 @@ const renderMarkers = async () => {
             fillOpacity: 0.65,
         })
             .bindPopup(
-                `<strong>${point.zip} — ${point.city}</strong><br>${point.count} soignant${point.count > 1 ? 's' : ''}`,
+                `<strong>${zip} — ${city}</strong><br>${point.count} soignant${point.count > 1 ? 's' : ''}`,
             )
-            .addTo(markersLayer);
+            .addTo(nursesLayer);
     }
 
-    map.fitBounds(bounds, { padding: [40, 40], maxZoom: 11 });
+    for (const point of props.institutionPoints) {
+        const latLng: [number, number] = [point.latitude, point.longitude];
+        bounds.push(latLng);
+
+        const zip = escapeHtml(String(point.zip));
+        const city = escapeHtml(String(point.city));
+
+        L.circleMarker(latLng, {
+            radius: markerRadius(point.count),
+            color: '#991b1b',
+            weight: 1.5,
+            fillColor: '#dc2626',
+            fillOpacity: 0.7,
+        })
+            .bindPopup(
+                `<strong>${zip} — ${city}</strong><br>${point.count} prospect${point.count > 1 ? 's' : ''} institution`,
+            )
+            .addTo(institutionsLayer);
+    }
+
+    if (!focusActive && bounds.length > 0) {
+        map.fitBounds(bounds, { padding: [40, 40], maxZoom: 11 });
+    }
+};
+
+const clearFocus = async () => {
+    focusActive = false;
+    if (focusCircle && map) {
+        map.removeLayer(focusCircle);
+        focusCircle = null;
+    }
+    await renderMarkers();
+};
+
+const focusAround = async (latitude: number, longitude: number, radiusKm = 25) => {
+    if (!map || !Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+        return;
+    }
+
+    const L = await import('leaflet');
+    focusActive = true;
+
+    if (focusCircle) {
+        map.removeLayer(focusCircle);
+        focusCircle = null;
+    }
+
+    focusCircle = L.circle([latitude, longitude], {
+        radius: radiusKm * 1000,
+        color: '#2563eb',
+        weight: 2,
+        fillColor: '#3b82f6',
+        fillOpacity: 0.08,
+    }).addTo(map);
+
+    map.fitBounds(focusCircle.getBounds(), { padding: [24, 24], maxZoom: 13 });
 };
 
 const initMap = async () => {
@@ -77,7 +144,8 @@ const initMap = async () => {
         maxZoom: 18,
     }).addTo(map);
 
-    markersLayer = L.layerGroup().addTo(map);
+    nursesLayer = L.layerGroup().addTo(map);
+    institutionsLayer = L.layerGroup().addTo(map);
     await renderMarkers();
 };
 
@@ -86,7 +154,7 @@ onMounted(() => {
 });
 
 watch(
-    () => props.points,
+    () => [props.points, props.institutionPoints] as const,
     () => {
         void renderMarkers();
     },
@@ -96,6 +164,13 @@ watch(
 onBeforeUnmount(() => {
     map?.remove();
     map = null;
-    markersLayer = null;
+    nursesLayer = null;
+    institutionsLayer = null;
+    focusCircle = null;
+});
+
+defineExpose({
+    focusAround,
+    clearFocus,
 });
 </script>
