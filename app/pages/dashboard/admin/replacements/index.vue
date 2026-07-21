@@ -519,7 +519,7 @@ function handleViewDetails(id: number) {
     isModalOpen.value = true;
 }
 
-const columns: ColumnDef<Replacement>[] = [
+const columnDefs: ColumnDef<Replacement>[] = [
     {
         id: 'boost',
         accessorKey: 'is_boosted',
@@ -611,7 +611,7 @@ const columns: ColumnDef<Replacement>[] = [
                 variant: 'ghost',
                 onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
                 style: 'white-space: nowrap;',
-            }, () => ['Date de création', h(ChevronsUpDown, { class: 'ml-2 h-4 w-4' })]);
+            }, () => ['Créé le', h(ChevronsUpDown, { class: 'ml-2 h-4 w-4' })]);
         },
         cell: ({ row }) => {
             const createdAt = row.getValue('created_at') as string | null | undefined;
@@ -892,6 +892,32 @@ const columns: ColumnDef<Replacement>[] = [
         },
     },
     {
+        id: 'contacted_count',
+        accessorFn: (row) => row.matching_users?.length ?? 0,
+        header: ({ column }) =>
+            h(Button, {
+                variant: 'ghost',
+                onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                style: 'white-space: nowrap;',
+            }, () => ['Contactés', h(ChevronsUpDown, { class: 'ml-2 h-2 w-2' })]),
+        cell: ({ row }) => {
+            const count = row.original.matching_users?.length ?? 0;
+            const id = row.original.id;
+
+            return h(
+                NuxtLink,
+                {
+                    to: `/dashboard/admin/replacements/notified/${id}`,
+                    class: 'text-blue-600 hover:underline',
+                    style: 'display: block; text-align: center;',
+                    title: 'Nombre de mails envoyés',
+                },
+                () => count.toString(),
+            );
+        },
+        sortingFn: 'alphanumeric',
+    },
+    {
         id: 'response_count',
         accessorKey: 'response_count',
         header: ({ column }) =>
@@ -927,10 +953,14 @@ const columns: ColumnDef<Replacement>[] = [
             const type = row.original.type;
             const isImmediate = type === 'immediate';
 
-            return h('div', { class: 'flex gap-2 items-center' }, [
-                isImmediate && h('span', {
-                    class: 'bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold',
-                }, 'URGENT'),
+            return h('div', { class: 'flex gap-2 items-center justify-center' }, [
+                isImmediate
+                    ? h('span', {
+                            class: 'bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold',
+                        }, 'URGENT')
+                    : h('span', {
+                            class: 'text-muted-foreground text-xs',
+                        }, 'Classique'),
             ]);
         },
     },
@@ -987,6 +1017,29 @@ const columns: ColumnDef<Replacement>[] = [
     },
 
 ];
+
+const columnOrder = [
+    'boost',
+    'type',
+    'view_details',
+    'time_slot',
+    'cities',
+    'zip_codes',
+    'country',
+    'status',
+    'user_owner',
+    'user_owner_phone_number',
+    'substitute_user',
+    'contacted_count',
+    'response_count',
+    'matching_user',
+    'created_at',
+    'actions',
+] as const;
+
+const columns: ColumnDef<Replacement>[] = columnOrder
+    .map((key) => columnDefs.find(col => (col.id ?? col.accessorKey) === key))
+    .filter((col): col is ColumnDef<Replacement> => Boolean(col));
 
 const excludedColumnsForModal = ['user_owner', 'substitute_user'];
 
