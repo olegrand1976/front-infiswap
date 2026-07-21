@@ -516,7 +516,7 @@ const adminNavigationSections = computed<NavigationSection[]>(() => [
     },
     {
         label: 'Opérations',
-        roles: ['super_admin', 'admin', 'community_manager', 'manager'],
+        roles: ['super_admin', 'admin', 'community_manager', 'manager', 'sale_representative'],
         items: [
             {
                 label: 'Remplacements',
@@ -534,17 +534,25 @@ const adminNavigationSections = computed<NavigationSection[]>(() => [
                         icon: List,
                     },
                 ],
+                roles: ['super_admin', 'admin', 'community_manager', 'manager'],
             },
             {
                 label: 'Suivi inscriptions',
                 route: '/dashboard/admin/registrations',
                 icon: BarChart3,
+                roles: ['super_admin', 'admin', 'community_manager', 'manager'],
             },
             {
                 label: 'Binômes',
                 route: '/dashboard/admin/partners',
                 icon: UserSearch,
                 roles: ['super_admin', 'admin', 'manager'],
+            },
+            {
+                label: 'Carte infirmières',
+                route: '/dashboard/admin/nurses-map',
+                icon: MapPin,
+                roles: ['super_admin', 'admin', 'community_manager', 'sale_representative', 'manager'],
             },
         ],
     },
