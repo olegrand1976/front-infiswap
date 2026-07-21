@@ -54,6 +54,42 @@
                     </div>
                 </div>
 
+                <div class="flex flex-wrap items-center gap-2">
+                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wide mr-1">
+                        Couches
+                    </p>
+                    <button
+                        type="button"
+                        class="inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm font-medium transition-colors"
+                        :class="showNurses
+                            ? 'border-teal-600 bg-teal-50 text-teal-800'
+                            : 'border-gray-200 bg-white text-gray-500 hover:bg-gray-50'"
+                        :aria-pressed="showNurses"
+                        @click="showNurses = !showNurses"
+                    >
+                        <span
+                            class="inline-block size-2.5 rounded-full bg-teal-500"
+                            aria-hidden="true"
+                        />
+                        Afficher infirmières
+                    </button>
+                    <button
+                        type="button"
+                        class="inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm font-medium transition-colors"
+                        :class="showInstitutions
+                            ? 'border-red-600 bg-red-50 text-red-800'
+                            : 'border-gray-200 bg-white text-gray-500 hover:bg-gray-50'"
+                        :aria-pressed="showInstitutions"
+                        @click="showInstitutions = !showInstitutions"
+                    >
+                        <span
+                            class="inline-block size-2.5 rounded-full bg-red-600"
+                            aria-hidden="true"
+                        />
+                        Afficher institutions
+                    </button>
+                </div>
+
                 <form
                     class="flex flex-col sm:flex-row gap-2 sm:items-end"
                     @submit.prevent="onSearchAddress"
@@ -126,6 +162,8 @@
                         :points="points"
                         :institution-points="institutionPoints"
                         :country-label="countryLabel"
+                        :show-nurses="showNurses"
+                        :show-institutions="showInstitutions"
                     />
                 </ClientOnly>
             </div>
@@ -175,6 +213,8 @@ const addressError = ref<string | null>(null);
 const addressHint = ref<string | null>(null);
 const hasFocus = ref(false);
 const mapRef = ref<MapExpose | null>(null);
+const showNurses = ref(true);
+const showInstitutions = ref(true);
 
 const countryLabel = computed(
     () => COUNTRY_OPTIONS.find((o) => o.value === selectedCountry.value)?.label ?? '',

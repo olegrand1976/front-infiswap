@@ -16,6 +16,8 @@ const props = defineProps<{
     points: NursesMapPoint[];
     institutionPoints: NursesMapPoint[];
     countryLabel: string;
+    showNurses?: boolean;
+    showInstitutions?: boolean;
 }>();
 
 const mapEl = ref<HTMLElement | null>(null);
@@ -40,58 +42,65 @@ const escapeHtml = (value: string): string =>
 const markerRadius = (count: number): number =>
     Math.min(8 + Math.sqrt(count) * 4, 32);
 
-const renderMarkers = async () => {
+const renderMarkers = async (options: { fit?: boolean } = {}) => {
     if (!map || !nursesLayer || !institutionsLayer) {
         return;
     }
 
+    const shouldFit = options.fit !== false;
     const L = await import('leaflet');
     nursesLayer.clearLayers();
     institutionsLayer.clearLayers();
 
     const bounds: [number, number][] = [];
+    const showNurses = props.showNurses !== false;
+    const showInstitutions = props.showInstitutions !== false;
 
-    for (const point of props.points) {
-        const latLng: [number, number] = [point.latitude, point.longitude];
-        bounds.push(latLng);
+    if (showNurses) {
+        for (const point of props.points) {
+            const latLng: [number, number] = [point.latitude, point.longitude];
+            bounds.push(latLng);
 
-        const zip = escapeHtml(String(point.zip));
-        const city = escapeHtml(String(point.city));
+            const zip = escapeHtml(String(point.zip));
+            const city = escapeHtml(String(point.city));
 
-        L.circleMarker(latLng, {
-            radius: markerRadius(point.count),
-            color: '#0f766e',
-            weight: 1.5,
-            fillColor: '#14b8a6',
-            fillOpacity: 0.65,
-        })
-            .bindPopup(
-                `<strong>${zip} — ${city}</strong><br>${point.count} soignant${point.count > 1 ? 's' : ''}`,
-            )
-            .addTo(nursesLayer);
+            L.circleMarker(latLng, {
+                radius: markerRadius(point.count),
+                color: '#0f766e',
+                weight: 1.5,
+                fillColor: '#14b8a6',
+                fillOpacity: 0.65,
+            })
+                .bindPopup(
+                    `<strong>${zip} — ${city}</strong><br>${point.count} soignant${point.count > 1 ? 's' : ''}`,
+                )
+                .addTo(nursesLayer);
+        }
     }
 
-    for (const point of props.institutionPoints) {
-        const latLng: [number, number] = [point.latitude, point.longitude];
-        bounds.push(latLng);
+    if (showInstitutions) {
+        for (const point of props.institutionPoints) {
+            const latLng: [number, number] = [point.latitude, point.longitude];
+            bounds.push(latLng);
 
-        const zip = escapeHtml(String(point.zip));
-        const city = escapeHtml(String(point.city));
+            const zip = escapeHtml(String(point.zip));
+            const city = escapeHtml(String(point.city));
 
-        L.circleMarker(latLng, {
-            radius: markerRadius(point.count),
-            color: '#991b1b',
-            weight: 1.5,
-            fillColor: '#dc2626',
-            fillOpacity: 0.7,
-        })
-            .bindPopup(
-                `<strong>${zip} — ${city}</strong><br>${point.count} prospect${point.count > 1 ? 's' : ''} institution`,
-            )
-            .addTo(institutionsLayer);
+            L.circleMarker(latLng, {
+                radius: markerRadius(point.count),
+                color: '#991b1b',
+                weight: 1.5,
+                fillColor: '#dc2626',
+                fillOpacity: 0.7,
+            })
+                .bindPopup(
+                    `<strong>${zip} — ${city}</strong><br>${point.count} prospect${point.count > 1 ? 's' : ''} institution`,
+                )
+                .addTo(institutionsLayer);
+        }
     }
 
-    if (!focusActive && bounds.length > 0) {
+    if (shouldFit && !focusActive && bounds.length > 0) {
         map.fitBounds(bounds, { padding: [40, 40], maxZoom: 11 });
     }
 };
@@ -156,9 +165,16 @@ onMounted(() => {
 watch(
     () => [props.points, props.institutionPoints] as const,
     () => {
-        void renderMarkers();
+        void renderMarkers({ fit: true });
     },
     { deep: true },
+);
+
+watch(
+    () => [props.showNurses, props.showInstitutions] as const,
+    () => {
+        void renderMarkers({ fit: false });
+    },
 );
 
 onBeforeUnmount(() => {
