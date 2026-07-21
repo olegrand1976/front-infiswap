@@ -25,7 +25,7 @@ useHead({
     meta: [
         {
             name: 'description',
-            content: 'Offre institutionnelle InfiSwap et Jaumana Soins : partenariat, remplacements infirmiers, comparateur intérim et formule DIY.',
+            content: 'Offre institutionnelle InfiSwap Institut : remplacements infirmiers, comparateur intérim et abonnement établissements. Partenariat Jaumana Soins disponible en option en Belgique.',
         },
     ],
 });
