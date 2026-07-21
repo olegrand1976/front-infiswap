@@ -20,6 +20,20 @@ export const OFFRE_INSTITUTION_CONTACTS: Record<string, OffreInstitutionContact>
         contactName: 'Vincent Schmit',
         repId: '1',
     },
+    2: {
+        phoneTel: '0475721632',
+        phoneDisplay: '0475.72.16.32',
+        email: 'cholet.odile@gmail.com',
+        contactName: 'Odile Cholet / Valérie Vaneck',
+        repId: '2',
+    },
+    3: {
+        phoneTel: '0471522660',
+        phoneDisplay: '0471.52.26.60',
+        email: 'Tolleneerstephanie@gmail.com',
+        contactName: 'Stéphanie Tolleneer',
+        repId: '3',
+    },
 };
 
 export function getOffreInstitutionContact(id: string): OffreInstitutionContact | undefined {
