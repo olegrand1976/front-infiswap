@@ -164,18 +164,36 @@
                         :country-label="countryLabel"
                         :show-nurses="showNurses"
                         :show-institutions="showInstitutions"
+                        @select-point="onSelectPoint"
                     />
                 </ClientOnly>
+
+                <AdminMapZipEntitiesDialog
+                    v-model:open="zipDialogOpen"
+                    :zip="zipDialogZip"
+                    :city="zipDialogCity"
+                    :type="zipDialogType"
+                    :loading="zipDialogLoading"
+                    :error="zipDialogError"
+                    :nurse-items="zipNurseItems"
+                    :institution-items="zipInstitutionItems"
+                />
             </div>
         </DashboardAdminPageContent>
     </div>
 </template>
 
 <script setup lang="ts">
-import AdminNursesResidenceMap from '@/components/admin/NursesResidenceMap.vue';
+import AdminMapZipEntitiesDialog from '@/components/admin/AdminMapZipEntitiesDialog.vue';
+import AdminNursesResidenceMap, {
+    type NursesMapSelectPointPayload,
+} from '@/components/admin/NursesResidenceMap.vue';
 import {
     type NursesMapCountry,
     type NursesMapPoint,
+    type NursesMapPointType,
+    type NursesMapZipInstitutionItem,
+    type NursesMapZipNurseItem,
     useNursesMap,
 } from '@/composables/useNursesMap';
 import { getErrorMessage } from '~/lib/utils';
@@ -197,7 +215,7 @@ type MapExpose = {
     clearFocus: () => Promise<void>;
 };
 
-const { fetchMap, geocode } = useNursesMap();
+const { fetchMap, geocode, fetchZipList } = useNursesMap();
 
 const selectedCountry = ref<NursesMapCountry>('be');
 const points = ref<NursesMapPoint[]>([]);
@@ -215,6 +233,16 @@ const hasFocus = ref(false);
 const mapRef = ref<MapExpose | null>(null);
 const showNurses = ref(true);
 const showInstitutions = ref(true);
+
+const zipDialogOpen = ref(false);
+const zipDialogZip = ref('');
+const zipDialogCity = ref('');
+const zipDialogType = ref<NursesMapPointType>('nurses');
+const zipDialogLoading = ref(false);
+const zipDialogError = ref<string | null>(null);
+const zipNurseItems = ref<NursesMapZipNurseItem[]>([]);
+const zipInstitutionItems = ref<NursesMapZipInstitutionItem[]>([]);
+let zipListRequestId = 0;
 
 const countryLabel = computed(
     () => COUNTRY_OPTIONS.find((o) => o.value === selectedCountry.value)?.label ?? '',
@@ -297,6 +325,49 @@ const onClearFocus = async () => {
     hasFocus.value = false;
     addressHint.value = null;
     addressError.value = null;
+};
+
+const onSelectPoint = async (payload: NursesMapSelectPointPayload) => {
+    const requestId = ++zipListRequestId;
+    zipDialogZip.value = payload.zip;
+    zipDialogCity.value = payload.city;
+    zipDialogType.value = payload.type;
+    zipDialogOpen.value = true;
+    zipDialogLoading.value = true;
+    zipDialogError.value = null;
+    zipNurseItems.value = [];
+    zipInstitutionItems.value = [];
+
+    try {
+        const data = await fetchZipList(selectedCountry.value, payload.zip, payload.type);
+        if (requestId !== zipListRequestId) {
+            return;
+        }
+        if (data.city) {
+            zipDialogCity.value = data.city;
+        }
+        switch (payload.type) {
+            case 'institutions':
+                zipInstitutionItems.value = (data.items as NursesMapZipInstitutionItem[]) ?? [];
+                break;
+            case 'nurses':
+                zipNurseItems.value = (data.items as NursesMapZipNurseItem[]) ?? [];
+                break;
+            default: {
+                const _exhaustive: never = payload.type;
+                return _exhaustive;
+            }
+        }
+    } catch (e) {
+        if (requestId !== zipListRequestId) {
+            return;
+        }
+        zipDialogError.value = getErrorMessage(e) || 'Impossible de charger la liste.';
+    } finally {
+        if (requestId === zipListRequestId) {
+            zipDialogLoading.value = false;
+        }
+    }
 };
 
 onMounted(() => {

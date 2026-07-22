@@ -1,5 +1,7 @@
 export type NursesMapCountry = 'be' | 'fr';
 
+export type NursesMapPointType = 'nurses' | 'institutions';
+
 export type NursesMapPoint = {
     zip: string;
     city: string;
@@ -21,6 +23,25 @@ export type NursesMapGeocodeResult = {
     label: string;
 };
 
+export type NursesMapZipNurseItem = {
+    id: number;
+    firstname: string;
+    lastname: string;
+    email?: string | null;
+};
+
+export type NursesMapZipInstitutionItem = {
+    id: number;
+    name: string;
+};
+
+export type NursesMapZipListResponse = {
+    zip: string;
+    city: string;
+    type: NursesMapPointType;
+    items: NursesMapZipNurseItem[] | NursesMapZipInstitutionItem[];
+};
+
 export const useNursesMap = () => {
     const { $apifetch } = useNuxtApp();
 
@@ -40,5 +61,19 @@ export const useNursesMap = () => {
         return await $apifetch(`api/admin/nurses/map/geocode?${params.toString()}`);
     };
 
-    return { fetchMap, geocode };
+    const fetchZipList = async (
+        country: NursesMapCountry,
+        zip: string,
+        type: NursesMapPointType,
+    ): Promise<NursesMapZipListResponse> => {
+        const params = new URLSearchParams({
+            country,
+            zip,
+            type,
+        });
+
+        return await $apifetch(`api/admin/nurses/map/zip?${params.toString()}`);
+    };
+
+    return { fetchMap, geocode, fetchZipList };
 };
