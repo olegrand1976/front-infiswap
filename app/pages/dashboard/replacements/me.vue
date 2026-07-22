@@ -167,11 +167,12 @@ import { useCookie } from '#app';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import Replacement from '~/components/Replacement.vue';
 import { goBack } from '~/lib/utils';
+import { normalizeSelectedFilters } from '~/utils/selectedFilters';
 
 const replacementTypeFilters = {
     all: 'Tous',
     classic: 'Classique',
-    urgent: 'Urgent',
+    immediate: 'Urgent',
 };
 
 const replacementRoleFilters = {
@@ -227,16 +228,20 @@ const selectedType = ref('me');
 
 onMounted(() => {
     if (filterCookies.value) {
-        selectedFilters.value = {
+        const normalized = normalizeSelectedFilters({
             type: filterCookies.value.type ?? 'all',
             role: filterCookies.value.role ?? 'all',
-            status: filterCookies.value.status ?? 'open', // fallback si ancien cookie sans status
-        };
+            status: filterCookies.value.status ?? 'open',
+        });
+        selectedFilters.value = normalized;
+        if (filterCookies.value.type === 'urgent') {
+            filterCookies.value = { ...normalized };
+        }
     }
 });
 
 watch(selectedFilters, (newFilters) => {
-    filterCookies.value = newFilters;
+    filterCookies.value = normalizeSelectedFilters(newFilters);
 }, { deep: true });
 
 try {

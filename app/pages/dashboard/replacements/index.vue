@@ -226,6 +226,7 @@ import Replacement from '~/components/Replacement.vue';
 import type { User } from '~/lib/types';
 import { useMissions } from '~/composables/useMission';
 import { PERPAGE } from '~/lib/constants';
+import { normalizeSelectedFilters } from '~/utils/selectedFilters';
 
 const user = useState<User>('user');
 const { allowedCountryCodes, defaultCountryCode, availableCountries } = useCountry();
@@ -315,12 +316,27 @@ const selectedProvincesPlaceholder = computed(() => {
 
 onMounted(() => {
     if (filterCookies.value) {
-        selectedFilters.value = filterCookies.value;
+        const normalized = normalizeSelectedFilters({
+            type: filterCookies.value.type ?? 'all',
+            role: filterCookies.value.role ?? 'all',
+            status: (filterCookies.value as { status?: string }).status ?? 'open',
+        });
+        selectedFilters.value = {
+            type: normalized.type,
+            role: normalized.role,
+            status: normalized.status ?? 'open',
+        };
+        if (filterCookies.value.type === 'urgent') {
+            filterCookies.value = { type: normalized.type, role: normalized.role };
+        }
     }
 });
 
 watch(selectedFilters, (newFilters) => {
-    filterCookies.value = newFilters;
+    filterCookies.value = normalizeSelectedFilters({
+        type: newFilters.type,
+        role: newFilters.role,
+    });
 }, { deep: true });
 
 watch(selectedCountry, () => {
