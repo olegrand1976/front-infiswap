@@ -194,7 +194,17 @@ const clearFocus = async () => {
     await renderMarkers();
 };
 
-const focusAround = async (latitude: number, longitude: number, radiusKm = 25) => {
+const focusMaxZoom = (radiusKm: number): number => {
+    if (radiusKm <= 5) {
+        return 15;
+    }
+    if (radiusKm <= 10) {
+        return 14;
+    }
+    return 13;
+};
+
+const focusAround = async (latitude: number, longitude: number, radiusKm = 10) => {
     if (!map || !Number.isFinite(latitude) || !Number.isFinite(longitude)) {
         return;
     }
@@ -213,9 +223,13 @@ const focusAround = async (latitude: number, longitude: number, radiusKm = 25) =
         weight: 2,
         fillColor: '#3b82f6',
         fillOpacity: 0.08,
+        interactive: false,
     }).addTo(map);
 
-    map.fitBounds(focusCircle.getBounds(), { padding: [24, 24], maxZoom: 13 });
+    map.fitBounds(focusCircle.getBounds(), {
+        padding: [24, 24],
+        maxZoom: focusMaxZoom(radiusKm),
+    });
     scheduleInvalidateSize();
 };
 
