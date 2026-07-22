@@ -99,7 +99,7 @@
                             for="map-address-search"
                             class="text-sm text-gray-500"
                         >
-                            Adresse ou lieu (zoom ~25 km)
+                            Adresse ou lieu
                         </Label>
                         <Input
                             id="map-address-search"
@@ -109,6 +109,33 @@
                             class="w-full"
                             autocomplete="off"
                         />
+                    </div>
+                    <div class="space-y-1 shrink-0">
+                        <Label
+                            id="map-radius-label"
+                            class="text-sm text-gray-500"
+                        >
+                            Rayon
+                        </Label>
+                        <div
+                            class="inline-flex rounded-md border border-gray-200 bg-gray-50 p-0.5"
+                            role="group"
+                            aria-labelledby="map-radius-label"
+                        >
+                            <button
+                                v-for="option in RADIUS_OPTIONS"
+                                :key="option"
+                                type="button"
+                                class="rounded px-3 py-1.5 text-sm font-medium transition-colors"
+                                :class="selectedRadiusKm === option
+                                    ? 'bg-primary text-white shadow-sm'
+                                    : 'text-gray-600 hover:bg-white'"
+                                :aria-pressed="selectedRadiusKm === option"
+                                @click="onRadiusChange(option)"
+                            >
+                                {{ option }} km
+                            </button>
+                        </div>
                     </div>
                     <div class="flex gap-2 shrink-0">
                         <Button
@@ -211,6 +238,9 @@ const COUNTRY_OPTIONS = [
     { value: 'fr' as const, label: 'France' },
 ];
 
+const RADIUS_OPTIONS = [5, 10, 25] as const;
+type FocusRadiusKm = (typeof RADIUS_OPTIONS)[number];
+
 type MapExpose = {
     focusAround: (lat: number, lng: number, radiusKm?: number) => Promise<void>;
     clearFocus: () => Promise<void>;
@@ -219,6 +249,7 @@ type MapExpose = {
 const { fetchMap, geocode, fetchZipList } = useNursesMap();
 
 const selectedCountry = ref<NursesMapCountry>('be');
+const selectedRadiusKm = ref<FocusRadiusKm>(10);
 const points = ref<NursesMapPoint[]>([]);
 const institutionPoints = ref<NursesMapPoint[]>([]);
 const unresolvedCount = ref(0);
@@ -231,6 +262,11 @@ const searchingAddress = ref(false);
 const addressError = ref<string | null>(null);
 const addressHint = ref<string | null>(null);
 const hasFocus = ref(false);
+const lastFocus = ref<{
+    latitude: number;
+    longitude: number;
+    label: string;
+} | null>(null);
 const mapRef = ref<MapExpose | null>(null);
 const showNurses = ref(true);
 const showInstitutions = ref(true);
@@ -257,13 +293,35 @@ const placedInstitutions = computed(() =>
     institutionPoints.value.reduce((sum, p) => sum + p.count, 0),
 );
 
+const clearFocusState = () => {
+    hasFocus.value = false;
+    lastFocus.value = null;
+    addressHint.value = null;
+    addressError.value = null;
+};
+
+const applyFocus = async (
+    latitude: number,
+    longitude: number,
+    label: string,
+    radiusKm: FocusRadiusKm = selectedRadiusKm.value,
+) => {
+    if (!mapRef.value) {
+        return;
+    }
+    await mapRef.value.focusAround(latitude, longitude, radiusKm);
+    lastFocus.value = { latitude, longitude, label };
+    hasFocus.value = true;
+    addressHint.value = `Vue centrée (~${radiusKm} km) : ${label}`;
+};
+
 const load = async () => {
     loading.value = true;
     error.value = null;
     addressHint.value = null;
     addressError.value = null;
     if (hasFocus.value) {
-        hasFocus.value = false;
+        clearFocusState();
         await mapRef.value?.clearFocus();
     }
     try {
@@ -314,9 +372,7 @@ const onSearchAddress = async () => {
             return;
         }
 
-        await mapRef.value.focusAround(result.latitude, result.longitude, 25);
-        hasFocus.value = true;
-        addressHint.value = `Vue centrée (~25 km) : ${result.label}`;
+        await applyFocus(result.latitude, result.longitude, result.label);
     } catch (e) {
         addressError.value = getErrorMessage(e) || 'Recherche d\'adresse impossible.';
     } finally {
@@ -324,11 +380,21 @@ const onSearchAddress = async () => {
     }
 };
 
+const onRadiusChange = (radiusKm: FocusRadiusKm) => {
+    if (selectedRadiusKm.value === radiusKm) {
+        return;
+    }
+    selectedRadiusKm.value = radiusKm;
+    const focus = lastFocus.value;
+    if (!hasFocus.value || !focus || !mapRef.value) {
+        return;
+    }
+    void applyFocus(focus.latitude, focus.longitude, focus.label, radiusKm);
+};
+
 const onClearFocus = async () => {
     await mapRef.value?.clearFocus();
-    hasFocus.value = false;
-    addressHint.value = null;
-    addressError.value = null;
+    clearFocusState();
 };
 
 const onSelectPoint = async (payload: NursesMapSelectPointPayload) => {
