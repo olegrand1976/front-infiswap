@@ -21,6 +21,12 @@
                     </Button>
                     <Button
                         variant="outline"
+                        @click="navigateTo('/dashboard/admin/nurses-map')"
+                    >
+                        Retour carte
+                    </Button>
+                    <Button
+                        variant="outline"
                         @click="navigateTo('/dashboard/admin/institutions')"
                     >
                         Retour à la liste
