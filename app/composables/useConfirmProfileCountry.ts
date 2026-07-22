@@ -1,11 +1,14 @@
+import { toast } from 'vue-sonner';
 import type { User } from '~/lib/types';
 import type { ReplacementCountryCode } from '~/lib/replacementCountry';
-import { needsProfileCountryConfirmation } from '~/utils/profileCountry';
+import {
+    needsProfileCountryConfirmation,
+    workingAtFromCountryCode,
+} from '~/utils/profileCountry';
 
 export function useConfirmProfileCountry() {
     const user = useState<User>('user');
     const { $apifetch } = useNuxtApp();
-    const toast = useToast();
 
     const showModal = ref(false);
     const pending = ref(false);
@@ -13,6 +16,10 @@ export function useConfirmProfileCountry() {
     let rejectPick: ((reason?: unknown) => void) | null = null;
 
     function needsConfirmation(): boolean {
+        if (user.value?.institution || user.value?.account_type === 'institution') {
+            return false;
+        }
+
         return needsProfileCountryConfirmation(user.value?.profile);
     }
 
@@ -41,6 +48,21 @@ export function useConfirmProfileCountry() {
         }
     }
 
+    function applyCountryToLocalUser(code: ReplacementCountryCode, apiUser?: User): void {
+        const workingAt = workingAtFromCountryCode(code);
+        const base = apiUser ? { ...user.value, ...apiUser } : { ...user.value };
+
+        user.value = {
+            ...base,
+            profile: {
+                ...(user.value.profile ?? {}),
+                ...(typeof base.profile === 'object' && base.profile ? base.profile : {}),
+                country: code,
+                working_at: workingAt,
+            },
+        };
+    }
+
     async function persistCountry(code: ReplacementCountryCode): Promise<void> {
         pending.value = true;
         try {
@@ -49,20 +71,8 @@ export function useConfirmProfileCountry() {
                 body: { country: code },
             });
 
-            if (response?.user) {
-                user.value = { ...user.value, ...response.user };
-            }
-            else if (user.value.profile) {
-                user.value = {
-                    ...user.value,
-                    profile: {
-                        ...user.value.profile,
-                        country: code,
-                        working_at: code === 'fr' ? 'France' : 'Belgique',
-                    },
-                };
-            }
-
+            // UserResource aplati le profil sur la racine : forcer aussi user.profile.
+            applyCountryToLocalUser(code, response?.user);
             toast.success('Pays enregistré');
         }
         catch (error) {

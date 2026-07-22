@@ -248,6 +248,7 @@ import type { User } from '~/lib/types';
 import { useMissions } from '~/composables/useMission';
 import { PERPAGE } from '~/lib/constants';
 import { normalizeSelectedFilters } from '~/utils/selectedFilters';
+import { resolveProfileCountryCode } from '~/utils/profileCountry';
 import { useConfirmProfileCountry } from '~/composables/useConfirmProfileCountry';
 
 const user = useState<User>('user');
@@ -269,6 +270,10 @@ const availableMissions = computed(() => missions.value.data ?? []);
 
 onMounted(async () => {
     await ensureProfileCountry();
+    const code = resolveProfileCountryCode(user.value?.profile);
+    if (code && allowedCountryCodes.value.includes(code)) {
+        selectedCountry.value = code;
+    }
     getMissions(1, PERPAGE, { type: 'nurse' });
 });
 
