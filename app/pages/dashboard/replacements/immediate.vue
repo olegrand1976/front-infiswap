@@ -267,6 +267,12 @@
                 </Button>
             </div>
         </Form>
+
+        <ConfirmProfileCountryModal
+            v-if="showCountryModal"
+            :pending="countryPending"
+            @select="onCountrySelect"
+        />
     </div>
 </template>
 
@@ -274,9 +280,15 @@
 import { ArrowLeft } from 'lucide-vue-next';
 import { InputTime } from '@/components/ui/input-time';
 import InputTagManager from '@/components/InputTagManager.vue';
+import ConfirmProfileCountryModal from '~/components/replacements/ConfirmProfileCountryModal.vue';
 import type { CountryCode, User } from '~/lib/types';
 import { goBack } from '~/lib/utils';
 import { validateImmediateReplacementForm } from '~/utils/platformAccess';
+import { resolveProfileCountryCode } from '~/utils/profileCountry';
+import {
+    clearReplacementListFilterCookies,
+    useConfirmProfileCountry,
+} from '~/composables/useConfirmProfileCountry';
 import { Form } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import {
@@ -292,6 +304,12 @@ import { Button } from '@/components/ui/button';
 const user = useState<User>('user');
 const validRoles = ['nurse', 'caregiver', 'midwife'];
 const selectedRole = ref(null);
+const {
+    showModal: showCountryModal,
+    pending: countryPending,
+    ensureProfileCountry,
+    onSelect: onCountrySelect,
+} = useConfirmProfileCountry();
 
 const roleType = computed(() => {
     return user.value.roles.find(role => validRoles.includes(role));
@@ -307,26 +325,10 @@ const { careTypes, fetchCareTypes } = useCareTypes();
 const { $toast } = useNuxtApp();
 const { sendUrgentReplacement } = useReplacements();
 const { getCitiesFomZipCode, getZipCodesFromCity } = useLocation();
-const countryCode = computed<CountryCode>(() => {
-    const country = (
-        user.value?.profile?.country
-        || user.value?.profile?.working_at
-        || 'be'
-    )
-        .toString()
-        .toLowerCase();
-    if (country === 'fr' || country === 'france') return 'fr';
-    if (
-        country === 'us'
-        || country === 'usa'
-        || country === 'etats-unis'
-        || country === 'états-unis'
-    )
-        return 'us';
-    return 'be';
-});
+const countryCode = computed<CountryCode>(() => resolveProfileCountryCode(user.value?.profile) ?? 'be');
 
-onMounted(() => {
+onMounted(async () => {
+    await ensureProfileCountry();
     if (hasMultipleValidRoles.value) {
         selectedRole.value = null;
         formData.roleType = null;
@@ -423,6 +425,15 @@ const { submit, inProgress } = useSubmit(async () => {
         return;
     }
 
+    const countryOk = await ensureProfileCountry();
+    if (!countryOk) {
+        $toast({
+            variant: 'destructive',
+            description: 'Confirmez votre pays pour publier.',
+        });
+        return;
+    }
+
     try {
         const result = await sendUrgentReplacement(formData);
         if (result === true) {
@@ -430,9 +441,8 @@ const { submit, inProgress } = useSubmit(async () => {
                 description: 'Création du remplacement rapide effectuée',
             });
 
-            setTimeout(() => {
-                navigateTo('/dashboard/replacements/me');
-            }, 2000);
+            clearReplacementListFilterCookies();
+            navigateTo('/dashboard/replacements/me');
         }
     }
     catch (err) {

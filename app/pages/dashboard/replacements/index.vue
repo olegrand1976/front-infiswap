@@ -206,6 +206,20 @@
             </div>
         </div>
 
+        <div
+            v-if="!user?.institution"
+            class="mt-4 mb-2 rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-slate-700"
+            data-testid="own-replacements-hidden-banner"
+        >
+            Vos propres annonces n’apparaissent pas ici.
+            <NuxtLink
+                to="/dashboard/replacements/me"
+                class="ml-1 font-semibold text-primary underline underline-offset-2"
+            >
+                Voir mes remplacements
+            </NuxtLink>
+        </div>
+
         <Replacement
             v-model:selected-regions="selectedRegions"
             :filters="selectedFilters"
@@ -215,6 +229,12 @@
             :display-mode="displayMode"
             :available-missions="availableMissions"
         />
+
+        <ConfirmProfileCountryModal
+            v-if="showCountryModal"
+            :pending="countryPending"
+            @select="onCountrySelect"
+        />
     </div>
 </template>
 
@@ -223,12 +243,20 @@ import { ArrowLeft, Filter, LayoutGrid, Map, Table } from 'lucide-vue-next';
 import { useCookie } from '#app';
 import { regions, departments, goBack } from '~/lib/utils';
 import Replacement from '~/components/Replacement.vue';
+import ConfirmProfileCountryModal from '~/components/replacements/ConfirmProfileCountryModal.vue';
 import type { User } from '~/lib/types';
 import { useMissions } from '~/composables/useMission';
 import { PERPAGE } from '~/lib/constants';
 import { normalizeSelectedFilters } from '~/utils/selectedFilters';
+import { useConfirmProfileCountry } from '~/composables/useConfirmProfileCountry';
 
 const user = useState<User>('user');
+const {
+    showModal: showCountryModal,
+    pending: countryPending,
+    ensureProfileCountry,
+    onSelect: onCountrySelect,
+} = useConfirmProfileCountry();
 const { allowedCountryCodes, defaultCountryCode, availableCountries } = useCountry();
 const selectedCountry = ref(
     allowedCountryCodes.value.includes(user.value.profile.country as 'be' | 'fr')
@@ -239,7 +267,8 @@ const selectedCountry = ref(
 const { getAll: getMissions, missions } = useMissions();
 const availableMissions = computed(() => missions.value.data ?? []);
 
-onMounted(() => {
+onMounted(async () => {
+    await ensureProfileCountry();
     getMissions(1, PERPAGE, { type: 'nurse' });
 });
 

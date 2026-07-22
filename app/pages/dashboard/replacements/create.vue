@@ -312,6 +312,12 @@
             Enregistrer
         </Button>
     </form>
+
+    <ConfirmProfileCountryModal
+        v-if="showCountryModal"
+        :pending="countryPending"
+        @select="onCountrySelect"
+    />
 </template>
 
 <script lang="ts" setup>
@@ -322,9 +328,15 @@ import { useReplacements } from '@/composables/useReplacements';
 import InputTagManager from '@/components/InputTagManager.vue';
 import { useCareTypes } from '@/composables/useCareTypes';
 import MultiRangeCalendar from '@/components/MultiRangeCalendar.vue';
+import ConfirmProfileCountryModal from '~/components/replacements/ConfirmProfileCountryModal.vue';
 import type { User } from '~/lib/types';
 import { goBack } from '~/lib/utils';
 import { validateCreateReplacementForm } from '~/utils/platformAccess';
+import { resolveProfileCountryCode } from '~/utils/profileCountry';
+import {
+    clearReplacementListFilterCookies,
+    useConfirmProfileCountry,
+} from '~/composables/useConfirmProfileCountry';
 
 const user = useState<User>('user');
 const { getCitiesFomZipCode, getZipCodesFromCity } = useLocation();
@@ -332,6 +344,12 @@ const { careTypes, fetchCareTypes } = useCareTypes();
 const { submitReplacement } = useReplacements();
 const router = useRouter();
 const { isInstitution } = useAuth();
+const {
+    showModal: showCountryModal,
+    pending: countryPending,
+    ensureProfileCountry,
+    onSelect: onCountrySelect,
+} = useConfirmProfileCountry();
 const validRoles = ['nurse', 'caregiver', 'midwife'];
 const selectedRole = ref(null);
 
@@ -345,19 +363,8 @@ const hasMultipleValidRoles = computed(() => {
 });
 
 const isMobile = ref(false);
-const countryCode = computed(() => {
-    const country = (
-        user.value?.profile?.country
-        || user.value?.profile?.working_at
-        || 'be'
-    )
-        .toString()
-        .toLowerCase();
-    if (country === 'fr' || country === 'france') return 'fr';
-    if (country === 'us' || country === 'usa') return 'us';
-    return 'be';
-});
-onMounted(() => {
+const countryCode = computed(() => resolveProfileCountryCode(user.value?.profile) ?? 'be');
+onMounted(async () => {
     if (import.meta.client) {
         isMobile.value = window.innerWidth <= 1024;
     }
@@ -365,6 +372,7 @@ onMounted(() => {
         router.push('/dashboard/institution');
         return;
     }
+    await ensureProfileCountry();
     if (hasMultipleValidRoles.value) {
         selectedRole.value = null;
         formData.roleType = null;
@@ -565,20 +573,20 @@ const { submit, inProgress } = useSubmit(
             return;
         }
 
+        const countryOk = await ensureProfileCountry();
+        if (!countryOk) {
+            toast.error('Confirmez votre pays pour publier.');
+            return;
+        }
+
         await submitReplacement(formData);
     },
     {
-        onSuccess: (response: { replacement?: { id?: number } } | null) => {
+        onSuccess: () => {
             toast.success('Création effectuée');
             resetForm();
-            const id = response?.replacement?.id;
-            if (id) {
-                router.push(`/dashboard/replacements/detail/${id}?boost=offer`);
-                return;
-            }
-            setTimeout(() => {
-                router.push('/dashboard/replacements/me');
-            }, 2000);
+            clearReplacementListFilterCookies();
+            router.push('/dashboard/replacements/me');
         },
     },
 );

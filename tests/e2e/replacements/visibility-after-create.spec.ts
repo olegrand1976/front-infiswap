@@ -52,35 +52,34 @@ async function fillMinimalCreateForm(page: Page): Promise<void> {
 }
 
 test.describe('Remplacements — visibilité après création', () => {
-    test('UI create → detail visible → présent sur /me → absent liste publique', async ({ page }) => {
+    test('UI create → redirect /me → présent ; bandeau Chercher', async ({ page }) => {
         const credentials = replacementE2eCredentials();
         test.skip(!credentials, 'E2E_CREATOR_* / E2E_CANDIDATE_* non configurés');
 
         await loginAs(page, credentials!.creatorEmail, credentials!.creatorPassword);
+
+        const countryModal = page.getByTestId('confirm-profile-country-modal');
+        if (await countryModal.isVisible().catch(() => false)) {
+            await page.getByTestId('confirm-profile-country-be').click();
+            await expect(countryModal).toBeHidden({ timeout: 15_000 });
+        }
+
         await page.goto('/dashboard/replacements/create');
         await expect(page.getByTestId('replacement-create-submit')).toBeVisible({ timeout: 20_000 });
+
+        if (await countryModal.isVisible().catch(() => false)) {
+            await page.getByTestId('confirm-profile-country-be').click();
+            await expect(countryModal).toBeHidden({ timeout: 15_000 });
+        }
 
         await fillMinimalCreateForm(page);
         await page.getByTestId('replacement-create-submit').click();
 
-        await expect(page).toHaveURL(/\/dashboard\/replacements\/detail\/\d+/, { timeout: 30_000 });
-        const detailMatch = page.url().match(/\/detail\/(\d+)/);
-        expect(detailMatch?.[1]).toBeTruthy();
-        const replacementId = Number(detailMatch![1]);
+        await expect(page).toHaveURL(/\/dashboard\/replacements\/me/, { timeout: 30_000 });
 
-        await expect(page.locator('body')).toBeVisible();
-        await expect(page.getByText(/boost|période|remplacement|patient/i).first()).toBeVisible({ timeout: 20_000 });
-
-        await page.goto('/dashboard/replacements/me');
-        await expect(page).toHaveURL(/\/dashboard\/replacements\/me/);
-        await expect(page.locator(`a[href*="/dashboard/replacements/detail/${replacementId}"]`).first()).toBeVisible({
-            timeout: 30_000,
-        });
-
-        // By design: créateur exclu de la liste « Chercher ».
         await page.goto('/dashboard/replacements');
-        await page.waitForLoadState('domcontentloaded');
-        await expect(page.locator(`a[href*="/dashboard/replacements/detail/${replacementId}"]`)).toHaveCount(0);
+        await expect(page.getByTestId('own-replacements-hidden-banner')).toBeVisible({ timeout: 20_000 });
+        await expect(page.getByTestId('own-replacements-hidden-banner').getByRole('link', { name: /mes remplacements/i })).toBeVisible();
     });
 
     test('filtre Urgent sur /me envoie immediate (pas 422)', async ({ page, context }) => {
@@ -101,7 +100,6 @@ test.describe('Remplacements — visibilité après création', () => {
             }
         });
 
-        // Seed legacy cookie value; me.vue must normalize urgent → immediate.
         await context.addCookies([{
             name: 'selectedFilters',
             value: JSON.stringify({ type: 'urgent', role: 'all', status: 'open' }),

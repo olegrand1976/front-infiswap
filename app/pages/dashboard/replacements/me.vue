@@ -158,6 +158,12 @@
                 :display-mode="displayMode"
             />
         </template>
+
+        <ConfirmProfileCountryModal
+            v-if="showCountryModal"
+            :pending="countryPending"
+            @select="onCountrySelect"
+        />
     </div>
 </template>
 
@@ -166,8 +172,17 @@ import { ArrowLeft, Filter, LayoutGrid, ListOrdered, Map } from 'lucide-vue-next
 import { useCookie } from '#app';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import Replacement from '~/components/Replacement.vue';
+import ConfirmProfileCountryModal from '~/components/replacements/ConfirmProfileCountryModal.vue';
 import { goBack } from '~/lib/utils';
 import { normalizeSelectedFilters } from '~/utils/selectedFilters';
+import { useConfirmProfileCountry } from '~/composables/useConfirmProfileCountry';
+
+const {
+    showModal: showCountryModal,
+    pending: countryPending,
+    ensureProfileCountry,
+    onSelect: onCountrySelect,
+} = useConfirmProfileCountry();
 
 const replacementTypeFilters = {
     all: 'Tous',
@@ -226,7 +241,8 @@ const toggleGroupByProvince = () => {
 
 const selectedType = ref('me');
 
-onMounted(() => {
+onMounted(async () => {
+    await ensureProfileCountry();
     if (filterCookies.value) {
         const normalized = normalizeSelectedFilters({
             type: filterCookies.value.type ?? 'all',
