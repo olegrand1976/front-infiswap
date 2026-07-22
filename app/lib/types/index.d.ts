@@ -738,9 +738,11 @@ export interface Institution {
     validation_date?: string | null;
     registration_source?: 'site' | 'file';
     registered_at?: string | null;
+    can_create_account?: boolean;
     histories?: InstitutionHistory[];
     email?: string | null;
     phone_number?: string | null;
+    profile?: Profile;
     referred_by?: Referrer;
     crm?: {
         contact_user_id?: number | null;

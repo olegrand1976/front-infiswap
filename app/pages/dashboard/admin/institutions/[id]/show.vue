@@ -4,6 +4,13 @@
             <template #action>
                 <div class="flex items-center gap-2">
                     <Button
+                        v-if="institution?.can_create_account"
+                        class="rounded-md"
+                        @click="navigateTo(`/dashboard/admin/institutions/${institution.id}/create-account`)"
+                    >
+                        Créer le compte
+                    </Button>
+                    <Button
                         v-if="!editMode"
                         variant="default"
                         class="rounded-md"
