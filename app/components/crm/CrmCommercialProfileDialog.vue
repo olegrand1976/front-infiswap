@@ -172,161 +172,13 @@
                         </div>
                     </section>
 
-                    <section
+                    <InstitutionAiInsightPanel
                         v-if="isInstitution && activeInstitution"
-                        class="rounded-lg border p-4 space-y-4"
-                    >
-                        <div class="flex flex-wrap items-center justify-between gap-3">
-                            <div>
-                                <h3 class="text-sm font-semibold text-primary">
-                                    Veille IA
-                                </h3>
-                                <p class="text-xs text-muted-foreground mt-0.5">
-                                    Sources web automatiques — à vérifier avant usage commercial.
-                                </p>
-                                <p
-                                    v-if="aiInsight?.generated_at"
-                                    class="text-xs text-muted-foreground mt-1"
-                                >
-                                    Dernière mise à jour : {{ formatToDMY(aiInsight.generated_at) }}
-                                </p>
-                            </div>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                class="rounded-md"
-                                :in-progress="aiRefreshing"
-                                @click="refreshAiInsight"
-                            >
-                                Mettre à jour via IA
-                            </Button>
-                        </div>
-
-                        <div
-                            v-if="aiLoading"
-                            class="flex justify-center py-8"
-                        >
-                            <RollingLoader :loading="true" />
-                        </div>
-
-                        <template v-else-if="aiInsight?.status === 'completed'">
-                            <div
-                                v-if="aiInsight.company_summary"
-                                class="space-y-1"
-                            >
-                                <h4 class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                                    Informations société
-                                </h4>
-                                <p class="text-sm leading-relaxed whitespace-pre-wrap">
-                                    {{ aiInsight.company_summary }}
-                                </p>
-                            </div>
-
-                            <div
-                                v-if="(aiInsight.news_items ?? []).length"
-                                class="space-y-2"
-                            >
-                                <h4 class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                                    Actualités & veille
-                                </h4>
-                                <ul class="space-y-2">
-                                    <li
-                                        v-for="item in aiInsight.news_items"
-                                        :key="item.url"
-                                        class="rounded-md border bg-background px-3 py-2 text-sm"
-                                    >
-                                        <div class="flex flex-wrap items-start justify-between gap-2">
-                                            <a
-                                                :href="item.url"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                class="font-medium text-primary underline"
-                                            >
-                                                {{ item.title }}
-                                            </a>
-                                            <span
-                                                v-if="item.source_name"
-                                                class="text-[10px] uppercase tracking-wide text-muted-foreground"
-                                            >
-                                                {{ item.source_name }}
-                                            </span>
-                                        </div>
-                                        <p
-                                            v-if="item.summary"
-                                            class="mt-1 text-xs text-muted-foreground leading-relaxed"
-                                        >
-                                            {{ item.summary }}
-                                        </p>
-                                    </li>
-                                </ul>
-                            </div>
-                            <p
-                                v-else-if="aiInsight.status === 'completed'"
-                                class="text-sm text-muted-foreground"
-                            >
-                                Aucune actualité trouvée.
-                            </p>
-
-                            <div
-                                v-if="(aiInsight.job_items ?? []).length"
-                                class="space-y-2"
-                            >
-                                <h4 class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                                    Offres d'emploi
-                                </h4>
-                                <ul class="space-y-2">
-                                    <li
-                                        v-for="item in aiInsight.job_items"
-                                        :key="item.url"
-                                        class="rounded-md border bg-background px-3 py-2 text-sm"
-                                    >
-                                        <div class="flex flex-wrap items-start justify-between gap-2">
-                                            <a
-                                                :href="item.url"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                class="font-medium text-primary underline"
-                                            >
-                                                {{ item.title }}
-                                            </a>
-                                            <span
-                                                v-if="item.source_name"
-                                                class="text-[10px] uppercase tracking-wide text-muted-foreground"
-                                            >
-                                                {{ item.source_name }}
-                                            </span>
-                                        </div>
-                                        <p
-                                            v-if="item.summary"
-                                            class="mt-1 text-xs text-muted-foreground leading-relaxed"
-                                        >
-                                            {{ item.summary }}
-                                        </p>
-                                    </li>
-                                </ul>
-                            </div>
-                            <p
-                                v-else-if="aiInsight.status === 'completed'"
-                                class="text-sm text-muted-foreground"
-                            >
-                                Aucune offre d'emploi trouvée.
-                            </p>
-                        </template>
-
-                        <p
-                            v-else-if="aiInsight?.status === 'failed'"
-                            class="text-sm text-destructive"
-                        >
-                            {{ aiInsight.error_message ?? 'La veille IA a échoué.' }}
-                        </p>
-
-                        <p
-                            v-else
-                            class="text-sm text-muted-foreground"
-                        >
-                            Aucune veille enregistrée. Cliquez sur « Mettre à jour via IA ».
-                        </p>
-                    </section>
+                        :insight="aiInsight"
+                        :loading="aiLoading"
+                        :refreshing="aiRefreshing"
+                        @refresh="refreshAiInsight"
+                    />
 
                     <section class="rounded-lg border p-4 space-y-3">
                         <h3 class="text-sm font-semibold text-primary">
@@ -367,6 +219,7 @@ import type { CrmInstitution, User } from '~/lib/types';
 import { formatPhoneNumber } from '~/lib/utils';
 import CrmHistoryEntryList from '@/components/crm/CrmHistoryEntryList.vue';
 import CommercialQuickActionDialog from '@/components/crm/CommercialQuickActionDialog.vue';
+import InstitutionAiInsightPanel from '@/components/crm/InstitutionAiInsightPanel.vue';
 import RollingLoader from '~/components/RollingLoader.vue';
 import { Button } from '@/components/ui/button';
 
