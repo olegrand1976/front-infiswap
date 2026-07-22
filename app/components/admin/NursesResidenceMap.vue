@@ -8,9 +8,15 @@
 </template>
 
 <script setup lang="ts">
-import type { NursesMapPoint } from '@/composables/useNursesMap';
+import type { NursesMapPoint, NursesMapPointType } from '@/composables/useNursesMap';
 import type { Circle, LayerGroup, Map as LeafletMap } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+
+export type NursesMapSelectPointPayload = {
+    type: NursesMapPointType;
+    zip: string;
+    city: string;
+};
 
 const props = defineProps<{
     points: NursesMapPoint[];
@@ -18,6 +24,10 @@ const props = defineProps<{
     countryLabel: string;
     showNurses?: boolean;
     showInstitutions?: boolean;
+}>();
+
+const emit = defineEmits<{
+    'select-point': [payload: NursesMapSelectPointPayload];
 }>();
 
 const mapEl = ref<HTMLElement | null>(null);
@@ -30,14 +40,6 @@ let nursesLayer: LayerGroup | null = null;
 let institutionsLayer: LayerGroup | null = null;
 let focusCircle: Circle | null = null;
 let focusActive = false;
-
-const escapeHtml = (value: string): string =>
-    value
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
 
 const markerRadius = (count: number): number =>
     Math.min(8 + Math.sqrt(count) * 4, 32);
@@ -61,9 +63,6 @@ const renderMarkers = async (options: { fit?: boolean } = {}) => {
             const latLng: [number, number] = [point.latitude, point.longitude];
             bounds.push(latLng);
 
-            const zip = escapeHtml(String(point.zip));
-            const city = escapeHtml(String(point.city));
-
             L.circleMarker(latLng, {
                 radius: markerRadius(point.count),
                 color: '#0f766e',
@@ -71,9 +70,13 @@ const renderMarkers = async (options: { fit?: boolean } = {}) => {
                 fillColor: '#14b8a6',
                 fillOpacity: 0.65,
             })
-                .bindPopup(
-                    `<strong>${zip} — ${city}</strong><br>${point.count} soignant${point.count > 1 ? 's' : ''}`,
-                )
+                .on('click', () => {
+                    emit('select-point', {
+                        type: 'nurses',
+                        zip: String(point.zip),
+                        city: String(point.city),
+                    });
+                })
                 .addTo(nursesLayer);
         }
     }
@@ -83,9 +86,6 @@ const renderMarkers = async (options: { fit?: boolean } = {}) => {
             const latLng: [number, number] = [point.latitude, point.longitude];
             bounds.push(latLng);
 
-            const zip = escapeHtml(String(point.zip));
-            const city = escapeHtml(String(point.city));
-
             L.circleMarker(latLng, {
                 radius: markerRadius(point.count),
                 color: '#991b1b',
@@ -93,9 +93,13 @@ const renderMarkers = async (options: { fit?: boolean } = {}) => {
                 fillColor: '#dc2626',
                 fillOpacity: 0.7,
             })
-                .bindPopup(
-                    `<strong>${zip} — ${city}</strong><br>${point.count} prospect${point.count > 1 ? 's' : ''} institution`,
-                )
+                .on('click', () => {
+                    emit('select-point', {
+                        type: 'institutions',
+                        zip: String(point.zip),
+                        city: String(point.city),
+                    });
+                })
                 .addTo(institutionsLayer);
         }
     }
