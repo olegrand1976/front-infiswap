@@ -748,6 +748,11 @@ export interface Institution {
         last_contact_date?: string | null;
         last_contact_method?: string | null;
         last_comment?: string | null;
+        nb_call?: number;
+        nb_sale?: number;
+        nb_recommandation?: number;
+        nb_meeting?: number;
+        nb_pending?: number;
     };
 }
 
