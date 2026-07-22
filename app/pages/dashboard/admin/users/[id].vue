@@ -301,7 +301,7 @@ function onUserCrmUpdated(crm: Record<string, unknown>) {
         ...user.value,
         crm: {
             ...user.value.crm,
-            id: user.value.crm?.id ?? Number(crm.id) || 0,
+            id: user.value.crm?.id ?? (Number(crm.id) || 0),
             user_id: user.value.id,
             client_type: user.value.crm?.client_type ?? 'user',
             created_at: user.value.crm?.created_at ?? '',
@@ -317,20 +317,21 @@ function onUserCrmUpdated(crm: Record<string, unknown>) {
 }
 
 async function saveContact() {
-    if (!user.value?.crm?.id) {
-        $toast({ description: 'Aucun contact CRM pour cet utilisateur.', variant: 'destructive' });
+    if (!user.value) {
         return;
     }
 
     savingContact.value = true;
     try {
-        const response = await updateCrmUser(user.value.crm.id, {
+        const crmId = user.value.crm?.id ?? 0;
+        const response = await updateCrmUser(crmId, {
             userId: user.value.id,
-            clientType: user.value.crm.client_type ?? 'user',
+            clientType: user.value.crm?.client_type ?? 'user',
             lastContactDate: tempContactDate.value || null,
             lastContactMethod: tempContactMethod.value || null,
         });
         onUserCrmUpdated({
+            id: response.crm?.id ?? crmId,
             ...(response.crm ?? {}),
             last_contact_date: tempContactDate.value,
             last_contact_method: tempContactMethod.value,

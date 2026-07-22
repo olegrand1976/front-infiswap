@@ -103,7 +103,7 @@
                 <div class="bg-white rounded-lg shadow p-6">
                     <div class="flex items-center justify-between mb-4">
                         <h2 class="text-xl font-bold">
-                            Coordonnées & suivi CRM
+                            Coordonnées
                         </h2>
                         <Button
                             v-if="editMode"
@@ -129,24 +129,6 @@
                             <label class="text-sm font-medium text-gray-500">Téléphone</label>
                             <p class="text-base">
                                 {{ institution.phone_number || institution.main_user?.phone_number || '—' }}
-                            </p>
-                        </div>
-                        <div v-if="institution.crm?.contact_user_id">
-                            <label class="text-sm font-medium text-gray-500">Date de contact</label>
-                            <p class="text-base">
-                                {{ formatContactDate(institution.crm?.last_contact_date) }}
-                            </p>
-                        </div>
-                        <div v-if="institution.crm?.contact_user_id">
-                            <label class="text-sm font-medium text-gray-500">Contacté par</label>
-                            <p class="text-base">
-                                {{ formatContactMethod(institution.crm?.last_contact_method) }}
-                            </p>
-                        </div>
-                        <div v-if="institution.crm?.contact_user_id">
-                            <label class="text-sm font-medium text-gray-500">Dernier commentaire</label>
-                            <p class="text-base whitespace-pre-wrap">
-                                {{ institution.crm?.last_comment || '—' }}
                             </p>
                         </div>
                         <div>
@@ -265,7 +247,7 @@
                         ref="followUpPanelRef"
                         :crm-user-id="institution.crm?.crm_id ?? null"
                         :user-id="institution.crm?.contact_user_id ?? null"
-                        client-type="institution"
+                        client-type="user"
                         :entity-label="institution.name"
                         :counters="institutionCrmCounters"
                         :last-contact-date="institution.crm?.last_contact_date"
@@ -275,158 +257,12 @@
                         @crm-updated="onInstitutionCrmUpdated"
                     />
 
-                    <section class="rounded-lg border p-4 space-y-4">
-                        <div class="flex flex-wrap items-center justify-between gap-3">
-                            <div>
-                                <h3 class="text-sm font-semibold text-primary">
-                                    Veille IA
-                                </h3>
-                                <p class="text-xs text-muted-foreground mt-0.5">
-                                    Sources web automatiques — à vérifier avant usage commercial.
-                                </p>
-                                <p
-                                    v-if="aiInsight?.generated_at"
-                                    class="text-xs text-muted-foreground mt-1"
-                                >
-                                    Dernière mise à jour : {{ formatToDMY(aiInsight.generated_at) }}
-                                </p>
-                            </div>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                class="rounded-md"
-                                :in-progress="aiRefreshing"
-                                @click="refreshAiInsight"
-                            >
-                                Mettre à jour via IA
-                            </Button>
-                        </div>
-
-                        <div
-                            v-if="aiLoading"
-                            class="flex justify-center py-8"
-                        >
-                            <RollingLoader :loading="true" />
-                        </div>
-
-                        <template v-else-if="aiInsight?.status === 'completed'">
-                            <div
-                                v-if="aiInsight.company_summary"
-                                class="space-y-1"
-                            >
-                                <h4 class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                                    Informations société
-                                </h4>
-                                <p class="text-sm leading-relaxed whitespace-pre-wrap">
-                                    {{ aiInsight.company_summary }}
-                                </p>
-                            </div>
-
-                            <div
-                                v-if="(aiInsight.news_items ?? []).length"
-                                class="space-y-2"
-                            >
-                                <h4 class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                                    Actualités & veille
-                                </h4>
-                                <ul class="space-y-2">
-                                    <li
-                                        v-for="item in aiInsight.news_items"
-                                        :key="item.url"
-                                        class="rounded-md border bg-background px-3 py-2 text-sm"
-                                    >
-                                        <div class="flex flex-wrap items-start justify-between gap-2">
-                                            <a
-                                                :href="item.url"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                class="font-medium text-primary underline"
-                                            >
-                                                {{ item.title }}
-                                            </a>
-                                            <span
-                                                v-if="item.source_name"
-                                                class="text-[10px] uppercase tracking-wide text-muted-foreground"
-                                            >
-                                                {{ item.source_name }}
-                                            </span>
-                                        </div>
-                                        <p
-                                            v-if="item.summary"
-                                            class="mt-1 text-xs text-muted-foreground leading-relaxed"
-                                        >
-                                            {{ item.summary }}
-                                        </p>
-                                    </li>
-                                </ul>
-                            </div>
-                            <p
-                                v-else
-                                class="text-sm text-muted-foreground"
-                            >
-                                Aucune actualité trouvée.
-                            </p>
-
-                            <div
-                                v-if="(aiInsight.job_items ?? []).length"
-                                class="space-y-2"
-                            >
-                                <h4 class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                                    Offres d'emploi
-                                </h4>
-                                <ul class="space-y-2">
-                                    <li
-                                        v-for="item in aiInsight.job_items"
-                                        :key="item.url"
-                                        class="rounded-md border bg-background px-3 py-2 text-sm"
-                                    >
-                                        <div class="flex flex-wrap items-start justify-between gap-2">
-                                            <a
-                                                :href="item.url"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                class="font-medium text-primary underline"
-                                            >
-                                                {{ item.title }}
-                                            </a>
-                                            <span
-                                                v-if="item.source_name"
-                                                class="text-[10px] uppercase tracking-wide text-muted-foreground"
-                                            >
-                                                {{ item.source_name }}
-                                            </span>
-                                        </div>
-                                        <p
-                                            v-if="item.summary"
-                                            class="mt-1 text-xs text-muted-foreground leading-relaxed"
-                                        >
-                                            {{ item.summary }}
-                                        </p>
-                                    </li>
-                                </ul>
-                            </div>
-                            <p
-                                v-else
-                                class="text-sm text-muted-foreground"
-                            >
-                                Aucune offre d'emploi trouvée.
-                            </p>
-                        </template>
-
-                        <p
-                            v-else-if="aiInsight?.status === 'failed'"
-                            class="text-sm text-destructive"
-                        >
-                            {{ aiInsight.error_message ?? 'La veille IA a échoué.' }}
-                        </p>
-
-                        <p
-                            v-else
-                            class="text-sm text-muted-foreground"
-                        >
-                            Aucune veille enregistrée. Cliquez sur « Mettre à jour via IA ».
-                        </p>
-                    </section>
+                    <InstitutionAiInsightPanel
+                        :insight="aiInsight"
+                        :loading="aiLoading"
+                        :refreshing="aiRefreshing"
+                        @refresh="refreshAiInsight"
+                    />
                 </div>
 
                 <div
@@ -662,8 +498,8 @@ import { InputIcon } from '~/components/ui/input-with-icon';
 import { Textarea } from '~/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import CrmCommercialFollowUpPanel from '@/components/crm/CrmCommercialFollowUpPanel.vue';
+import InstitutionAiInsightPanel from '@/components/crm/InstitutionAiInsightPanel.vue';
 import type { CrmFollowUpAction } from '@/components/crm/CrmCommercialFollowUpPanel.vue';
-import { formatToDMY } from '@/composables/useDate';
 
 useHead({ title: 'Détails de l\'institution' });
 
@@ -681,7 +517,7 @@ const validatingChanges = ref(false);
 const editMode = ref(route.query.edit === '1');
 const savingCrm = ref(false);
 const { get, validateInstitution, validateInstitutionChanges, rejectInstitution, forceDelete } = useInstitutions();
-const { updateCrmInstitutionContact, updateCrmUser } = useCrm();
+const { updateCrmInstitutionContact, updateCrmUser, ensureCrmInstitutionContact } = useCrm();
 const { updateInstitutionReferrer, getUserReferrer, userReferrer, referrerDisplayLabel } = useReferrer();
 const { store: storeComment } = useComment();
 const { isSuperAdmin } = useAuth();
@@ -708,11 +544,50 @@ const institutionCrmCounters = computed(() => {
     };
 });
 
-async function onFollowUpAction(type: CrmFollowUpAction) {
-    await toggleEditMode(true);
-    if (type === 'comment') {
-        // focus handled by edit mode form
+async function ensureInstitutionCrmReady() {
+    if (!institution.value) {
+        return;
     }
+    if (institution.value.crm?.contact_user_id && institution.value.crm?.crm_id) {
+        return;
+    }
+
+    const email = (institution.value.email || institution.value.main_user?.email || '').trim();
+    if (!email) {
+        return;
+    }
+
+    try {
+        const response = await ensureCrmInstitutionContact(institution.value.id);
+        institution.value = {
+            ...institution.value,
+            crm: {
+                ...(institution.value.crm ?? {}),
+                contact_user_id: response.representative_user_id ?? institution.value.crm?.contact_user_id,
+                crm_id: response.crm?.id ?? institution.value.crm?.crm_id,
+                nb_call: response.crm?.nb_call ?? institution.value.crm?.nb_call ?? 0,
+                nb_sale: response.crm?.nb_sale ?? institution.value.crm?.nb_sale ?? 0,
+                nb_recommandation: response.crm?.nb_recommandation ?? institution.value.crm?.nb_recommandation ?? 0,
+                nb_meeting: response.crm?.nb_meeting ?? institution.value.crm?.nb_meeting ?? 0,
+                nb_pending: response.crm?.nb_pending ?? institution.value.crm?.nb_pending ?? 0,
+                last_contact_date: response.crm?.last_contact_date ?? institution.value.crm?.last_contact_date,
+                last_contact_method: response.crm?.last_contact_method ?? institution.value.crm?.last_contact_method,
+                last_comment: institution.value.crm?.last_comment,
+            },
+        };
+        await followUpPanelRef.value?.reloadHistories();
+    }
+    catch (error: unknown) {
+        const message = (error as { data?: { message?: string } })?.data?.message;
+        if (message) {
+            $toast({ description: message, variant: 'destructive' });
+        }
+    }
+}
+
+async function onFollowUpAction(_type: CrmFollowUpAction) {
+    await ensureInstitutionCrmReady();
+    await toggleEditMode(true);
 }
 
 function onInstitutionCrmUpdated(crm: Record<string, unknown>) {
@@ -811,34 +686,6 @@ function populateEditForm() {
     }
 }
 
-function formatContactMethod(method?: string | null): string {
-    if (method === 'mail') {
-        return 'Mail';
-    }
-    if (method === 'phone') {
-        return 'Téléphone';
-    }
-    if (method === 'visio') {
-        return 'Visioconférence';
-    }
-
-    return method || '—';
-}
-
-function formatContactDate(value?: string | null): string {
-    if (!value) {
-        return '—';
-    }
-
-    const date = new Date(value);
-
-    if (Number.isNaN(date.getTime())) {
-        return value;
-    }
-
-    return date.toLocaleDateString('fr-BE');
-}
-
 async function toggleEditMode(enable: boolean) {
     editMode.value = enable;
 
@@ -872,7 +719,7 @@ async function saveCrmEdits() {
         if (contactUserId && crmTargetId) {
             await updateCrmUser(crmTargetId, {
                 userId: contactUserId,
-                clientType: 'institution',
+                clientType: 'user',
                 lastContactDate: editForm.last_contact_date || null,
                 lastContactMethod: editForm.last_contact_method || null,
             });
@@ -912,6 +759,7 @@ const response = await get(Number(id.value));
 institution.value = response.data;
 institutionHistories.value = response.data?.histories ?? [];
 loading.value = false;
+await ensureInstitutionCrmReady();
 await loadAiInsight();
 
 if (editMode.value) {
