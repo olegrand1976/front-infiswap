@@ -149,24 +149,25 @@
                     {{ addressHint }}
                 </p>
 
-                <div
-                    v-if="loading"
-                    class="h-[min(70vh,640px)] w-full rounded-md border border-gray-200 bg-gray-50 animate-pulse"
-                    aria-busy="true"
-                    aria-label="Chargement de la carte"
-                />
-
-                <ClientOnly v-else>
-                    <AdminNursesResidenceMap
-                        ref="mapRef"
-                        :points="points"
-                        :institution-points="institutionPoints"
-                        :country-label="countryLabel"
-                        :show-nurses="showNurses"
-                        :show-institutions="showInstitutions"
-                        @select-point="onSelectPoint"
+                <div class="relative h-[min(70vh,640px)] w-full">
+                    <div
+                        v-if="loading"
+                        class="absolute inset-0 z-10 rounded-md border border-gray-200 bg-gray-50/90 animate-pulse"
+                        aria-busy="true"
+                        aria-label="Chargement de la carte"
                     />
-                </ClientOnly>
+                    <ClientOnly>
+                        <AdminNursesResidenceMap
+                            ref="mapRef"
+                            :points="points"
+                            :institution-points="institutionPoints"
+                            :country-label="countryLabel"
+                            :show-nurses="showNurses"
+                            :show-institutions="showInstitutions"
+                            @select-point="onSelectPoint"
+                        />
+                    </ClientOnly>
+                </div>
 
                 <AdminMapZipEntitiesDialog
                     v-model:open="zipDialogOpen"
@@ -259,9 +260,12 @@ const placedInstitutions = computed(() =>
 const load = async () => {
     loading.value = true;
     error.value = null;
-    hasFocus.value = false;
     addressHint.value = null;
     addressError.value = null;
+    if (hasFocus.value) {
+        hasFocus.value = false;
+        await mapRef.value?.clearFocus();
+    }
     try {
         const data = await fetchMap(selectedCountry.value);
         points.value = data.points ?? [];
