@@ -5,8 +5,19 @@
         aria-modal="true"
         aria-labelledby="confirm-profile-country-title"
         data-testid="confirm-profile-country-modal"
+        @keydown.escape.prevent="onDismiss"
     >
-        <div class="w-full max-w-lg rounded-2xl bg-white p-6 sm:p-8 shadow-2xl border border-slate-100">
+        <div
+            class="absolute inset-0"
+            aria-hidden="true"
+            data-testid="confirm-profile-country-backdrop"
+            @click="onDismiss"
+        />
+        <div
+            class="relative w-full max-w-lg rounded-2xl bg-white p-6 sm:p-8 shadow-2xl border border-slate-100"
+            tabindex="-1"
+            @click.stop
+        >
             <h2
                 id="confirm-profile-country-title"
                 class="text-xl sm:text-2xl font-extrabold text-slate-900 text-center"
@@ -29,6 +40,18 @@
                     <span class="font-bold text-slate-900">{{ option.label }}</span>
                 </button>
             </div>
+            <button
+                type="button"
+                class="mt-6 w-full text-sm text-slate-500 hover:text-slate-800 underline underline-offset-2 disabled:opacity-60"
+                data-testid="confirm-profile-country-later"
+                :disabled="pending"
+                @click="onDismiss"
+            >
+                Plus tard
+            </button>
+            <p class="mt-2 text-center text-xs text-slate-400">
+                Sans pays, les listes restent vides et la publication est bloquée.
+            </p>
         </div>
     </div>
 </template>
@@ -43,5 +66,10 @@ defineProps<{
 
 const emit = defineEmits<{
     select: [country: ReplacementCountryCode];
+    dismiss: [];
 }>();
+
+function onDismiss(): void {
+    emit('dismiss');
+}
 </script>

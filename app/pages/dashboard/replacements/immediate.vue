@@ -272,6 +272,7 @@
             v-if="showCountryModal"
             :pending="countryPending"
             @select="onCountrySelect"
+            @dismiss="cancelCountryModal"
         />
     </div>
 </template>
@@ -309,6 +310,7 @@ const {
     pending: countryPending,
     ensureProfileCountry,
     onSelect: onCountrySelect,
+    cancel: cancelCountryModal,
 } = useConfirmProfileCountry();
 
 const roleType = computed(() => {

@@ -16,11 +16,16 @@ export function useConfirmProfileCountry() {
     let rejectPick: ((reason?: unknown) => void) | null = null;
 
     function needsConfirmation(): boolean {
-        if (user.value?.institution || user.value?.account_type === 'institution') {
+        const u = user.value;
+        if (
+            u?.institution
+            || u?.account_type === 'institution'
+            || u?.type === 'institution'
+        ) {
             return false;
         }
 
-        return needsProfileCountryConfirmation(user.value?.profile);
+        return needsProfileCountryConfirmation(u?.profile);
     }
 
     async function ensureProfileCountry(): Promise<boolean> {
@@ -103,6 +108,9 @@ export function useConfirmProfileCountry() {
     function cancel(): void {
         rejectPick?.(new Error('cancelled'));
         showModal.value = false;
+        toast.message('Pays non confirmé', {
+            description: 'Confirmez votre pays pour afficher et publier des remplacements.',
+        });
     }
 
     return {

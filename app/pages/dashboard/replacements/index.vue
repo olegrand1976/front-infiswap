@@ -234,6 +234,7 @@
             v-if="showCountryModal"
             :pending="countryPending"
             @select="onCountrySelect"
+            @dismiss="cancelCountryModal"
         />
     </div>
 </template>
@@ -257,6 +258,7 @@ const {
     pending: countryPending,
     ensureProfileCountry,
     onSelect: onCountrySelect,
+    cancel: cancelCountryModal,
 } = useConfirmProfileCountry();
 const { allowedCountryCodes, defaultCountryCode, availableCountries } = useCountry();
 const selectedCountry = ref(
@@ -268,14 +270,33 @@ const selectedCountry = ref(
 const { getAll: getMissions, missions } = useMissions();
 const availableMissions = computed(() => missions.value.data ?? []);
 
-onMounted(async () => {
-    await ensureProfileCountry();
+function syncSelectedCountryFromProfile(): void {
     const code = resolveProfileCountryCode(user.value?.profile);
     if (code && allowedCountryCodes.value.includes(code)) {
         selectedCountry.value = code;
+        return;
     }
+    if (allowedCountryCodes.value.includes(defaultCountryCode.value)) {
+        selectedCountry.value = defaultCountryCode.value;
+    }
+}
+
+onMounted(async () => {
+    await ensureProfileCountry();
+    syncSelectedCountryFromProfile();
     getMissions(1, PERPAGE, { type: 'nurse' });
 });
+
+watch(
+    () => [
+        user.value?.profile?.country,
+        user.value?.profile?.working_at,
+        allowedCountryCodes.value.join(','),
+    ],
+    () => {
+        syncSelectedCountryFromProfile();
+    },
+);
 
 const countries = availableCountries;
 
