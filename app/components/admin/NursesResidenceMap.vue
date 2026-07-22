@@ -44,6 +44,9 @@ let focusActive = false;
 const markerRadius = (count: number): number =>
     Math.min(8 + Math.sqrt(count) * 4, 32);
 
+/** Léger décalage lng pour distinguer soignants / institutions au même CP. */
+const INSTITUTION_LNG_OFFSET = 0.004;
+
 const renderMarkers = async (options: { fit?: boolean } = {}) => {
     if (!map || !nursesLayer || !institutionsLayer) {
         return;
@@ -69,6 +72,7 @@ const renderMarkers = async (options: { fit?: boolean } = {}) => {
                 weight: 1.5,
                 fillColor: '#14b8a6',
                 fillOpacity: 0.65,
+                className: 'cursor-pointer',
             })
                 .on('click', () => {
                     emit('select-point', {
@@ -83,7 +87,10 @@ const renderMarkers = async (options: { fit?: boolean } = {}) => {
 
     if (showInstitutions) {
         for (const point of props.institutionPoints) {
-            const latLng: [number, number] = [point.latitude, point.longitude];
+            const latLng: [number, number] = [
+                point.latitude,
+                point.longitude + INSTITUTION_LNG_OFFSET,
+            ];
             bounds.push(latLng);
 
             L.circleMarker(latLng, {
@@ -92,6 +99,7 @@ const renderMarkers = async (options: { fit?: boolean } = {}) => {
                 weight: 1.5,
                 fillColor: '#dc2626',
                 fillOpacity: 0.7,
+                className: 'cursor-pointer',
             })
                 .on('click', () => {
                     emit('select-point', {

@@ -242,6 +242,7 @@ const zipDialogLoading = ref(false);
 const zipDialogError = ref<string | null>(null);
 const zipNurseItems = ref<NursesMapZipNurseItem[]>([]);
 const zipInstitutionItems = ref<NursesMapZipInstitutionItem[]>([]);
+let zipListRequestId = 0;
 
 const countryLabel = computed(
     () => COUNTRY_OPTIONS.find((o) => o.value === selectedCountry.value)?.label ?? '',
@@ -327,6 +328,7 @@ const onClearFocus = async () => {
 };
 
 const onSelectPoint = async (payload: NursesMapSelectPointPayload) => {
+    const requestId = ++zipListRequestId;
     zipDialogZip.value = payload.zip;
     zipDialogCity.value = payload.city;
     zipDialogType.value = payload.type;
@@ -338,6 +340,9 @@ const onSelectPoint = async (payload: NursesMapSelectPointPayload) => {
 
     try {
         const data = await fetchZipList(selectedCountry.value, payload.zip, payload.type);
+        if (requestId !== zipListRequestId) {
+            return;
+        }
         if (data.city) {
             zipDialogCity.value = data.city;
         }
@@ -354,9 +359,14 @@ const onSelectPoint = async (payload: NursesMapSelectPointPayload) => {
             }
         }
     } catch (e) {
+        if (requestId !== zipListRequestId) {
+            return;
+        }
         zipDialogError.value = getErrorMessage(e) || 'Impossible de charger la liste.';
     } finally {
-        zipDialogLoading.value = false;
+        if (requestId === zipListRequestId) {
+            zipDialogLoading.value = false;
+        }
     }
 };
 
