@@ -1,7 +1,7 @@
 <template>
     <div
         ref="mapEl"
-        class="h-[min(70vh,640px)] w-full rounded-md border border-gray-200 bg-gray-50"
+        class="relative z-0 h-[min(70vh,640px)] w-full rounded-md border border-gray-200 bg-gray-50"
         role="img"
         :aria-label="ariaLabel"
     />
