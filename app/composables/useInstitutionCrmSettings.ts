@@ -117,61 +117,7 @@ export type CareerProgressionSeries = {
     eligible_for_promotion: boolean;
 };
 
-export type TeamSimulatorScenario = {
-    label: string;
-    amount_htva: number;
-    payment_mode: 'monthly' | 'yearly';
-    subscription_year: number;
-    count_per_month: number;
-};
-
-export type TeamSimulatorMember = {
-    depth: 1 | 2;
-    count: number;
-    avg_bc_per_month: number;
-    avg_amount: number;
-};
-
-export type TeamSimulatorPayload = {
-    viewer_grade_id?: number | null;
-    compare_next_grade?: boolean;
-    scenarios: TeamSimulatorScenario[];
-    team: TeamSimulatorMember[];
-};
-
-export type TeamSimulatorBreakdownRow = {
-    source: string;
-    type: 'direct' | 'override_l1' | 'override_l2';
-    amount_monthly: number;
-    amount_yearly: number;
-};
-
-export type TeamSimulatorResult = {
-    direct_monthly: number;
-    direct_yearly: number;
-    override_l1_monthly: number;
-    override_l1_yearly: number;
-    override_l2_monthly: number;
-    override_l2_yearly: number;
-    total_monthly: number;
-    total_yearly: number;
-    breakdown: TeamSimulatorBreakdownRow[];
-    next_grade?: {
-        grade: CommercialCareerGrade;
-        total_monthly: number;
-        total_yearly: number;
-        delta_monthly: number;
-        delta_yearly: number;
-    } | null;
-};
-
 export type InstitutionCrmSettingsSection = 'periods' | 'general' | 'grades';
-
-export type TeamSimulatorExample = {
-    description?: string;
-    payload: TeamSimulatorPayload;
-    labels?: Record<string, string>;
-};
 
 export const useInstitutionCrmSettings = () => {
     const { $apifetch } = useNuxtApp();
@@ -231,19 +177,6 @@ export const useInstitutionCrmSettings = () => {
         return response;
     }
 
-    async function calculateTeamSimulator(payload: TeamSimulatorPayload) {
-        const response = await $apifetch('api/crm/team-simulator/calculate', {
-            method: 'POST',
-            body: payload,
-        });
-        return response.data as TeamSimulatorResult;
-    }
-
-    async function getTeamSimulatorExample() {
-        const response = await $apifetch('api/crm/team-simulator/example');
-        return (response.data ?? response) as TeamSimulatorExample;
-    }
-
     async function getCommercialCareerStatus(userId: number) {
         const response = await $apifetch(`api/admin/commercials/${userId}/career-status`);
         return normalizeMyCareerStatus(response.data as Record<string, unknown>) as MyCareerStatus;
@@ -280,8 +213,6 @@ export const useInstitutionCrmSettings = () => {
         assignCareerGrade,
         assignCommercialUpline,
         getMyCareerStatus,
-        calculateTeamSimulator,
-        getTeamSimulatorExample,
         getCommercialCareerStatus,
         getCommercialCareerHistory,
         getCommercialCareerProgressionSeries,

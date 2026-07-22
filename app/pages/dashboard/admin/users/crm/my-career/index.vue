@@ -31,15 +31,6 @@
                             Mon contrat de collaboration
                         </NuxtLink>
                     </Button>
-                    <Button
-                        as-child
-                        variant="outline"
-                        class="rounded-md"
-                    >
-                        <NuxtLink to="/dashboard/admin/users/crm/team-simulator">
-                            Simulateur d'équipe
-                        </NuxtLink>
-                    </Button>
                 </div>
             </div>
         </DashboardAdminPageContent>

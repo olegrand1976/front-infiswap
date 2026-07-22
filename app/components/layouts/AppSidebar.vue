@@ -207,7 +207,7 @@
 </template>
 
 <script lang="ts" setup>
-import { BarChart3, Briefcase, ChevronRight, CircleHelp, CirclePlay, CircleUser, ClipboardList, Cog, CreditCard, Euro, FileSearch, FileText, Inbox, LayoutGrid, Link, List, Mail, MapPin, MessageSquare, Network, Plus, Power, RefreshCw, Search, ShieldAlert, ShieldCheck, ShoppingBag, Sparkles, Star, UserCheck, Users, UserSearch, Wrench } from 'lucide-vue-next';
+import { BarChart3, Briefcase, ChevronRight, CircleHelp, CirclePlay, CircleUser, ClipboardList, Cog, CreditCard, Euro, FileSearch, FileText, Inbox, LayoutGrid, Link, List, Mail, MapPin, MessageSquare, Plus, Power, RefreshCw, Search, ShieldAlert, ShieldCheck, ShoppingBag, Sparkles, Star, UserCheck, Users, UserSearch, Wrench } from 'lucide-vue-next';
 import type { FunctionalComponent } from 'vue';
 import QuickReplacementIcon from '../icons/QuickReplacementIcon.vue';
 import { useSidebar } from '../ui/sidebar';
@@ -401,18 +401,6 @@ const crmChildren = computed<NavigationItem[]>(() => [
         route: '/dashboard/admin/institution-commission-tracking',
         icon: Euro,
         visible: isSuperAdmin.value || isAdmin.value || isSaleRepresentative.value,
-    },
-    {
-        label: 'Ma carrière',
-        route: '/dashboard/admin/users/crm/my-career',
-        icon: Sparkles,
-        visible: isSuperAdmin.value || isAdmin.value || isSaleRepresentative.value || isCommunityManager.value,
-    },
-    {
-        label: 'Simulateur équipe',
-        route: '/dashboard/admin/users/crm/team-simulator',
-        icon: Network,
-        visible: isSuperAdmin.value || isAdmin.value || isSaleRepresentative.value || isCommunityManager.value,
     },
     {
         label: 'Paramètres BC institution',

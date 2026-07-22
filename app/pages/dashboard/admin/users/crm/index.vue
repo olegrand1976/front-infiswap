@@ -207,13 +207,21 @@
                     </SelectContent>
                 </Select>
                 <Button
+                    v-if="selectedCrm !== 'exUsers'"
                     class="rounded-md"
                     variant="outline"
-                    :disabled="isListLoading"
-                    @click="exportCurrentListCsv"
+                    :disabled="isListLoading || isExportingCsv"
+                    @click="openExportCsvDialog"
                 >
-                    <Download class="md:mr-2 size-4" />
-                    <span class="hidden md:inline-block">Exporter CSV</span>
+                    <Loader2
+                        v-if="isExportingCsv"
+                        class="md:mr-2 size-4 animate-spin"
+                    />
+                    <Download
+                        v-else
+                        class="md:mr-2 size-4"
+                    />
+                    <span class="hidden md:inline-block">{{ isExportingCsv ? 'Export…' : 'Exporter CSV' }}</span>
                 </Button>
                 <Button
                     class="rounded-md"
@@ -382,6 +390,59 @@
                 </DialogFooter>
             </DialogContent>
         </Dialog>
+        <Dialog v-model:open="exportCsvDialogOpen">
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Exporter CSV</DialogTitle>
+                    <DialogDescription>
+                        Choisissez le périmètre de l’export.
+                    </DialogDescription>
+                </DialogHeader>
+                <RadioGroup
+                    v-model="exportCsvScope"
+                    class="gap-3"
+                >
+                    <div class="flex items-center space-x-2">
+                        <RadioGroupItem
+                            id="crm-export-page"
+                            value="page"
+                        />
+                        <Label for="crm-export-page">Page actuelle uniquement</Label>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <RadioGroupItem
+                            id="crm-export-filtered"
+                            value="filtered"
+                        />
+                        <Label for="crm-export-filtered">Résultat filtré (toutes les pages)</Label>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <RadioGroupItem
+                            id="crm-export-all"
+                            value="all"
+                        />
+                        <Label for="crm-export-all">Tous les enregistrements</Label>
+                    </div>
+                </RadioGroup>
+                <DialogFooter>
+                    <Button
+                        variant="outline"
+                        class="rounded-md"
+                        :disabled="isExportingCsv"
+                        @click="exportCsvDialogOpen = false"
+                    >
+                        Annuler
+                    </Button>
+                    <Button
+                        class="rounded-md"
+                        :disabled="isExportingCsv"
+                        @click="confirmExportCsv"
+                    >
+                        {{ isExportingCsv ? 'Export en cours…' : 'Exporter' }}
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
         <CrmCommercialProfileDialog />
     </div>
 </template>
@@ -390,17 +451,21 @@
 import { Download, Loader2, RefreshCw, Upload } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import { InputIcon } from '~/components/ui/input-with-icon';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { PERPAGE } from '~/lib/constants';
 import { useCrm, type CrmActivityKpis } from '@/composables/useCrm';
 import CrmActivityKpiCards from '@/components/crm/CrmActivityKpiCards.vue';
 import { buildCrmCacheKey, getCrmUiState, hasCrmCacheEntry, saveCrmUiState } from '@/composables/useCrmCache';
-import type { CrmInstitution, User } from '~/lib/types';
+import type { CrmInstitution, Pagination, User } from '~/lib/types';
 import FileUpload from '~/components/ui/file-upload/FileUpload.vue';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useInstitutions } from '@/composables/useInstitution';
 import { useAuth } from '@/composables/useAuth';
+
+type CrmExportCsvScope = 'page' | 'filtered' | 'all';
 
 useHead({ title: 'Suivi infirmières' });
 
@@ -411,7 +476,7 @@ definePageMeta({
 });
 
 const route = useRoute();
-const { $toast } = useNuxtApp();
+const { $toast, $apifetch } = useNuxtApp();
 
 const pageCookie = useCookie<number>('crm_page', {
     default: () => 1,
@@ -439,6 +504,9 @@ const { canImportInstitutions } = useAuth();
 const importDialogOpen = ref(false);
 const importFile = ref<File | null>(null);
 const importing = ref(false);
+const exportCsvDialogOpen = ref(false);
+const exportCsvScope = ref<CrmExportCsvScope>('page');
+const isExportingCsv = ref(false);
 
 const perPage = ref(perPageCookie.value);
 const page = ref(pageCookie.value);
@@ -856,15 +924,97 @@ function exportUsersToCsv(rows: User[], filename: string) {
     URL.revokeObjectURL(url);
 }
 
-function exportCurrentListCsv() {
-    if (isInstitutionsTab.value) {
-        const rows = institutions.value?.data ?? [];
-        exportInstitutionsToCsv(rows, `crm-institutions-export-${new Date().toISOString().slice(0, 10)}.csv`);
+function openExportCsvDialog() {
+    exportCsvScope.value = 'page';
+    exportCsvDialogOpen.value = true;
+}
+
+function buildExportQueryParams(scope: CrmExportCsvScope): Record<string, unknown> {
+    if (scope === 'all') {
+        return buildCrmQueryParams({
+            name: null,
+            zip: null,
+            city: null,
+            country: '',
+            insurance: CRM_FILTER_ALL,
+            site: CRM_FILTER_ALL,
+            days_without_contact: CRM_FILTER_ALL,
+            registration_source: CRM_FILTER_ALL,
+        });
+    }
+
+    return buildCrmQueryParams();
+}
+
+async function fetchExportRows(scope: CrmExportCsvScope): Promise<User[] | CrmInstitution[]> {
+    if (scope === 'page') {
+        return isInstitutionsTab.value
+            ? (institutions.value?.data ?? [])
+            : (users.value?.data ?? []);
+    }
+
+    const params = buildExportQueryParams(scope);
+    const exportPerPage = 100;
+    const rows: Array<User | CrmInstitution> = [];
+    let pageNumber = 1;
+    let lastPage = 1;
+
+    do {
+        const response = isInstitutionsTab.value
+            ? await $apifetch<{ institutions: Pagination<CrmInstitution> }>('api/crm/institutions', {
+                params: {
+                    ...params,
+                    page: pageNumber,
+                    perPage: exportPerPage,
+                },
+            })
+            : await $apifetch<{ users: Pagination<User> }>('api/crm', {
+                params: {
+                    ...params,
+                    page: pageNumber,
+                    perPage: exportPerPage,
+                },
+            });
+
+        const pagination = isInstitutionsTab.value
+            ? (response as { institutions: Pagination<CrmInstitution> }).institutions
+            : (response as { users: Pagination<User> }).users;
+
+        rows.push(...(pagination.data ?? []));
+        lastPage = pagination.last_page ?? 1;
+        pageNumber += 1;
+    } while (pageNumber <= lastPage);
+
+    return rows as User[] | CrmInstitution[];
+}
+
+async function confirmExportCsv() {
+    if (isExportingCsv.value || selectedCrm.value === 'exUsers') {
         return;
     }
 
-    const rows = users.value?.data ?? [];
-    exportUsersToCsv(rows, `crm-export-${new Date().toISOString().slice(0, 10)}.csv`);
+    const scope = exportCsvScope.value;
+    const date = new Date().toISOString().slice(0, 10);
+    const prefix = isInstitutionsTab.value ? 'crm-institutions-export' : 'crm-export';
+    const filename = `${prefix}-${scope}-${date}.csv`;
+
+    isExportingCsv.value = true;
+    try {
+        const rows = await fetchExportRows(scope);
+        if (isInstitutionsTab.value) {
+            exportInstitutionsToCsv(rows as CrmInstitution[], filename);
+        }
+        else {
+            exportUsersToCsv(rows as User[], filename);
+        }
+        exportCsvDialogOpen.value = false;
+    }
+    catch {
+        $toast({ description: 'Échec de l’export CSV', variant: 'destructive' });
+    }
+    finally {
+        isExportingCsv.value = false;
+    }
 }
 
 function exportInstitutionsToCsv(rows: CrmInstitution[], filename: string) {

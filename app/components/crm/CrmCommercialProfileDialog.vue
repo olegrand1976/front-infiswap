@@ -163,8 +163,8 @@
                                 <Button
                                     size="sm"
                                     class="rounded-md"
-                                    :disabled="!commercialUserId"
-                                    @click="commercialDialogOpen = true"
+                                    :disabled="ensuringContact"
+                                    @click="openCommercialActionDialog"
                                 >
                                     Enregistrer une action
                                 </Button>
@@ -243,6 +243,7 @@ const activeCrmUserId = ref<number | null>(null);
 const commercialUserId = ref<number | null>(null);
 const commercialClientType = ref('user');
 const commercialDialogOpen = ref(false);
+const ensuringContact = ref(false);
 
 const activeUser = ref<User | null>(null);
 const activeInstitution = ref<CrmInstitution | null>(null);
@@ -376,14 +377,18 @@ const lastCommentText = computed(() => {
         ?? '';
 });
 
-async function resolveInstitutionContact(institution: CrmInstitution): Promise<CrmInstitution> {
+async function resolveInstitutionContact(institution: CrmInstitution): Promise<CrmInstitution | null> {
     if (institution.representative_user_id && institution.crm?.id) {
         return institution;
     }
 
     const email = institution.email?.trim();
     if (!email) {
-        return institution;
+        $toast({
+            description: 'Renseignez l\'e-mail de l\'institution pour créer le contact CRM.',
+            variant: 'destructive',
+        });
+        return null;
     }
 
     try {
@@ -408,8 +413,42 @@ async function resolveInstitutionContact(institution: CrmInstitution): Promise<C
             },
         };
     }
-    catch {
-        return institution;
+    catch (error: unknown) {
+        const message = (error as { data?: { message?: string } })?.data?.message;
+        $toast({
+            description: message ?? 'Impossible de créer le contact CRM.',
+            variant: 'destructive',
+        });
+        return null;
+    }
+}
+
+function applyResolvedInstitution(institution: CrmInstitution) {
+    activeInstitution.value = institution;
+    commercialUserId.value = institution.representative_user_id ?? null;
+    activeCrmUserId.value = institution.crm?.id ?? null;
+    commercialClientType.value = institution.crm?.client_type ?? 'user';
+}
+
+async function ensureActiveInstitutionContact(): Promise<boolean> {
+    if (!activeInstitution.value) {
+        return false;
+    }
+    if (activeInstitution.value.representative_user_id && activeInstitution.value.crm?.id) {
+        return true;
+    }
+
+    ensuringContact.value = true;
+    try {
+        const resolved = await resolveInstitutionContact(activeInstitution.value);
+        if (!resolved) {
+            return false;
+        }
+        applyResolvedInstitution(resolved);
+        return true;
+    }
+    finally {
+        ensuringContact.value = false;
     }
 }
 
@@ -489,11 +528,8 @@ async function initializeProfile() {
             commercialClientType.value = activeUser.value.crm?.client_type ?? 'user';
         }
         else if (isInstitution.value && profileInstitution.value) {
-            activeInstitution.value = await resolveInstitutionContact({ ...profileInstitution.value });
             activeUser.value = null;
-            commercialUserId.value = activeInstitution.value.representative_user_id ?? null;
-            activeCrmUserId.value = activeInstitution.value.crm?.id ?? null;
-            commercialClientType.value = activeInstitution.value.crm?.client_type ?? 'user';
+            applyResolvedInstitution({ ...profileInstitution.value });
             await loadAiInsight();
         }
 
@@ -504,14 +540,31 @@ async function initializeProfile() {
     }
 }
 
-function emitProfileAction(type: 'contact' | 'comment' | 'referrer') {
+async function emitProfileAction(type: 'contact' | 'comment' | 'referrer') {
     if (isUser.value && activeUser.value) {
         dispatchAction({ type, user: activeUser.value });
         return;
     }
     if (isInstitution.value && activeInstitution.value) {
+        const ready = await ensureActiveInstitutionContact();
+        if (!ready || !activeInstitution.value) {
+            return;
+        }
         dispatchAction({ type, institution: activeInstitution.value });
     }
+}
+
+async function openCommercialActionDialog() {
+    if (isInstitution.value) {
+        const ready = await ensureActiveInstitutionContact();
+        if (!ready) {
+            return;
+        }
+    }
+    if (!commercialUserId.value) {
+        return;
+    }
+    commercialDialogOpen.value = true;
 }
 
 function onCommercialUpdated(crm: Record<string, unknown>) {
