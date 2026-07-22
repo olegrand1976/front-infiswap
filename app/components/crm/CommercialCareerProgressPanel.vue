@@ -54,27 +54,15 @@
                 </div>
             </dl>
 
-            <!-- Grade initial -->
-            <div class="flex flex-wrap items-center gap-3">
-                <template v-if="needsInitialGrade">
-                    <p class="text-sm text-muted-foreground">
-                        Aucun grade de démarrage défini pour ce commercial.
-                    </p>
-                    <Button
-                        type="button"
-                        size="sm"
-                        class="rounded-md"
-                        @click="assignDialogOpen = true"
-                    >
-                        Définir le grade de démarrage
-                    </Button>
-                </template>
-                <template v-else-if="initialHistoryEntry">
-                    <span class="text-xs rounded px-2 py-1 bg-muted text-muted-foreground">
-                        Grade initial : {{ initialHistoryEntry.grade?.name ?? '—' }}
-                        le {{ formatDate(initialHistoryEntry.effective_at ?? initialHistoryEntry.created_at) }}
-                    </span>
-                </template>
+            <!-- Grade initial (lecture seule) -->
+            <div
+                v-if="initialHistoryEntry"
+                class="flex flex-wrap items-center gap-3"
+            >
+                <span class="text-xs rounded px-2 py-1 bg-muted text-muted-foreground">
+                    Grade initial : {{ initialHistoryEntry.grade?.name ?? '—' }}
+                    le {{ formatDate(initialHistoryEntry.effective_at ?? initialHistoryEntry.created_at) }}
+                </span>
             </div>
 
             <!-- Éligibilité promotion -->
@@ -227,138 +215,34 @@
                 </ol>
             </div>
         </template>
-
-        <Dialog v-model:open="assignDialogOpen">
-            <DialogContent class="max-w-md">
-                <DialogHeader>
-                    <DialogTitle>Grade de démarrage</DialogTitle>
-                    <DialogDescription>
-                        {{ commercialName }}
-                    </DialogDescription>
-                </DialogHeader>
-
-                <form
-                    class="space-y-4"
-                    @submit.prevent="submitInitialGrade"
-                >
-                    <div>
-                        <Label for="initial_career_grade_id">Grade initial</Label>
-                        <Select v-model="assignForm.career_grade_id">
-                            <SelectTrigger
-                                id="initial_career_grade_id"
-                                class="mt-1 rounded-md"
-                            >
-                                <SelectValue placeholder="Choisir un grade" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem
-                                    v-for="grade in grades"
-                                    :key="grade.id ?? grade.slug"
-                                    :value="String(grade.id ?? '')"
-                                    :disabled="!grade.id"
-                                >
-                                    {{ grade.name }}
-                                </SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-                    <div>
-                        <Label for="initial_notes">Notes (optionnel)</Label>
-                        <Textarea
-                            id="initial_notes"
-                            v-model="assignForm.notes"
-                            rows="2"
-                            class="mt-1"
-                        />
-                    </div>
-
-                    <DialogFooter>
-                        <Button
-                            type="button"
-                            variant="outline"
-                            class="rounded-md"
-                            @click="assignDialogOpen = false"
-                        >
-                            Annuler
-                        </Button>
-                        <Button
-                            type="submit"
-                            class="rounded-md"
-                            :disabled="assigning || !assignForm.career_grade_id"
-                        >
-                            Enregistrer
-                        </Button>
-                    </DialogFooter>
-                </form>
-            </DialogContent>
-        </Dialog>
     </section>
 </template>
 
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
 import { LineChart } from '@/components/ui/chart-line';
 import type {
     CareerHistoryEntry,
     CareerProgressionSeries,
-    CommercialCareerGrade,
     MyCareerStatus,
 } from '@/composables/useInstitutionCrmSettings';
 
 const props = defineProps<{
     userId: number;
     commercialName: string;
-    grades: CommercialCareerGrade[];
-    allowInitialAssignment?: boolean;
-}>();
-
-const emit = defineEmits<{
-    updated: [];
 }>();
 
 const {
     getCommercialCareerStatus,
     getCommercialCareerHistory,
     getCommercialCareerProgressionSeries,
-    assignCareerGrade,
 } = useInstitutionCrmSettings();
-const { $toast } = useNuxtApp();
 
 const loading = ref(true);
-const assigning = ref(false);
 const errorMessage = ref('');
 const status = ref<MyCareerStatus | null>(null);
 const history = ref<CareerHistoryEntry[]>([]);
 const series = ref<CareerProgressionSeries | null>(null);
-const assignDialogOpen = ref(false);
-
-const assignForm = reactive({
-    career_grade_id: '',
-    notes: '',
-});
-
-const needsInitialGrade = computed(() =>
-    props.allowInitialAssignment
-    && (!status.value?.grade || !status.value?.has_initial_assignment),
-);
 
 const initialHistoryEntry = computed(() =>
     history.value.find(entry => entry.assignment_type === 'initial') ?? null,
@@ -460,32 +344,6 @@ async function refresh() {
     }
     finally {
         loading.value = false;
-    }
-}
-
-async function submitInitialGrade() {
-    if (!assignForm.career_grade_id) return;
-
-    assigning.value = true;
-    try {
-        await assignCareerGrade(props.userId, {
-            career_grade_id: Number(assignForm.career_grade_id),
-            assignment_type: 'initial',
-            notify: true,
-            notes: assignForm.notes || null,
-        });
-        $toast({ description: 'Grade de démarrage enregistré.' });
-        assignDialogOpen.value = false;
-        assignForm.career_grade_id = '';
-        assignForm.notes = '';
-        await refresh();
-        emit('updated');
-    }
-    catch {
-        $toast({ description: 'Erreur lors de l\'assignation.', variant: 'destructive' });
-    }
-    finally {
-        assigning.value = false;
     }
 }
 
