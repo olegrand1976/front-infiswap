@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { NursesMapCountry } from '@/composables/useNursesMap';
 import NursesResidenceMap from '@/components/maps/NursesResidenceMap.vue';
-import { MapPin, UserPlus } from 'lucide-vue-next';
+import { UserPlus } from 'lucide-vue-next';
 import { useAuth } from '~/composables/useAuth';
 import { usePublicNursesMapData } from '~/composables/usePublicNursesMapData';
 
@@ -15,7 +15,7 @@ const countryLabel = computed(() =>
     countryCode.value === 'fr' ? 'France' : 'Belgique',
 );
 
-const { points, loading, error, placedCount, isEmpty } = usePublicNursesMapData(countryCode);
+const { points, loading, error, isEmpty } = usePublicNursesMapData(countryCode);
 </script>
 
 <template>
@@ -50,17 +50,6 @@ const { points, loading, error, placedCount, isEmpty } = usePublicNursesMapData(
                     Visualisez la densité du réseau InfiSwap : chaque point regroupe les
                     infirmiers et infirmières indépendants présents près de chez vous.
                     Zoomez pour explorer — sans données personnelles exposées.
-                </p>
-                <p
-                    v-if="!loading && !error && placedCount > 0"
-                    class="mt-4 inline-flex items-center gap-2 text-sm font-medium text-teal-800"
-                >
-                    <MapPin
-                        class="size-4"
-                        aria-hidden="true"
-                    />
-                    {{ placedCount }} soignant{{ placedCount > 1 ? 's' : '' }}
-                    positionné{{ placedCount > 1 ? 's' : '' }} sur la carte
                 </p>
             </div>
 
