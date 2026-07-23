@@ -433,8 +433,11 @@ export const useListResponse = (id) => {
         }
     }
 
-    async function getReplacementResponses() {
-        const response = await $apifetch(`api/replacement-responses/nurse/${id}`, { method: 'GET' });
+    async function getReplacementResponses(older = false) {
+        const response = await $apifetch(`api/replacement-responses/nurse/${id}`, {
+            method: 'GET',
+            query: { older },
+        });
         listResponse.value = response.data;
     }
 
