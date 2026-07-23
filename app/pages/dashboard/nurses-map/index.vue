@@ -12,12 +12,9 @@
                 <span class="font-medium text-foreground">{{ countryLabel }}</span>
                 (agrégation par code postal). Zoomez pour explorer —
                 les points ne sont pas cliquables.
-                <span
-                    v-if="!loading && placedCount > 0"
-                    class="text-teal-800"
-                >
-                    — {{ placedCount }} soignant{{ placedCount > 1 ? 's' : '' }}
-                </span>
+            </p>
+            <p class="text-sm text-muted-foreground">
+                Un point selon sa taille correspond à plusieurs infirmiers.
             </p>
 
             <div class="relative h-[min(70vh,560px)] w-full min-h-[360px]">
@@ -74,5 +71,5 @@ const { defaultCountryCode, COUNTRY_LABELS } = useCountry();
 const countryCode = computed((): NursesMapCountry => defaultCountryCode.value);
 const countryLabel = computed(() => COUNTRY_LABELS[countryCode.value]);
 
-const { points, loading, error, placedCount, isEmpty } = usePublicNursesMapData(countryCode);
+const { points, loading, error, isEmpty } = usePublicNursesMapData(countryCode);
 </script>

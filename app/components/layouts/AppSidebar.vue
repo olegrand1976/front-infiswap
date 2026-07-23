@@ -427,6 +427,11 @@ const nurseNavigationItems: NavigationItem[] = [
         icon: LayoutGrid,
     },
     {
+        label: 'Carte infirmières',
+        route: '/dashboard/nurses-map',
+        icon: MapPin,
+    },
+    {
         label: 'Remplacement rapide',
         route: '/dashboard/replacements/immediate',
         icon: QuickReplacementIcon,
@@ -445,11 +450,6 @@ const nurseNavigationItems: NavigationItem[] = [
         label: 'Chercher un remplacement',
         route: '/dashboard/replacements',
         icon: FileSearch,
-    },
-    {
-        label: 'Carte infirmières',
-        route: '/dashboard/nurses-map',
-        icon: MapPin,
     },
     {
         label: 'Mes réponses reçues',
@@ -703,6 +703,11 @@ const institutionNavigationItems: NavigationItem[] = [
         icon: LayoutGrid,
     },
     {
+        label: 'Carte infirmières',
+        route: '/dashboard/nurses-map',
+        icon: MapPin,
+    },
+    {
         label: 'Membres',
         route: '/dashboard/institution/members',
         icon: Users,
@@ -722,11 +727,6 @@ const institutionNavigationItems: NavigationItem[] = [
         label: 'Chercher un remplacement',
         route: '/dashboard/institution/replacements',
         icon: FileSearch,
-    },
-    {
-        label: 'Carte infirmières',
-        route: '/dashboard/nurses-map',
-        icon: MapPin,
     },
     {
         label: 'Binômes',

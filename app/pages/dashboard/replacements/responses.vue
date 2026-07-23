@@ -323,6 +323,7 @@ const { listResponse, getReplacementResponses } = useListResponse(user.value.id)
 const { changeStatus } = changeStatusReplacement();
 const nurseDialog = ref(false);
 const selectedUser = ref(null);
+const includeOlder = true;
 
 const { identifierLabel } = useCountry();
 
@@ -360,7 +361,7 @@ const handleCancel = async (responseDetail: ReplacementResponse) => {
     try {
         await changeStatus(responseDetail.id, 'pending');
         responseDetail.status = 'pending';
-        await getReplacementResponses();
+        await getReplacementResponses(includeOlder);
     }
     catch (error) {
         $toast({
@@ -419,7 +420,7 @@ const formatTimeSlot = (timeSlot: string) => {
     }
 };
 
-await getReplacementResponses();
+await getReplacementResponses(includeOlder);
 
 definePageMeta({
     layout: 'dashboard',
