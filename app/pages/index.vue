@@ -3,6 +3,7 @@
         <div class="flex flex-col">
             <HomeNewBanner />
             <HomePlatformStats />
+            <HomeNursesMapSection />
             <HomeCommunityStory />
             <div class="container mt-12">
                 <HomePlatform />

@@ -184,7 +184,7 @@
                         aria-label="Chargement de la carte"
                     />
                     <ClientOnly>
-                        <AdminNursesResidenceMap
+                        <NursesResidenceMap
                             ref="mapRef"
                             :points="points"
                             :institution-points="institutionPoints"
@@ -213,9 +213,9 @@
 
 <script setup lang="ts">
 import AdminMapZipEntitiesDialog from '@/components/admin/AdminMapZipEntitiesDialog.vue';
-import AdminNursesResidenceMap, {
+import NursesResidenceMap, {
     type NursesMapSelectPointPayload,
-} from '@/components/admin/NursesResidenceMap.vue';
+} from '@/components/maps/NursesResidenceMap.vue';
 import {
     type NursesMapCountry,
     type NursesMapPoint,

@@ -17,6 +17,11 @@ export type NursesMapResponse = {
     institution_unresolved_count: number;
 };
 
+export type PublicNursesMapResponse = {
+    points: NursesMapPoint[];
+    unresolved_count: number;
+};
+
 export type NursesMapGeocodeResult = {
     latitude: number;
     longitude: number;
@@ -49,6 +54,10 @@ export const useNursesMap = () => {
         return await $apifetch(`api/admin/nurses/map?country=${country}`);
     };
 
+    const fetchPublicMap = async (country: NursesMapCountry): Promise<PublicNursesMapResponse> => {
+        return await $apifetch(`api/public/nurses-map?country=${country}`);
+    };
+
     const geocode = async (
         query: string,
         country: NursesMapCountry,
@@ -75,5 +84,5 @@ export const useNursesMap = () => {
         return await $apifetch(`api/admin/nurses/map/zip?${params.toString()}`);
     };
 
-    return { fetchMap, geocode, fetchZipList };
+    return { fetchMap, fetchPublicMap, geocode, fetchZipList };
 };
