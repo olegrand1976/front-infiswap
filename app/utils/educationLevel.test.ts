@@ -39,6 +39,27 @@ describe('educationLevel utils', () => {
             country: 'be',
             education_level: null,
         })).toBe(false);
+
+        expect(needsEducationLevel({
+            type: 'institution',
+            roles: ['nurse'],
+            country: 'be',
+            education_level: null,
+        })).toBe(false);
+
+        expect(needsEducationLevel({
+            account_type: 'institution',
+            roles: ['nurse'],
+            country: 'be',
+            education_level: null,
+        })).toBe(false);
+
+        expect(needsEducationLevel({
+            institution: { id: 1 },
+            roles: ['nurse'],
+            country: 'be',
+            education_level: null,
+        })).toBe(false);
     });
 
     it('detects real INAMI vs temp or unavailable', () => {

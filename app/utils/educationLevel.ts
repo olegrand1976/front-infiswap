@@ -21,11 +21,21 @@ export function isBelgiumCountryCode(country?: string | null): boolean {
 }
 
 export function needsEducationLevel(user: {
+    type?: string | null;
+    account_type?: string | null;
+    institution?: unknown;
     roles?: string[] | null;
     country?: string | null;
     education_level?: string | null;
 } | null | undefined): boolean {
     if (!user) {
+        return false;
+    }
+    if (
+        user.type === 'institution'
+        || user.account_type === 'institution'
+        || user.institution
+    ) {
         return false;
     }
     const roles = user.roles ?? [];

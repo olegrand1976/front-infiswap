@@ -377,6 +377,29 @@ export const useInstitutions = () => {
         }
     }
 
+    async function createInstitutionAccount(institutionId: number, payload: Record<string, unknown>) {
+        try {
+            saving.value = true;
+            const response = await $apifetch(`api/admin/institutions/${institutionId}/create-account`, {
+                method: 'POST',
+                body: payload,
+            });
+            toast.success(response.message || 'Compte institution créé avec succès');
+            return response;
+        }
+        catch (error: any) {
+            const message = error?.data?.message
+                || error?.data?.errors?.email?.[0]
+                || error?.data?.errors?.institution?.[0]
+                || 'Erreur lors de la création du compte';
+            toast.error(message);
+            throw error;
+        }
+        finally {
+            saving.value = false;
+        }
+    }
+
     return {
         institutions,
         currentInstitution,
@@ -400,6 +423,7 @@ export const useInstitutions = () => {
         rejectInstitution,
         updateStatus,
         importInstitutions,
+        createInstitutionAccount,
     };
 };
 
