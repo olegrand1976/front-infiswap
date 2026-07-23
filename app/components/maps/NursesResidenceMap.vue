@@ -24,13 +24,20 @@ export type NursesMapSelectPointPayload = {
     city: string;
 };
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     points: NursesMapPoint[];
-    institutionPoints: NursesMapPoint[];
+    institutionPoints?: NursesMapPoint[];
     countryLabel: string;
     showNurses?: boolean;
     showInstitutions?: boolean;
-}>();
+    /** When false: zoom/pan only, no marker click / cursor pointer. */
+    clickable?: boolean;
+}>(), {
+    institutionPoints: () => [],
+    showNurses: true,
+    showInstitutions: true,
+    clickable: true,
+});
 
 const emit = defineEmits<{
     'select-point': [payload: NursesMapSelectPointPayload];
@@ -38,9 +45,13 @@ const emit = defineEmits<{
 
 const wrapperEl = ref<HTMLElement | null>(null);
 const mapEl = ref<HTMLElement | null>(null);
-const ariaLabel = computed(
-    () => `Carte soignants et prospects institutions — ${props.countryLabel}`,
-);
+const ariaLabel = computed(() => {
+    if (!props.clickable && !props.showInstitutions) {
+        return `Carte des soignants — ${props.countryLabel}`;
+    }
+
+    return `Carte soignants et prospects institutions — ${props.countryLabel}`;
+});
 
 let map: LeafletMap | null = null;
 let nursesLayer: LayerGroup | null = null;
@@ -132,22 +143,27 @@ const renderMarkers = async (options: { fit?: boolean } = {}) => {
             const latLng: [number, number] = [point.latitude, point.longitude];
             bounds.push(latLng);
 
-            L.circleMarker(latLng, {
+            const marker = L.circleMarker(latLng, {
                 radius: markerRadius(point.count),
                 color: '#0f766e',
                 weight: 1.5,
                 fillColor: '#14b8a6',
                 fillOpacity: 0.65,
-                className: 'cursor-pointer',
-            })
-                .on('click', () => {
+                interactive: props.clickable,
+                className: props.clickable ? 'cursor-pointer' : undefined,
+            });
+
+            if (props.clickable) {
+                marker.on('click', () => {
                     emit('select-point', {
                         type: 'nurses',
                         zip: String(point.zip),
                         city: String(point.city),
                     });
-                })
-                .addTo(nursesLayer);
+                });
+            }
+
+            marker.addTo(nursesLayer);
         }
     }
 
@@ -159,22 +175,27 @@ const renderMarkers = async (options: { fit?: boolean } = {}) => {
             ];
             bounds.push(latLng);
 
-            L.circleMarker(latLng, {
+            const marker = L.circleMarker(latLng, {
                 radius: markerRadius(point.count),
                 color: '#991b1b',
                 weight: 1.5,
                 fillColor: '#dc2626',
                 fillOpacity: 0.7,
-                className: 'cursor-pointer',
-            })
-                .on('click', () => {
+                interactive: props.clickable,
+                className: props.clickable ? 'cursor-pointer' : undefined,
+            });
+
+            if (props.clickable) {
+                marker.on('click', () => {
                     emit('select-point', {
                         type: 'institutions',
                         zip: String(point.zip),
                         city: String(point.city),
                     });
-                })
-                .addTo(institutionsLayer);
+                });
+            }
+
+            marker.addTo(institutionsLayer);
         }
     }
 

@@ -447,6 +447,11 @@ const nurseNavigationItems: NavigationItem[] = [
         icon: FileSearch,
     },
     {
+        label: 'Carte infirmières',
+        route: '/dashboard/nurses-map',
+        icon: MapPin,
+    },
+    {
         label: 'Mes réponses reçues',
         route: '/dashboard/replacements/responses',
         icon: Users,
@@ -717,6 +722,11 @@ const institutionNavigationItems: NavigationItem[] = [
         label: 'Chercher un remplacement',
         route: '/dashboard/institution/replacements',
         icon: FileSearch,
+    },
+    {
+        label: 'Carte infirmières',
+        route: '/dashboard/nurses-map',
+        icon: MapPin,
     },
     {
         label: 'Binômes',
