@@ -645,7 +645,43 @@
                             </div>
                         </div>
 
-                        <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
+                        <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm space-y-3">
+                            <label class="flex items-start cursor-pointer">
+                                <Checkbox
+                                    :checked="termsAccepted"
+                                    class="mt-1"
+                                    @update:checked="termsAccepted = $event"
+                                />
+                                <span class="text-sm ml-2 font-medium">
+                                    J'accepte les
+                                    <NuxtLink
+                                        to="/terms"
+                                        target="_blank"
+                                        class="text-primary underline font-semibold hover:text-primary/80"
+                                    >
+                                        Conditions Générales d'Utilisation
+                                    </NuxtLink>
+                                    <span class="text-red-500">*</span>
+                                </span>
+                            </label>
+                            <label class="flex items-start cursor-pointer">
+                                <Checkbox
+                                    :checked="privacyAccepted"
+                                    class="mt-1"
+                                    @update:checked="privacyAccepted = $event"
+                                />
+                                <span class="text-sm ml-2 font-medium">
+                                    J'accepte la
+                                    <NuxtLink
+                                        to="/privacy-security"
+                                        target="_blank"
+                                        class="text-primary underline font-semibold hover:text-primary/80"
+                                    >
+                                        Politique de protection des données
+                                    </NuxtLink>
+                                    <span class="text-red-500">*</span>
+                                </span>
+                            </label>
                             <label class="flex items-start cursor-pointer">
                                 <Checkbox
                                     :checked="charteAccepted"
@@ -1322,7 +1358,43 @@
                             </transition>
                         </div>
                     </div>
-                    <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
+                    <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm space-y-3">
+                        <label class="flex items-start cursor-pointer">
+                            <Checkbox
+                                :checked="termsAccepted"
+                                class="mt-1"
+                                @update:checked="termsAccepted = $event"
+                            />
+                            <span class="text-sm ml-2 font-medium">
+                                J'accepte les
+                                <NuxtLink
+                                    to="/terms"
+                                    target="_blank"
+                                    class="text-primary underline font-semibold hover:text-primary/80"
+                                >
+                                    Conditions Générales d'Utilisation
+                                </NuxtLink>
+                                <span class="text-red-500">*</span>
+                            </span>
+                        </label>
+                        <label class="flex items-start cursor-pointer">
+                            <Checkbox
+                                :checked="privacyAccepted"
+                                class="mt-1"
+                                @update:checked="privacyAccepted = $event"
+                            />
+                            <span class="text-sm ml-2 font-medium">
+                                J'accepte la
+                                <NuxtLink
+                                    to="/privacy-security"
+                                    target="_blank"
+                                    class="text-primary underline font-semibold hover:text-primary/80"
+                                >
+                                    Politique de protection des données
+                                </NuxtLink>
+                                <span class="text-red-500">*</span>
+                            </span>
+                        </label>
                         <label class="flex items-start cursor-pointer">
                             <Checkbox
                                 :checked="charteAccepted"
@@ -1511,6 +1583,8 @@ const { country } = useCountry();
 
 const representGroup = ref(false);
 const charteAccepted = ref(false);
+const termsAccepted = ref(false);
+const privacyAccepted = ref(false);
 
 const formData = reactive({
     lastname: '',
@@ -1580,7 +1654,7 @@ const identifierLabel = computed(() => {
 });
 
 const canSubmit = computed(() => {
-    if (!charteAccepted.value) {
+    if (!charteAccepted.value || !termsAccepted.value || !privacyAccepted.value) {
         return false;
     }
 
@@ -1635,6 +1709,8 @@ function buildRegistrationPayload() {
         zipCodes: formData.zipCodesArray.join(', '),
         cities: formData.citiesArray.join(', '),
         charteAccepted: charteAccepted.value,
+        termsAccepted: termsAccepted.value,
+        privacyAccepted: privacyAccepted.value,
         referralCode: referralCode.value ?? undefined,
     };
 }

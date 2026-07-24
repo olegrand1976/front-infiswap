@@ -7,7 +7,7 @@ export default defineNuxtConfig({
         process.env.NODE_ENV !== 'production' ? '@nuxt/eslint' : null,
         'shadcn-nuxt',
         '@nuxt/image',
-        process.env.NODE_ENV === 'production' ? 'nuxt-meta-pixel' : null,
+        // Meta Pixel: chargé uniquement après consentement marketing (useCookieConsent)
     ].filter(Boolean),
     plugins: [],
     components: ['~/components/ui', '~/components'],
@@ -60,12 +60,7 @@ export default defineNuxtConfig({
             REVERB_PORT: process.env.NUXT_PUBLIC_REVERB_PORT || '8080',
             REVERB_SCHEME: process.env.NUXT_PUBLIC_REVERB_SCHEME || 'http',
             MAINTENANCE_MODE: process.env.MAINTENANCE_MODE === 'true' || false,
-            metapixel: {
-                default: {
-                    id: '1687858552113266',
-                    pageView: '**',
-                },
-            },
+            metaPixelId: '1687858552113266',
         },
     },
 
@@ -117,15 +112,26 @@ export default defineNuxtConfig({
     gtag: {
         id: 'G-CKSFK6XYTZ',
         enabled: process.env.NODE_ENV === 'production',
+        initCommands: [
+            ['consent', 'default', {
+                ad_user_data: 'denied',
+                ad_personalization: 'denied',
+                ad_storage: 'denied',
+                analytics_storage: 'denied',
+                wait_for_update: 500,
+            }],
+        ],
     },
     gtm: {
         id: 'GTM-KFBFVVR3',
-        defer: false,
+        defer: true,
         compatibility: false,
+        // Consent Mode default denied (plugin + gtag initCommands). Tags marketing/analytics
+        // du container GTM doivent être conditionnés au consentement dans GTM Preview.
         enabled: process.env.NODE_ENV == 'production',
         debug: process.env.NODE_ENV !== 'production',
         loadScript: true,
-        enableRouterSync: true,
+        enableRouterSync: false,
         trackOnNextTick: true,
         devtools: process.env.NODE_ENV !== 'production',
     },

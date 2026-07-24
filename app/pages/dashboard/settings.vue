@@ -1515,20 +1515,34 @@
                                     @update:checked="handleChangeNotif"
                                 />
                             </div>
-                            <div class="flex justify-between items-center gap-3">
-                                <div class="flex items-center gap-1.5 min-w-0">
-                                    <Label for="digestWeekly">Résumé hebdomadaire (ma zone)</Label>
-                                    <SettingsFieldHint
-                                        :text="SETTINGS_TOOLTIPS.digestWeekly"
-                                        label="Résumé hebdomadaire (ma zone)"
+                                <div class="flex justify-between items-center gap-3">
+                                    <div class="flex items-center gap-1.5 min-w-0">
+                                        <Label for="digestWeekly">Résumé hebdomadaire (ma zone)</Label>
+                                        <SettingsFieldHint
+                                            :text="SETTINGS_TOOLTIPS.digestWeekly"
+                                            label="Résumé hebdomadaire (ma zone)"
+                                        />
+                                    </div>
+                                    <Switch
+                                        id="digestWeekly"
+                                        v-model:checked="notifDigestWeekly"
+                                        @update:checked="handleChangeNotif"
                                     />
                                 </div>
-                                <Switch
-                                    id="digestWeekly"
-                                    v-model:checked="notifDigestWeekly"
-                                    @update:checked="handleChangeNotif"
-                                />
-                            </div>
+                                <div class="flex justify-between items-center gap-3">
+                                    <div class="flex items-center gap-1.5 min-w-0">
+                                        <Label for="marketingEmails">Emails marketing & partenaires</Label>
+                                        <SettingsFieldHint
+                                            :text="SETTINGS_TOOLTIPS.marketingEmails"
+                                            label="Emails marketing & partenaires"
+                                        />
+                                    </div>
+                                    <Switch
+                                        id="marketingEmails"
+                                        v-model:checked="notifMarketingEmails"
+                                        @update:checked="handleChangeNotif"
+                                    />
+                                </div>
                             <div class="flex justify-between items-center gap-3">
                                 <div class="flex items-center gap-1.5 min-w-0">
                                     <Label for="urgentOnly">Urgences uniquement</Label>
@@ -1673,6 +1687,37 @@
                         </div>
                     </section> -->
 
+                    <section class="mt-4 shadow rounded-lg p-6 space-y-4">
+                        <h3 class="flex items-center space-x-4">
+                            <ShieldCheck class="w-6 text-gray-400" />
+                            <span class="text-lg">Données personnelles (RGPD)</span>
+                        </h3>
+                        <p class="text-sm text-gray-600">
+                            Téléchargez une copie de vos données (portabilité) ou supprimez votre compte.
+                            La suppression anonymise vos données personnelles ; InfiSwap ne revend pas vos données.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-3 sm:justify-end">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                class="border-gray-300"
+                                @click="openCookiePreferences"
+                            >
+                                Gérer les cookies
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                class="border-primary text-primary"
+                                :in-progress="isExportingData"
+                                :disabled="isExportingData"
+                                @click="exportPersonalData"
+                            >
+                                Exporter mes données
+                            </Button>
+                        </div>
+                    </section>
+
                     <section>
                         <DeleteAccountSection />
                     </section>
@@ -1696,7 +1741,8 @@ import type { User, UserSettings } from '~/lib/types';
 import { SETTINGS_TOOLTIPS } from '~/utils/settingsTooltips';
 import { EDUCATION_LEVEL_OPTIONS, educationLevelLabel, hasRealIdentifier, isBelgiumCountryCode } from '~/utils/educationLevel';
 
-const { $toast } = useNuxtApp();
+const { $toast, $apifetch } = useNuxtApp();
+const { openPreferences: openCookiePreferences } = useCookieConsent();
 
 const {
     updateUser,
@@ -1709,6 +1755,36 @@ const {
     deleteAvatar,
 } = useAuth();
 const { createPreferences, createNotifPreferences } = useAuth();
+
+const isExportingData = ref(false);
+
+async function exportPersonalData() {
+    if (!user.value?.id || isExportingData.value) {
+        return;
+    }
+
+    isExportingData.value = true;
+    try {
+        const response = await $apifetch<{ data: Record<string, unknown> }>(
+            `/api/users/${user.value.id}/data-export`,
+        );
+        const blob = new Blob([JSON.stringify(response.data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `infiswap-data-export-${user.value.id}.json`;
+        link.click();
+        URL.revokeObjectURL(url);
+        $toast({ description: 'Export téléchargé.' });
+    } catch (error) {
+        $toast({
+            variant: 'destructive',
+            description: getErrorMessage(error),
+        });
+    } finally {
+        isExportingData.value = false;
+    }
+}
 
 const user = useState<User>('user');
 const setting = JSON.parse(user.value.settings);
@@ -1966,7 +2042,8 @@ const handleChangePassword = async () => {
 
 const notifNewReplacement = ref(setting.notification?.new_replacement);
 const notifAcceptReplacement = ref(setting.notification?.replacement_accepted);
-const notifDigestWeekly = ref(setting.notification?.digest_weekly ?? true);
+const notifDigestWeekly = ref(setting.notification?.digest_weekly ?? false);
+const notifMarketingEmails = ref(setting.notification?.marketing_emails ?? false);
 const notifUrgentOnly = ref(setting.notification?.urgent_only ?? false);
 const notifSmsUrgent = ref(setting.notification?.sms_urgent ?? false);
 
@@ -1978,6 +2055,7 @@ const handleChangeNotif = async () => {
                 new_replacement: notifNewReplacement.value,
                 replacement_accepted: notifAcceptReplacement.value,
                 digest_weekly: notifDigestWeekly.value,
+                marketing_emails: notifMarketingEmails.value,
                 urgent_only: notifUrgentOnly.value,
                 sms_urgent: notifSmsUrgent.value,
             },

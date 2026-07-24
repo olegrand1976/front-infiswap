@@ -8,6 +8,9 @@
             </p>
         </template>
         <div class="max-w-7xl mx-auto p-6">
+            <div class="container md:mx-8 lg:mx-16 mx-auto font-light mb-4 text-sm text-gray-500">
+                Dernière mise à jour : 24 juillet 2026.
+            </div>
             <div class="container grid grid-cols-1 md:grid-cols-3 gap-8 font-light">
                 <ol class="space-y-4 list-decimal pl-6 mt-2">
                     <li
@@ -23,7 +26,7 @@
                 <ul class="md:col-span-2 flex flex-col space-y-4">
                     <li
                         v-for="(term, index) in terms"
-                        :id="index"
+                        :id="String(index)"
                         :key="index"
                     >
                         <h3 class="text-lg font-semibold text-gray-800">
@@ -34,11 +37,6 @@
                             v-html="term.text"
                         />
                     </li>
-                    <a
-                        href="http://"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    />
                 </ul>
             </div>
         </div>
@@ -48,7 +46,10 @@
 <script lang="ts" setup>
 useHead({
     title: 'Conditions Générales d\'Utilisation',
-    meta: [{ name: 'description', content: 'Découvrez les Conditions Générales d\'Utilisation d\'InfiSwap : accès, droits, responsabilités et protection des données.' }],
+    meta: [{
+        name: 'description',
+        content: 'CGU InfiSwap : accès, responsabilités, données personnelles, interdiction de revente des données et cession d\'entreprise.',
+    }],
 });
 
 definePageMeta({
@@ -60,9 +61,9 @@ const { scrollToSection } = useScroll();
 const terms = {
     introduction: {
         title: 'Introduction',
-        text: `Les présentes Conditions Générales d’Utilisation (ci-après « CGU ») ont pour objet de définir les modalités d’accès et d’utilisation du site <a class='text-primary font-semibold' href="https://www.infiswap.be" target="_blank" rel="noopener noreferrer">www.infiswap.com</a> (ci-après « le Site »), édité par la société :
+        text: `Les présentes Conditions Générales d’Utilisation (ci-après « CGU ») définissent les modalités d’accès et d’utilisation du site <a class='text-primary font-semibold' href="https://www.infiswap.be" target="_blank" rel="noopener noreferrer">www.infiswap.be</a> et des services associés (ci-après « le Site » / « InfiSwap »), édités par :
                 <ul class='mt-1'>
-                    <li>LL-IT Software & Computer</li>
+                    <li>LL-IT Software &amp; Computer</li>
                     <li>Rue de la Résistance, 92 / A</li>
                     <li>7131 Waudrez</li>
                     <li>TVA : BE1007132489</li>
@@ -70,63 +71,63 @@ const terms = {
     },
     acceptance: {
         title: 'Acceptation des CGU',
-        text: `L’accès et l’utilisation du Site impliquent l’acceptation sans réserve des présentes CGU par l’utilisateur. Si l’utilisateur n’accepte pas ces conditions, il lui est demandé de ne pas utiliser le Site.`,
+        text: `L’accès et l’utilisation du Site impliquent l’acceptation des présentes CGU. Lors de l’inscription, l’utilisateur accepte également la Politique de protection des données et la Charte de bonne conduite. À défaut, il lui est demandé de ne pas utiliser le Site.`,
     },
     siteObjetAndAccess: {
         title: 'Objet du Site et Accès',
-        text: `Le Site propose :
+        text: `Le Site propose notamment :
         <ul class='list-disc ml-4 md:ml-6'>
-            <li>de mise en relation entre infirmiers,</li>
-            <li>encodage de remplacement,</li>
-            <li>proposition de remplacement à effectuer,</li>
-            <li>encodage de tournée,</li>
-            <li>encodage de données patient</li>
-            <li>enregistrement de patient à la recherche d'une infirmière pour affectation vers une infirmière de sa région.</li>
+            <li>la mise en relation entre professionnels de santé ;</li>
+            <li>l’encodage et la proposition de remplacements ;</li>
+            <li>l’aide à la gestion de tournées et, le cas échéant, d’informations patients nécessaires à un remplacement ;</li>
+            <li>des services destinés aux institutions (SaaS).</li>
         </ul>
-    L’accès au Site est gratuit, sauf indication contraire indiquée sur les pages de services spécifiques. L’utilisateur s’engage à utiliser le Site conformément aux présentes CGU et aux lois en vigueur.`,
+        <p class="mt-2">Les données patients constituent des données sensibles : l’utilisateur s’engage à ne les encoder que dans le cadre strictement nécessaire au service et conformément à la déontologie et à la Politique de confidentialité.</p>
+        <p class="mt-2">L’accès au Site est gratuit, sauf services payants indiqués sur les pages concernées.</p>`,
     },
     registration: {
         title: 'Inscription et Comptes Utilisateurs',
-        text: `Pour accéder à certains services ou contenus, l’utilisateur peut être amené à créer un compte. Dans ce cas, il s’engage à fournir des informations exactes et à jour. Il est de la responsabilité de l’utilisateur de maintenir la confidentialité de ses identifiants et de son mot de passe. Toute utilisation frauduleuse de ces identifiants pourra entraîner la suspension ou la suppression du compte.`,
+        text: `L’utilisateur s’engage à fournir des informations exactes et à jour, à protéger ses identifiants, et à ne pas permettre d’accès non autorisé. Toute utilisation frauduleuse peut entraîner la suspension ou la suppression du compte.`,
     },
     intellectualProperty: {
         title: 'Propriété Intellectuelle',
-        text: `Tous les contenus présents sur le Site (textes, images, logos, graphismes, vidéos, etc.) sont la propriété exclusive de LL-IT Software & Computer ou de ses partenaires et sont protégés par le droit d’auteur. Toute reproduction, représentation, modification ou exploitation, totale ou partielle, sans l’autorisation écrite préalable de l’éditeur est strictement interdite.`,
+        text: `Tous les contenus du Site sont la propriété de LL-IT Software &amp; Computer ou de ses partenaires et sont protégés. Toute reproduction ou exploitation non autorisée est interdite.`,
     },
     userResponsibilities: {
         title: 'Responsabilités de l’Utilisateur',
-        text: `L’utilisateur s’engage à utiliser le Site de manière loyale et conforme aux lois et règlements en vigueur. Il s’engage à ne pas porter atteinte aux droits de tiers, à ne pas diffuser de contenus illicites, diffamatoires ou contraires aux bonnes mœurs, et à ne pas perturber le fonctionnement du Site (par exemple, via l’introduction de virus ou autres logiciels malveillants).`,
+        text: `L’utilisateur s’engage à une utilisation loyale, légale et respectueuse des tiers, sans contenus illicites ni atteinte au fonctionnement du Site. Il reste responsable des données qu’il encode (y compris données patients) et des autorisations nécessaires.`,
+    },
+    dataNoSale: {
+        title: 'Données personnelles — non-revente',
+        text: `L’utilisation du Site implique un traitement de données personnelles décrit dans la Politique de protection des données. <strong>InfiSwap n’autorise pas la vente, la location ou l’échange des données personnelles ou de santé à des tiers</strong> à des fins commerciales indépendantes du service. Les sous-traitants techniques et les mises en relation nécessaires au service ne constituent pas une revente de données.`,
+    },
+    companyTransfer: {
+        title: 'Cession de l’entreprise ou du service',
+        text: `En cas de fusion, cession, apport ou transfert du fonds de commerce / actifs InfiSwap, le successeur peut reprendre le traitement des données pour les <strong>mêmes finalités</strong> de service, sans vente séparée de la base de données. Les utilisateurs seront informés dans un délai raisonnable (objectif : 30 jours après closing, sous réserve des contraintes de confidentialité transactionnelle).`,
     },
     publisherResponsibilities: {
         title: 'Responsabilités de l’Éditeur',
-        text: `LL-IT Software & Computer s’efforce d’assurer l’exactitude et la disponibilité des informations diffusées sur le Site. Toutefois, l’éditeur ne saurait être tenu responsable :
-                <ul class='list-disc ml-4 md:ml-6'>
-                <li>Des interruptions ou dysfonctionnements du Site.</li>
-                <li>Des informations erronées ou obsolètes.</li>
-                <li>Des dommages directs ou indirects résultant de l’utilisation du Site.</li>
-                </ul>
-                En outre, le Site peut contenir des liens hypertextes vers des sites tiers. LL-IT Software & Computer n’exerce aucun contrôle sur ces sites et décline toute responsabilité quant à leur contenu.`,
+        text: `LL-IT s’efforce d’assurer la disponibilité du Site mais ne saurait être tenu responsable des interruptions, informations erronées, ou dommages indirects. Les liens vers des sites tiers relèvent de la responsabilité de leurs éditeurs.`,
     },
     cookies: {
         title: 'Cookies',
-        text: `Le Site utilise des cookies pour améliorer l’expérience utilisateur et réaliser des statistiques de fréquentation. L’utilisateur peut, via les paramètres de son navigateur, refuser l’installation de cookies, en étant informé que cela pourrait altérer l’accès à certaines fonctionnalités du Site.`,
+        text: `Les cookies non essentiels (mesure d’audience, publicité) sont soumis au consentement via le bandeau prévu à cet effet. Voir la Politique de protection des données.`,
     },
     personalData: {
         title: 'Données Personnelles',
-        text: `L’utilisation du Site peut impliquer la collecte et le traitement de données personnelles. Pour plus d’informations sur la gestion de ces données, veuillez consulter notre « Politique de Protection des Données Personnelles & Sécurité ». En vous inscrivant sur le Site, vous acceptez les modalités de collecte et d’utilisation de vos données telles qu’y décrites.`,
+        text: `Pour le détail des traitements, droits et contacts (y compris APD Belgique), consultez la « Politique de Protection des Données Personnelles &amp; Sécurité ».`,
     },
     modifications: {
         title: 'Modifications des CGU',
-        text: `LL-IT Software & Computer se réserve le droit de modifier à tout moment les présentes CGU. Les modifications seront publiées sur le Site et entreront en vigueur dès leur mise en ligne. Il est conseillé à l’utilisateur de consulter régulièrement cette page afin de prendre connaissance des éventuelles mises à jour.`,
+        text: `LL-IT peut modifier les présentes CGU. La version publiée sur le Site fait foi. Il est conseillé de consulter régulièrement cette page.`,
     },
     applicableLawAndJurisdiction: {
         title: 'Loi Applicable et Juridiction Compétente',
-        text: `Les présentes CGU sont régies par le droit belge. En cas de litige relatif à l’interprétation ou à l’exécution des présentes, les tribunaux compétents seront ceux du ressort de [préciser la localité].`,
+        text: `Les présentes CGU sont régies par le <strong>droit belge</strong>. En cas de litige, les tribunaux de l’arrondissement judiciaire de <strong>Charleroi (Belgique)</strong> sont compétents, sous réserve de dispositions légales impératives contraires.`,
     },
     miscellaneous: {
         title: 'Dispositions Diverses',
-        text: `Si une ou plusieurs dispositions des présentes CGU devaient être déclarées nulles ou inapplicables, les autres dispositions demeureront en vigueur.
-    L’éditeur se réserve le droit de suspendre ou de limiter l’accès à certaines parties du Site, sans préavis, pour des raisons de maintenance ou de sécurité.`,
+        text: `Si une disposition est déclarée nulle, les autres demeurent en vigueur. L’éditeur peut suspendre ou limiter l’accès pour maintenance ou sécurité.`,
     },
 };
 </script>

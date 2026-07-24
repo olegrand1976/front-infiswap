@@ -16,8 +16,9 @@
                     </DialogTitle>
                 </DialogHeader>
                 <div class="mt-8">
-                    Confirmez avec votre mot de passe. Votre compte sera supprimé et les administrateurs
-                    du site seront informés par e-mail.
+                    Confirmez avec votre mot de passe. Votre compte sera désactivé, vos données personnelles
+                    anonymisées (droit à l’effacement), et les administrateurs seront informés par e-mail.
+                    Certaines données de facturation peuvent être conservées selon les obligations légales.
                 </div>
 
                 <div class="mt-4 space-y-3">
@@ -90,7 +91,7 @@ const handleDeleteAccount = async () => {
         deleteAccountDialog.value = false;
 
         $toast({
-            description: 'Votre désinscription a été enregistrée.',
+            description: 'Votre désinscription a été enregistrée. Vos données personnelles ont été anonymisées.',
         });
 
         await router.push('/');
