@@ -3,7 +3,10 @@ import { ref, onMounted } from 'vue';
 import { loadStripe } from '@stripe/stripe-js';
 import type { PaymentDetails } from '~/composables/useSubscription';
 
-const stripePromise = loadStripe('pk_test_51QzllsGhmRlizdmdd6yvpInKXkwAjOg8Wabal5k14V89bRSyZmiU1nXLZDSLWtK8QM5LQdbFcvMagvmLdOQ1gw3k00uj5OZTOe');
+const stripePromise = loadStripe(
+    useRuntimeConfig().public.stripePublishableKey
+    || 'pk_test_51QzllsGhmRlizdmdd6yvpInKXkwAjOg8Wabal5k14V89bRSyZmiU1nXLZDSLWtK8QM5LQdbFcvMagvmLdOQ1gw3k00uj5OZTOe',
+);
 
 const elements = ref(null);
 const cardElement = ref(null);

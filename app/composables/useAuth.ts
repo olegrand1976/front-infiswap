@@ -156,8 +156,10 @@ export const useAuth = () => {
             }
 
             if (response.hash) {
-                localStorage.setItem('credentials', JSON.stringify(credentials));
                 useCookie('2fa_hash').value = response.hash;
+                if (import.meta.client) {
+                    localStorage.removeItem('credentials');
+                }
                 return;
             }
             throw createError({

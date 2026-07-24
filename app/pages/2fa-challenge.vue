@@ -161,29 +161,49 @@ import { useCookie } from '#app';
 import { getErrorMessage } from '~/lib/utils';
 import { safeLoginRedirectPath } from '~/utils/accessReturn';
 
-const { $toast } = useNuxtApp();
+const { verify2fa } = useAuth();
+const { $apifetch, $toast } = useNuxtApp();
 const route = useRoute();
-
-const { verify2fa, login } = useAuth();
-
-const resendingCode = ref(false);
-
-const resendCode = async () => {
-    resendingCode.value = true;
-
-    return login(JSON.parse(localStorage.getItem('credentials'))).then(async () => {
-        await nextTick();
-
-        $toast({
-            description: 'Un nouveau code a été envoyé.',
-        });
-
-        resendingCode.value = false;
-    });
-};
 
 const pinValue = ref<string[]>([]);
 const hash = useCookie('2fa_hash');
+const resendingCode = ref(false);
+
+onMounted(() => {
+    if (import.meta.client) {
+        localStorage.removeItem('credentials');
+    }
+});
+
+const resendCode = async () => {
+    if (!hash.value) {
+        $toast({
+            description: 'Session 2FA expirée. Reconnectez-vous.',
+        });
+        return;
+    }
+
+    resendingCode.value = true;
+
+    try {
+        await $apifetch('/api/resend-2fa', {
+            method: 'post',
+            body: { hash: hash.value },
+        });
+        await nextTick();
+        $toast({
+            description: 'Un nouveau code a été envoyé.',
+        });
+    }
+    catch {
+        $toast({
+            description: 'Impossible de renvoyer le code. Reconnectez-vous.',
+        });
+    }
+    finally {
+        resendingCode.value = false;
+    }
+};
 
 const { submit, inProgress } = useSubmit(
     async () => {

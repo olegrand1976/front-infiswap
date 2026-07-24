@@ -61,6 +61,7 @@ export default defineNuxtConfig({
             REVERB_SCHEME: process.env.NUXT_PUBLIC_REVERB_SCHEME || 'http',
             MAINTENANCE_MODE: process.env.MAINTENANCE_MODE === 'true' || false,
             metaPixelId: '1687858552113266',
+            stripePublishableKey: process.env.NUXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '',
         },
     },
 
@@ -76,6 +77,17 @@ export default defineNuxtConfig({
         '/dashboard/**': { ssr: false },
         '/acces-plan': { redirect: '/dashboard' },
         '/dashboard/subscriptions/create': { redirect: '/dashboard' },
+        '/**': {
+            headers: {
+                'X-Content-Type-Options': 'nosniff',
+                'X-Frame-Options': 'SAMEORIGIN',
+                'Referrer-Policy': 'strict-origin-when-cross-origin',
+                'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+                // Report-only CSP: tighten after monitoring violations in staging.
+                'Content-Security-Policy-Report-Only':
+                    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://js.stripe.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: wss:; frame-src https://js.stripe.com https://hooks.stripe.com; object-src 'none'; base-uri 'self'",
+            },
+        },
     },
 
     devServer: {

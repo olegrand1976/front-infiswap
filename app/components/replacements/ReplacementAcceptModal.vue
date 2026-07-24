@@ -7,6 +7,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import type { ReplacementResponse } from '~/lib/types';
 import type { ReplacementContractSignatureMode } from '~/composables/useReplacementContract';
 import { getErrorMessage } from '~/lib/utils';
+import { assertAllowedExternalRedirectUrl } from '~/utils/accessReturn';
 
 const props = defineProps<{
     open: boolean;
@@ -87,8 +88,9 @@ async function acceptWithContract() {
             includesPatientAccess: includesPatientAccess.value,
         });
 
-        if (url) {
-            window.location.assign(url);
+        const checkoutUrl = assertAllowedExternalRedirectUrl(url);
+        if (checkoutUrl) {
+            window.location.assign(checkoutUrl);
             return;
         }
 
