@@ -7,13 +7,29 @@
         >
             <div
                 v-if="loading"
-                class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3"
+                class="space-y-3"
             >
-                <Skeleton
-                    v-for="i in 6"
-                    :key="i"
-                    class="h-20 rounded-md bg-gray-200"
-                />
+                <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3">
+                    <Skeleton
+                        v-for="i in 6"
+                        :key="`kpi-a-${i}`"
+                        class="h-20 rounded-md bg-gray-200"
+                    />
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+                    <Skeleton
+                        v-for="i in 8"
+                        :key="`kpi-b-${i}`"
+                        class="h-20 rounded-md bg-gray-200"
+                    />
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <Skeleton
+                        v-for="i in 4"
+                        :key="`kpi-c-${i}`"
+                        class="h-20 rounded-md bg-gray-200"
+                    />
+                </div>
             </div>
             <template v-else>
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
@@ -40,6 +56,28 @@
                     <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
                         <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">Réponses 30 j</p>
                         <p class="text-2xl font-bold text-pink-600 tabular-nums mt-0.5">{{ responsesLast30 }}</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+                    <div
+                        v-for="kpi in peakKpiCards"
+                        :key="kpi.label"
+                        class="bg-white rounded-md border border-gray-100 shadow-sm p-3"
+                    >
+                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">{{ kpi.label }}</p>
+                        <p
+                            class="text-2xl font-bold tabular-nums mt-0.5"
+                            :class="kpi.valueClass"
+                        >
+                            {{ kpi.value }}
+                        </p>
+                        <p
+                            v-if="kpi.hint"
+                            class="text-[11px] text-gray-400 mt-0.5 tabular-nums"
+                        >
+                            {{ kpi.hint }}
+                        </p>
                     </div>
                 </div>
 
@@ -470,6 +508,78 @@ const userTotal = computed(() => reports.value.registration_statistics?.total ??
 const userLast30 = computed(() => reports.value.registration_statistics?.last_30_days ?? 0);
 const acceptedLast30 = computed(() => reports.value.accepted_replacement_statistics?.last_30_days ?? 0);
 const responsesLast30 = computed(() => reports.value.replacement_response_statistics?.last_30_days ?? 0);
+const acceptedTotal = computed(() => reports.value.accepted_replacement_statistics?.total ?? 0);
+const responsesTotal = computed(() => reports.value.replacement_response_statistics?.total ?? 0);
+
+function formatPeakDay(peak?: { count?: number; date?: string | null }) {
+    if (!peak?.date) return '—';
+    const d = new Date(`${peak.date}T00:00:00`);
+    if (Number.isNaN(d.getTime())) return peak.date;
+    return d.toLocaleDateString('fr-BE', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function formatPeakWeek(peak?: { week?: number | null; year?: number | null }) {
+    if (peak?.week == null || peak?.year == null) return '—';
+    return `S${String(peak.week).padStart(2, '0')}/${peak.year}`;
+}
+
+const peakKpiCards = computed(() => {
+    const peaks = reports.value?.peak_kpis ?? {};
+    const reg = peaks.registrations ?? {};
+    const repl = peaks.replacements ?? {};
+    const accepted = peaks.accepted_replacements ?? {};
+
+    return [
+        {
+            label: 'Max inscrits / j',
+            value: reg.max_day?.count ?? 0,
+            hint: formatPeakDay(reg.max_day),
+            valueClass: 'text-primary',
+        },
+        {
+            label: 'Max inscrits / sem.',
+            value: reg.max_week?.count ?? 0,
+            hint: formatPeakWeek(reg.max_week),
+            valueClass: 'text-primary',
+        },
+        {
+            label: 'Max rempl. créés / j',
+            value: repl.max_day?.count ?? 0,
+            hint: formatPeakDay(repl.max_day),
+            valueClass: 'text-indigo-600',
+        },
+        {
+            label: 'Max rempl. créés / sem.',
+            value: repl.max_week?.count ?? 0,
+            hint: formatPeakWeek(repl.max_week),
+            valueClass: 'text-indigo-600',
+        },
+        {
+            label: 'Max rempl. acceptés / j',
+            value: accepted.max_day?.count ?? 0,
+            hint: formatPeakDay(accepted.max_day),
+            valueClass: 'text-success',
+        },
+        {
+            label: 'Max rempl. acceptés / sem.',
+            value: accepted.max_week?.count ?? 0,
+            hint: formatPeakWeek(accepted.max_week),
+            valueClass: 'text-success',
+        },
+        {
+            label: 'Rempl. acceptés',
+            value: acceptedTotal.value,
+            hint: null,
+            valueClass: 'text-indigo-600',
+        },
+        {
+            label: 'Réponses postées',
+            value: responsesTotal.value,
+            hint: null,
+            valueClass: 'text-pink-600',
+        },
+    ];
+});
 
 const userByProvince = computed(() => {
     const userByProvinces = reports.value?.registration_statistics?.group_by_province ?? [];
