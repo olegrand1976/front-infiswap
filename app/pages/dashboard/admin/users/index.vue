@@ -107,7 +107,7 @@ definePageMeta({
     layout: 'dashboard',
     middleware: ['admin'],
 });
-const { users, isSuperAdmin, isManager, isDeveloper, count, getUsers, softDelete, resendEmailVerification, validate, edit, isCollaborator } = useAuth();
+const { users, isSuperAdmin, isManager, isDeveloper, count, getUsers, forceDelete, resendEmailVerification, validate, edit, isCollaborator } = useAuth();
 const pageCookie = useCookie<number>('admin_users_page');
 const perPageCookie = useCookie<number>('admin_users_per_page');
 const page = ref(pageCookie.value || 1);
@@ -463,13 +463,8 @@ const handleEdit = (user: User) => {
 const handleDelete = async (user: User) => {
     selectedUser.value = user;
 
-    return await softDelete(selectedUser.value.id).then(async () => {
-        $toast({
-            description: 'Utilisateur supprimé avec succès',
-        });
-
-        await getUsers(page.value, perPage.value);
-    });
+    await forceDelete(selectedUser.value.id);
+    await getUsers(page.value, perPage.value);
 };
 
 const validateEmail = async (id: number) => {
