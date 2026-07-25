@@ -14,7 +14,8 @@
 
         <div class="mt-6 mb-12 max-w-xl">
             <p class="text-gray-600 mb-4">
-                Vous pouvez supprimer définitivement votre compte utilisateur. Cette action est irréversible pour votre accès à la plateforme.
+            Vous pouvez supprimer votre compte. Cette action désactive l’accès et anonymise vos données personnelles
+            (sous réserve des obligations légales de conservation, ex. facturation).
             </p>
             <DeleteAccountSection />
         </div>

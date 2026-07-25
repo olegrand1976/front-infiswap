@@ -175,7 +175,10 @@
                             </div>
                         </div>
                     </h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                    <div
+                        v-if="isCardMode"
+                        class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4"
+                    >
                         <template
                             v-for="item in topItems"
                             :key="`top-${item.record_type}-${item.id}`"
@@ -195,6 +198,32 @@
                             />
                         </template>
                     </div>
+                    <template v-else>
+                        <ReplacementTable
+                            v-if="topReplacementItems.length > 0"
+                            :replacements="topReplacementItems"
+                            :type="props.type"
+                            :user-id="user.id"
+                            :group-members="groupMembers"
+                            :highlighted-zip-codes="isSubmitted ? formData.postalCodeTags : []"
+                            :highlighted-cities="isSubmitted ? formData.cityTags : []"
+                            @show-user-info="handleShowInfoUser"
+                            @show-periods="handleShowPeriods"
+                            @open-edit="openEditDialog"
+                            @select-replacement="selectReplacement"
+                        />
+                        <Table v-if="topMissionItems.length > 0">
+                            <TableBody>
+                                <MissionTable
+                                    v-for="mission in topMissionItems"
+                                    :key="`top-mission-${mission.id}`"
+                                    :mission="mission"
+                                    :type="props.type"
+                                    :grid-class="gridClass"
+                                />
+                            </TableBody>
+                        </Table>
+                    </template>
                 </div>
             </template>
 
@@ -585,6 +614,14 @@ const topItems = computed<MergedItem[]>(() => {
         currentItems.value.filter(item => isTopSectionItem(item)),
     );
 });
+
+const topReplacementItems = computed<MergedItem[]>(() =>
+    topItems.value.filter(item => item.record_type === 'replacement'),
+);
+
+const topMissionItems = computed<MergedItem[]>(() =>
+    topItems.value.filter(item => isMission(item)),
+);
 
 const replacementItems = computed<MergedItem[]>(() => {
     const replacements = currentItems.value.filter(item => item.record_type === 'replacement');

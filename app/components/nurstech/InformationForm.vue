@@ -61,16 +61,10 @@
                             />
                         </div>
 
-                        <!-- <div class="border border-gray-300 rounded px-6 py-4 w-[450px]">
-                            <input
-                                id="captcha"
-                                type="checkbox"
-                            >
-                            <label
-                                for="captcha"
-                                class="ml-2 text-sm"
-                            >I’m not a robot</label>
-                        </div> -->
+                        <SharedPartnerShareConsent
+                            v-model="contact.partner_share_consent"
+                            partner-name="NursTech"
+                        />
 
                         <div class="w-full">
                             <Button
@@ -114,6 +108,7 @@ const contact = reactive({
     phone: '',
     description: '',
     captcha: false,
+    partner_share_consent: false,
 });
 
 const { submitContact } = useService();
@@ -128,6 +123,15 @@ onMounted(() => {
 
 const { submit, inProgress } = useSubmit(async () => {
     try {
+        if (!contact.partner_share_consent) {
+            $toast({
+                description: 'Veuillez accepter la transmission de vos coordonnées au partenaire pour envoyer la demande.',
+                status: 'error',
+                variant: 'destructive',
+            });
+            return;
+        }
+
         await submitContact(contact);
         trackPartnerFormSubmit('nurstech', 'landing_information_form');
 
@@ -141,6 +145,7 @@ const { submit, inProgress } = useSubmit(async () => {
             contact.phone = '';
             contact.description = '';
             contact.captcha = false;
+            contact.partner_share_consent = false;
         }, 1500);
     }
     catch (error) {

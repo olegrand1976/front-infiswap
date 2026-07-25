@@ -5,6 +5,9 @@
             Mentions Légales
         </template>
         <div class="max-w-7xl mx-auto p-6">
+            <div class="container md:mx-8 lg:mx-16 mx-auto font-light mb-4 text-sm text-gray-500">
+                Dernière mise à jour : 24 juillet 2026.
+            </div>
             <div class="container grid grid-cols-1 md:grid-cols-3 gap-8 font-light">
                 <ol class="space-y-4 list-decimal pl-6 mt-2">
                     <li
@@ -20,7 +23,7 @@
                 <ul class="md:col-span-2 flex flex-col space-y-4">
                     <li
                         v-for="(item, index) in legalNotices"
-                        :id="index"
+                        :id="String(index)"
                         :key="index"
                     >
                         <h3 class="text-lg font-semibold text-gray-800">
@@ -31,11 +34,6 @@
                             v-html="item.text"
                         />
                     </li>
-                    <a
-                        href="http://"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    />
                 </ul>
             </div>
         </div>
@@ -44,8 +42,11 @@
 
 <script lang="ts" setup>
 useHead({
-    title: 'Conditions Générales d\'Utilisation',
-    meta: [{ name: 'description', content: 'Découvrez les Conditions Générales d\'Utilisation d\'InfiSwap : accès, droits, responsabilités et protection des données.' }],
+    title: 'Mentions Légales',
+    meta: [{
+        name: 'description',
+        content: 'Mentions légales InfiSwap : éditeur LL-IT Software & Computer, hébergement GCP, données personnelles (RGPD) et contact.',
+    }],
 });
 
 definePageMeta({
@@ -57,14 +58,9 @@ const { scrollToSection } = useScroll();
 const legalNotices = {
     siteEditor: {
         title: 'Éditeur du Site',
-        text: `Le présent site, accessible à l’adresse <a class='text-primary font-semibold' href="https://www.infiswap.be" target="_blank" rel="noopener noreferrer">www.infiswap.be</a>, est édité par la société :
+        text: `Le présent site, accessible à l’adresse <a class='text-primary font-semibold' href="https://www.infiswap.be" target="_blank" rel="noopener noreferrer">www.infiswap.be</a>, est édité par :
                 <ul class='mt-1'>
-                    <li><a
-                        class="text-primary"
-                        href="https://ll-it-sc.be/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >LL-IT Software & Computer</a></li>
+                    <li><a class="text-primary" href="https://ll-it-sc.be/" target="_blank" rel="noopener noreferrer">LL-IT Software &amp; Computer</a></li>
                     <li>Rue de la Résistance, 92 / A</li>
                     <li>7131 Waudrez</li>
                     <li>TVA : BE1007132489</li>
@@ -72,52 +68,49 @@ const legalNotices = {
     },
     publicationDirector: {
         title: 'Directeur de Publication',
-        text: `Pour toute question concernant le contenu du site, merci de contacter le directeur de la publication à l’adresse suivante :
+        text: `Pour toute question concernant le contenu du site :
                 <a href="mailto:info@infiswap.be" class='text-primary font-semibold'>info@infiswap.be</a>.`,
     },
     hosting: {
         title: 'Hébergement',
-        text: `Le site est hébergé par :
+        text: `Le Site et l’API sont hébergés sur l’infrastructure <strong>Google Cloud Platform (GCP)</strong> (Cloud Run / services associés), opérée sous la responsabilité de LL-IT Software &amp; Computer.
                 <ul class='mt-1'>
-                    <li><strong>OVH France</strong></li>
-                    <li>2 rue Kellermann, 59100 Roubaix, France</li>
-                    <li>Téléphone : +33 9 72 10 10 07</li>
+                    <li>Google Cloud EMEA Limited (et affiliés Google Cloud)</li>
+                    <li>Coordonnées : voir documentation Google Cloud — région(s) de déploiement configurées pour InfiSwap</li>
                 </ul>`,
     },
     intellectualProperty: {
         title: 'Propriété Intellectuelle',
-        text: `L’ensemble des contenus (textes, images, graphismes, logos, icônes, sons, vidéos, etc.) présents sur ce Site est protégé par le droit d’auteur et constitue la propriété exclusive de <a
-                        class="text-primary"
-                        href="https://ll-it-sc.be/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >LL-IT Software & Computer</a> ou de ses partenaires. Toute reproduction, représentation, modification, publication, adaptation de tout ou partie des éléments du Site, quel que soit le moyen ou le procédé utilisé, est interdite, sauf autorisation écrite préalable de LL-IT Software & Computer.`,
+        text: `L’ensemble des contenus présents sur ce Site est protégé par le droit d’auteur et constitue la propriété exclusive de
+                    <a class="text-primary" href="https://ll-it-sc.be/" target="_blank" rel="noopener noreferrer">LL-IT Software &amp; Computer</a>
+                    ou de ses partenaires. Toute reproduction non autorisée est interdite.`,
     },
     liability: {
         title: 'Responsabilité',
-        text: `<a
-                        class="text-primary"
-                        href="https://ll-it-sc.be/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >LL-IT Software & Computer</a> s’efforce de fournir sur le Site des informations précises et à jour. Cependant, il ne saurait garantir l’exactitude, la complétude ou l’actualité des informations diffusées. En conséquence, l’utilisateur reconnaît utiliser ces informations sous sa responsabilité exclusive. En aucun cas, LL-IT Software & Computer ne pourra être tenu responsable des dommages directs ou indirects résultant de l’accès ou de l’utilisation du Site.`,
+        text: `<a class="text-primary" href="https://ll-it-sc.be/" target="_blank" rel="noopener noreferrer">LL-IT Software &amp; Computer</a>
+                    s’efforce de fournir des informations exactes. L’utilisateur utilise le Site sous sa responsabilité. LL-IT ne pourra être tenu responsable des dommages directs ou indirects résultant de l’accès ou de l’utilisation du Site.`,
     },
     hyperlinks: {
         title: 'Liens Hypertextes',
-        text: `Le Site peut contenir des liens vers d’autres sites présents sur le réseau Internet. LL-IT Software & Computer n’exerce aucun contrôle sur ces sites et ne saurait, en aucun cas, être responsable de leur contenu ou de leur politique de confidentialité.`,
+        text: `Le Site peut contenir des liens vers d’autres sites. LL-IT n’exerce aucun contrôle sur ces sites et décline toute responsabilité quant à leur contenu ou leur politique de confidentialité.`,
     },
     personalData: {
         title: 'Données Personnelles',
-        text: `Les informations recueillies sur ce Site (via formulaires de contact ou inscriptions) sont destinées exclusivement à LL-IT Software & Computer. Conformément à la loi « Informatique et Libertés » du 6 janvier 1978 modifiée, l’utilisateur dispose d’un droit d’accès, de modification, de rectification et de suppression des données le concernant. Pour exercer ce droit, l’utilisateur est invité à contacter l’éditeur par mail à l’adresse :
-                <a href="mailto:info@infiswap.be" class='text-primary font-semibold'>info@infiswap.be</a>.`,
+        text: `Les traitements de données personnelles sont décrits dans la
+                <a href="/privacy-security" class="text-primary font-semibold">Politique de protection des données</a>,
+                conformément au <strong>RGPD</strong> et au droit belge. Contact :
+                <a href="mailto:info@infiswap.be" class='text-primary font-semibold'>info@infiswap.be</a>.
+                Réclamation possible auprès de l’Autorité de protection des données (Belgique) :
+                <a href="https://www.autoriteprotectiondonnees.be" class="text-primary" target="_blank" rel="noopener noreferrer">autoriteprotectiondonnees.be</a>.
+                <p class="mt-2"><strong>InfiSwap ne revend pas</strong> les données personnelles à des tiers à des fins commerciales indépendantes du service.</p>`,
     },
     cookies: {
         title: 'Cookies',
-        text: `Le Site peut utiliser des cookies afin d’améliorer l’expérience utilisateur. L’utilisateur peut configurer son navigateur pour refuser l’installation de cookies, sachant que cette modification pourrait altérer l’accès à certaines fonctionnalités du Site.`,
+        text: `Les cookies non essentiels sont soumis au consentement via le bandeau prévu sur le Site. Voir la politique de confidentialité.`,
     },
     applicableLaw: {
         title: 'Loi Applicable et Juridiction Compétente',
-        text: `Les présentes mentions légales sont régies par le droit belge. En cas de litige relatif à l’interprétation ou à l’exécution des présentes, les tribunaux compétents seront ceux de Charleroi (Belgique).`,
+        text: `Les présentes mentions légales sont régies par le droit belge. En cas de litige, les tribunaux de Charleroi (Belgique) sont compétents.`,
     },
 };
 </script>

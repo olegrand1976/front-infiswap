@@ -222,6 +222,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/compone
 import { Button } from '@/components/ui/button';
 import ReplacementBoostStars from '@/components/replacements/ReplacementBoostStars.vue';
 import { isReplacementActivelyBoosted } from '~/lib/replacementBoost';
+import { assertAllowedExternalRedirectUrl } from '~/utils/accessReturn';
 import type { Replacement } from '~/lib/types';
 
 const open = defineModel<boolean>('open', { default: false });
@@ -369,7 +370,7 @@ const confirmBoost = async () => {
     paying.value = true;
     try {
         const response = await boostReplacement(id, planId);
-        const checkoutUrl = response?.url;
+        const checkoutUrl = assertAllowedExternalRedirectUrl(response?.url);
         if (checkoutUrl) {
             window.location.assign(checkoutUrl);
             return;

@@ -207,7 +207,7 @@
 </template>
 
 <script lang="ts" setup>
-import { BarChart3, Briefcase, ChevronRight, CircleHelp, CirclePlay, CircleUser, ClipboardList, Cog, CreditCard, Euro, FileSearch, FileText, Inbox, LayoutGrid, Link, List, Mail, MapPin, MessageSquare, Plus, Power, RefreshCw, Search, ShieldAlert, ShieldCheck, ShoppingBag, Sparkles, Star, UserCheck, Users, UserSearch, Wrench } from 'lucide-vue-next';
+import { BarChart3, Briefcase, ChevronRight, CircleHelp, CirclePlay, CircleUser, ClipboardList, Cog, CreditCard, Euro, FileSearch, FileText, Inbox, LayoutGrid, Link, List, Mail, MapPin, MessageSquare, Plus, Power, RefreshCw, Search, ShieldAlert, ShieldCheck, ShoppingBag, Sparkles, Star, UserCheck, Users, UserSearch, Wrench, IdCard } from 'lucide-vue-next';
 import type { FunctionalComponent } from 'vue';
 import QuickReplacementIcon from '../icons/QuickReplacementIcon.vue';
 import { useSidebar } from '../ui/sidebar';
@@ -685,6 +685,12 @@ const adminNavigationSections = computed<NavigationSection[]>(() => [
                 label: 'AI - Configuration',
                 route: '/dashboard/admin/ai-settings',
                 icon: Sparkles,
+                visible: isSuperAdmin.value,
+            },
+            {
+                label: 'INAMI / CoBRHA',
+                route: '/dashboard/admin/inami-settings',
+                icon: IdCard,
                 visible: isSuperAdmin.value,
             },
             {

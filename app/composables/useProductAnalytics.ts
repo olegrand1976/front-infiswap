@@ -34,9 +34,14 @@ type ProductEventName =
 
 export function useProductAnalytics() {
     const { gtag } = useGtag();
+    const { hasAnalyticsConsent } = useCookieConsent();
 
     function trackEvent(eventName: ProductEventName, params?: Record<string, string | number | boolean>) {
         if (import.meta.server) {
+            return;
+        }
+
+        if (!hasAnalyticsConsent()) {
             return;
         }
 

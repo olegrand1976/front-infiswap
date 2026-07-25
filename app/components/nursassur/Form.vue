@@ -60,6 +60,13 @@
                         class="w-full border border-gray-300 rounded text-sm p-2 focus:outline-none focus:ring-1 focus:ring-primary mt-1.5"
                     />
                 </div>
+
+                <SharedPartnerShareConsent
+                    v-model="contact.partner_share_consent"
+                    partner-name="NursAssur"
+                    class="mt-4"
+                />
+
                 <div class="flex flex-col sm:flex-row justify-end gap-3 mt-4">
                     <button
                         class="px-4 py-2 bg-gray-200 text-gray-700 text-sm rounded hover:bg-gray-300 transition"
@@ -127,6 +134,12 @@
                     />
                 </div>
 
+                <SharedPartnerShareConsent
+                    v-model="partnerShareConsent"
+                    partner-name="NursAssur"
+                    class="mb-4"
+                />
+
                 <p class="text-center text-[0.6rem] text-gray-500 mb-4">
                     Ce formulaire vous permet de contacter directement les responsables afin de bénéficier de ce service personnalisé.
                 </p>
@@ -146,7 +159,7 @@
                         type="submit"
                     >
                         Nous contacter
-                    </button>
+                    </Button>
                 </div>
             </form>
         </div>
@@ -174,6 +187,8 @@ const form = ref({
     description: '',
 });
 
+const partnerShareConsent = ref(false);
+
 const contact = reactive({
     product: 'NursAssur',
     name: '',
@@ -181,6 +196,7 @@ const contact = reactive({
     phone: '',
     description: '',
     captcha: false,
+    partner_share_consent: false,
 });
 
 function prefillFromUser() {
@@ -193,6 +209,21 @@ function prefillFromUser() {
     contact.phone = user.value.phone_number ?? '';
 }
 
+function assertConsent(): boolean {
+    const ok = isLoggedIn.value ? partnerShareConsent.value : contact.partner_share_consent;
+    if (ok) {
+        return true;
+    }
+
+    $toast({
+        description: 'Veuillez accepter la transmission de vos coordonnées au partenaire pour envoyer la demande.',
+        status: 'error',
+        variant: 'destructive',
+    });
+
+    return false;
+}
+
 function buildLoggedInPayload() {
     prefillFromUser();
 
@@ -202,6 +233,7 @@ function buildLoggedInPayload() {
         email: contact.email,
         phone: contact.phone,
         description: form.value.description,
+        partner_share_consent: partnerShareConsent.value,
         interested_products: assurTypes.value
             .filter((type) => form.value.types.includes(type.id))
             .map((type) => type.label),
@@ -229,6 +261,10 @@ onMounted(async () => {
 
 const { submit: handleContact, inProgress: inProgressContact } = useSubmit(async () => {
     try {
+        if (!assertConsent()) {
+            return;
+        }
+
         trackPartnerFormSubmit('nursassur', 'dashboard_modal');
         await submitContact(buildLoggedInPayload());
 
@@ -238,6 +274,7 @@ const { submit: handleContact, inProgress: inProgressContact } = useSubmit(async
 
         form.value.types = [];
         form.value.description = '';
+        partnerShareConsent.value = false;
         emit('close');
     }
     catch (error) {
@@ -252,6 +289,10 @@ const { submit: handleContact, inProgress: inProgressContact } = useSubmit(async
 
 const { submit, inProgress } = useSubmit(async () => {
     try {
+        if (!assertConsent()) {
+            return;
+        }
+
         trackPartnerFormSubmit('nursassur', 'dashboard_modal_guest');
         await submitContact(contact);
 

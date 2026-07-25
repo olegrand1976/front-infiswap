@@ -22,7 +22,8 @@ export const SETTINGS_TOOLTIPS = {
     language: 'Langue de l\'interface. D\'autres langues seront proposées prochainement.',
     newReplacement: 'Notification immédiate (cloche et e-mail) lorsqu\'une nouvelle annonce correspond à votre zone.',
     replacementAccepted: 'Notification lorsqu\'un collègue accepte votre candidature ou confirme un remplacement avec vous.',
-    digestWeekly: 'Chaque semaine, un e-mail récapitule les nouvelles annonces publiées dans votre zone (codes postaux des Préférences). Envoyé le lundi matin s\'il y a des annonces correspondantes.',
+    digestWeekly: 'Chaque semaine, un e-mail récapitule les nouvelles annonces publiées dans votre zone (codes postaux des Préférences). Opt-in : désactivé par défaut.',
+    marketingEmails: 'Emails promotionnels InfiSwap et présentation de partenaires (NursTech, NursAssur). Les leads nominatifs ne sont transmis au partenaire qu\'avec un consentement distinct sur le formulaire de contact. Opt-in : désactivé par défaut.',
     urgentOnly: 'Limite les notifications aux seules annonces marquées urgentes. Les autres nouveautés de zone sont ignorées.',
     smsUrgent: 'SMS pour les remplacements urgents dans votre zone. Nécessite un numéro de mobile valide et l\'activation côté plateforme.',
 } as const;

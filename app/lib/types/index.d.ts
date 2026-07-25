@@ -101,6 +101,10 @@ export type User = {
     education_level_label?: string | null;
     identifier_unavailable?: boolean;
     has_real_identifier?: boolean;
+    inami_cobrha_enabled?: boolean;
+    identifier_verified?: boolean | null;
+    identifier_verification_status?: string | null;
+    identifier_verified_at?: string | null;
     comment_crm?: string | null;
     historic_activity?: UserActivity;
     contact_date?: string;

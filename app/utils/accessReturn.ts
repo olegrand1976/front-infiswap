@@ -147,3 +147,37 @@ export function buildLoginRedirectWithStripeReturn(path: string, query: Record<s
 
     return `${safeLoginRedirectPath(path)}${separator}${params.toString()}`;
 }
+
+const ALLOWED_EXTERNAL_REDIRECT_HOSTS = [
+    'checkout.stripe.com',
+    'billing.stripe.com',
+    'documenso.com',
+    'app.documenso.com',
+    // Self-hosted Documenso (staging / prod Infiswap)
+    'documenso.ll-it-sc.be',
+] as const;
+
+/** Valide une URL de redirection externe (Stripe Checkout, Documenso, …). */
+export function assertAllowedExternalRedirectUrl(url: unknown): string | null {
+    if (typeof url !== 'string' || url.length === 0) {
+        return null;
+    }
+
+    try {
+        const parsed = new URL(url);
+
+        if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') {
+            return null;
+        }
+
+        const host = parsed.hostname.toLowerCase();
+        const allowed = ALLOWED_EXTERNAL_REDIRECT_HOSTS.some(
+            allowedHost => host === allowedHost || host.endsWith(`.${allowedHost}`),
+        );
+
+        return allowed ? parsed.toString() : null;
+    }
+    catch {
+        return null;
+    }
+}

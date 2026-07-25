@@ -31,13 +31,13 @@ export function useAuthTokenCookie() {
     const domain = import.meta.env.PROD ? authCookieDomain() : undefined;
     const config = import.meta.env.PROD
         ? {
-            maxAge: 7776000,
+            maxAge: 1209600,
             secure: true,
             sameSite: 'lax' as const,
             path: '/',
             ...(domain ? { domain } : {}),
         }
-        : { maxAge: 7776000, path: '/' };
+        : { maxAge: 1209600, path: '/' };
 
     return useCookie(AUTH_TOKEN, config);
 }

@@ -3,6 +3,7 @@
     <NuxtLayout class="overflow-x-hidden">
         <NuxtPage />
     </NuxtLayout>
+    <LegalCookieConsentBanner />
     <Toaster
         position="top-center"
         :rich-colors="true"

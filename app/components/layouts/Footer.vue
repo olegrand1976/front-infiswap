@@ -100,7 +100,14 @@
                     to="/legal-notice"
                 >Mentions légales</NuxtLink> -
                 <NuxtLink to="/privacy-security">Politique de Protection des données personnelles & Sécurité</NuxtLink> -
-                <NuxtLink to="/terms">CGU</NuxtLink>
+                <NuxtLink to="/terms">CGU</NuxtLink> -
+                <button
+                    type="button"
+                    class="underline"
+                    @click="openCookiePreferences"
+                >
+                    Cookies
+                </button>
             </p>
         </div>
 
@@ -121,6 +128,7 @@ import { Globe, Mail, MapPin, Phone } from 'lucide-vue-next';
 import { useNewsletter } from '@/composables/useNewsletter';
 
 const { email, isLoading, subscribeNewsletter } = useNewsletter();
+const { openPreferences: openCookiePreferences } = useCookieConsent();
 </script>
 
 <style scoped>
