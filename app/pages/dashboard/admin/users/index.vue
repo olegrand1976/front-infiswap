@@ -3,7 +3,6 @@
         <DashboardAdminPageHeader
             title="Des utilisateurs"
             :count="count"
-            flex-class="flex gap-2"
         >
             <template
                 v-if="!isDeveloper || isManager"
