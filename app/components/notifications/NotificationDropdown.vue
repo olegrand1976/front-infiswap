@@ -221,6 +221,8 @@ const getNotificationTitle = (notification: Notification): string => {
             return 'Annonce';
         case 'system.update':
             return 'Mise à jour';
+        case 'identifier.inami_invalid':
+            return 'Numéro INAMI';
         default:
             return data.title || 'Notification';
     }
@@ -260,6 +262,8 @@ const getNotificationMessage = (notification: Notification): string => {
             return data.message || 'Nouvelle annonce de la plateforme';
         case 'system.update':
             return data.message || 'Mise à jour de la plateforme';
+        case 'identifier.inami_invalid':
+            return data.message || 'Votre numéro INAMI n\'a pas pu être vérifié. Merci de le mettre à jour.';
         default:
             return data.message || 'Nouvelle notification';
     }
@@ -315,6 +319,13 @@ const getNotificationDetailLink = (
             path: isReplacementListType
                 ? `/dashboard/replacements/detail/${data.replacement_id}/list`
                 : `/dashboard/replacements/detail/${data.replacement_id}`,
+        };
+    }
+
+    if (type === 'identifier.inami_invalid') {
+        return {
+            label: 'Paramètres',
+            path: '/dashboard/settings',
         };
     }
 
@@ -379,6 +390,9 @@ const handleNotificationClick = async (notification: Notification) => {
     }
     else if (type.includes('partnership')) {
         router.push('/dashboard/partners');
+    }
+    else if (type === 'identifier.inami_invalid') {
+        router.push('/dashboard/settings');
     }
 };
 

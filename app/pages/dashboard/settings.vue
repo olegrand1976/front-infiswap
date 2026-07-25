@@ -15,27 +15,29 @@
         <form class="mt-6 mb-12">
             <div class="flex justify-center sm:justify-start space-x-4 items-center sm:w-96 h-20 sm:h-28 px-1 py-2 rounded-full border border-gray-300">
                 <ProfileLifetimeAccessBadge size="lg">
-                    <div class="relative">
-                        <SquarePen
-                            class="w-5 text-gray-600 absolute -top-1 -right-2 sm:-right-1 cursor-pointer"
-                            @click="profileDialog = true"
-                        />
-                        <Trash2
-                            v-if="user.profile?.profil_url"
-                            class="w-5 text-primary absolute -bottom-1 -right-2 sm:-right-1 cursor-pointer"
-                            @click="deleteAvatarDialog = true"
-                        />
-                        <img
-                            v-if="user.profile?.profil_url != null"
-                            :src="useRuntimeConfig().public.API_URL + '/storage/' + user.profile?.profil_url"
-                            class="w-16 h-16 sm:w-24 sm:h-24 rounded-full"
-                        >
-                        <img
-                            v-else
-                            src="/images/icons/user-circle.png"
-                            class="w-16 h-16 sm:w-24 sm:h-24 rounded-full opacity-60"
-                        >
-                    </div>
+                    <ProfileInamiVerifiedBadge size="lg">
+                        <div class="relative">
+                            <SquarePen
+                                class="w-5 text-gray-600 absolute -top-1 -right-2 sm:-right-1 cursor-pointer"
+                                @click="profileDialog = true"
+                            />
+                            <Trash2
+                                v-if="user.profile?.profil_url"
+                                class="w-5 text-primary absolute -bottom-1 -right-2 sm:-right-1 cursor-pointer"
+                                @click="deleteAvatarDialog = true"
+                            />
+                            <img
+                                v-if="user.profile?.profil_url != null"
+                                :src="useRuntimeConfig().public.API_URL + '/storage/' + user.profile?.profil_url"
+                                class="w-16 h-16 sm:w-24 sm:h-24 rounded-full"
+                            >
+                            <img
+                                v-else
+                                src="/images/icons/user-circle.png"
+                                class="w-16 h-16 sm:w-24 sm:h-24 rounded-full opacity-60"
+                            >
+                        </div>
+                    </ProfileInamiVerifiedBadge>
                 </ProfileLifetimeAccessBadge>
 
                 <Dialog v-model:open="profileDialog">
@@ -1739,7 +1741,8 @@ import { useSubmit } from '~/composables/useSubmit';
 import FileUpload from '~/components/ui/form/FileUpload.vue';
 import type { User, UserSettings } from '~/lib/types';
 import { SETTINGS_TOOLTIPS } from '~/utils/settingsTooltips';
-import { EDUCATION_LEVEL_OPTIONS, educationLevelLabel, hasRealIdentifier, isBelgiumCountryCode } from '~/utils/educationLevel';
+import { EDUCATION_LEVEL_OPTIONS, educationLevelLabel, hasRealIdentifier, isBelgiumProfile } from '~/utils/educationLevel';
+import { INAMI_FORMAT_ERROR, isValidInamiFormat } from '~/utils/inamiNumber';
 
 const { $toast, $apifetch } = useNuxtApp();
 const { openPreferences: openCookiePreferences } = useCookieConsent();
@@ -1839,7 +1842,11 @@ const educationLevelOptions = EDUCATION_LEVEL_OPTIONS;
 
 const showEducationLevelSettings = computed(() => (
     user.value?.roles?.includes('nurse')
-    && isBelgiumCountryCode(user.value?.country ?? user.value?.profile?.country)
+    && isBelgiumProfile({
+        country: user.value?.country ?? user.value?.profile?.country,
+        working_at: user.value?.profile?.working_at,
+        profile: user.value?.profile,
+    })
 ));
 
 const formattedEducationLevel = computed(() => (
@@ -1912,6 +1919,22 @@ const formAddress = reactive({
 
 const updateInfoUser = async () => {
     try {
+        if (
+            isBelgiumProfile({
+                country: user.value?.country ?? user.value?.profile?.country ?? formAddress.country,
+                working_at: user.value?.profile?.working_at ?? formAddress.workingAt,
+                profile: user.value?.profile,
+            })
+            && !isValidInamiFormat(formPersonalInfo.identifierNumber)
+        ) {
+            $toast({
+                title: 'Erreur',
+                description: INAMI_FORMAT_ERROR,
+                variant: 'destructive',
+            });
+            return;
+        }
+
         const response = await updateUser({
             ...formPersonalInfo,
             educationLevel: formPersonalInfo.educationLevel || null,

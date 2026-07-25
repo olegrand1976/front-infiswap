@@ -458,7 +458,8 @@ import {
 } from '~/utils/purchaseCelebration';
 import { useDetailReplacement, sendResponse } from '~/composables/useReplacements';
 import { useInstitutions } from '~/composables/useInstitution';
-import { hasRealIdentifier, isBelgiumCountryCode } from '~/utils/educationLevel';
+import { hasRealIdentifier, isBelgiumProfile } from '~/utils/educationLevel';
+import { INAMI_FORMAT_ERROR, isValidInamiFormat } from '~/utils/inamiNumber';
 
 const user = useState('user');
 const route = useRoute();
@@ -756,7 +757,11 @@ const needsInamiPrompt = computed(() => {
     if (!user.value?.roles?.includes('nurse')) {
         return false;
     }
-    if (!isBelgiumCountryCode(user.value?.country ?? user.value?.profile?.country)) {
+    if (!isBelgiumProfile({
+        country: user.value?.country ?? user.value?.profile?.country,
+        working_at: user.value?.profile?.working_at,
+        profile: user.value?.profile,
+    })) {
         return false;
     }
     if (user.value?.identifier_unavailable) {
@@ -796,6 +801,22 @@ async function confirmInamiUnavailable() {
 
 async function confirmInamiNumber() {
     const value = inamiDraft.value.trim();
+    if (
+        value
+        && isBelgiumProfile({
+            country: user.value?.country ?? user.value?.profile?.country,
+            working_at: user.value?.profile?.working_at,
+            profile: user.value?.profile,
+        })
+        && !isValidInamiFormat(value)
+    ) {
+        $toast({
+            title: 'Erreur',
+            description: INAMI_FORMAT_ERROR,
+            variant: 'destructive',
+        });
+        return;
+    }
     identifierSaving.value = true;
     try {
         if (value) {

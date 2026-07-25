@@ -515,6 +515,15 @@
                                             size="md"
                                             :placeholder="identifierLabel"
                                         />
+                                        <p
+                                            v-if="formData.accountType !== 'institution'
+                                                && isBelgiumCountryCode(formData.address.country)
+                                                && formData.identifierNumber?.trim()
+                                                && !isValidInamiFormat(formData.identifierNumber)"
+                                            class="mt-1 text-xs text-destructive"
+                                        >
+                                            {{ INAMI_FORMAT_ERROR }}
+                                        </p>
                                     </div>
                                     <div
                                         v-else
@@ -1230,6 +1239,14 @@
                                         size="md"
                                         :placeholder="identifierLabel"
                                     />
+                                    <p
+                                        v-if="isBelgiumCountryCode(formData.address.country)
+                                            && formData.identifierNumber?.trim()
+                                            && !isValidInamiFormat(formData.identifierNumber)"
+                                        class="mt-1 text-xs text-destructive"
+                                    >
+                                        {{ INAMI_FORMAT_ERROR }}
+                                    </p>
                                 </div>
                                 <div
                                     v-else
@@ -1444,6 +1461,7 @@
 <script lang="ts" setup>
 import { ArrowRight, Building2, Check, CircleChevronDown, CircleUser, GraduationCap, IdCard, Inbox, Lock, Mail, MapPin, Phone, Users } from 'lucide-vue-next';
 import { EDUCATION_LEVEL_OPTIONS, isBelgiumCountryCode } from '~/utils/educationLevel';
+import { INAMI_FORMAT_ERROR, isValidInamiFormat } from '~/utils/inamiNumber';
 import InstitutionPricing from '~/components/register/InstitutionPricing.vue';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
 import BackButton from '~/components/ui/back-button/BackButton.vue';
@@ -1690,6 +1708,14 @@ const canSubmit = computed(() => {
         return false;
     }
 
+    if (
+        formData.accountType !== 'institution'
+        && isBelgiumCountryCode(formData.address.country)
+        && !isValidInamiFormat(formData.identifierNumber)
+    ) {
+        return false;
+    }
+
     return true;
 });
 
@@ -1727,6 +1753,14 @@ const { submit, inProgress } = useSubmit(
     async () => {
         status.value = '';
         const formDataForBackend = buildRegistrationPayload();
+
+        if (
+            formData.accountType !== 'institution'
+            && isBelgiumCountryCode(formData.address.country)
+            && !isValidInamiFormat(formData.identifierNumber)
+        ) {
+            throw new Error(INAMI_FORMAT_ERROR);
+        }
 
         await register(formDataForBackend);
         clearReferralRegistration();

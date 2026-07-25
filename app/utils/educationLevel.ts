@@ -20,6 +20,46 @@ export function isBelgiumCountryCode(country?: string | null): boolean {
     return normalized === 'be' || normalized === 'belgique' || normalized === 'belgium';
 }
 
+/**
+ * Miroir back EducationLevel::isBelgiumProfile :
+ * working_at (1er segment) prioritaire, sinon country — pas de défaut silencieux.
+ */
+export function isBelgiumProfile(input?: {
+    country?: string | null;
+    workingAt?: string | string[] | null;
+    working_at?: string | string[] | null;
+    profile?: {
+        country?: string | null;
+        working_at?: string | string[] | null;
+    } | null;
+} | null): boolean {
+    if (!input) {
+        return false;
+    }
+
+    const workingRaw = input.workingAt ?? input.working_at ?? input.profile?.working_at ?? null;
+    const fromWorking = firstWorkingAtCountry(workingRaw);
+    if (fromWorking !== null) {
+        return isBelgiumCountryCode(fromWorking);
+    }
+
+    return isBelgiumCountryCode(input.country ?? input.profile?.country ?? null);
+}
+
+function firstWorkingAtCountry(workingAt?: string | string[] | null): string | null {
+    if (workingAt == null) {
+        return null;
+    }
+
+    if (Array.isArray(workingAt)) {
+        const first = workingAt.map(part => String(part).trim()).find(Boolean);
+        return first ?? null;
+    }
+
+    const first = String(workingAt).split(',')[0]?.trim();
+    return first || null;
+}
+
 export function needsEducationLevel(user: {
     type?: string | null;
     account_type?: string | null;

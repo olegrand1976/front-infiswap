@@ -3,6 +3,7 @@ import {
     educationLevelLabel,
     hasRealIdentifier,
     isBelgiumCountryCode,
+    isBelgiumProfile,
     needsEducationLevel,
 } from './educationLevel';
 
@@ -13,6 +14,28 @@ describe('educationLevel utils', () => {
         expect(isBelgiumCountryCode('be')).toBe(true);
         expect(isBelgiumCountryCode('Belgique')).toBe(true);
         expect(isBelgiumCountryCode('fr')).toBe(false);
+    });
+
+    it('detects belgium profile via working_at before country', () => {
+        expect(isBelgiumProfile({
+            country: 'fr',
+            working_at: 'Belgique',
+        })).toBe(true);
+
+        expect(isBelgiumProfile({
+            country: null,
+            profile: { working_at: 'Belgique,France' },
+        })).toBe(true);
+
+        expect(isBelgiumProfile({
+            country: 'be',
+            working_at: 'France',
+        })).toBe(false);
+
+        expect(isBelgiumProfile({
+            country: null,
+            working_at: null,
+        })).toBe(false);
     });
 
     it('detects missing education level for BE nurses only', () => {
