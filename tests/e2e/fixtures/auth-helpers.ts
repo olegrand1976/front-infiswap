@@ -5,6 +5,24 @@ function visibleRegistrationForm(page: Page): Locator {
     return page.locator('form:visible').first();
 }
 
+/**
+ * Pré-seed le consentement cookies (nécessaires uniquement) avant la première
+ * navigation : le bandeau RGPD (fixed bottom z-[100]) recouvre sinon les boutons
+ * de formulaire et fait échouer les clics Playwright.
+ */
+export async function seedCookieConsent(page: Page): Promise<void> {
+    await page.addInitScript(() => {
+        try {
+            localStorage.setItem(
+                'infiswap:cookie_consent:v1',
+                JSON.stringify({ necessary: true, analytics: false, marketing: false }),
+            );
+        } catch {
+            // storage indisponible : le bandeau s'affichera, sans bloquer le script
+        }
+    });
+}
+
 export async function fillLoginForm(page: Page, identifier: string, password: string): Promise<void> {
     await page.getByPlaceholder('Email').first().fill(identifier);
     await page.getByPlaceholder('Mot de passe').first().fill(password);

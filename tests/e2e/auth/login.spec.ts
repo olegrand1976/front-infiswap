@@ -1,9 +1,10 @@
 import { expect, test } from '@playwright/test';
 import { AUTH_TOKEN_COOKIE } from '../fixtures/test-data';
-import { fillLoginForm, submitLogin } from '../fixtures/auth-helpers';
+import { fillLoginForm, seedCookieConsent, submitLogin } from '../fixtures/auth-helpers';
 
 test.describe('Connexion', () => {
     test.beforeEach(async ({ page }) => {
+        await seedCookieConsent(page);
         await page.goto('/login');
     });
 

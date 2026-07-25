@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { fillLoginForm, submitLogin } from '../fixtures/auth-helpers';
+import { fillLoginForm, seedCookieConsent, submitLogin } from '../fixtures/auth-helpers';
 
 const SIMULATED_SESSION = 'cs_e2e_simulated';
 
@@ -10,6 +10,7 @@ test.describe('Retours Stripe simulés', () => {
 
         test.skip(!email || !password, 'E2E_LOGIN_EMAIL / E2E_LOGIN_PASSWORD non configurés');
 
+        await seedCookieConsent(page);
         await page.goto('/login');
         await fillLoginForm(page, email!, password!);
         await submitLogin(page);
