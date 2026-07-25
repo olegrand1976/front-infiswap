@@ -76,7 +76,7 @@
     </div>
 
     <Dialog v-model:open="showNursTech">
-        <DialogContent>
+        <DialogContent class="max-w-2xl max-h-[90vh] overflow-y-auto">
             <NurstechForm @close="showNursTech = false" />
         </DialogContent>
     </Dialog>

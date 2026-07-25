@@ -106,9 +106,10 @@ const privacyPolicy = [
             </ul>`,
     },
     {
-        title: 'Interdiction de revente des données',
-        text: `<p>Nous <strong>ne vendons pas, ne louons pas et n’échangeons pas</strong> vos données personnelles ni les données de santé des patients à des tiers à des fins commerciales indépendantes du service InfiSwap.</p>
-            <p class="mt-2">Le CRM et les analyses internes restent des traitements internes. Les emails présentant des services partenaires (ex. NursTech, NursAssur) sont envoyés par InfiSwap ; <strong>aucun fichier clients n’est transmis</strong> à ces partenaires sans votre demande explicite de mise en relation.</p>`,
+        title: 'Partage et monétisation consentis des données',
+        text: `<p>InfiSwap <strong>ne vend pas et ne loue pas</strong> les données de santé des patients. Les données professionnelles et coordonnées de contact peuvent être transmises à des partenaires commerciaux (ex. NursTech, NursAssur) <strong>uniquement</strong> lorsque vous donnez un <strong>consentement distinct</strong> (case à cocher sur le formulaire de mise en relation), pour un recontact et un suivi commercial (Art. 6(1)(a) / Art. 7 RGPD).</p>
+            <p class="mt-2">Cette transmission peut s’inscrire dans une monétisation commerciale des leads consentis. Les emails marketing présentant des services partenaires restent envoyés par InfiSwap selon votre opt-in « emails marketing » ; ils ne constituent pas, à eux seuls, une cession de fichier.</p>
+            <p class="mt-2">Vous pouvez retirer votre consentement pour de futures transmissions en nous contactant (<a href="mailto:info@infiswap.be" class="text-primary underline">info@infiswap.be</a>) ; cela n’affecte pas la licéité des traitements déjà réalisés.</p>`,
     },
     {
         title: 'Sous-traitants et destinataires',
@@ -123,7 +124,8 @@ const privacyPolicy = [
     },
     {
         title: 'Cession de la société ou du service',
-        text: `<p>En cas de fusion, acquisition, apport ou cession de LL-IT Software &amp; Computer / du fonds de commerce ou des actifs InfiSwap, les données personnelles peuvent être <strong>transférées au successeur</strong> exclusivement pour poursuivre les <strong>mêmes finalités</strong> de service. Ce transfert s’inscrit dans la continuité du traitement ; il <strong>n’autorise pas</strong> une vente, licence ou monétisation séparée de la base utilisateurs ou des données de santé.</p>
+        text: `<p>En cas de fusion, acquisition, apport ou cession de LL-IT Software &amp; Computer / du fonds de commerce ou des actifs InfiSwap, les données personnelles peuvent être <strong>transférées au successeur</strong> exclusivement pour poursuivre les <strong>mêmes finalités</strong> de service. Ce transfert s’inscrit dans la continuité du traitement ; il <strong>n’autorise pas</strong> une vente, licence ou monétisation séparée de la <strong>base utilisateurs complète</strong> ou des données de santé.</p>
+            <p class="mt-2">Cela ne remet pas en cause la transmission ponctuelle de leads / coordonnées professionnelles aux partenaires commerciaux lorsque l’utilisateur a donné un <strong>consentement distinct</strong> via un formulaire de mise en relation (voir section « Partage et monétisation consentis »).</p>
             <p class="mt-2">Les utilisateurs concernés seront informés par email et/ou notice sur le Site <strong>dans un délai raisonnable et au plus tard sous 30 jours</strong> après le closing (ou dès que la loi l’autorise si une confidentialité transactionnelle s’applique). En cas de changement de finalité par le successeur, une nouvelle base légale et une information / un consentement adaptés seront requis.</p>`,
     },
     {

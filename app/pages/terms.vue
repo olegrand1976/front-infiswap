@@ -48,7 +48,7 @@ useHead({
     title: 'Conditions Générales d\'Utilisation',
     meta: [{
         name: 'description',
-        content: 'CGU InfiSwap : accès, responsabilités, données personnelles, interdiction de revente des données et cession d\'entreprise.',
+        content: 'CGU InfiSwap : accès, responsabilités, données personnelles, partage consenti aux partenaires et cession d\'entreprise.',
     }],
 });
 
@@ -98,12 +98,12 @@ const terms = {
         text: `L’utilisateur s’engage à une utilisation loyale, légale et respectueuse des tiers, sans contenus illicites ni atteinte au fonctionnement du Site. Il reste responsable des données qu’il encode (y compris données patients) et des autorisations nécessaires.`,
     },
     dataNoSale: {
-        title: 'Données personnelles — non-revente',
-        text: `L’utilisation du Site implique un traitement de données personnelles décrit dans la Politique de protection des données. <strong>InfiSwap n’autorise pas la vente, la location ou l’échange des données personnelles ou de santé à des tiers</strong> à des fins commerciales indépendantes du service. Les sous-traitants techniques et les mises en relation nécessaires au service ne constituent pas une revente de données.`,
+        title: 'Données personnelles — partage consenti',
+        text: `L’utilisation du Site implique un traitement de données personnelles décrit dans la Politique de protection des données. <strong>Les données de santé des patients ne sont ni vendues ni louées.</strong> Les coordonnées professionnelles peuvent être transmises à des partenaires commerciaux (NursTech, NursAssur, etc.) <strong>uniquement avec votre consentement distinct</strong> lors d’une demande de mise en relation, y compris dans le cadre d’une monétisation de leads. Les sous-traitants techniques et les mises en relation nécessaires au service (remplacements) ne constituent pas une revente de données.`,
     },
     companyTransfer: {
         title: 'Cession de l’entreprise ou du service',
-        text: `En cas de fusion, cession, apport ou transfert du fonds de commerce / actifs InfiSwap, le successeur peut reprendre le traitement des données pour les <strong>mêmes finalités</strong> de service, sans vente séparée de la base de données. Les utilisateurs seront informés dans un délai raisonnable (objectif : 30 jours après closing, sous réserve des contraintes de confidentialité transactionnelle).`,
+        text: `En cas de fusion, cession, apport ou transfert du fonds de commerce / actifs InfiSwap, le successeur peut reprendre le traitement des données pour les <strong>mêmes finalités</strong> de service, sans vente séparée de la base de données complète. Les transmissions ponctuelles de leads aux partenaires sous consentement distinct (formulaires de mise en relation) restent régies par la Politique de protection des données. Les utilisateurs seront informés dans un délai raisonnable (objectif : 30 jours après closing, sous réserve des contraintes de confidentialité transactionnelle).`,
     },
     publisherResponsibilities: {
         title: 'Responsabilités de l’Éditeur',
