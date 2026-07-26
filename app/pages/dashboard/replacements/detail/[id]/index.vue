@@ -836,7 +836,7 @@ async function confirmInamiNumber() {
         console.error(error);
         $toast({
             title: 'Erreur',
-            description: '{{ $t('replacements.inamiNumber') }} invalide ou déjà utilisé.',
+            description: `${t('replacements.inamiNumber')} invalide ou déjà utilisé.`,
             variant: 'destructive',
         });
     }

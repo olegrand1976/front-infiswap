@@ -2202,7 +2202,7 @@ const disableAuth2Fa = async () => {
         enterPasswordDialog.value = false;
 
         $toast({
-            description: '{{ $t('settings.twoFactor') }} désactivé',
+            description: `${t('settings.twoFactor')} ${t('settings.disabled').toLowerCase()}`,
         });
 
         currentPassword.value = '';
@@ -2255,7 +2255,7 @@ const handleVerifyCode = async () => {
         await verifyCode(formData);
 
         $toast({
-            description: '{{ $t('settings.twoFactor') }} activé',
+            description: `${t('settings.twoFactor')} ${t('settings.enabled').toLowerCase()}`,
         });
 
         pinValue.value = [];
