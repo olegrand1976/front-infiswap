@@ -48,7 +48,7 @@
     "career": "CARRIÈRE",
     "pricingNav": "ONZE PRIJZEN",
     "contactNav": "CONTACT",
-    "homeNav": "HOME",
+    "homeNav": "THUIS",
     "aboutNav": "OVER ONS"
   },
   "auth": {
@@ -126,7 +126,30 @@
     "metaDescription": "Onze verpleegkundigen zijn vaak onderweg en verplaatsen zich van patiënt naar patiënt tijdens hun rondes die week na week worden gepland.",
     "metaKeywords": "infiswap, verpleegkundige, vervanging, ronde",
     "contactUsAt": "Neem contact op via",
-    "ctaRegister": "Registreren"
+    "ctaRegister": "Registreren",
+    "heroTagline": "InfiSwap is het 100 % geautomatiseerde platform voor de matching van verpleegkundigen in België en Frankrijk.",
+    "stats": {
+      "sectionTitle": "InfiSwap in cijfers",
+      "sectionSubtitle": "Het aantal zorgprofessionals ingeschreven op InfiSwap, in België en Frankrijk.",
+      "badge": "Referentieplatform",
+      "badgeHint": "België & Frankrijk",
+      "communityTitle": "Het referentieplatform voor verpleegkundige vervangingen",
+      "communityLead": "InfiSwap behoort tot de meest actieve platforms voor de matching van verpleegkundigen, in België én Frankrijk.",
+      "communityBody": "Elke dag sluiten nieuwe verpleegkundigen, vroedvrouwen en zorgkundigen zich aan bij een community die de continuïteit van zorg, de planning van afwezigheden en de matching tussen veldprofessionals vereenvoudigt.",
+      "communityCta": "Word lid van de community",
+      "learnMore": "Meer weten",
+      "growthLabel": "Groei over 30 dagen",
+      "updatedLabel": "Indicatoren bijgewerkt op",
+      "featureVerifiedTitle": "Geverifieerde profielen & beveiligde berichten",
+      "featureVerifiedBody": "Een platform ontworpen voor zorgcontinuïteit, met betrouwbare uitwisselingen tussen veldprofessionals.",
+      "featureCommunityTitle": "Een community die elke dag groeit",
+      "featureCommunityBody": "Verpleegkundigen, vroedvrouwen en zorgkundigen kiezen InfiSwap om hun vervangingen eenvoudiger te organiseren.",
+      "membersBadgeFoot": "Leden ingeschreven in België & Frankrijk"
+    },
+    "kpi": {
+      "membersLabel": "Ingeschreven leden",
+      "membersDescription": "Zorgprofessionals ingeschreven op het platform"
+    }
   },
   "settings": {
     "title": "Instellingen",

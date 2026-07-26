@@ -93,8 +93,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { HOME_HERO_TAGLINE } from '~/lib/constants/homeStats';
 
 const nurseLoaded = ref(false);
-const heroTagline = HOME_HERO_TAGLINE;
+const { t } = useI18n();
+const heroTagline = computed(() => t('home.heroTagline'));
 </script>
