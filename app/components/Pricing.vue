@@ -8,12 +8,11 @@
         <div class="relative container px-4 sm:px-6 py-14 lg:py-20 max-w-6xl mx-auto flex-1 flex flex-col">
             <div class="text-center max-w-2xl mx-auto mb-14 lg:mb-16">
                 <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
-                    Des tarifs clairs,<br>
-                    <span class="text-primary">pensés pour votre pratique</span>
+                    {{ $t('pricing.title') }}<br>
+                    <span class="text-primary">{{ $t('pricing.titleHighlight') }}</span>
                 </h1>
                 <p class="mt-5 text-gray-600 text-base lg:text-lg leading-relaxed">
-                    Inscription gratuite pour explorer le réseau, publier et candidater.
-                    Boostez une annonce ponctuellement pour gagner en visibilité.
+                    {{ $t('pricing.subtitle') }}
                 </p>
             </div>
 
@@ -27,10 +26,10 @@
                             </div>
                             <div>
                                 <p class="text-xs font-semibold uppercase tracking-wide text-success">
-                                    Découverte
+                                    {{ $t('pricing.discovery') }}
                                 </p>
                                 <h2 class="text-xl font-bold text-gray-900">
-                                    Gratuit
+                                    {{ $t('pricing.free') }}
                                 </h2>
                             </div>
                         </div>
@@ -41,13 +40,12 @@
                                 <span class="text-2xl font-semibold text-gray-700 mb-1">€</span>
                             </div>
                             <p class="mt-2 text-sm text-gray-500">
-                                Compte gratuit · sans carte bancaire
+                                {{ $t('pricing.freeAccount') }}
                             </p>
                         </div>
 
                         <p class="text-gray-600 text-sm leading-relaxed mb-6 lg:min-h-[4.5rem]">
-                            Idéal pour explorer InfiSwap et rester informé des remplacements près de chez vous,
-                            sans engagement.
+                            {{ $t('pricing.freeDesc') }}
                         </p>
 
                         <ul class="space-y-3 mb-8 flex-1">
@@ -72,15 +70,15 @@
                         <Button
                             variant="outline"
                             class="w-full font-semibold border-success/40 text-success hover:text-success/80 hover:bg-success/5 h-11"
-                            href="/register"
+                            :href="localePath('/register')"
                         >
-                            Créer un compte gratuit
+                            {{ $t('pricing.createFree') }}
                         </Button>
                         <p class="text-center text-xs text-gray-400 mt-3">
-                            Déjà inscrit ? <NuxtLink
-                                to="/login"
+                            {{ $t('pricing.alreadyRegistered') }} <NuxtLink
+                                :to="localePath('/login')"
                                 class="text-primary hover:underline"
-                            >Se connecter</NuxtLink>
+                            >{{ $t('auth.signIn') }}</NuxtLink>
                         </p>
                     </div>
                 </article>
@@ -94,10 +92,10 @@
                             </div>
                             <div>
                                 <p class="text-xs font-semibold uppercase tracking-wide text-amber-600">
-                                    Optionnel
+                                    {{ $t('pricing.optional') }}
                                 </p>
                                 <h2 class="text-xl font-bold text-gray-900">
-                                    Boost remplacement
+                                    {{ $t('pricing.boost') }}
                                 </h2>
                             </div>
                         </div>
@@ -232,6 +230,7 @@ import { Button } from '@/components/ui/button';
 
 const { $apifetch } = useNuxtApp();
 const user = useUser();
+const localePath = useLocalePath();
 
 type PricingPlansResponse = {
     boosts: {

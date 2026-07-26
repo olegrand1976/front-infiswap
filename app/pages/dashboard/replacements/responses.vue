@@ -3,17 +3,17 @@
         <div class="mt-6 flex items-center gap-2 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
             <ArrowLeft
                 class="size-5 cursor-pointer hover:text-primary"
-                title="Retour"
+                :title="$t('common.back')"
                 @click="goBack"
             />
             <h1 class="py-3 text-primary font-bold">
-                Historique de mes <strong>réponses</strong>
+                {{ $t('replacements.responsesHeading') }} <strong>{{ $t('replacements.responsesHeadingStrong') }}</strong>
             </h1>
         </div>
 
         <template v-if="listResponse.length === 0">
             <p class="text-black/50 mt-16 text-center">
-                Aucune donnée à afficher pour le moment
+                {{ $t('replacements.empty') }}
             </p>
         </template>
         <template v-else>
@@ -202,7 +202,7 @@
                             </template>
                             <template v-else>
                                 <p class="mt-8 text-center text-black/70">
-                                    Aucune donnée à afficher pour le moment
+                                    {{ $t('replacements.empty') }}
                                 </p>
                             </template>
                         </Table>
@@ -311,6 +311,7 @@
 </template>
 
 <script lang="ts" setup>
+const { t } = useI18n();
 import { ArrowLeft, BadgeCheck, Check, CircleUser, Eye, X } from 'lucide-vue-next';
 import { useRuntimeConfig } from '#app';
 import { getErrorMessage, goBack } from '~/lib/utils';
@@ -328,7 +329,7 @@ const includeOlder = true;
 const { identifierLabel } = useCountry();
 
 useHead({
-    title: 'Mes réponses reçues',
+    title: () => t('replacements.responsesTitle'),
 });
 
 const visibleResponses = (responses: ReplacementResponse[]) => {

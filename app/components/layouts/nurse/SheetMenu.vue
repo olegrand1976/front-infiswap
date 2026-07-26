@@ -17,13 +17,13 @@
                 >
                     <Button
                         class="z-20 inline-flex mx-auto ml-4 font-bold rounded-3xl"
-                        href="/login"
+                        :href="localePath('/login')"
                     >
                         Connexion
                     </Button>
                     <Button
                         class="z-20 inline-flex mx-auto ml-4 font-bold rounded-3xl"
-                        href="/register"
+                        :href="localePath('/register')"
                     >
                         Inscription
                     </Button>
@@ -31,7 +31,7 @@
                 <Button
                     v-if="isLoggedIn"
                     class="z-20 inline-flex mx-auto ml-4 w-44 rounded-3xl"
-                    href="/dashboard"
+                    :href="localePath('/dashboard')"
                 >
                     Tableau de bord
                 </Button>
@@ -79,7 +79,7 @@
                     <ul class="flex flex-col mt-8 space-y-5">
                         <li>
                             <NuxtLink
-                                to="/"
+                                :to="localePath('/')"
                                 class="flex flex-row space-x-3"
                             >
                                 <Phone class="w-4 h-4 text-primary" />
@@ -88,7 +88,7 @@
                         </li>
                         <li>
                             <NuxtLink
-                                to="/"
+                                :to="localePath('/')"
                                 class="flex flex-row space-x-3"
                             >
                                 <MapPin class="w-4 h-4 text-primary" />
@@ -97,7 +97,7 @@
                         </li>
                         <li>
                             <NuxtLink
-                                to="/"
+                                :to="localePath('/')"
                                 class="flex flex-row justify-start space-x-3"
                             >
                                 <Mail class="w-4 h-4 text-primary" />
@@ -106,7 +106,7 @@
                         </li>
                         <li>
                             <NuxtLink
-                                to="/"
+                                :to="localePath('/')"
                                 class="flex flex-row justify-start space-x-3"
                             >
                                 <Globe class="w-4 h-4 text-primary" />
@@ -121,6 +121,7 @@
 </template>
 
 <script lang="ts" setup>
+const localePath = useLocalePath();
 import { Globe, Mail, MapPin, Phone } from 'lucide-vue-next';
 
 const { isLoggedIn } = useAuth();

@@ -1,27 +1,56 @@
 import type { OffreInstitutionCountry } from '~/lib/offreInstitutionCountry';
+import type { AppLocale } from '~/utils/appLocale';
 
 export const OFFRE_INSTITUTION_NETWORK_COUNT = 2300;
 
-const networkCountFormatter = new Intl.NumberFormat('fr-BE', { maximumFractionDigits: 0 });
+const networkCountFormatterFr = new Intl.NumberFormat('fr-BE', { maximumFractionDigits: 0 });
+const networkCountFormatterNl = new Intl.NumberFormat('nl-BE', { maximumFractionDigits: 0 });
 
-export function formatOffreInstitutionNetworkCount(count = OFFRE_INSTITUTION_NETWORK_COUNT): string {
-    return networkCountFormatter.format(count);
+export function formatOffreInstitutionNetworkCount(
+    count = OFFRE_INSTITUTION_NETWORK_COUNT,
+    locale: AppLocale = 'fr',
+): string {
+    return (locale === 'nl' ? networkCountFormatterNl : networkCountFormatterFr).format(count);
 }
 
-export function getOffreInstitutionNetworkMembersLabel(count = OFFRE_INSTITUTION_NETWORK_COUNT): string {
-    return `plus de ${formatOffreInstitutionNetworkCount(count)} infirmières indépendantes inscrites`;
+export function getOffreInstitutionNetworkMembersLabel(
+    count = OFFRE_INSTITUTION_NETWORK_COUNT,
+    locale: AppLocale = 'fr',
+): string {
+    const formatted = formatOffreInstitutionNetworkCount(count, locale);
+    return locale === 'nl'
+        ? `meer dan ${formatted} zelfstandige verpleegkundigen ingeschreven`
+        : `plus de ${formatted} infirmières indépendantes inscrites`;
 }
 
-export function getOffreInstitutionNetworkMembersShortLabel(count = OFFRE_INSTITUTION_NETWORK_COUNT): string {
-    return `${formatOffreInstitutionNetworkCount(count)}+ indépendantes`;
+export function getOffreInstitutionNetworkMembersShortLabel(
+    count = OFFRE_INSTITUTION_NETWORK_COUNT,
+    locale: AppLocale = 'fr',
+): string {
+    const formatted = formatOffreInstitutionNetworkCount(count, locale);
+    return locale === 'nl'
+        ? `${formatted}+ zelfstandigen`
+        : `${formatted}+ indépendantes`;
 }
 
-export function getOffreInstitutionNetworkProfilesLabel(count = OFFRE_INSTITUTION_NETWORK_COUNT): string {
-    return `${formatOffreInstitutionNetworkCount(count)}+ profils`;
+export function getOffreInstitutionNetworkProfilesLabel(
+    count = OFFRE_INSTITUTION_NETWORK_COUNT,
+    locale: AppLocale = 'fr',
+): string {
+    const formatted = formatOffreInstitutionNetworkCount(count, locale);
+    return locale === 'nl'
+        ? `${formatted}+ profielen`
+        : `${formatted}+ profils`;
 }
 
 export const OFFRE_INSTITUTION_JAUMANA_BELGIUM_ONLY_LABEL =
     'Service Jaumana Soins — disponible en Belgique uniquement';
+
+export function getOffreInstitutionJaumanaBelgiumOnlyLabel(locale: AppLocale = 'fr'): string {
+    return locale === 'nl'
+        ? 'Service Jaumana Soins — enkel beschikbaar in België'
+        : OFFRE_INSTITUTION_JAUMANA_BELGIUM_ONLY_LABEL;
+}
 
 export type OffreInstitutionCountryContent = {
     headerBadge: string;
@@ -96,8 +125,41 @@ const CONTENT_BY_COUNTRY: Record<OffreInstitutionCountry, OffreInstitutionCountr
     },
 };
 
-export function getOffreInstitutionCountryContent(country: OffreInstitutionCountry): OffreInstitutionCountryContent {
-    return CONTENT_BY_COUNTRY[country];
+export function getOffreInstitutionCountryContent(
+    country: OffreInstitutionCountry,
+    locale: AppLocale = 'fr',
+): OffreInstitutionCountryContent {
+    const base = CONTENT_BY_COUNTRY[country];
+    if (locale !== 'nl') {
+        return base;
+    }
+
+    const isFr = country === 'fr';
+
+    return {
+        ...base,
+        headerBadge: isFr ? 'Institutionele ruimte Frankrijk' : 'Institutionele ruimte België',
+        trustBannerLead: isFr
+            ? '1e netwerk voor onderlinge hulp en verpleegkundige vervanging in Frankrijk'
+            : '1e netwerk voor onderlinge hulp en verpleegkundige vervanging in België',
+        trustBannerMembers: `Meer dan ${formatOffreInstitutionNetworkCount(undefined, 'nl')} gekwalificeerde verpleegkundigen ingeschreven`,
+        diyPillarBadge: isFr ? 'Netwerk nr. 1 in Frankrijk' : 'Netwerk nr. 1 in België',
+        networkHighlightTitle: isFr
+            ? 'Het eerste onderlinge-hulpnetwerk van Frankrijk'
+            : 'Het eerste onderlinge-hulpnetwerk van België',
+        footerTagline: isFr
+            ? 'De eerste 100% geautomatiseerde vervangingsoplossing voor verpleegkundigen in Frankrijk.'
+            : 'De eerste 100% geautomatiseerde vervangingsoplossing voor verpleegkundigen in België.',
+        footerCopyright: 'InfiSwap Institut — zorg zonder onderbreking.',
+        footerCopyrightJaumana: 'Officieel partnerschap InfiSwap × Jaumana Soins — zorg zonder onderbreking.',
+        diyCommunityLabel: '{networkCountShort} zelfstandigen',
+        diyNetworkAccessLabel: isFr
+            ? 'Directe toegang tot het grootste Franse hulpnetwerk'
+            : 'Directe toegang tot het grootste Belgische hulpnetwerk',
+        comparatifNetworkLabel: 'InfiSwap-hulpnetwerk ({networkCountShort} verpleegkundigen).',
+        insightTitle: 'InfiSwap Institut voor uw instelling',
+        insightTitleJaumana: 'Het partnerschap InfiSwap × Jaumana Soins',
+    };
 }
 
 export function interpolateOffreInstitutionContent(

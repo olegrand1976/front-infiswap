@@ -23,7 +23,7 @@
                 class="block rounded-l-md text-center shadow-lg bg-gray-50 p-2 transition-transform duration-500 ease-in-out"
             >
                 <h5 class="mb-2 text-sm font-bold">
-                    Contactez-nous au
+                    {{ $t('home.contactUsAt') }}
                 </h5>
                 <p class="mt-1 text-xl font-bold text-success">
                     (+32) 478 02 33 77
@@ -36,11 +36,11 @@
 
         <NuxtLink
             v-if="!isLoggedIn"
-            to="/register"
+            :to="localePath('/register')"
             class="lg:hidden fixed bottom-20 right-0 z-40 bg-primary text-white rounded-l-full shadow-lg px-4 py-3 flex items-center gap-2 transition-all duration-300 hover:scale-105 hover:shadow-xl"
         >
             <UserPlus class="w-5 h-5" />
-            <span class="text-sm font-semibold">Inscription</span>
+            <span class="text-sm font-semibold">{{ $t('home.ctaRegister') }}</span>
         </NuxtLink>
     </div>
 </template>
@@ -50,14 +50,15 @@ import { Phone, UserPlus } from 'lucide-vue-next';
 import { useAuth } from '~/composables/useAuth';
 
 const { isLoggedIn } = useAuth();
+const localePath = useLocalePath();
+const { t } = useI18n();
 
 useHead({
-    title: 'Accueil',
+    title: () => t('nav.home'),
     meta: [
         {
             name: 'description',
-            content:
-        'InfiSwap – la plateforme de référence du remplacement infirmier. InfiSwap connecte les infirmières et infirmiers indépendants de Belgique et de France pour organiser facilement leurs remplacements : planification des absences (vacances, formation, urgences), recherche de missions, profils vérifiés, messagerie sécurisée et alertes instantanées. Une solution pensée pour assurer la continuité des soins, simplifier l’administratif et développer votre activité. Rejoignez la communauté !',
+            content: () => t('home.metaDescription'),
         },
     ],
 });

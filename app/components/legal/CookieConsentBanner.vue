@@ -11,19 +11,18 @@
                 id="cookie-consent-title"
                 class="text-base font-semibold text-gray-900 sm:text-lg"
             >
-                Cookies et confidentialité
+                {{ $t('cookies.title') }}
             </h2>
             <p
                 id="cookie-consent-desc"
                 class="mt-2 text-sm text-gray-600"
             >
-                Nous utilisons des cookies nécessaires au fonctionnement du site. Avec votre accord, nous activons aussi
-                la mesure d’audience et, le cas échéant, la publicité. InfiSwap ne revend pas vos données.
+                {{ $t('cookies.description') }}
                 <NuxtLink
-                    to="/privacy-security"
+                    :to="localePath('/privacy-security')"
                     class="text-primary underline"
                 >
-                    Politique de confidentialité
+                    {{ $t('cookies.privacyLink') }}
                 </NuxtLink>
             </p>
 
@@ -38,7 +37,7 @@
                         disabled
                         class="mt-1"
                     >
-                    <span><strong>Nécessaires</strong> — session, sécurité, préférences techniques (toujours actifs).</span>
+                    <span>{{ $t('cookies.necessary') }}</span>
                 </label>
                 <label class="flex items-start gap-2">
                     <input
@@ -46,7 +45,7 @@
                         type="checkbox"
                         class="mt-1"
                     >
-                    <span><strong>Analytics</strong> — Google Analytics / Tag Manager (mesure d’audience).</span>
+                    <span>{{ $t('cookies.analytics') }}</span>
                 </label>
                 <label class="flex items-start gap-2">
                     <input
@@ -54,7 +53,7 @@
                         type="checkbox"
                         class="mt-1"
                     >
-                    <span><strong>Marketing</strong> — Meta Pixel et publicité personnalisée.</span>
+                    <span>{{ $t('cookies.marketing') }}</span>
                 </label>
             </div>
 
@@ -65,7 +64,7 @@
                     class="order-3 sm:order-1"
                     @click="showDetails = !showDetails"
                 >
-                    {{ showDetails ? 'Masquer' : 'Personnaliser' }}
+                    {{ showDetails ? $t('cookies.hide') : $t('cookies.customize') }}
                 </Button>
                 <Button
                     type="button"
@@ -73,7 +72,7 @@
                     class="order-2"
                     @click="rejectNonEssential"
                 >
-                    Refuser
+                    {{ $t('cookies.refuse') }}
                 </Button>
                 <Button
                     v-if="showDetails"
@@ -82,14 +81,14 @@
                     class="order-1 sm:order-3"
                     @click="save({ analytics, marketing })"
                 >
-                    Enregistrer
+                    {{ $t('cookies.save') }}
                 </Button>
                 <Button
                     type="button"
                     class="order-1 sm:order-4"
                     @click="acceptAll"
                 >
-                    Tout accepter
+                    {{ $t('cookies.acceptAll') }}
                 </Button>
             </div>
         </div>
@@ -108,6 +107,7 @@ const {
     init,
 } = useCookieConsent();
 
+const localePath = useLocalePath();
 const showDetails = ref(false);
 const analytics = ref(false);
 const marketing = ref(false);
@@ -128,8 +128,4 @@ watch(bannerVisible, (visible) => {
         showDetails.value = Boolean(preferences.value);
     }
 });
-
-watch(preferences, () => {
-    syncLocalFromPreferences();
-}, { deep: true });
 </script>

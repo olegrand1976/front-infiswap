@@ -8,7 +8,7 @@
                         title="Retour"
                         @click="goBack"
                     />
-                    Chercher <strong>un remplacement</strong>
+                    {{ $t('replacements.searchHeading') }} <strong>{{ $t('replacements.searchHeadingStrong') }}</strong>
                 </div>
             </h1>
 
@@ -240,6 +240,7 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n();
 import { ArrowLeft, Filter, LayoutGrid, Map, Table } from 'lucide-vue-next';
 import { useCookie } from '#app';
 import { regions, departments, goBack } from '~/lib/utils';
@@ -403,7 +404,7 @@ const replacementStatusFilters = {
     all: 'Tous',
 };
 useHead({
-    title: 'Chercher un remplacement',
+    title: () => t('replacements.searchTitle'),
 });
 
 definePageMeta({

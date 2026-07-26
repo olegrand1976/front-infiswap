@@ -21,10 +21,10 @@
                             class="size-4 shrink-0 text-primary"
                             aria-hidden="true"
                         />
-                        Suivi marketing & fréquentation
+                        {{ $t('dashboard.marketing') }}
                     </span>
                     <span class="text-xs font-medium text-primary">
-                        Ouvrir →
+                        {{ $t('dashboard.open') }}
                     </span>
                 </NuxtLink>
             </div>
@@ -51,7 +51,8 @@ import { useReports } from '~/composables/useReports';
 const { reports, getReports, loading } = useReports();
 const { isAdmin, isCommunityManager, canAccessMarketingAnalytics } = useAuth();
 
-useHead({ title: 'Tableau de bord' });
+const { t } = useI18n();
+useHead({ title: () => t('dashboard.title') });
 
 definePageMeta({
     layout: 'dashboard',

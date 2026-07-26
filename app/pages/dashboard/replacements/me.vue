@@ -123,7 +123,7 @@
                         value="me"
                         class="w-full md:w-48 h-12"
                     >
-                        Mes remplacements
+                        {{ $t('replacements.myTitle') }}
                     </TabsTrigger>
                     <TabsTrigger
                         value="groups"
@@ -169,6 +169,7 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n();
 import { ArrowLeft, Filter, LayoutGrid, ListOrdered, Map } from 'lucide-vue-next';
 import { useCookie } from '#app';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -271,7 +272,7 @@ catch (e) {
 }
 
 useHead({
-    title: 'Mes remplacements',
+    title: () => t('replacements.myTitle'),
 });
 
 definePageMeta({

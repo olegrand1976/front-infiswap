@@ -14,6 +14,8 @@ const delegatedProps = computed(() => {
 });
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits);
+const { locale: appLocale } = useI18n();
+const calendarLocale = computed(() => (appLocale.value === 'nl' ? 'nl-BE' : 'fr-BE'));
 </script>
 
 <template>
@@ -21,7 +23,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
         v-slot="{ grid, weekDays }"
         :class="cn('p-3 flex-1 w-full', props.class)"
         v-bind="forwarded"
-        locale="fr"
+        :locale="calendarLocale"
     >
         <RangeCalendarHeader class="flex justify-between items-center">
             <RangeCalendarHeading class="text-primary font-bold" />

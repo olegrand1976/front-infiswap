@@ -12,26 +12,12 @@
                         <h3
                             class="text-primary text-4xl lg:text-5xl xl:text-7xl font-semibold text-center lg:text-left"
                         >
-                            Nos <span class="font-bold">services</span>
+                            {{ $t('services.title') }} <span class="font-bold">{{ $t('services.titleStrong') }}</span>
                         </h3>
 
                         <p
                             class="text-center lg:text-left text-base px-8"
-                        >
-                            Chez InfiSwap, nous mettons à votre disposition une plateforme
-                            complète et intuitive conçue pour faciliter la vie des infirmiers
-                            libéraux.<br class="hidden lg:block">
-                            Notre objectif est de simplifier la gestion des remplacements,<br
-                                class="hidden lg:block"
-                            >
-                            la planification des tournées et l’organisation quotidienne,<br
-                                class="hidden lg:block"
-                            >
-                            afin que vous puissiez vous concentrer sur l’essentiel:<br
-                                class="hidden lg:block"
-                            >
-                            soignez vos patients. Découvrez nos services clés :
-                        </p>
+                        >{{ $t('services.intro') }}</p>
                     </div>
 
                     <div
@@ -543,6 +529,7 @@
 </template>
 
 <script lang="ts" setup>
+const { t } = useI18n();
 import type { PartnerProduct } from '~/utils/partnerServices';
 
 const { trackPartnerImpression, trackPartnerCtaClick, registerPartnerClickFromProduct } = usePartnerServices();

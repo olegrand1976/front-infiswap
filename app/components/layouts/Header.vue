@@ -16,7 +16,7 @@
                             'hover:text-primary/90 font-semibold text-dark animate duration-500': !isActiveRoute(item.route),
                         }"
                     >
-                        <NuxtLink :to="item.route">
+                        <NuxtLink :to="localePath(item.route)">
                             {{ item.label }}
                         </NuxtLink>
                     </li>
@@ -27,23 +27,23 @@
                 <Button
                     v-if="!isLoggedIn"
                     class="font-semibold text-base"
-                    href="/login"
+                    :href="localePath('/login')"
                 >
-                    Connexion
+                    {{ $t('nav.login') }}
                 </Button>
                 <Button
                     v-if="!isLoggedIn"
                     class="font-semibold text-base"
-                    href="/register"
+                    :href="localePath('/register')"
                 >
-                    Inscription
+                    {{ $t('nav.register') }}
                 </Button>
                 <Button
                     v-if="isLoggedIn"
                     class="font-semibold text-base"
-                    href="/dashboard"
+                    :href="localePath('/dashboard')"
                 >
-                    Tableau de bord
+                    {{ $t('nav.dashboard') }}
                 </Button>
                 <LayoutsDropdownLang />
             </div>
@@ -62,8 +62,8 @@
             </div>
             <div
                 :class="{
-                    'relative m-auto flex sm:hidden pt-12 justify-center items-center': route.path === '/',
-                    'hidden': route.path != '/',
+                    'relative m-auto flex sm:hidden pt-12 justify-center items-center': route.path === '/' || route.path === '/nl',
+                    'hidden': route.path !== '/' && route.path !== '/nl',
                 }"
             >
                 <div class="absolute top-0">
@@ -77,9 +77,9 @@
                         v-if="isLoggedIn"
                         variant="light"
                         class="font-semibold cursor-pointer w-full h-10 shadow-lg rounded-full relative z-30"
-                        href="/login"
+                        :href="localePath('/login')"
                     >
-                        Connexion
+                        {{ $t('nav.login') }}
                     </Button>
                 </div>
             </div>
@@ -91,19 +91,24 @@
 import { useRoute } from 'vue-router';
 
 const { isLoggedIn } = useAuth();
-
-const navigationItems = [
-    { label: 'ACCUEIL', route: '/' },
-    { label: 'A PROPOS', route: '/about' },
-    { label: 'NOS SERVICES', route: '/services' },
-    { label: 'OFFRE INSTITUTION', route: '/offre-institution' },
-    { label: 'CARRIÈRE', route: '/carriere' },
-    { label: 'NOS TARIFS', route: '/pricing' },
-    { label: 'NOUS CONTACTER', route: '/contact' },
-];
-
+const { t } = useI18n();
+const localePath = useLocalePath();
 const route = useRoute();
-const isActiveRoute = (routePath: string) => route.path === routePath;
+
+const navigationItems = computed(() => [
+    { label: t('nav.homeNav'), route: '/' },
+    { label: t('nav.aboutNav'), route: '/about' },
+    { label: t('nav.services'), route: '/services' },
+    { label: t('nav.institutionOffer'), route: '/offre-institution' },
+    { label: t('nav.career'), route: '/carriere' },
+    { label: t('nav.pricingNav'), route: '/pricing' },
+    { label: t('nav.contactNav'), route: '/contact' },
+]);
+
+const isActiveRoute = (routePath: string) => {
+    const localized = localePath(routePath);
+    return route.path === localized || route.path === routePath;
+};
 </script>
 
 <style scoped>

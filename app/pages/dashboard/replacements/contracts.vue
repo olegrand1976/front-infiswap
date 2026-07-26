@@ -3,16 +3,16 @@
         <div class="mt-6 flex items-center gap-2">
             <ArrowLeft
                 class="size-5 cursor-pointer hover:text-primary"
-                title="Retour"
+                :title="$t('common.back')"
                 @click="goBack"
             />
             <h1 class="text-primary font-bold">
-                Mes contrats de remplacement
+                {{ $t('replacements.contractsHeading') }}
             </h1>
         </div>
 
         <p class="text-sm text-muted-foreground">
-            Contrats optionnels souscrits lors de la validation d'un remplaçant (3 € par contrat).
+            {{ $t('replacements.contractsHint') }}
         </p>
 
         <div
@@ -80,6 +80,7 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n();
 import { ArrowLeft } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import { goBack } from '~/lib/utils';
@@ -99,7 +100,7 @@ onMounted(async () => {
     }
 });
 
-useHead({ title: 'Mes contrats de remplacement' });
+useHead({ title: () => t('replacements.contractsTitle') });
 
 definePageMeta({
     layout: 'dashboard',

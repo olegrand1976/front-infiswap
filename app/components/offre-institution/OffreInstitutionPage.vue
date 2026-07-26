@@ -293,7 +293,7 @@
                                 <span class="text-slate-700 font-extrabold text-sm">Sécurisation &amp; suivi</span>
                             </div>
                             <p class="text-[10px] text-[#d3405c] font-semibold mb-3">
-                                {{ OFFRE_INSTITUTION_JAUMANA_BELGIUM_ONLY_LABEL }}
+                                {{ jaumanaBelgiumOnlyLabel }}
                             </p>
                             <div class="flex items-center gap-3 mb-3">
                                 <div class="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center text-[#d3405c]">
@@ -603,7 +603,7 @@
                                     Partenariat InfiSwap × Jaumana Soins
                                 </h2>
                                 <p class="text-sm text-[#d3405c] font-semibold mt-2">
-                                    {{ OFFRE_INSTITUTION_JAUMANA_BELGIUM_ONLY_LABEL }}
+                                    {{ jaumanaBelgiumOnlyLabel }}
                                 </p>
                                 <p class="text-sm text-slate-500 mt-2">
                                     Pour mieux vous accompagner, pour mieux vous soutenir — des soins de qualité, sans interruption.
@@ -1226,6 +1226,7 @@ import {
     getOffreInstitutionCountryContent,
     getOffreInstitutionNetworkMembersLabel,
     getOffreInstitutionNetworkProfilesLabel,
+    getOffreInstitutionJaumanaBelgiumOnlyLabel,
     interpolateOffreInstitutionContent,
     OFFRE_INSTITUTION_JAUMANA_BELGIUM_ONLY_LABEL,
 } from '~/lib/offreInstitutionContent';
@@ -1254,6 +1255,7 @@ const props = defineProps<{
     contact: OffreInstitutionContact;
 }>();
 
+const { locale } = useI18n();
 const commitmentLabel = computed(() => getInstitutionCommitmentLabel('monthly'));
 
 const {
@@ -1315,18 +1317,24 @@ const calcIndieRate = ref(45);
 
 const currentYear = new Date().getFullYear();
 
-const contentInterpolationValues = computed(() => ({
-    networkMembers: getOffreInstitutionNetworkMembersLabel(),
-    networkCountShort: `${formatOffreInstitutionNetworkCount()}+`,
-    diyMonthlyLabel: diyMonthlyLabel.value,
-}));
+const contentInterpolationValues = computed(() => {
+    const appLocale = locale.value === 'nl' ? 'nl' as const : 'fr' as const;
+
+    return {
+        networkMembers: getOffreInstitutionNetworkMembersLabel(undefined, appLocale),
+        networkCountShort: `${formatOffreInstitutionNetworkCount(undefined, appLocale)}+`,
+        diyMonthlyLabel: diyMonthlyLabel.value,
+    };
+});
 
 const countryContent = computed(() => {
     if (!selectedCountry.value) {
         return null;
     }
 
-    return getOffreInstitutionCountryContent(selectedCountry.value);
+    const appLocale = locale.value === 'nl' ? 'nl' as const : 'fr' as const;
+
+    return getOffreInstitutionCountryContent(selectedCountry.value, appLocale);
 });
 
 function interpolateCountryContent(template: string): string {
@@ -1389,7 +1397,13 @@ const diyCommunityLabel = computed(() =>
     countryContent.value ? interpolateCountryContent(countryContent.value.diyCommunityLabel) : '',
 );
 
-const networkProfilesLabel = computed(() => getOffreInstitutionNetworkProfilesLabel());
+const jaumanaBelgiumOnlyLabel = computed(() => getOffreInstitutionJaumanaBelgiumOnlyLabel(locale.value === 'nl' ? 'nl' : 'fr'));
+
+const networkProfilesLabel = computed(() => {
+    const appLocale = locale.value === 'nl' ? 'nl' as const : 'fr' as const;
+
+    return getOffreInstitutionNetworkProfilesLabel(undefined, appLocale);
+});
 
 const folderTabDefs: FolderTabDef[] = [
     { id: 'accueil', baseLabel: 'Contexte & Enjeux', icon: 'fa-solid fa-circle-info' },

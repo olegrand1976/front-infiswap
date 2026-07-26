@@ -1,7 +1,7 @@
 <template>
     <NuxtLayout name="guest-with-title">
         <template #title>
-            Contactez-nous
+            {{ $t('contact.title') }}
         </template>
         <div>
             <form
@@ -16,7 +16,7 @@
                                     v-model="formData.name"
                                     :icon="CircleUser"
                                     size="md"
-                                    placeholder="Nom, prénom"
+                                    :placeholder="$t('contact.namePlaceholder')"
                                     :errors="validationErrors.name"
                                     @blur="validateField('name')"
                                     @input="validateField('name')"
@@ -35,7 +35,7 @@
                                     v-model="formData.email"
                                     :icon="Mail"
                                     size="md"
-                                    placeholder="Email"
+                                    :placeholder="$t('auth.email')"
                                     :errors="validationErrors.email"
                                     @blur="validateField('email')"
                                     @input="validateField('email')"
@@ -54,7 +54,7 @@
                                     v-model="formData.phoneNumber"
                                     :icon="Phone"
                                     size="md"
-                                    placeholder="N° de téléphone"
+                                    :placeholder="$t('contact.phonePlaceholder')"
                                     :errors="validationErrors.phoneNumber"
                                     @blur="validateField('phoneNumber')"
                                     @input="validateField('phoneNumber')"
@@ -70,14 +70,14 @@
                         <div class="flex items-center space-x-3">
                             <Mail class="w-6 text-primary" />
                             <span class="text-sm text-primary">
-                                Message
+                                {{ $t('contact.message') }}
                             </span>
                         </div>
                         <FormControl>
                             <div class="flex items-center w-full space-x-1">
                                 <Textarea
                                     v-model="formData.message"
-                                    placeholder="Votre message..."
+                                    :placeholder="$t('contact.messagePlaceholder')"
                                     class="h-40 bg-white"
                                 />
                             </div>
@@ -90,7 +90,7 @@
                     type="submit"
                     :in-progress="inProgress"
                 >
-                    Envoyer
+                    {{ $t('contact.send') }}
                 </Button>
             </form>
 
@@ -98,7 +98,7 @@
                 <div class="p-4 transition duration-300 ease-in-out transform bg-white shadow cursor-pointer hover:bg-primary hover:scale-105 rounded-2xl group">
                     <h4 class="flex items-center justify-center space-x-2 text-sm font-bold text-primary group-hover:text-white">
                         <Mail class="w-6 h-6" />
-                        <span>Téléphone</span>
+                        <span>{{ $t('contact.phone') }}</span>
                     </h4>
                     <p class="mt-6 text-sm text-center group-hover:text-white">
                         0478.02.33.77
@@ -108,7 +108,7 @@
                 <div class="p-4 transition duration-300 ease-in-out transform bg-white shadow cursor-pointer hover:bg-primary hover:scale-105 rounded-2xl group">
                     <h4 class="flex items-center justify-center space-x-2 text-sm font-bold text-primary group-hover:text-white">
                         <MapPin class="w-6 h-6" />
-                        <span>Emplacement</span>
+                        <span>{{ $t('contact.location') }}</span>
                     </h4>
                     <p class="mt-6 text-sm text-center group-hover:text-white">
                         Rue de la Résistance 92/A 7131 Waudrez
@@ -140,6 +140,7 @@
 </template>
 
 <script lang="ts" setup>
+const { t } = useI18n();
 import { CircleUser, Globe, Mail, MapPin, Phone } from 'lucide-vue-next';
 import * as yup from 'yup';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
@@ -202,7 +203,7 @@ const {
 );
 
 useHead({
-    title: 'Contactez-nous',
+    title: () => t('contact.title'),
     meta: [
         {
             name: 'description',

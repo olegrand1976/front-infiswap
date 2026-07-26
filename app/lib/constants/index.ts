@@ -44,7 +44,7 @@ export const LANGUAGES = [
     {
         value: 'fr',
         label: 'FR',
-        name: 'France',
+        name: 'Français',
         icon: '/icons/fr.png',
     },
     {
@@ -53,4 +53,4 @@ export const LANGUAGES = [
         name: 'Nederlands',
         icon: '/icons/pays-bas.png',
     },
-];
+] as const;

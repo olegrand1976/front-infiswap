@@ -38,16 +38,16 @@
             </div>
 
             <div class="bg-white container w-full xl:h-screen lg:h-[55vh] flex flex-col space-y-12 justify-center items-center relative">
-                <BackButton to="/login" />
+                <BackButton :to="localePath('/login')" />
                 <div>
                     <LayoutsLogo class="sm:w-64 lg:w-72" />
                 </div>
                 <div class="flex flex-col items-center space-y-2">
                     <h1 class="md:text-2xl sm:text-xl text-center text-primary">
-                        Nouveau <span class="font-bold">mot de passe</span>
+                        {{ $t('auth.newPasswordTitle') }} <span class="font-bold">{{ $t('auth.newPasswordTitleStrong') }}</span>
                     </h1>
                     <p class="text-gray-400 text-sm text-center">
-                        Veuillez saisir votre nouveau mot de passe sécurisé.
+                        {{ $t('auth.newPasswordHint') }}
                     </p>
                 </div>
                 <div class="w-full container">
@@ -59,7 +59,7 @@
                             v-model="formData.password"
                             :icon="Lock"
                             type="password"
-                            placeholder="Mot de passe"
+                            :placeholder="$t('auth.password')"
                             class="text-sm w-full"
                         />
 
@@ -67,7 +67,7 @@
                             v-model="formData.passwordConfirm"
                             :icon="Lock"
                             type="password"
-                            placeholder="Confirmation"
+                            :placeholder="$t('auth.passwordConfirmPlaceholder')"
                             class="text-sm w-full"
                         />
 
@@ -76,7 +76,7 @@
                                 type="submit"
                                 class="font-bold px-12 md:text-sm sm:text-xs"
                             >
-                                Enregistrer
+                                {{ $t('common.save') }}
                             </Button>
                         </div>
                     </form>
@@ -87,14 +87,14 @@
         <div class="sm:hidden w-screen flex flex-col justify-between relative overflow-hidden">
             <LayoutsHeaderMobile />
 
-            <BackButton to="/login" />
+            <BackButton :to="localePath('/login')" />
 
             <div class="flex flex-col items-center space-y-2 px-6 mt-32 text-center">
                 <h1 class="text-lg text-primary">
-                    Nouveau <span class="font-bold">mot de passe</span>
+                    {{ $t('auth.newPasswordTitle') }} <span class="font-bold">{{ $t('auth.newPasswordTitleStrong') }}</span>
                 </h1>
                 <p class="text-gray-400 text-xs">
-                    Veuillez saisir votre nouveau mot de passe sécurisé.
+                    {{ $t('auth.newPasswordHint') }}
                 </p>
             </div>
 
@@ -108,9 +108,9 @@
                             v-model="formData.password"
                             :icon="Lock"
                             type="password"
-                            label="Nouveau mot de passe"
+                            :label="$t('auth.newPasswordLabel')"
                             label-class="text-xs text-primary font-bold mb-2 uppercase"
-                            placeholder="Mot de passe"
+                            :placeholder="$t('auth.password')"
                             class="text-sm w-full"
                         />
 
@@ -118,9 +118,9 @@
                             v-model="formData.passwordConfirm"
                             :icon="Lock"
                             type="password"
-                            label="Confirmer le nouveau mot de passe"
+                            :label="$t('auth.confirmNewPassword')"
                             label-class="text-xs text-primary font-bold mb-2 uppercase"
-                            placeholder="Confirmation"
+                            :placeholder="$t('auth.passwordConfirmPlaceholder')"
                             class="text-sm w-full"
                         />
                     </div>
@@ -130,7 +130,7 @@
                             type="submit"
                             class="font-bold px-12 md:text-sm sm:text-xs"
                         >
-                            Enregistrer
+                            {{ $t('common.save') }}
                         </Button>
                     </div>
                 </form>
@@ -146,6 +146,7 @@ import { ref } from 'vue';
 import { getErrorMessage } from '~/lib/utils';
 import BackButton from '~/components/ui/back-button/BackButton.vue';
 
+const { t, localePath } = useI18n();
 const { $toast } = useNuxtApp();
 
 definePageMeta({
@@ -153,7 +154,7 @@ definePageMeta({
 });
 
 useHead({
-    title: 'Réinitialisation de mot de passe',
+    title: t('auth.newPasswordPageTitle'),
 });
 
 const formData = ref({
@@ -176,8 +177,8 @@ const resetPassword = async () => {
     getUrlParams();
     if (formData.value.password !== formData.value.passwordConfirm) {
         $toast({
-            title: 'Oups! Une erreur s\'est produite',
-            description: 'Les mots de passe ne correspondent pas.',
+            title: t('auth.oopsError'),
+            description: t('auth.passwordMismatch'),
             variant: 'destructive',
         });
     }
@@ -197,26 +198,26 @@ const resetPassword = async () => {
 
         if (response && response.data && response.data.success) {
             $toast({
-                title: 'Succès',
+                title: t('common.success'),
             });
             setTimeout(() => {
-                navigateTo('/login');
+                navigateTo(localePath('/login'));
             }, 2000);
         }
         else {
             $toast({
-                title: 'Succès',
-                description: 'Votre nouveau mot de passe a été enregistré',
+                title: t('common.success'),
+                description: t('auth.passwordSaved'),
             });
             setTimeout(() => {
-                navigateTo('/login');
+                navigateTo(localePath('/login'));
             }, 2000);
         }
     }
     catch (error: any) {
         console.error('Erreur lors de l\'envoi des données :', error);
         $toast({
-            title: 'Oups! Une erreur s\'est produite',
+            title: t('auth.oopsError'),
             description: getErrorMessage(error),
             variant: 'destructive',
         });
