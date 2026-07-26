@@ -26,7 +26,8 @@ export default defineNuxtConfig({
                 // Page-level useHead + i18n overrides these defaults.
                 {
                     name: 'description',
-                    content: 'InfiSwap — remplacement infirmier BE/FR',
+                    // Pages override via useHead + $t (ex. home.metaDescription).
+                    content: 'InfiSwap — infirmier / verpleegkundige · BE/FR',
                 },
                 {
                     name: 'keywords',
