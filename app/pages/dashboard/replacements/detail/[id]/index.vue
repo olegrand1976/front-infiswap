@@ -410,9 +410,9 @@
             <DialogContent class="sm:max-w-md">
                 <DialogHeader>
                     <DialogTitle>{{ $t('replacements.inamiNumber') }}</DialogTitle>
-                    <Dialog{{ $t('replacements.description') }}>
+                    <DialogDescription>
                         Votre numéro INAMI n'est pas renseigné. Vous pouvez le saisir maintenant (optionnel) ou indiquer que vous ne l'avez pas à disposition.
-                    </Dialog{{ $t('replacements.description') }}>
+                    </DialogDescription>
                 </DialogHeader>
                 <div class="space-y-4 py-2">
                     <Input
@@ -444,7 +444,7 @@
 
 <script setup lang="ts">
 import { ArrowRight, Calendar, CircleCheck, Clock, Home, User } from 'lucide-vue-next';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '~/components/ui/dialog';
 import ReplacementBoostStars from '~/components/replacements/ReplacementBoostStars.vue';
 import ReplacementDetailBoostBlock from '~/components/replacements/ReplacementDetailBoostBlock.vue';
 import ReplacementShareButtons from '~/components/replacements/ReplacementShareButtons.vue';
