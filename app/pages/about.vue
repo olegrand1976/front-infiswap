@@ -32,7 +32,7 @@
                     <div class="order-1 lg:order-2 flex justify-center lg:justify-end">
                         <LayoutsAppImage
                             src="/home/woman_infirmier.png"
-                            alt="Infirmière avec une vieille femme"
+                            :alt="$t('about.altNurseElder')"
                             class="w-full max-w-2xs lg:max-w-none z-20"
                         />
                     </div>
@@ -63,35 +63,27 @@
                 <div>
                     <LayoutsAppImage
                         src="/home/black_infirmier.png"
-                        alt="Jeune infirmière noire"
+                        :alt="$t('about.altNurseYoung')"
                         class="w-full"
                     />
                 </div>
 
                 <div class="space-y-6">
                     <h3 class="text-xl md:text-3xl text-primary text-center md:text-left">
-                        Enfin, <strong>la plateforme...</strong>
+                        {{ $t('about.platformTitleLead') }} <strong>{{ $t('about.platformTitleStrong') }}</strong>
                     </h3>
                     <p>
-                        Accessible sur mobile(bientôt disponible) et ordinateur, InfiSwap apporte un gain de
-                        temps significatif, améliore la coordination entre professionnels et
-                        contribue à une meilleure qualité de soins. Une solution moderne et
-                        indispensable pour un exercice serein et efficace du métier
-                        d'infirmier. <br>
+                        {{ $t('about.platformBody') }}
                     </p>
                     <div>
                         <h5 class="font-semibold">
-                            InfiSwap:
+                            {{ $t('about.taglineLabel') }}
                             <span class="text-primary">
-                                Plus de temps pour soigner, moins de temps à gérer
+                                {{ $t('about.tagline') }}
                             </span>
                         </h5>
                         <p>
-                            Avec InfiSwap, trouvez et gérez vos remplacements facilement. Plus
-                            de visibilité pour les annonces, une recherche optimisée par
-                            localisation et une mise en relation rapide entre infirmiers.
-                            Gagnez du temps, développez votre réseau et exercez en toute
-                            sérénité!
+                            {{ $t('about.taglineBody') }}
                         </p>
                     </div>
                     <Button
@@ -146,55 +138,55 @@
 </template>
 
 <script lang="ts" setup>
-const { t } = useI18n();
-const localePath = useLocalePath();
 import Card from '~/components/ui/card/Card.vue';
 import CardContent from '~/components/ui/card/CardContent.vue';
 import CardHeader from '~/components/ui/card/CardHeader.vue';
 import CardTitle from '~/components/ui/card/CardTitle.vue';
 
-const cards = [
+const { t } = useI18n();
+const localePath = useLocalePath();
+
+const cards = computed(() => [
     {
-        title: '🔍 Recherche rapide et ciblée',
+        title: t('about.cards.searchTitle'),
         content: [
-            'Recherchez facilement les offres de remplacement disponibles.',
-            'Filtrez les annonces par localisation, date et type de soins.',
-            'Recevez des notifications en temps réel dès qu\'une nouvelle opportunité correspond à vos critères.',
+            t('about.cards.search1'),
+            t('about.cards.search2'),
+            t('about.cards.search3'),
         ],
     },
     {
-        title: '🤝 Mise en relation instantanée',
+        title: t('about.cards.connectTitle'),
         content: [
-            'Contactez directement l\'infirmier ou l\'établissement en quelques secondes.',
-            'Obtenez toutes les informations nécessaires sur la mission avant de postuler.',
-            'Echangez via le messagerie integrée pour finaliser votre engagement en toute simplicité.',
+            t('about.cards.connect1'),
+            t('about.cards.connect2'),
+            t('about.cards.connect3'),
         ],
     },
     {
-        title: '📅 Gestion flexible et optimisée',
+        title: t('about.cards.manageTitle'),
         content: [
-            'Planifiez vos remplacements en fonction de vos disponibilités.',
-            'Ajoutez directement les missions acceptées à votre agenda.',
-            'Suivez l\'historique de vos remplacements et optimisez votre planning.',
+            t('about.cards.manage1'),
+            t('about.cards.manage2'),
+            t('about.cards.manage3'),
         ],
     },
     {
-        title: '🚀 Développez votre activité et votre réseau',
+        title: t('about.cards.networkTitle'),
         content: [
-            'Multipliez les opportunités de travail sans effort.',
-            'Renforcez votre réseau professionnel avec de nouvelles collaborations.',
-            'Augmentez votre visibilité auprès des infirmiers et établissements recherchant des remplaçants.',
+            t('about.cards.network1'),
+            t('about.cards.network2'),
+            t('about.cards.network3'),
         ],
     },
-];
+]);
 
 useHead({
     title: () => t('about.title'),
     meta: [
         {
             name: 'description',
-            content:
-                'InfiSwap est la plateforme innovante pour les infirmiers libéraux, facilitant la gestion des remplacements, la planification des tournées et le suivi des formations. Simplifiez vos missions, optimisez votre planning, développez votre réseau professionnel et concentrez-vous sur l’essentiel : soigner vos patients.',
+            content: () => t('about.metaDescription'),
         },
     ],
 });

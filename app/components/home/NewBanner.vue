@@ -80,11 +80,7 @@
                     class="absolute z-20"
                     style="bottom: -80px; left: 20px;"
                 >
-                    <LayoutsAppImage
-                        src="/home/phone_banner.png"
-                        alt="Application InfiSwap"
-                        class="w-52 lg:w-64 xl:w-80 object-contain drop-shadow-xl"
-                    />
+                    <HomePhoneMockup class="w-52 lg:w-64 xl:w-80 drop-shadow-xl" />
                 </div>
             </div>
         </div>

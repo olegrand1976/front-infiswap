@@ -6,15 +6,15 @@
                 :key="item.route"
                 :to="item.route"
                 class="flex flex-col items-center justify-center flex-1 h-full transition-colors duration-200 relative min-w-0 px-1"
-                :class="isActiveRoute(item.route) ? 'text-primary' : 'text-gray-500'"
+                :class="isActiveRoute(item.path) ? 'text-primary' : 'text-gray-500'"
             >
                 <component
-                    :is="isActiveRoute(item.route) ? item.iconSolid : item.iconOutline"
+                    :is="isActiveRoute(item.path) ? item.iconSolid : item.iconOutline"
                     class="w-5 h-5 mb-0.5 flex-shrink-0"
                 />
                 <span class="text-[10px] font-medium leading-tight text-center truncate w-full">{{ item.label }}</span>
                 <div
-                    v-if="isActiveRoute(item.route)"
+                    v-if="isActiveRoute(item.path)"
                     class="absolute top-0 left-1/2 transform -translate-x-1/2 w-10 h-1 bg-primary rounded-b-full"
                 />
             </NuxtLink>
@@ -26,43 +26,51 @@
 import { Briefcase, Building2, Headphones as HeadphonesIcon, Home, Info, LayoutGrid, LogIn as LogInIcon, Sparkles } from 'lucide-vue-next';
 
 const { isLoggedIn } = useAuth();
+const { t } = useI18n();
+const localePath = useLocalePath();
 const route = useRoute();
 
 const tabs = computed(() => {
     const baseTabs = [
         {
-            label: 'Accueil',
-            route: '/',
+            label: t('nav.home'),
+            path: '/',
+            route: localePath('/'),
             iconOutline: Home,
             iconSolid: Home,
         },
         {
-            label: 'À propos',
-            route: '/about',
+            label: t('nav.about'),
+            path: '/about',
+            route: localePath('/about'),
             iconOutline: Info,
             iconSolid: Info,
         },
         {
-            label: 'Services',
-            route: '/services',
+            label: t('nav.servicesTab'),
+            path: '/services',
+            route: localePath('/services'),
             iconOutline: Briefcase,
             iconSolid: Briefcase,
         },
         {
-            label: 'Institution',
-            route: '/offre-institution',
+            label: t('nav.institutionTab'),
+            path: '/offre-institution',
+            route: localePath('/offre-institution'),
             iconOutline: Building2,
             iconSolid: Building2,
         },
         {
-            label: 'Carrière',
-            route: '/carriere',
+            label: t('nav.careerTab'),
+            path: '/carriere',
+            route: localePath('/carriere'),
             iconOutline: Sparkles,
             iconSolid: Sparkles,
         },
         {
-            label: 'Contact',
-            route: '/contact',
+            label: t('nav.contact'),
+            path: '/contact',
+            route: localePath('/contact'),
             iconOutline: HeadphonesIcon,
             iconSolid: HeadphonesIcon,
         },
@@ -70,16 +78,18 @@ const tabs = computed(() => {
 
     if (isLoggedIn.value) {
         baseTabs.push({
-            label: 'Dashboard',
-            route: '/dashboard',
+            label: t('nav.dashboardTab'),
+            path: '/dashboard',
+            route: localePath('/dashboard'),
             iconOutline: LayoutGrid,
             iconSolid: LayoutGrid,
         });
     }
     else {
         baseTabs.push({
-            label: 'Connexion',
-            route: '/login',
+            label: t('nav.login'),
+            path: '/login',
+            route: localePath('/login'),
             iconOutline: LogInIcon,
             iconSolid: LogInIcon,
         });
@@ -89,10 +99,11 @@ const tabs = computed(() => {
 });
 
 const isActiveRoute = (routePath: string) => {
+    const localized = localePath(routePath);
     if (routePath === '/') {
-        return route.path === '/';
+        return route.path === localized || route.path === '/';
     }
-    return route.path.startsWith(routePath);
+    return route.path === localized || route.path.startsWith(`${localized}/`) || route.path.startsWith(routePath);
 };
 </script>
 

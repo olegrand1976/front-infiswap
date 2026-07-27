@@ -64,28 +64,23 @@
                     <div
                         class="absolute z-20 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg rounded-lg p-4 w-4/5 text-center lg:hidden"
                     >
-                        <h3 class="text-primary text-lg font-bold">
-                            Recherche et gestion de remplacement
+                        <h3 class="text-primary text-lg font-bold whitespace-pre-line">
+                            {{ $t('services.replacementTitle') }}
                         </h3>
                     </div>
                 </div>
 
                 <div class="space-y-6">
                     <h3
-                        class="hidden lg:block xl:text-4xl md:text-3xl lg:text-xl text-primary font-bold"
+                        class="hidden lg:block xl:text-4xl md:text-3xl lg:text-xl text-primary font-bold whitespace-pre-line"
                     >
-                        Recherche et gestion <br>
-                        de remplacement
+                        {{ $t('services.replacementTitle') }}
                     </h3>
                     <h4 class="hidden lg:flex text-lg lg:text-xl text-primary">
-                        Accès rapide aux offres
+                        {{ $t('services.replacementSubtitle') }}
                     </h4>
-                    <p class="hidden lg:flex text-base">
-                        Recherchez facilement les offres de remplacement disponibles grâce à
-                        notre moteur de recherche intelligent.
-                        <br>
-                        Filtrez les annonces par localisation, date, type de soins et autres
-                        critères spécifiques à vos besoins.
+                    <p class="hidden lg:flex text-base whitespace-pre-line">
+                        {{ $t('services.replacementBody') }}
                     </p>
                 </div>
             </div>
@@ -99,12 +94,10 @@
                     <h3
                         class="lg:flex hidden xl:text-4xl lg:text-3xl md:text-xl text-primary font-bold"
                     >
-                        Notification en temps réel
+                        {{ $t('services.notifTitle') }}
                     </h3>
                     <p class="hidden lg:flex text-base">
-                        Recevez des alertes instantanées dès qu’une nouvelle opportunité
-                        correspond à vos critères. Ne manquez jamais une mission qui
-                        pourrait optimiser votre planning et valoriser votre expertise.
+                        {{ $t('services.notifBody') }}
                     </p>
                 </div>
                 <div
@@ -119,7 +112,7 @@
                         class="absolute z-20 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg rounded-lg p-4 w-4/5 text-center lg:hidden"
                     >
                         <h3 class="text-primary text-lg font-bold">
-                            Notification en temps réel
+                            {{ $t('services.notifTitle') }}
                         </h3>
                     </div>
                 </div>
@@ -189,21 +182,17 @@
                         <LayoutsNursTech />
                     </div>
                     <p class="text-sm lg:text-base text-center lg:text-left">
-                        Créez votre page web professionnelle avec
-                        <span class="font-bold text-primary">NURS</span><span class="font-bold text-primarytech">TECH</span>
-                        — visible sur InfiSwap et optimisée pour vos futurs patients.
+                        {{ $t('services.nurstechLead') }}
                     </p>
                     <p class="hidden lg:block text-base">
-                        Avec NURSTECH, bénéficiez d'une page web claire, professionnelle
-                        et optimisée pour que vos futurs patients vous trouvent facilement
-                        et vous contactent rapidement.
+                        {{ $t('services.nurstechBody') }}
                     </p>
                     <div class="flex justify-center lg:justify-start">
                         <Button
-                            href="/nurstech-by-infiswap"
+                            :href="localePath('/nurstech-by-infiswap')"
                             @click="onServicesLearnMore('nurstech')"
                         >
-                            En savoir plus
+                            {{ $t('services.learnMore') }}
                         </Button>
                     </div>
                 </div>
@@ -219,17 +208,17 @@
                         <LayoutsNursAssur />
                     </div>
                     <p class="text-sm lg:text-base text-center lg:text-left">
-                        Votre assurance professionnelle 100% adaptée aux infirmiers libéraux — devis personnalisé sous 48h.
+                        {{ $t('services.nursassurLead') }}
                     </p>
                     <p class="hidden lg:block text-base">
-                        Votre assurance professionnelle 100% adaptée à votre métier d'infirmier-ère. Avec NURSASSUR, bénéficiez d'une couverture complète, conçue pour les besoins spécifiques des infirmiers et infirmières libéraux. Gagnez en sérénité et concentrez-vous sur vos patients !
+                        {{ $t('services.nursassurBody') }}
                     </p>
                     <div class="flex justify-center lg:justify-start">
                         <Button
-                            href="/nursassur-by-infiswap"
+                            :href="localePath('/nursassur-by-infiswap')"
                             @click="onServicesLearnMore('nursassur')"
                         >
-                            En savoir plus
+                            {{ $t('services.learnMore') }}
                         </Button>
                     </div>
                 </div>
@@ -263,29 +252,23 @@
                     <div
                         class="absolute z-20 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg rounded-lg p-4 w-4/5 text-center lg:hidden"
                     >
-                        <h3 class="text-primary text-lg font-bold">
-                            Communication et <br>
-                            réseau
+                        <h3 class="text-primary text-lg font-bold whitespace-pre-line">
+                            {{ $t('services.networkTitle') }}
                         </h3>
                     </div>
                 </div>
 
                 <div class="space-y-6">
                     <h3
-                        class="hidden lg:flex xl:text-4xl lg:text-3xl md:text-xl text-primary font-bold"
+                        class="hidden lg:flex xl:text-4xl lg:text-3xl md:text-xl text-primary font-bold whitespace-pre-line"
                     >
-                        Communication et <br>
-                        réseau
+                        {{ $t('services.networkTitle') }}
                     </h3>
                     <h4 class="hidden lg:flex text-lg lg:text-xl text-primary">
-                        Mise en relation facilitée
+                        {{ $t('services.networkSubtitle') }}
                     </h4>
-                    <p class="hidden lg:flex text-base">
-                        Contactez directement l’infirmier ou l’établissement en quelques
-                        clics pour finaliser rapidement vos engagements.
-                        <br>
-                        Échangez via la messagerie intégrée pour une communication sécurisée
-                        et fluide.
+                    <p class="hidden lg:flex text-base whitespace-pre-line">
+                        {{ $t('services.networkBody') }}
                     </p>
                 </div>
             </div>
@@ -299,13 +282,10 @@
                     <h3
                         class="hidden lg:flex xl:text-4xl lg:text-3xl md:text-xl text-primary font-bold"
                     >
-                        Historique et suivi personnalisé
+                        {{ $t('services.historyTitle') }}
                     </h3>
                     <p class="hidden lg:block text-base">
-                        Suivez l’historique de vos missions et analysez vos performances
-                        pour optimiser votre activité. Bénéficiez d’un retour détaillé sur
-                        vos interventions, pour toujours améliorer votre gestion de temps et
-                        vos compétences.
+                        {{ $t('services.historyBody') }}
                     </p>
                 </div>
                 <div
@@ -320,7 +300,7 @@
                         class="absolute z-20 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg rounded-lg p-4 w-4/5 text-center lg:hidden"
                     >
                         <h3 class="text-primary text-lg font-bold">
-                            Historique et suivi personnalisé
+                            {{ $t('services.historyTitle') }}
                         </h3>
                     </div>
                 </div>
@@ -343,7 +323,7 @@
                         class="absolute z-20 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg rounded-lg p-4 w-4/5 text-center lg:hidden"
                     >
                         <h3 class="text-primary text-lg font-bold">
-                            Développement de votre réseau professionnel
+                            {{ $t('services.devNetworkTitle') }}
                         </h3>
                     </div>
                 </div>
@@ -351,13 +331,10 @@
                     <h3
                         class="hidden lg:flex xl:text-4xl lg:text-3xl md:text-xl text-primary font-bold"
                     >
-                        Développement de votre réseau professionnel
+                        {{ $t('services.devNetworkTitle') }}
                     </h3>
                     <p class="hidden lg:flex text-base">
-                        Renforcez vos liens avec d’autres professionnels de la santé et
-                        élargissez votre réseau grâce à de nouvelles collaborations.
-                        Augmentez votre visibilité auprès des établissements et des
-                        infirmiers à la recherche de remplaçants.
+                        {{ $t('services.devNetworkBody') }}
                     </p>
                 </div>
             </div>
@@ -368,22 +345,15 @@
             >
                 <div class="space-y-6">
                     <h3
-                        class="hidden lg:flex xl:text-4xl lg:text-3xl md:text-xl text-primary font-bold"
+                        class="hidden lg:flex xl:text-4xl lg:text-3xl md:text-xl text-primary font-bold whitespace-pre-line"
                     >
-                        Gestion administrative
-                        <br>
-                        et suivi des formations
-                        <br>
-                        (bientôt disponible)
+                        {{ $t('services.adminTitle') }}
                     </h3>
                     <h4 class="hidden lg:flex text-lg lg:text-xl text-primary">
-                        Outil de gestion complet
+                        {{ $t('services.adminSubtitle') }}
                     </h4>
                     <p class="hidden lg:flex text-base">
-                        Gérez vos remplacements et votre planning de manière centralisée,
-                        tout en réduisant le temps administratif. Accédez à des outils de
-                        suivi administratif et financier pour une vision claire de votre
-                        activité.
+                        {{ $t('services.adminBody') }}
                     </p>
                 </div>
                 <div class="relative order-1 lg:order-2 flex justify-center lg:justify-end">
@@ -395,12 +365,8 @@
                     <div
                         class="absolute z-20 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg rounded-lg p-4 w-4/5 text-center lg:hidden"
                     >
-                        <h3 class="text-primary text-lg font-bold">
-                            Gestion administrative
-                            <br>
-                            et suivi des formations
-                            <br>
-                            (bientôt disponible)
+                        <h3 class="text-primary text-lg font-bold whitespace-pre-line">
+                            {{ $t('services.adminTitle') }}
                         </h3>
                     </div>
                 </div>
@@ -421,10 +387,8 @@
                     <div
                         class="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg rounded-lg p-4 w-4/5 text-center lg:hidden"
                     >
-                        <h3 class="text-primary text-lg font-bold">
-                            Suivi des formation
-                            <br>
-                            professionnelles
+                        <h3 class="text-primary text-lg font-bold whitespace-pre-line">
+                            {{ $t('services.trainingTitleMobile') }}
                         </h3>
                     </div>
                 </div>
@@ -432,14 +396,10 @@
                     <h3
                         class="lg:block hidden xl:text-4xl lg:text-3xl md:text-xl text-primary font-bold"
                     >
-                        Suivi des formations
+                        {{ $t('services.trainingTitle') }}
                     </h3>
-                    <p class="hidden lg:flex text-base">
-                        Assurez-vous de rester en conformité avec les obligations légales
-                        grâce à un suivi détaillé de vos formations.
-                        <br>
-                        Recevez des rappels et gérez vos inscriptions pour maintenir vos
-                        compétences à jour et valoriser votre expertise.
+                    <p class="hidden lg:flex text-base whitespace-pre-line">
+                        {{ $t('services.trainingBody') }}
                     </p>
                 </div>
             </div>
@@ -448,7 +408,7 @@
         <div class="container lg:my-8 py-8">
             <LayoutsLogo class="w-72 flex justify-center items-center mx-auto" />
             <h2 class="text-3xl text-center text-primary font-bold lg:my-10">
-                Plus de temps pour soigner, moins de temps à gérer !
+                {{ $t('services.slogan') }}
             </h2>
         </div>
         <div class="relative font-light">
@@ -462,15 +422,10 @@
                         <h3
                             class="lg:text-4xl text-3xl text-primary font-bold text-center lg:text-left"
                         >
-                            Avec InfiSwap,
+                            {{ $t('services.withTitle') }}
                         </h3>
                         <p class="text-center lg:text-start text-base">
-                            Multipliez vos opportunités professionnelles en toute simplicité.
-                            Notre solution moderne et sécurisée vous offre plus de temps pour
-                            soigner, moins de temps à gérer et une expérience utilisateur
-                            pensée pour répondre aux exigences d'un secteur en constante
-                            évolution. Découvrez dès aujourd'hui comment nous pouvons
-                            transformer votre quotidien professionnel!
+                            {{ $t('services.withBody') }}
                         </p>
                     </div>
                     <div class="order-2 flex justify-center lg:justify-end flex-1">
@@ -491,28 +446,26 @@
                 class="order-1 lg:order-2 text-center lg:text-right space-y-8 lg:space-y-32"
             >
                 <h3
-                    class="text-primary text-3xl font-semibold text-center lg:text-left max-w-xs sm:max-w-lg mx-auto lg:mx-0"
+                    class="text-primary text-3xl font-semibold text-center lg:text-left max-w-xs sm:max-w-lg mx-auto lg:mx-0 whitespace-pre-line"
                 >
-                    Inscris-toi dès maintenant
-                    <br>
-                    pour développer ton activité!
+                    {{ $t('services.signupTitle') }}
                 </h3>
 
                 <div
                     class="flex flex-col space-y-4 lg:flex-row lg:justify-between lg:items-center lg:space-y-0"
                 >
                     <Button
-                        href="/register"
+                        :href="localePath('/register')"
                         class="w-44 mx-auto lg:mx-0 flex justify-center items-center font-bold"
                     >
-                        S'inscrire
+                        {{ $t('services.ctaRegister') }}
                     </Button>
                     <Button
                         variant="outline"
                         class="w-44 mx-auto inline-flex rounded-3xl"
-                        href="/login"
+                        :href="localePath('/login')"
                     >
-                        Se connecter
+                        {{ $t('services.ctaLogin') }}
                     </Button>
                 </div>
             </div>
@@ -529,18 +482,18 @@
 </template>
 
 <script lang="ts" setup>
-const { t } = useI18n();
 import type { PartnerProduct } from '~/utils/partnerServices';
 
+const { t } = useI18n();
+const localePath = useLocalePath();
 const { trackPartnerImpression, trackPartnerCtaClick, registerPartnerClickFromProduct } = usePartnerServices();
 
 useHead({
-    title: 'Services',
+    title: () => t('services.seoTitle'),
     meta: [
         {
             name: 'description',
-            content:
-                'Découvrez les services InfiSwap, la plateforme complète dédiée aux infirmiers indépendants. Recherche de remplacements, notifications en temps réel, gestion de planning, communication sécurisée, création de page professionnelle avec NursTech, assurances spécialisées avec NursAssur et outils d’organisation adaptés à votre activité. Simplifiez votre quotidien et développez votre activité infirmière grâce à InfiSwap.',
+            content: () => t('services.metaDescription'),
         },
     ],
 });

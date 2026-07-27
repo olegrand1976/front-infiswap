@@ -110,7 +110,7 @@
                                     :key="plan.id"
                                     class="flex items-baseline justify-between gap-3"
                                 >
-                                    <span class="text-sm text-gray-600">{{ plan.duration_days }} jours</span>
+                                    <span class="text-sm text-gray-600">{{ $t('pricing.days', { n: plan.duration_days }) }}</span>
                                     <span class="text-2xl font-bold text-gray-900">{{ formatAmount(plan.amount) }} €</span>
                                 </div>
                             </div>
@@ -123,7 +123,7 @@
                                 </div>
                             </template>
                             <p class="mt-2 text-sm text-gray-500">
-                                Paiement unique · 3 ou 7 jours de visibilité
+                                {{ $t('pricing.oneTimeVisibility') }}
                             </p>
                         </div>
 
@@ -147,10 +147,10 @@
                             class="w-full font-semibold border-amber-300 text-amber-800 rounded hover:text-amber-800/60 hover:bg-amber-50 h-11"
                             @click="handleBoostCta"
                         >
-                            {{ user ? 'Gérer mes remplacements' : 'Commencer gratuitement' }}
+                            {{ user ? $t('pricing.manageReplacements') : $t('pricing.startFree') }}
                         </Button>
                         <p class="text-center text-xs text-gray-400 mt-3">
-                            Activable depuis « Mes remplacements » sur chaque annonce
+                            {{ $t('pricing.activableFrom') }}
                         </p>
                     </div>
                 </article>
@@ -158,23 +158,22 @@
 
             <div class="mt-12 lg:hidden max-w-xl mx-auto">
                 <h3 class="text-center text-lg font-semibold text-gray-800 mb-4">
-                    Comment ça marche ?
+                    {{ $t('pricing.howItWorks') }}
                 </h3>
                 <div class="rounded-2xl border border-gray-100 bg-white/80 p-5 shadow-sm text-center">
                     <Search class="w-6 h-6 text-primary mx-auto mb-3" />
                     <p class="font-semibold text-sm text-gray-800">
-                        Un parcours progressif
+                        {{ $t('pricing.progressiveTitle') }}
                     </p>
                     <p class="text-xs text-gray-500 mt-2 leading-relaxed">
-                        Créez un compte gratuit pour explorer, publier et postuler.
-                        Boostez une annonce dès 2 € (3 jours) si vous voulez plus de visibilité.
+                        {{ $t('pricing.progressiveBody') }}
                     </p>
                 </div>
             </div>
 
             <div class="mt-16 lg:mt-20 max-w-4xl mx-auto hidden lg:block">
                 <h3 class="text-center text-lg font-semibold text-gray-800 mb-8">
-                    Comment ça marche ?
+                    {{ $t('pricing.howItWorks') }}
                 </h3>
                 <div class="grid grid-cols-3 gap-4 text-center">
                     <div
@@ -199,15 +198,15 @@
             <div class="mt-10 lg:mt-14 flex flex-col sm:flex-row flex-wrap justify-center gap-4 sm:gap-6 text-sm text-gray-500 px-2">
                 <span class="flex items-center gap-2">
                     <ShieldCheck class="w-4 h-4 text-success" />
-                    Paiement sécurisé Stripe
+                    {{ $t('pricing.secureStripe') }}
                 </span>
                 <span class="flex items-center gap-2">
                     <HeartHandshake class="w-4 h-4 text-primary" />
-                    Conçu par des professionnels de santé
+                    {{ $t('pricing.madeByPros') }}
                 </span>
                 <span class="flex items-center gap-2">
                     <Zap class="w-4 h-4 text-amber-500" />
-                    Durée fixe, sans abonnement
+                    {{ $t('pricing.fixedDuration') }}
                 </span>
             </div>
         </div>
@@ -229,6 +228,7 @@ import {
 import { Button } from '@/components/ui/button';
 
 const { $apifetch } = useNuxtApp();
+const { t, locale } = useI18n();
 const user = useUser();
 const localePath = useLocalePath();
 
@@ -261,8 +261,6 @@ const { data: plansData } = await useAsyncData('pricing-plans', async () => {
 const boostPlan = computed(() => plansData.value?.boosts?.replacement ?? null);
 const boostPlans = computed(() => plansData.value?.boosts?.replacement_plans ?? []);
 
-const DEFAULT_BOOST_DESCRIPTION = 'Mettez votre annonce en tête des recherches et augmentez votre visibilité auprès des remplaçants disponibles.';
-
 const isUsableDescription = (value?: string | null) => {
     if (!value) return false;
     const trimmed = value.trim();
@@ -273,59 +271,63 @@ const isUsableDescription = (value?: string | null) => {
 const boostDescription = computed(() => (
     isUsableDescription(boostPlan.value?.description)
         ? boostPlan.value!.description!
-        : DEFAULT_BOOST_DESCRIPTION
+        : t('pricing.boostDefaultDesc')
 ));
 
-const freeFeatures = [
-    { label: 'Rechercher les remplacements disponibles', available: true },
-    { label: 'Consulter les annonces et missions institution', available: true },
-    { label: 'Alertes et notifications personnalisées', available: true },
-    { label: 'Filtres par zone, dates et type de soins', available: true },
-    { label: 'Aperçu des détails avant de postuler', available: true },
-    { label: 'Publier et gérer vos remplacements', available: true },
-    { label: 'Postuler aux annonces qui vous intéressent', available: true },
-    { label: 'Modifier ou fermer vos publications', available: true },
-    { label: 'Publier un remplacement urgent', available: true },
-    { label: 'Mise en avant en tête de liste', available: false },
-];
+const freeFeatures = computed(() => [
+    { label: t('pricing.freeFeatures.f1'), available: true },
+    { label: t('pricing.freeFeatures.f2'), available: true },
+    { label: t('pricing.freeFeatures.f3'), available: true },
+    { label: t('pricing.freeFeatures.f4'), available: true },
+    { label: t('pricing.freeFeatures.f5'), available: true },
+    { label: t('pricing.freeFeatures.f6'), available: true },
+    { label: t('pricing.freeFeatures.f7'), available: true },
+    { label: t('pricing.freeFeatures.f8'), available: true },
+    { label: t('pricing.freeFeatures.f9'), available: true },
+    { label: t('pricing.freeFeatures.f10'), available: false },
+]);
 
-const boostFeatures = [
-    'Boost 2 : 7 jours à 4,40 € — recommandé',
-    'Boost 1 : 3 jours à 2,00 € — option rapide',
-    'Annonce en tête des résultats de recherche',
-    'Activation en un clic sur vos annonces',
-    'Contrat de remplacement optionnel — 3 €',
-];
+const boostFeatures = computed(() => [
+    t('pricing.boostFeatures.b1'),
+    t('pricing.boostFeatures.b2'),
+    t('pricing.boostFeatures.b3'),
+    t('pricing.boostFeatures.b4'),
+    t('pricing.boostFeatures.b5'),
+]);
 
-const tips = [
+const tips = computed(() => [
     {
         icon: Gift,
-        title: 'Gratuit',
-        text: 'Parfait pour surveiller le marché, publier et postuler, sans abonnement.',
+        title: t('pricing.tips.freeTitle'),
+        text: t('pricing.tips.freeText'),
     },
     {
         icon: Rocket,
-        title: 'Boost dès 2 €',
-        text: 'Option ponctuelle (3 ou 7 jours) pour accélérer le remplissage d\'une annonce déjà publiée.',
+        title: t('pricing.tips.boostTitle'),
+        text: t('pricing.tips.boostText'),
     },
     {
         icon: Search,
-        title: 'Progressif',
-        text: 'Commencez gratuitement, boostez une annonce quand vous voulez plus de visibilité.',
+        title: t('pricing.tips.progressiveTitle'),
+        text: t('pricing.tips.progressiveText'),
     },
-];
+]);
 
 const formatAmount = (amount?: string | number | null, fallback = '—') => {
     if (amount === undefined || amount === null || amount === '') return fallback;
     const num = Number(amount);
     if (Number.isNaN(num)) return String(amount);
-    return num.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const numberLocale = locale.value === 'nl' ? 'nl-BE' : 'fr-BE';
+    return num.toLocaleString(numberLocale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 };
 
 const handleBoostCta = () => {
     if (!user.value) {
-        return navigateTo('/register');
+        return navigateTo(localePath('/register'));
     }
-    navigateTo('/dashboard/replacements?type=me');
+    return navigateTo({
+        path: localePath('/dashboard/replacements'),
+        query: { type: 'me' },
+    });
 };
 </script>

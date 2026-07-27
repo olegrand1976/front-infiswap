@@ -15,8 +15,8 @@
             />
         </div>
 
-        <h2 class="text-center text-2xl lg:text-4xl font-light text-primary mb-10 leading-snug">
-            InfiSwap, une plateforme<br>pensée pour les infirmiers
+        <h2 class="text-center text-2xl lg:text-4xl font-light text-primary mb-10 leading-snug whitespace-pre-line">
+            {{ $t('home.platform.title') }}
         </h2>
 
         <div class="flex flex-col gap-4 lg:hidden">
@@ -27,18 +27,18 @@
                 <div class="absolute inset-0 bg-primary" />
                 <LayoutsAppImage
                     src="/home/nurse_with_phone3.png"
-                    alt="Professionnels de terrain"
+                    :alt="$t('home.platform.altField')"
                     class="absolute right-0 bottom-0 h-full w-auto object-contain"
                 />
                 <div class="absolute inset-0 flex flex-col justify-between p-5">
-                    <p class="text-white font-semibold text-lg leading-snug max-w-[55%]">
-                        Professionnels<br>de terrain
+                    <p class="text-white font-semibold text-lg leading-snug max-w-[55%] whitespace-pre-line">
+                        {{ $t('home.platform.cardField') }}
                     </p>
                     <Button
                         class="bg-white text-primary font-semibold rounded-xl px-5 py-2.5 self-start text-sm hover:bg-white hover:scale-105 transition-transform duration-300"
-                        href="/about"
+                        :href="localePath('/about')"
                     >
-                        En savoir plus
+                        {{ $t('home.stats.learnMore') }}
                     </Button>
                 </div>
             </div>
@@ -50,18 +50,18 @@
                 <div class="absolute inset-0 bg-primary" />
                 <LayoutsAppImage
                     src="/home/nurse_with_phone2.png"
-                    alt="Me faire remplacer"
+                    :alt="$t('home.platform.altReplace')"
                     class="absolute right-0 bottom-0 h-full w-auto object-contain"
                 />
                 <div class="absolute inset-0 flex flex-col justify-between p-5">
-                    <p class="text-white font-bold text-xl leading-snug max-w-[55%]">
-                        Me faire<br>remplacer
+                    <p class="text-white font-bold text-xl leading-snug max-w-[55%] whitespace-pre-line">
+                        {{ $t('home.platform.cardReplace') }}
                     </p>
                     <Button
                         class="bg-white text-primary font-bold rounded-xl px-5 py-2.5 self-start text-sm hover:bg-white hover:scale-105 transition-transform duration-300"
-                        href="/about"
+                        :href="localePath('/about')"
                     >
-                        En savoir plus
+                        {{ $t('home.stats.learnMore') }}
                     </Button>
                 </div>
             </div>
@@ -73,18 +73,18 @@
                 <div class="absolute inset-0 bg-primary" />
                 <LayoutsAppImage
                     src="/home/three_nurses.png"
-                    alt="Je cherche un remplacement"
+                    :alt="$t('home.platform.altFind')"
                     class="absolute right-0 bottom-0 h-full w-auto object-contain"
                 />
                 <div class="absolute inset-0 flex flex-col justify-between p-5">
-                    <p class="text-white font-semibold text-lg leading-snug max-w-[55%]">
-                        Trouver un<br>remplacement
+                    <p class="text-white font-semibold text-lg leading-snug max-w-[55%] whitespace-pre-line">
+                        {{ $t('home.platform.cardFind') }}
                     </p>
                     <Button
                         class="bg-white text-primary font-semibold rounded-xl px-5 py-2.5 self-start text-sm hover:bg-white hover:scale-105 transition-transform duration-300"
-                        href="/about"
+                        :href="localePath('/about')"
                     >
-                        En savoir plus
+                        {{ $t('home.stats.learnMore') }}
                     </Button>
                 </div>
             </div>
@@ -97,18 +97,18 @@
                 >
                     <LayoutsAppImage
                         src="/home/nurse_with_phone3.png"
-                        alt="Professionnels de terrain"
+                        :alt="$t('home.platform.altField')"
                         class="absolute bottom-0 left-1/2 transform -translate-x-1/2 h-full w-auto object-contain object-bottom"
                     />
                 </div>
-                <p class="text-center text-primary px-2 mb-4 leading-snug">
-                    Une solution parfaite<br>pour les professionnels<br>de terrain
+                <p class="text-center text-primary px-2 mb-4 leading-snug whitespace-pre-line">
+                    {{ $t('home.platform.cardFieldDesktop') }}
                 </p>
                 <Button
                     class="bg-primary text-white rounded-lg px-5 py-1.5 hover:bg-primary w-75 hover:scale-105 transition-transform duration-300"
-                    href="/about"
+                    :href="localePath('/about')"
                 >
-                    En savoir plus
+                    {{ $t('home.stats.learnMore') }}
                 </Button>
             </div>
 
@@ -118,18 +118,18 @@
                 >
                     <LayoutsAppImage
                         src="/home/nurse_with_phone2.png"
-                        alt="Me faire remplacer"
+                        :alt="$t('home.platform.altReplace')"
                         class="w-full h-auto block"
                     />
                 </div>
-                <p class="text-center text-white text-base font-semibold px-4 mb-5 leading-snug">
-                    Me faire<br>remplacer
+                <p class="text-center text-white text-base font-semibold px-4 mb-5 leading-snug whitespace-pre-line">
+                    {{ $t('home.platform.cardReplace') }}
                 </p>
                 <Button
                     class="bg-white text-primary font-medium rounded-lg px-6 py-2 hover:bg-white lg:mt-10 w-75 hover:scale-105 transition-transform duration-300"
-                    href="/about"
+                    :href="localePath('/about')"
                 >
-                    En savoir plus
+                    {{ $t('home.stats.learnMore') }}
                 </Button>
             </div>
 
@@ -139,20 +139,24 @@
                 >
                     <LayoutsAppImage
                         src="/home/three_nurses.png"
-                        alt="Je cherche un remplacement"
+                        :alt="$t('home.platform.altFind')"
                         class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 h-full w-auto object-contain object-bottom"
                     />
                 </div>
-                <p class="text-center text-primary px-2 mb-4 leading-snug">
-                    Je cherche<br>un remplacement à<br>effectuer
+                <p class="text-center text-primary px-2 mb-4 leading-snug whitespace-pre-line">
+                    {{ $t('home.platform.cardFindDesktop') }}
                 </p>
                 <Button
                     class="bg-primary text-white rounded-lg px-5 py-1.5 hover:bg-primary w-75 hover:scale-105 transition-transform duration-300"
-                    href="/about"
+                    :href="localePath('/about')"
                 >
-                    En savoir plus
+                    {{ $t('home.stats.learnMore') }}
                 </Button>
             </div>
         </div>
     </div>
 </template>
+
+<script setup lang="ts">
+const localePath = useLocalePath();
+</script>
