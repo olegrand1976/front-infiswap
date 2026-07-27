@@ -9,7 +9,7 @@
                 Rue de la Résistance, 92/A 7131 Waudrez Belgium
             </p>
             <div class="flex items-center gap-2">
-                <NuxtLink to="/">Revenir vers <span class="text-primary font-bold">infiswap.be</span></NuxtLink>
+                <NuxtLink :to="localePath('/')">Revenir vers <span class="text-primary font-bold">infiswap.be</span></NuxtLink>
                 <a
                     href="mailto:info@infiswap.be"
                     class="ml-4 flex items-center gap-2"
@@ -51,14 +51,14 @@
                 <Button
                     v-if="!isLoggedIn"
                     class="font-semibold text-base"
-                    href="/login"
+                    :href="localePath('/login')"
                 >
                     Connexion
                 </Button>
                 <Button
                     v-if="isLoggedIn"
                     class="font-semibold text-base"
-                    href="/dashboard"
+                    :href="localePath('/dashboard')"
                 >
                     Tableau de bord
                 </Button>
@@ -96,7 +96,7 @@
                         v-if="isLoggedIn"
                         variant="light"
                         class="font-semibold cursor-pointer w-full h-10 shadow-lg rounded-full relative z-30"
-                        href="/login"
+                        :href="localePath('/login')"
                     >
                         Connexion
                     </Button>
@@ -107,6 +107,7 @@
 </template>
 
 <script lang="ts" setup>
+const localePath = useLocalePath();
 import { Mail, MapPin } from 'lucide-vue-next';
 import { useRoute } from 'vue-router';
 

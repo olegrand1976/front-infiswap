@@ -436,7 +436,7 @@ export const useAuth = () => {
         group: number;
         phoneNumber: string;
         dateOfBirth: string | null;
-        language: 'fr' | 'en' | string;
+        language: 'fr' | 'nl' | string;
         roles: AccountType[];
         address: Address;
     };

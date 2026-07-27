@@ -25,25 +25,31 @@ export async function seedCookieConsent(page: Page): Promise<void> {
 
 export async function fillLoginForm(page: Page, identifier: string, password: string): Promise<void> {
     await page.getByPlaceholder('Email').first().fill(identifier);
-    await page.getByPlaceholder('Mot de passe').first().fill(password);
+    await page.getByPlaceholder(/Mot de passe|Wachtwoord/).first().fill(password);
 }
 
 export async function submitLogin(page: Page): Promise<void> {
-    await page.getByRole('button', { name: 'Se connecter' }).first().click();
+    const submit = page.getByTestId('login-submit').first();
+    if (await submit.count()) {
+        await submit.click();
+        return;
+    }
+
+    await page.getByRole('button', { name: /Se connecter|Inloggen/ }).first().click();
 }
 
 export async function fillRegistrationForm(page: Page, data: RegistrationFormData): Promise<void> {
     const form = visibleRegistrationForm(page);
 
-    await form.getByPlaceholder('Nom *', { exact: true }).fill(data.lastname);
-    await form.getByPlaceholder('Prénoms *', { exact: true }).fill(data.firstname);
-    await form.getByPlaceholder('Email *', { exact: true }).fill(data.email);
-    await form.getByPlaceholder('N° de téléphone *', { exact: true }).fill(data.phoneNumber);
-    await form.getByPlaceholder('Mot de passe *', { exact: true }).fill(data.password);
-    await form.getByPlaceholder('Confirmation mot de passe *', { exact: true }).fill(data.password);
-    await form.getByPlaceholder('Rue *', { exact: true }).fill(data.street);
-    await form.getByPlaceholder('Code postal *', { exact: true }).fill(data.zipCode);
-    await form.getByPlaceholder('Ville *', { exact: true }).fill(data.city);
+    await form.getByPlaceholder(/Nom \*|Naam \*/).fill(data.lastname);
+    await form.getByPlaceholder(/Prénoms \*|Voornamen \*/).fill(data.firstname);
+    await form.getByPlaceholder(/Email \*|E-mail \*/).fill(data.email);
+    await form.getByPlaceholder(/N° de téléphone \*|Telefoonnummer \*/).fill(data.phoneNumber);
+    await form.getByPlaceholder(/Mot de passe \*|Wachtwoord \*/).fill(data.password);
+    await form.getByPlaceholder(/Confirmation mot de passe \*|Bevestig wachtwoord \*/).fill(data.password);
+    await form.getByPlaceholder(/Rue \*|Straat \*/).fill(data.street);
+    await form.getByPlaceholder(/Code postal \*|Postcode \*/).fill(data.zipCode);
+    await form.getByPlaceholder(/Ville \*|Stad \*/).fill(data.city);
 
     const workingCountriesBlock = form.locator('div.col-span-4').filter({ hasText: 'Pays de recherche' });
     const belgiumCheckbox = workingCountriesBlock.getByRole('checkbox').first();
@@ -82,7 +88,7 @@ export async function fillRegistrationForm(page: Page, data: RegistrationFormDat
 }
 
 export async function submitRegistration(page: Page): Promise<void> {
-    const submitButton = visibleRegistrationForm(page).getByRole('button', { name: "S'inscrire" });
+    const submitButton = visibleRegistrationForm(page).getByRole('button', { name: /S'inscrire|Registreren/ });
     await expect(submitButton).toBeEnabled({ timeout: 15_000 });
     await submitButton.click();
 }
@@ -100,4 +106,9 @@ export async function cleanupE2eUsers(apiUrl: string): Promise<void> {
             Accept: 'application/json',
         },
     }).catch(() => undefined);
+}
+
+export async function openNlLogin(page: Page, baseURL: string): Promise<void> {
+    await seedCookieConsent(page);
+    await page.goto(`${baseURL.replace(/\/$/, '')}/nl/login`);
 }

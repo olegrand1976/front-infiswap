@@ -74,7 +74,7 @@
                                                 :class="subMenuButtonClass(isActiveRoute(subItem.route))"
                                             >
                                                 <NuxtLink
-                                                    :to="subItem.route"
+                                                    :to="localePath(subItem.route)"
                                                     class="flex h-10 w-full items-center rounded px-2"
                                                     @click="closeSidebar"
                                                 >
@@ -104,7 +104,7 @@
                                 :class="menuButtonClass(isActiveRoute(item.route))"
                             >
                                 <NuxtLink
-                                    :to="item.route"
+                                    :to="item.external ? item.route : localePath(item.route)"
                                     class="flex w-full items-center justify-between rounded-lg p-3"
                                     :target="item.external ? '_blank' : undefined"
                                     @click="closeSidebar"
@@ -229,6 +229,8 @@ const {
     isInstitutionAdmin,
     logout,
 } = useAuth();
+const { t } = useI18n();
+const localePath = useLocalePath();
 const config = useRuntimeConfig();
 const user = useUser();
 const showGoogleReviewLink = computed(() => !hasLeftGoogleReview(user.value));
@@ -420,80 +422,82 @@ const crmChildren = computed<NavigationItem[]>(() => [
     },
 ].filter(item => item.visible !== false));
 
-const nurseNavigationItems: NavigationItem[] = [
-    {
-        label: 'Informations',
-        route: '/dashboard',
-        icon: LayoutGrid,
-    },
-    {
-        label: 'Carte infirmières',
-        route: '/dashboard/nurses-map',
-        icon: MapPin,
-    },
-    {
-        label: 'Remplacement rapide',
-        route: '/dashboard/replacements/immediate',
-        icon: QuickReplacementIcon,
-    },
-    {
-        label: 'Demander un(e) remplaçant(e)',
-        route: '/dashboard/replacements/create',
-        icon: RefreshCw,
-    },
-    {
-        label: 'Mes remplacements',
-        route: '/dashboard/replacements/me',
-        icon: List,
-    },
-    {
-        label: 'Chercher un remplacement',
-        route: '/dashboard/replacements',
-        icon: FileSearch,
-    },
-    {
-        label: 'Mes réponses reçues',
-        route: '/dashboard/replacements/responses',
-        icon: Users,
-    },
-    {
-        label: 'Missions',
-        route: '/dashboard/missions',
-        icon: Briefcase,
-    },
-    {
-        label: 'Binômes',
-        route: '/dashboard/partners',
-        icon: Users,
-        children: [
-            {
-                label: 'Rechercher',
-                route: '/dashboard/partners',
-                icon: Search,
-            },
-            {
-                label: 'Demander',
-                route: '/dashboard/partners/create',
-                icon: Plus,
-            },
-            {
-                label: 'Réponses',
-                route: '/dashboard/partners/responses',
-                icon: MessageSquare,
-            },
-        ],
-    },
-    {
-        label: 'Mon groupement',
-        route: '/dashboard/group',
-        icon: Users,
-    },
-    {
-        label: 'Paramètres',
-        route: '/dashboard/settings',
-        icon: Cog,
-    },
-];
+const nurseNavigationItems = computed<NavigationItem[]>(() => {
+    return [
+        {
+            label: t('nav.dashboard'),
+            route: '/dashboard',
+            icon: LayoutGrid,
+        },
+        {
+            label: t('nav.nurseMap'),
+            route: '/dashboard/nurses-map',
+            icon: MapPin,
+        },
+        {
+            label: t('nav.quickReplacement'),
+            route: '/dashboard/replacements/immediate',
+            icon: QuickReplacementIcon,
+        },
+        {
+            label: t('nav.requestReplacement'),
+            route: '/dashboard/replacements/create',
+            icon: RefreshCw,
+        },
+        {
+            label: t('nav.myReplacements'),
+            route: '/dashboard/replacements/me',
+            icon: List,
+        },
+        {
+            label: t('nav.findReplacement'),
+            route: '/dashboard/replacements',
+            icon: FileSearch,
+        },
+        {
+            label: t('nav.myResponses'),
+            route: '/dashboard/replacements/responses',
+            icon: Users,
+        },
+        {
+            label: t('nav.missions'),
+            route: '/dashboard/missions',
+            icon: Briefcase,
+        },
+        {
+            label: t('nav.pairings'),
+            route: '/dashboard/partners',
+            icon: Users,
+            children: [
+                {
+                    label: t('common.search'),
+                    route: '/dashboard/partners',
+                    icon: Search,
+                },
+                {
+                    label: t('nav.requestReplacement'),
+                    route: '/dashboard/partners/create',
+                    icon: Plus,
+                },
+                {
+                    label: t('nav.myResponses'),
+                    route: '/dashboard/partners/responses',
+                    icon: MessageSquare,
+                },
+            ],
+        },
+        {
+            label: t('nav.network'),
+            route: '/dashboard/group',
+            icon: Users,
+        },
+        {
+            label: t('nav.settings'),
+            route: '/dashboard/settings',
+            icon: Cog,
+        },
+    ];
+});
 
 const adminNavigationSections = computed<NavigationSection[]>(() => [
     {
@@ -781,7 +785,7 @@ const navigationSections = computed(() => {
         return [{
             label: '',
             roles: [] as StaffRole[],
-            items: nurseNavigationItems,
+            items: nurseNavigationItems.value,
         }];
     }
 
@@ -797,7 +801,10 @@ const navigationSections = computed(() => {
 });
 
 const route = useRoute();
-const isActiveRoute = (routePath: string) => route.path === routePath;
+const isActiveRoute = (routePath: string) => {
+    const localized = localePath(routePath);
+    return route.path === localized || route.path === routePath;
+};
 
 const isGroupActive = (item: NavigationItem) => {
     if (route.path.startsWith(item.route)) {

@@ -2,7 +2,7 @@
     <div>
         <div class="hidden sm:flex flex-row h-screen overflow-hidden">
             <BackButton
-                to="/login"
+                :to="localePath('/login')"
             />
             <div
                 :class="cn(
@@ -20,9 +20,9 @@
                     >
                         <div class="flex-1 lg:hidden" />
                         <h1 class="mb-6 sm:mb-8 lg:mb-12 text-xl lg:text-2xl xl:text-3xl max-w-xl mx-auto mt-4 sm:mt-0 lg:mt-10 xl:mt-12 text-center px-6 lg:px-0 leading-tight">
-                            <span class="block mb-2 font-medium text-gray-600">Bienvenue sur <span class="font-black text-primary drop-shadow-sm uppercase tracking-wider">InfiSwap</span>,</span>
-                            <span class="block text-gray-900 font-extrabold">la plateforme pour vos remplacements!</span>
-                            <span class="block mt-5 text-sm font-medium text-gray-400">Pour vous inscrire, veuillez remplir le formulaire ci-dessous.</span>
+                            <span class="block mb-2 font-medium text-gray-600">{{ $t('register.welcome') }}</span>
+                            <span class="block text-gray-900 font-extrabold">{{ $t('register.tagline') }}</span>
+                            <span class="block mt-5 text-sm font-medium text-gray-400">{{ $t('register.scrollHint') }}</span>
                         </h1>
                         <div class="flex-1" />
                         <div class="rounded-2xl max-w-md mx-auto">
@@ -56,7 +56,7 @@
                         class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 cursor-pointer animate-bounce text-white drop-shadow-xl z-30 group"
                         @click="scrollLeftPanelDown"
                     >
-                        <span class="text-[10px] font-bold uppercase tracking-widest bg-black/20 px-4 py-1.5 rounded-full backdrop-blur-md border border-white/10 group-hover:bg-black/40 transition-colors">Découvrir nos avantages</span>
+                        <span class="text-[10px] font-bold uppercase tracking-widest bg-black/20 px-4 py-1.5 rounded-full backdrop-blur-md border border-white/10 group-hover:bg-black/40 transition-colors">{{ $t('register.discoverBenefits') }}</span>
                         <CircleChevronDown class="size-8" />
                     </div>
                 </transition>
@@ -148,7 +148,7 @@
                                         v-model="formData.institutionName"
                                         :icon="Building2"
                                         size="md"
-                                        placeholder="Nom de l'institution *"
+                                        :placeholder="$t('register.institutionName')"
                                     />
                                 </div>
                             </div>
@@ -156,7 +156,7 @@
 
                         <div>
                             <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
-                                Informations personnelles
+                                {{ $t('register.personalInfo') }}
                             </label>
                             <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
                                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -168,7 +168,7 @@
                                             v-model="formData.lastname"
                                             :icon="CircleUser"
                                             size="md"
-                                            placeholder="Nom *"
+                                            :placeholder="$t('register.lastname')"
                                         />
                                     </div>
 
@@ -180,7 +180,7 @@
                                             v-model="formData.firstname"
                                             :icon="CircleUser"
                                             size="md"
-                                            placeholder="Prénoms *"
+                                            :placeholder="$t('register.firstname')"
                                         />
                                     </div>
 
@@ -192,7 +192,7 @@
                                             v-model="formData.email"
                                             :icon="Mail"
                                             size="md"
-                                            placeholder="Email *"
+                                            :placeholder="$t('register.email')"
                                             autocomplete="off"
                                         />
                                     </div>
@@ -205,13 +205,13 @@
                                             v-model="formData.phoneNumber"
                                             :icon="Phone"
                                             size="md"
-                                            placeholder="N° de téléphone *"
+                                            :placeholder="$t('register.phone')"
                                         />
                                     </div>
 
                                     <div class="col-span-2">
                                         <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                            Sexe
+                                            {{ $t('register.gender') }}
                                         </label>
                                         <Select v-model="formData.gender">
                                             <SelectTrigger
@@ -223,7 +223,7 @@
                                                     class="h-5"
                                                 />
                                                 <SelectValue
-                                                    placeholder="Sexe"
+                                                    :placeholder="$t('register.gender')"
                                                     class="ml-3"
                                                 />
                                             </SelectTrigger>
@@ -248,7 +248,7 @@
 
                         <div>
                             <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
-                                Informations de connexion
+                                {{ $t('register.loginInfo') }}
                             </label>
                             <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
                                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -261,7 +261,7 @@
                                             :icon="Lock"
                                             size="md"
                                             type="password"
-                                            placeholder="Mot de passe *"
+                                            :placeholder="$t('register.password')"
                                         />
                                     </div>
 
@@ -274,7 +274,7 @@
                                             :icon="Lock"
                                             size="md"
                                             type="password"
-                                            placeholder="Confirmation mot de passe *"
+                                            :placeholder="$t('register.passwordConfirm')"
                                         />
                                     </div>
                                 </div>
@@ -283,7 +283,7 @@
 
                         <div>
                             <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
-                                Adresses
+                                {{ $t('register.addresses') }}
                             </label>
                             <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
                                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -295,7 +295,7 @@
                                             v-model="formData.address.street"
                                             :icon="MapPin"
                                             size="md"
-                                            placeholder="Rue *"
+                                            :placeholder="$t('register.street')"
                                         />
                                     </div>
 
@@ -307,7 +307,7 @@
                                             v-model="formData.address.zipCode"
                                             :icon="Inbox"
                                             size="md"
-                                            placeholder="Code postal *"
+                                            :placeholder="$t('register.zipCode')"
                                         />
                                     </div>
 
@@ -319,7 +319,7 @@
                                             v-model="formData.address.city"
                                             :icon="Building2"
                                             size="md"
-                                            placeholder="Ville *"
+                                            :placeholder="$t('register.city')"
                                         />
                                     </div>
 
@@ -383,7 +383,7 @@
                         </div>
                         <div>
                             <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
-                                Informations professionnelles
+                                {{ $t('register.professionalInfo') }}
                             </label>
                             <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
                                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -426,11 +426,11 @@
                                         class="col-span-2"
                                     >
                                         <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                            Langue
+                                            {{ $t('register.language') }}
                                         </label>
                                         <Select
                                             v-model="formData.language"
-                                            disabled
+                                            @update:model-value="onRegisterLanguageChange"
                                         >
                                             <SelectTrigger
                                                 class="flex w-full space-x-4 xl:text-sm sm:text-xs xl:h-auto sm:h-8 justify-start items-center rounded-3xl border-2 border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90"
@@ -438,7 +438,7 @@
                                             >
                                                 <LanguageIcon class="text-primary w-6 h-6" />
                                                 <SelectValue
-                                                    placeholder="Langue"
+                                                    :placeholder="$t('register.language')"
                                                     class="text-sm ml-3 my-auto"
                                                 />
                                             </SelectTrigger>
@@ -460,7 +460,7 @@
 
                                     <div class="col-span-4">
                                         <div class="text-sm font-medium text-gray-700 mb-4 block">
-                                            Pays de recherche
+                                            {{ $t('register.searchCountries') }}
                                             <span
                                                 v-if="formData.address.workingAt.length === 0"
                                                 class="text-gray-400 text-sm ml-2 font-light"
@@ -530,13 +530,13 @@
                                         class="col-span-4"
                                     >
                                         <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                            Numéro d'entreprise
+                                            {{ $t('register.companyNumber') }}
                                         </label>
                                         <InputIcon
                                             v-model="formData.companyNumber"
                                             :icon="IdCard"
                                             size="md"
-                                            placeholder="Numéro d'entreprise"
+                                            :placeholder="$t('register.companyNumber')"
                                         />
                                     </div>
                                 </div>
@@ -558,7 +558,7 @@
                                     >
                                         <Users class="text-primary w-10 h-10" />
                                         <SelectValue
-                                            placeholder="Catégorie professionnelle *"
+                                            :placeholder="$t('register.professionalCategory')"
                                             class="ml-3 block w-full"
                                         />
                                     </SelectTrigger>
@@ -598,7 +598,7 @@
                                     >
                                         <GraduationCap class="text-primary w-10 h-10" />
                                         <SelectValue
-                                            placeholder="Niveau d'études *"
+                                            :placeholder="$t('register.educationLevel')"
                                             class="ml-3 block w-full"
                                         />
                                     </SelectTrigger>
@@ -664,7 +664,7 @@
                                 <span class="text-sm ml-2 font-medium">
                                     J'accepte les
                                     <NuxtLink
-                                        to="/terms"
+                                        :to="localePath('/terms')"
                                         target="_blank"
                                         class="text-primary underline font-semibold hover:text-primary/80"
                                     >
@@ -682,7 +682,7 @@
                                 <span class="text-sm ml-2 font-medium">
                                     J'accepte la
                                     <NuxtLink
-                                        to="/privacy-security"
+                                        :to="localePath('/privacy-security')"
                                         target="_blank"
                                         class="text-primary underline font-semibold hover:text-primary/80"
                                     >
@@ -718,15 +718,15 @@
                                 :in-progress="inProgress"
                                 :disabled="!canSubmit"
                             >
-                                S'inscrire
+                                {{ $t('register.submit') }}
                             </Button>
                         </div>
                     </form>
 
                     <div class="text-sm text-center mt-10">
-                        <span>Vous avez déjà un compte ?</span>
+                        <span>{{ $t('register.hasAccount') }}</span>
                         <NuxtLink
-                            to="/login"
+                            :to="localePath('/login')"
                             class="font-bold text-primary underline ml-1"
                         >
                             Connexion
@@ -743,13 +743,13 @@
             )"
         >
             <LayoutsHeaderMobile />
-            <BackButton to="/login" />
+            <BackButton :to="localePath('/login')" />
 
             <div class="grow flex flex-col items-center px-6 py-10 pb-20 overflow-y-auto">
                 <div v-if="formData.accountType === 'standard'">
                     <h1 class="mt-8 mb-8 text-sm text-center">
-                        <span>Bienvenue sur <span class="font-bold text-primary">InfiSwap</span>, la plateforme pour vos remplacements!</span>
-                        <span> Pour vous inscrire, veuillez remplir le formulaire ci-dessous.</span>
+                        <span>{{ $t('register.welcome') }} {{ $t('register.tagline') }}</span>
+                        <span> {{ $t('register.scrollHint') }}</span>
                     </h1>
                 </div>
                 <NuxtLink
@@ -759,7 +759,7 @@
                 >
                     <div class="z-10">
                         <h3 class="text-white font-bold text-lg mb-1 leading-tight">Infiswap Institutional</h3>
-                        <p class="text-white/80 text-sm">Le réseau n°1 du remplacement infirmier en Belgique</p>
+                        <p class="text-white/80 text-sm">{{ $t('register.networkTaglineBe') }}</p>
                         <div class="mt-4 inline-flex items-center gap-2 bg-white/20 text-white px-4 py-2 rounded-xl backdrop-blur-md border border-white/20 text-sm font-medium">
                             Découvrir les avantages
                             <ArrowRight class="size-4 animate-bounce-right" />
@@ -873,14 +873,14 @@
                                 v-model="formData.institutionName"
                                 :icon="Building2"
                                 size="md"
-                                placeholder="Nom de l'institution *"
+                                :placeholder="$t('register.institutionName')"
                             />
                         </div>
                     </div>
 
                     <div>
                         <label :class="cn('text-md font-medium mb-1 sm:mb-2 lg:mb-3 block', formData.accountType === 'institution' ? 'text-white' : 'text-gray-700')">
-                            Informations personnelles
+                            {{ $t('register.personalInfo') }}
                         </label>
                         <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -892,7 +892,7 @@
                                         v-model="formData.lastname"
                                         :icon="CircleUser"
                                         size="md"
-                                        placeholder="Nom *"
+                                        :placeholder="$t('register.lastname')"
                                     />
                                 </div>
 
@@ -904,7 +904,7 @@
                                         v-model="formData.firstname"
                                         :icon="CircleUser"
                                         size="md"
-                                        placeholder="Prénoms *"
+                                        :placeholder="$t('register.firstname')"
                                     />
                                 </div>
 
@@ -916,7 +916,7 @@
                                         v-model="formData.email"
                                         :icon="Mail"
                                         size="md"
-                                        placeholder="Email *"
+                                        :placeholder="$t('register.email')"
                                         autocomplete="off"
                                     />
                                 </div>
@@ -929,13 +929,13 @@
                                         v-model="formData.phoneNumber"
                                         :icon="Phone"
                                         size="md"
-                                        placeholder="N° de téléphone *"
+                                        :placeholder="$t('register.phone')"
                                     />
                                 </div>
 
                                 <div class="col-span-2">
                                     <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                        Sexe
+                                        {{ $t('register.gender') }}
                                     </label>
                                     <Select v-model="formData.gender">
                                         <SelectTrigger
@@ -947,7 +947,7 @@
                                                 class="h-5"
                                             />
                                             <SelectValue
-                                                placeholder="Sexe"
+                                                :placeholder="$t('register.gender')"
                                                 class="ml-3"
                                             />
                                         </SelectTrigger>
@@ -972,7 +972,7 @@
 
                     <div>
                         <label :class="cn('text-md font-medium mb-1 sm:mb-2 lg:mb-3 block', formData.accountType === 'institution' ? 'text-white' : 'text-gray-700')">
-                            Informations de connexion
+                            {{ $t('register.loginInfo') }}
                         </label>
                         <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -985,7 +985,7 @@
                                         :icon="Lock"
                                         size="md"
                                         type="password"
-                                        placeholder="Mot de passe *"
+                                        :placeholder="$t('register.password')"
                                     />
                                 </div>
 
@@ -998,7 +998,7 @@
                                         :icon="Lock"
                                         size="md"
                                         type="password"
-                                        placeholder="Confirmation mot de passe *"
+                                        :placeholder="$t('register.passwordConfirm')"
                                     />
                                 </div>
                             </div>
@@ -1007,7 +1007,7 @@
 
                     <div>
                         <label :class="cn('text-md font-medium mb-1 sm:mb-2 lg:mb-3 block', formData.accountType === 'institution' ? 'text-white' : 'text-gray-700')">
-                            Adresses
+                            {{ $t('register.addresses') }}
                         </label>
                         <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -1019,7 +1019,7 @@
                                         v-model="formData.address.street"
                                         :icon="MapPin"
                                         size="md"
-                                        placeholder="Rue *"
+                                        :placeholder="$t('register.street')"
                                     />
                                 </div>
 
@@ -1031,7 +1031,7 @@
                                         v-model="formData.address.zipCode"
                                         :icon="Inbox"
                                         size="md"
-                                        placeholder="Code postal *"
+                                        :placeholder="$t('register.zipCode')"
                                     />
                                 </div>
 
@@ -1043,7 +1043,7 @@
                                         v-model="formData.address.city"
                                         :icon="Building2"
                                         size="md"
-                                        placeholder="Ville *"
+                                        :placeholder="$t('register.city')"
                                     />
                                 </div>
 
@@ -1107,7 +1107,7 @@
                     </div>
                     <div>
                         <label :class="cn('text-md font-medium mb-1 sm:mb-2 lg:mb-3 block', formData.accountType === 'institution' ? 'text-white' : 'text-gray-700')">
-                            Informations professionnelles
+                            {{ $t('register.professionalInfo') }}
                         </label>
                         <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -1150,11 +1150,11 @@
                                     class="col-span-4"
                                 >
                                     <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                        Langue
+                                        {{ $t('register.language') }}
                                     </label>
                                     <Select
                                         v-model="formData.language"
-                                        disabled
+                                        @update:model-value="onRegisterLanguageChange"
                                     >
                                         <SelectTrigger
                                             class="flex w-full space-x-4 xl:text-sm sm:text-xs xl:h-auto sm:h-8 justify-start items-center rounded-3xl border-2 border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90"
@@ -1162,7 +1162,7 @@
                                         >
                                             <LanguageIcon class="text-primary w-6 h-6" />
                                             <SelectValue
-                                                placeholder="Langue"
+                                                :placeholder="$t('register.language')"
                                                 class="text-sm ml-3 my-auto"
                                             />
                                         </SelectTrigger>
@@ -1184,7 +1184,7 @@
 
                                 <div class="col-span-4">
                                     <div class="text-sm font-medium text-gray-700 mb-4 block">
-                                        Pays de recherche
+                                        {{ $t('register.searchCountries') }}
                                         <span
                                             v-if="formData.address.workingAt.length === 0"
                                             class="text-gray-400 text-sm ml-2 font-light"
@@ -1253,13 +1253,13 @@
                                     class="col-span-4"
                                 >
                                     <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                        Numéro d'entreprise
+                                        {{ $t('register.companyNumber') }}
                                     </label>
                                     <InputIcon
                                         v-model="formData.companyNumber"
                                         :icon="IdCard"
                                         size="md"
-                                        placeholder="Numéro d'entreprise"
+                                        :placeholder="$t('register.companyNumber')"
                                     />
                                 </div>
                             </div>
@@ -1280,7 +1280,7 @@
                                     >
                                         <Users class="text-primary w-10 h-10" />
                                         <SelectValue
-                                            placeholder="Catégorie professionnelle *"
+                                            :placeholder="$t('register.professionalCategory')"
                                             class="ml-3 block w-full"
                                         />
                                     </SelectTrigger>
@@ -1320,7 +1320,7 @@
                                     >
                                         <GraduationCap class="text-primary w-10 h-10" />
                                         <SelectValue
-                                            placeholder="Niveau d'études *"
+                                            :placeholder="$t('register.educationLevel')"
                                             class="ml-3 block w-full"
                                         />
                                     </SelectTrigger>
@@ -1385,7 +1385,7 @@
                             <span class="text-sm ml-2 font-medium">
                                 J'accepte les
                                 <NuxtLink
-                                    to="/terms"
+                                    :to="localePath('/terms')"
                                     target="_blank"
                                     class="text-primary underline font-semibold hover:text-primary/80"
                                 >
@@ -1403,7 +1403,7 @@
                             <span class="text-sm ml-2 font-medium">
                                 J'accepte la
                                 <NuxtLink
-                                    to="/privacy-security"
+                                    :to="localePath('/privacy-security')"
                                     target="_blank"
                                     class="text-primary underline font-semibold hover:text-primary/80"
                                 >
@@ -1439,15 +1439,15 @@
                             :in-progress="inProgress"
                             :disabled="!canSubmit"
                         >
-                            S'inscrire
+                            {{ $t('register.submit') }}
                         </Button>
                     </div>
                 </form>
 
                 <div class="text-sm text-center mt-10">
-                    <span>Vous avez déjà un compte ?</span>
+                    <span>{{ $t('register.hasAccount') }}</span>
                     <NuxtLink
-                        to="/login"
+                        :to="localePath('/login')"
                         :class="cn('font-bold underline ml-1', formData.accountType === 'institution' ? 'text-white' : 'text-primary')"
                     >
                         Connexion
@@ -1477,9 +1477,23 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { LANGUAGES } from '~/lib/constants';
 import { cn } from '~/lib/utils';
+import { isAppLocale, type AppLocale } from '~/utils/appLocale';
 
 const leftPanelScroll = ref<HTMLElement | null>(null);
 const hasScrolledToBottom = ref(false);
+const { applyLocale } = useAppLocale();
+const switchLocalePath = useSwitchLocalePath();
+const localePath = useLocalePath();
+const { locale, t } = useI18n();
+
+async function onRegisterLanguageChange(value: unknown) {
+    if (!isAppLocale(value)) {
+        return;
+    }
+
+    await applyLocale(value as AppLocale, { persistSettings: false });
+    await navigateTo(switchLocalePath(value as AppLocale));
+}
 
 const handleLeftPanelScroll = (e: Event) => {
     const target = e.target as HTMLElement;
@@ -1498,12 +1512,12 @@ const scrollLeftPanelDown = () => {
 const accountOptions = [
     {
         value: 'standard',
-        label: 'Infirmier(ère)',
+        label: t('register.nurse'),
         description: 'Professionnel de santé',
     },
     {
         value: 'institution',
-        label: 'Institution',
+        label: t('register.institution'),
         description: 'MR/MRS, hôpital, bureau de tarification, groupe infirmier, centre d\'intérim',
     },
 ];
@@ -1511,12 +1525,12 @@ const accountOptions = [
 const genders = [
     {
         value: 'M',
-        label: 'Homme',
+        label: t('register.male'),
         name: 'homme',
     },
     {
         value: 'F',
-        label: 'Femme',
+        label: t('register.female'),
         name: 'femme',
     },
     {
@@ -1571,7 +1585,7 @@ const countryOfWork: CountryOfWork[] = [
 
 const roleOptions = [
     {
-        label: 'Infirmier(ère)',
+        label: t('register.nurse'),
         value: 'nurse',
     },
     {
@@ -1586,11 +1600,11 @@ const roleOptions = [
 
 const professionalCategory = [
     {
-        label: 'Salarié(e)',
+        label: t('register.employee'),
         value: 'salaried',
     },
     {
-        label: 'Indépendant(e)',
+        label: t('register.independent'),
         value: 'independent',
     },
 ];
@@ -1615,7 +1629,7 @@ const formData = reactive({
     role: roleOptions[0].value,
     passwordConfirmation: '',
     gender: 'F',
-    language: LANGUAGES[0].value,
+    language: isAppLocale(locale.value) ? locale.value : LANGUAGES[0].value,
     phoneNumber: '',
     identifierNumber: '',
 

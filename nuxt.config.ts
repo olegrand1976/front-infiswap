@@ -2,6 +2,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineNuxtConfig({
     modules: [
+        '@nuxtjs/i18n',
         '@saslavik/nuxt-gtm',
         'nuxt-gtag',
         process.env.NODE_ENV !== 'production' ? '@nuxt/eslint' : null,
@@ -22,14 +23,15 @@ export default defineNuxtConfig({
         head: {
             titleTemplate: '%s | InfiSwap',
             meta: [
+                // Page-level useHead + i18n overrides these defaults.
                 {
                     name: 'description',
-                    content:
-            'Nos infirmiers sont aussi souvent sur les routes et se déplacent de patients à patients pendant leurs tournées qui sont planifiées de semaine en semaine.',
+                    // Pages override via useHead + $t (ex. home.metaDescription).
+                    content: 'InfiSwap — infirmier / verpleegkundige · BE/FR',
                 },
                 {
                     name: 'keywords',
-                    content: 'infiswap, infirmier, remplacement, tournée',
+                    content: 'infiswap, infirmier, verpleegkundige, remplacement, vervanging',
                 },
             ],
             link: [
@@ -69,14 +71,40 @@ export default defineNuxtConfig({
         transpile: [],
     },
 
+    i18n: {
+        locales: [
+            { code: 'fr', language: 'fr-BE', name: 'Français', file: 'fr.json' },
+            { code: 'nl', language: 'nl-BE', name: 'Nederlands', file: 'nl.json' },
+        ],
+        defaultLocale: 'fr',
+        strategy: 'prefix_except_default',
+        lazy: true,
+        langDir: 'locales',
+        detectBrowserLanguage: {
+            useCookie: true,
+            cookieKey: 'LANGUAGE',
+            redirectOn: 'root',
+            fallbackLocale: 'fr',
+            alwaysRedirect: false,
+        },
+        baseUrl: process.env.NUXT_PUBLIC_FRONT_END_URL || 'https://infiswap.ll-it-sc.be',
+    },
+
     routeRules: {
         '/': { prerender: true },
+        '/nl': { prerender: true },
         '/about': { prerender: true },
+        '/nl/about': { prerender: true },
         '/contact': { prerender: true },
+        '/nl/contact': { prerender: true },
         '/pricing': { prerender: true },
+        '/nl/pricing': { prerender: true },
         '/dashboard/**': { ssr: false },
+        '/nl/dashboard/**': { ssr: false },
         '/acces-plan': { redirect: '/dashboard' },
+        '/nl/acces-plan': { redirect: '/nl/dashboard' },
         '/dashboard/subscriptions/create': { redirect: '/dashboard' },
+        '/nl/dashboard/subscriptions/create': { redirect: '/nl/dashboard' },
         '/**': {
             headers: {
                 'X-Content-Type-Options': 'nosniff',
@@ -108,7 +136,7 @@ export default defineNuxtConfig({
             concurrency: 1,
             interval: 100,
             failOnError: false,
-            routes: ['/', '/about', '/contact'],
+            routes: ['/', '/nl', '/about', '/nl/about', '/contact', '/nl/contact'],
         },
     },
     vite: {

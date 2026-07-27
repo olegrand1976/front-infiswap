@@ -5,6 +5,8 @@ import { UserPlus } from 'lucide-vue-next';
 import { useAuth } from '~/composables/useAuth';
 import { usePublicNursesMapData } from '~/composables/usePublicNursesMapData';
 
+const { t } = useI18n();
+const localePath = useLocalePath();
 const { isLoggedIn } = useAuth();
 
 const url = useRequestURL();
@@ -12,7 +14,7 @@ const countryCode = computed((): NursesMapCountry =>
     url.hostname.endsWith('.fr') ? 'fr' : 'be',
 );
 const countryLabel = computed(() =>
-    countryCode.value === 'fr' ? 'France' : 'Belgique',
+    countryCode.value === 'fr' ? t('home.map.countryFr') : t('home.map.countryBe'),
 );
 
 const { points, loading, error, isEmpty } = usePublicNursesMapData(countryCode);
@@ -38,18 +40,16 @@ const { points, loading, error, isEmpty } = usePublicNursesMapData(countryCode);
                     variant="secondary"
                     class="mb-4 rounded-full px-4 py-1 text-xs font-semibold uppercase tracking-wide"
                 >
-                    Réseau {{ countryLabel }}
+                    {{ $t('home.map.networkBadge', { country: countryLabel }) }}
                 </Badge>
                 <h2
                     id="home-nurses-map-title"
                     class="text-2xl font-bold tracking-tight text-foreground sm:text-3xl lg:text-4xl"
                 >
-                    Une communauté de soignants partout en {{ countryLabel }}
+                    {{ $t('home.map.title', { country: countryLabel }) }}
                 </h2>
                 <p class="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                    Visualisez la densité du réseau InfiSwap : chaque point regroupe les
-                    infirmiers et infirmières indépendants présents près de chez vous.
-                    Zoomez pour explorer — sans données personnelles exposées.
+                    {{ $t('home.map.body') }}
                 </p>
             </div>
 
@@ -58,7 +58,7 @@ const { points, loading, error, isEmpty } = usePublicNursesMapData(countryCode);
                     v-if="loading"
                     class="absolute inset-0 z-10 animate-pulse rounded-xl border border-gray-200 bg-gray-50/90"
                     aria-busy="true"
-                    aria-label="Chargement de la carte"
+                    :aria-label="$t('home.map.loading')"
                 />
                 <div
                     v-else-if="error"
@@ -70,7 +70,7 @@ const { points, loading, error, isEmpty } = usePublicNursesMapData(countryCode);
                     v-else-if="isEmpty"
                     class="absolute inset-0 z-10 flex items-center justify-center rounded-xl border border-gray-200 bg-white px-6 text-center text-sm text-muted-foreground"
                 >
-                    Aucun soignant positionné pour le moment en {{ countryLabel }}.
+                    {{ $t('home.map.empty', { country: countryLabel }) }}
                 </div>
                 <ClientOnly v-else>
                     <NursesResidenceMap
@@ -90,11 +90,11 @@ const { points, loading, error, isEmpty } = usePublicNursesMapData(countryCode);
                 class="mt-8 flex justify-center"
             >
                 <NuxtLink
-                    to="/register"
+                    :to="localePath('/register')"
                     class="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:scale-[1.02] hover:shadow-lg"
                 >
                     <UserPlus class="size-4" />
-                    Rejoindre le réseau
+                    {{ $t('home.map.joinCta') }}
                 </NuxtLink>
             </div>
         </div>

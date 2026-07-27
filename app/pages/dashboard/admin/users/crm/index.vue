@@ -34,6 +34,7 @@
                     <TabsTrigger
                         value="institutions"
                         class="w-full md:w-48 h-12"
+                        data-testid="crm-tab-institutions"
                     >
                         Suivi des institutions
                     </TabsTrigger>

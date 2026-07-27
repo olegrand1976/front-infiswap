@@ -3,12 +3,12 @@
         <div class="mt-6 flex items-center gap-2 rounded-lg text-primary sm:bg-muted/50 sm:px-9">
             <ArrowLeft
                 class="size-5 cursor-pointer hover:text-primary"
-                title="Retour"
+                :title="$t('common.back')"
                 @click="goBack"
             />
             <h1 class="py-3 text-primary font-bold">
-                <span class="hidden lg:inline-block">Personnes intéressées par mon remplacement</span>
-                <span class="lg:hidden">Intéressés</span>
+                <span class="hidden lg:inline-block">{{ $t('replacements.interestedListTitle') }}</span>
+                <span class="lg:hidden">{{ $t('replacements.interestedPeople') }}</span>
             </h1>
         </div>
 
@@ -16,7 +16,7 @@
             v-if="showBoostBanner"
             class="mx-2 mt-4 flex flex-col gap-2 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 sm:flex-row sm:items-center sm:justify-between"
         >
-            <span>Dernière chance : <strong>Boost 2 — 4,40 € / 7 j</strong> recommandé (ou Boost 1 — 2 € / 3 j).</span>
+            <span>{{ $t('replacements.boostLastChance') }} <strong>{{ $t('replacements.boost2') }}</strong> {{ $t('replacements.boostRecommended') }}</span>
             <ReplacementBoostButton
                 show-price
                 @boost="goToReplacementDetail"
@@ -26,10 +26,10 @@
         <template v-if="listResponse.length != 0">
             <div class="flex items-center sm:space-x-4 lg:space-x-8 gap-2 mt-6 p-2">
                 <h4 class="font-bold hidden lg:inline-block text-sm text-primary">
-                    Période
+                    {{ $t('replacements.period') }}
                 </h4>
                 <div class="flex space-x-5 items-center rounded-full bg-primary w-40">
-                    <span class="ms-3 text-xs text-primary-foreground">Début</span>
+                    <span class="ms-3 text-xs text-primary-foreground">{{ $t('replacements.start') }}</span>
                     <div class="flex w-40 items-center justify-center rounded-full bg-card text-primary shadow">
                         <Calendar class="w-4 h-4 ml-1 text-primary" />
                         <div class="flex h-9 w-24 items-center rounded-full bg-card text-xs text-primary">
@@ -39,7 +39,7 @@
                 </div>
                 <span class="text-primary">au</span>
                 <div class="flex space-x-5 items-center rounded-full bg-primary w-40">
-                    <span class="ms-3 text-xs text-primary-foreground">Fin</span>
+                    <span class="ms-3 text-xs text-primary-foreground">{{ $t('replacements.end') }}</span>
                     <div class="flex w-40 items-center justify-center rounded-full bg-card text-primary shadow">
                         <Calendar class="w-4 h-4 ml-1 text-primary" />
                         <div class="flex h-9 w-24 items-center rounded-full bg-card text-xs text-primary">
@@ -86,13 +86,13 @@
                                 v-if="list.status==='confirmed'"
                                 class="mx-auto flex w-full items-center justify-center gap-1.5 text-sm text-success"
                             >
-                                <CircleCheck class="size-5 shrink-0" /> <span>Accepté</span>
+                                <CircleCheck class="size-5 shrink-0" /> <span>{{ $t('replacements.accepted') }}</span>
                             </div>
                             <div
                                 v-else-if="list.status==='refused'"
                                 class="mx-auto flex w-full items-center justify-center gap-1.5 text-sm font-bold text-primary"
                             >
-                                <X class="size-5 shrink-0" /> <span>Refusé</span>
+                                <X class="size-5 shrink-0" /> <span>{{ $t('replacements.refused') }}</span>
                             </div>
                             <div
                                 v-if="!hasConfirmed() && list.status !== 'refused'"
@@ -104,7 +104,7 @@
                                     :class="{ 'opacity-50 cursor-not-allowed': loading }"
                                     @click="updateStatus(list.id, 'refused')"
                                 >
-                                    Refuser
+                                    {{ $t('replacements.refuse') }}
                                 </Button>
                                 <Button
                                     size="sm"
@@ -113,7 +113,7 @@
                                     :class="{ 'opacity-50 cursor-not-allowed': loading }"
                                     @click="openAcceptModal(list)"
                                 >
-                                    Accepter
+                                    {{ $t('replacements.accept') }}
                                 </Button>
                             </div>
                         </div>
@@ -122,7 +122,7 @@
             </template>
             <template v-else>
                 <span class="mx-auto mt-8 flex items-center justify-center text-muted-foreground">
-                    Aucune liste à afficher pour le moment
+                    {{ $t('replacements.emptyList') }}
                 </span>
             </template>
         </div>
@@ -157,6 +157,7 @@ const { changeStatus } = changeStatusReplacement();
 const route = useRoute();
 const router = useRouter();
 const replacementId = route.params.id;
+const { t } = useI18n();
 const { $toast } = useNuxtApp();
 const { trackEvent } = useProductAnalytics();
 const { triggerCelebration } = usePurchaseCelebration();

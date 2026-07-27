@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Sparkles, ShieldCheck, UsersRound } from 'lucide-vue-next';
 
+const localePath = useLocalePath();
 const { copy } = usePlatformStats();
 </script>
 
@@ -38,17 +39,17 @@ const { copy } = usePlatformStats();
 
                         <div class="mt-8 flex flex-col gap-3 sm:flex-row">
                             <Button
-                                href="/register"
+                                :href="localePath('/register')"
                                 class="rounded-full bg-white px-6 py-3 text-primary hover:bg-white/90"
                             >
                                 {{ copy.communityCta }}
                             </Button>
                             <Button
                                 variant="outline"
-                                href="/about"
+                                :href="localePath('/about')"
                                 class="rounded-full border-white/60 bg-transparent px-6 py-3 text-white hover:bg-white/10 hover:text-white"
                             >
-                                En savoir plus
+                                {{ copy.learnMore }}
                             </Button>
                         </div>
                     </div>
@@ -61,11 +62,11 @@ const { copy } = usePlatformStats();
                                     aria-hidden="true"
                                 />
                                 <p class="font-semibold">
-                                    Profils vérifiés & messagerie sécurisée
+                                    {{ copy.featureVerifiedTitle }}
                                 </p>
                             </div>
                             <p class="text-sm leading-relaxed text-white/85">
-                                Une plateforme pensée pour la continuité des soins, avec des échanges fiables entre professionnels de terrain.
+                                {{ copy.featureVerifiedBody }}
                             </p>
                         </div>
 
@@ -76,11 +77,11 @@ const { copy } = usePlatformStats();
                                     aria-hidden="true"
                                 />
                                 <p class="font-semibold">
-                                    Une communauté qui grandit chaque jour
+                                    {{ copy.featureCommunityTitle }}
                                 </p>
                             </div>
                             <p class="text-sm leading-relaxed text-white/85">
-                                Infirmiers, sages-femmes et aides-soignants rejoignent InfiSwap pour organiser leurs remplacements plus simplement.
+                                {{ copy.featureCommunityBody }}
                             </p>
                         </div>
 
@@ -89,7 +90,7 @@ const { copy } = usePlatformStats();
                                 {{ copy.badge }}
                             </p>
                             <p class="mt-1 text-sm text-white/80">
-                                Membres inscrits en Belgique & France
+                                {{ copy.membersBadgeFoot }}
                             </p>
                         </div>
                     </div>

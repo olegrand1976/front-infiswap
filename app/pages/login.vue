@@ -61,7 +61,7 @@
                                     v-model="credentials.password"
                                     :icon="Lock"
                                     type="password"
-                                    placeholder="Mot de passe"
+                                    :placeholder="$t('auth.password')"
                                     class="text-sm w-full"
                                 />
                             </div>
@@ -74,15 +74,15 @@
                                     for="remember"
                                     class="font-sans font-light text-primary leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                 >
-                                    Se souvenir de moi
+                                    {{ $t('auth.rememberMe') }}
                                 </label>
                             </div>
 
                             <NuxtLink
-                                to="/password/reset-password"
+                                :to="localePath('/password/reset-password')"
                                 class="text-primary"
                             >
-                                *Mot de passe oublié
+                                *{{ $t('auth.forgotPassword') }}
                             </NuxtLink>
                         </div>
 
@@ -97,15 +97,16 @@
                                     class="w-4"
                                 />
                                 <span>
-                                    Se connecter avec Google
+                                    {{ $t('auth.signInGoogle') }}
                                 </span>
                             </Button> -->
                             <Button
                                 class="md:w-80 sm:w-64 hover:shadow-lg md:text-base sm:text-xs"
                                 type="submit"
                                 :in-progress="inProgress"
+                                data-testid="login-submit"
                             >
-                                Se connecter
+                                {{ $t('auth.signIn') }}
                             </Button>
                         </div>
                     </form>
@@ -113,12 +114,12 @@
 
                 <div>
                     <p class="text-xs">
-                        Vous n'avez pas encore de compte ?
+                        {{ $t('auth.noAccountYet') }}
                         <NuxtLink
-                            to="/register"
+                            :to="localePath('/register')"
                             class="font-bold text-primary underline"
                         >
-                            Inscrivez-vous
+                            {{ $t('auth.signUp') }}
                         </NuxtLink>
                     </p>
                 </div>
@@ -151,7 +152,7 @@
                                 v-model="credentials.password"
                                 :icon="Lock"
                                 type="password"
-                                placeholder="Mot de passe"
+                                :placeholder="$t('auth.password')"
                                 class="text-sm w-full"
                             />
                         </div>
@@ -163,13 +164,13 @@
                             <label
                                 for="remember"
                                 class="font-light text-primary leading-none"
-                            >Se souvenir de moi</label>
+                            >{{ $t('auth.rememberMe') }}</label>
                         </div>
 
                         <NuxtLink
-                            to="/password/reset-password"
+                            :to="localePath('/password/reset-password')"
                             class="text-primary"
-                        >*Mot de passe oublié</NuxtLink>
+                        >*{{ $t('auth.forgotPassword') }}</NuxtLink>
                     </div>
 
                     <div class="flex flex-col justify-center items-center mx-auto mt-12 space-y-7">
@@ -182,14 +183,15 @@
                                 alt="Google"
                                 class="w-4"
                             />
-                            <span>Se connecter avec Google</span>
+                            <span>{{ $t('auth.signInGoogle') }}</span>
                         </Button> -->
                         <Button
                             class="w-80"
                             type="submit"
                             :in-progress="inProgress"
+                            data-testid="login-submit"
                         >
-                            Se connecter
+                            {{ $t('auth.signIn') }}
                         </Button>
                     </div>
                 </form>
@@ -197,11 +199,11 @@
 
             <div class="text-xs text-center mt-4 mb-8">
                 <p>
-                    Vous n'avez pas encore de compte ?
+                    {{ $t('auth.noAccountYet') }}
                     <NuxtLink
-                        to="/register"
+                        :to="localePath('/register')"
                         class="font-bold text-primary underline"
-                    >Inscrivez-vous</NuxtLink>
+                    >{{ $t('auth.signUp') }}</NuxtLink>
                 </p>
             </div>
 
@@ -221,6 +223,8 @@ import { safeLoginRedirectPath } from '~/utils/accessReturn';
 
 const route = useRoute();
 const { login } = useAuth();
+const localePath = useLocalePath();
+const { t } = useI18n();
 
 const credentials = reactive({
     identifier: '',
@@ -235,18 +239,18 @@ const { submit, inProgress } = useSubmit(
 
         if (useCookie('2fa_hash').value) {
             return navigateTo({
-                path: '/2fa-challenge',
+                path: localePath('/2fa-challenge'),
                 query: route.query.redirect ? { redirect: route.query.redirect } : undefined,
             });
         }
 
         const target = safeLoginRedirectPath(route.query.redirect);
-        await navigateTo(target, { replace: true });
+        await navigateTo(localePath(target), { replace: true });
 
         await nextTick();
 
-        if (route.path === '/login') {
-            window.location.assign(target);
+        if (route.path === '/login' || route.path === '/nl/login') {
+            window.location.assign(localePath(target));
         }
     },
 );
@@ -257,12 +261,11 @@ definePageMeta({
 });
 
 useHead({
-    title: 'Connexion',
+    title: () => t('auth.signIn'),
     meta: [
         {
             name: 'description',
-            content:
-                'Connectez-vous à InfiSwap pour accéder à votre espace professionnel, gérer vos remplacements infirmiers, consulter vos missions et profiter de toutes les fonctionnalités de la plateforme. Authentification sécurisée pour infirmiers indépendants en Belgique et en France.',
+            content: () => t('home.metaDescription'),
         },
     ],
 });

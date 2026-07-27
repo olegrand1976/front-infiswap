@@ -3,11 +3,11 @@
         <div class="mt-2 flex items-center gap-2 text-primary sm:bg-gray-100 sm:px-4 rounded-lg">
             <ArrowLeft
                 class="size-5 cursor-pointer hover:text-primary"
-                title="Retour"
+                :title="$t('common.back')"
                 @click="goBack"
             />
             <h1 class="py-3 text-primary font-bold">
-                Modifier le <strong>remplacement</strong>
+                {{ $t('replacements.editHeading') }} <strong>{{ $t('replacements.editHeadingStrong') }}</strong>
             </h1>
         </div>
 
@@ -239,6 +239,7 @@
 </template>
 
 <script lang="ts" setup>
+const { t } = useI18n();
 import { ArrowLeft, Plus, X } from 'lucide-vue-next';
 import { toast } from 'vue-sonner';
 import { useReplacements } from '@/composables/useReplacements';
@@ -396,7 +397,7 @@ onMounted(async () => {
 
 await fetchCareTypes();
 
-useHead({ title: 'Modifier le remplacement' });
+useHead({ title: () => t('replacements.editTitle') });
 
 definePageMeta({
     layout: 'dashboard',

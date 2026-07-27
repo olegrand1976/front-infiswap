@@ -8,11 +8,11 @@
         >
             <ArrowLeft
                 class="size-5 cursor-pointer hover:text-primary"
-                title="Retour"
+                :title="$t('common.back')"
                 @click="goBack"
             />
             <h1 class="py-3 text-primary font-bold">
-                Créer un <strong>remplacement</strong>
+                {{ $t('replacements.createHeading') }} <strong>{{ $t('replacements.createHeadingStrong') }}</strong>
             </h1>
         </div>
 
@@ -24,7 +24,7 @@
                     <h2
                         class="text-white font-medium text-center bg-primary lg:px-2 px-0 py-4 rounded-t-lg"
                     >
-                        Sélectionner les périodes de remplacement
+                        {{ $t('replacements.selectPeriods') }}
                     </h2>
 
                     <MultiRangeCalendar
@@ -46,7 +46,7 @@
                         class="flex flex-col space-y-4 justify-center items-center mx-auto"
                     >
                         <h2 class="text-center font-semibold text-black/70">
-                            Saisir manuellement les périodes
+                            {{ $t('replacements.manualPeriods') }}
                         </h2>
                         <div class="flex flex-col space-y-4 w-full px-4 gap-6">
                             <div
@@ -56,7 +56,7 @@
                             >
                                 <div class="flex flex-col space-y-1">
                                     <label class="font-semibold text-primary text-sm text-center">
-                                        Date de début
+                                        {{ $t('replacements.startDate') }}
                                     </label>
                                     <input
                                         v-model="period.startDate"
@@ -68,7 +68,7 @@
                                 </div>
                                 <div class="flex flex-col space-y-1">
                                     <label class="font-semibold text-primary text-sm text-center">
-                                        Date de fin
+                                        {{ $t('replacements.endDate') }}
                                     </label>
                                     <input
                                         v-model="period.endDate"
@@ -91,7 +91,7 @@
                             @click="addPeriod"
                         >
                             <Plus class="w-5 h-5" />
-                            <span> Ajouter période </span>
+                            <span> {{ $t('replacements.addPeriod') }} </span>
                         </Button>
                     </div>
                 </div>
@@ -99,11 +99,11 @@
 
             <div class="flex flex-col space-y-4 text-sm sm:mx-10 lg:mx-0 lg:mr-12">
                 <div>
-                    <label class="text-primary font-semibold"> Créneau horaire </label>
+                    <label class="text-primary font-semibold"> {{ $t('replacements.timeSlot') }} </label>
                     <div
                         class="mt-2 grid sm:grid-cols-[20%_80%] lg:grid-cols-1 xl:grid-cols-[12%_88%] 2xl:grid-cols-[10%_90%] xl:space-x-8 items-center"
                     >
-                        <label class="font-medium text-gray-700"> Matin : </label>
+                        <label class="font-medium text-gray-700"> {{ $t('replacements.morning') }} </label>
                         <div
                             class="lg:mt-2 xl:mt-0 flex space-x-2 sm:space-x-5 lg:space-x-2 xl:space-x-3 2xl:space-x-5 items-center"
                         >
@@ -124,7 +124,7 @@
                     <div
                         class="mt-4 grid sm:grid-cols-[20%_80%] lg:grid-cols-1 xl:grid-cols-[12%_88%] 2xl:grid-cols-[10%_90%] xl:space-x-8 items-center"
                     >
-                        <label class="font-medium text-gray-700"> Soir : </label>
+                        <label class="font-medium text-gray-700"> {{ $t('replacements.evening') }} </label>
                         <div
                             class="lg:mt-2 xl:mt-0 flex space-x-2 sm:space-x-5 lg:space-x-2 xl:space-x-3 2xl:space-x-5 items-center"
                         >
@@ -145,18 +145,18 @@
                 </div>
                 <div class="flex flex-col space-y-2">
                     <label class="text-primary font-semibold">
-                        Nombre de patients par jour
+                        {{ $t('replacements.patientsPerDay') }}
                     </label>
                     <InputIcon
                         v-model="formData.patientCount"
-                        placeholder="Entrer un nombre"
+                        :placeholder="$t('replacements.enterNumber')"
                     />
                 </div>
 
                 <div class="relative">
                     <InputTagManager
                         v-model="formData.zipCodes"
-                        label="Codes postaux"
+                        :label="$t('replacements.colZip')"
                         :placeholder="
                             user.profile.country == 'fr'
                                 ? '75000, 40990, 89550'
@@ -175,13 +175,13 @@
                         class="absolute -top-[1.2rem] right-0 font-bold text-primary text-xs mt-2"
                         @click="openProposalDialog('')"
                     >
-                        Boost IA
+                        {{ $t('settings.aiBoost') }}
                     </Button>
                 </div>
 
                 <InputTagManager
                     v-model="formData.cities"
-                    label="Villes"
+                    :label="$t('replacements.colCities')"
                     :placeholder="
                         user.profile.country
                             ? 'Paris, Landes, Yonne'
@@ -197,7 +197,7 @@
                 />
 
                 <div class="flex flex-col space-y-2">
-                    <label class="text-primary font-semibold"> Type de soins </label>
+                    <label class="text-primary font-semibold"> {{ $t('replacements.careType') }} </label>
                     <Select
                         v-model="formData.careTypes"
                         multiple
@@ -211,7 +211,7 @@
                                     {{ getSelectedCareTypesText(formData.careTypes) }}
                                 </template>
                                 <template v-else>
-                                    <span class="text-black/60"> Sélectionner </span>
+                                    <span class="text-black/60"> {{ $t('replacements.select') }} </span>
                                 </template>
                             </SelectValue>
                         </SelectTrigger>
@@ -241,7 +241,7 @@
                     class="flex flex-col space-y-2"
                 >
                     <label class="text-primary font-semibold">
-                        Demander en tant que
+                        {{ $t('replacements.askAs') }}
                     </label>
                     <div
                         class="flex flex-col gap-4 sm:flex-row sm:gap-12 lg:gap-8 2xl:gap-12 sm:items-center"
@@ -254,7 +254,7 @@
                                 name="roleType"
                                 value="nurse"
                             >
-                            <label for="nurse"> Infirmier(ère) </label>
+                            <label for="nurse"> {{ $t('replacements.roleNurse') }} </label>
                         </div>
                         <div class="flex gap-2 items-center">
                             <input
@@ -264,7 +264,7 @@
                                 name="roleType"
                                 value="caregiver"
                             >
-                            <label for="caregiver"> Aide soignant(e) </label>
+                            <label for="caregiver"> {{ $t('replacements.roleAide') }} </label>
                         </div>
                         <div class="flex gap-2 items-center">
                             <input
@@ -274,16 +274,16 @@
                                 name="roleType"
                                 value="midwife"
                             >
-                            <label for="midwife"> Sage-femme </label>
+                            <label for="midwife"> {{ $t('replacements.roleMidwife') }} </label>
                         </div>
                     </div>
                 </div>
 
                 <div class="flex flex-col space-y-2">
-                    <label class="text-primary font-semibold"> Description </label>
+                    <label class="text-primary font-semibold"> {{ $t('replacements.description') }} </label>
                     <Textarea
                         v-model="formData.comment"
-                        placeholder="Décrivez en quelques mots votre demande de remplacement..."
+                        :placeholder="$t('replacements.descriptionPlaceholder')"
                         rows="8"
                         class="w-full border border-gray-400 focus-within:border-primary"
                     />
@@ -293,7 +293,7 @@
         <ProposalLocationModal
             v-model="proposalDialog"
             v-model:newly-added-value="newlyAddedValue"
-            title="Suggestions"
+            :title="$t('replacements.suggestions')"
             description="Sélectionnez uniquement les codes postaux/villes que vous souhaitez conserver parmi ceux déjà cochés pour l'encodage de vos lieux cibles"
             :initial-zip-codes="formData.zipCodes"
             :initial-cities="formData.cities"
@@ -309,7 +309,7 @@
             data-testid="replacement-create-submit"
             :in-progress="inProgress"
         >
-            Enregistrer
+            {{ $t('common.save') }}
         </Button>
     </form>
 
@@ -322,6 +322,7 @@
 </template>
 
 <script lang="ts" setup>
+const { t } = useI18n();
 import { ArrowLeft, Plus, X } from 'lucide-vue-next';
 import { toast } from 'vue-sonner';
 import { InputTime } from '@/components/ui/input-time';
@@ -594,7 +595,7 @@ const { submit, inProgress } = useSubmit(
 );
 
 useHead({
-    title: 'Créer un remplacement',
+    title: () => t('replacements.createTitle'),
 });
 
 definePageMeta({

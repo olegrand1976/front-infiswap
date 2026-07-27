@@ -7,22 +7,23 @@
 <script setup lang="ts">
 import Pricing from '@/components/Pricing.vue';
 
-const seoDescription = 'Tarifs InfiSwap : compte gratuit (recherche, alertes, publication et candidatures aux remplacements), boost visibilité dès 2 € (3 jours) ou 4,40 € (7 jours) en tête de liste.';
+const { t } = useI18n();
+const localePath = useLocalePath();
 
 useSeoMeta({
-    title: 'Tarifs InfiSwap — Gratuit & Boost remplacement',
-    description: seoDescription,
-    ogTitle: 'Tarifs InfiSwap — Gratuit & Boost remplacement',
-    ogDescription: seoDescription,
+    title: () => t('pricing.seoTitle'),
+    description: () => t('pricing.seoDescription'),
+    ogTitle: () => t('pricing.seoTitle'),
+    ogDescription: () => t('pricing.seoDescription'),
     ogType: 'website',
     twitterCard: 'summary_large_image',
-    twitterTitle: 'Tarifs InfiSwap',
-    twitterDescription: seoDescription,
+    twitterTitle: () => t('pricing.seoTitle'),
+    twitterDescription: () => t('pricing.seoDescription'),
 });
 
 useHead({
     link: [
-        { rel: 'canonical', href: '/pricing' },
+        { rel: 'canonical', href: localePath('/pricing') },
     ],
 });
 

@@ -5,11 +5,11 @@
         >
             <ArrowLeft
                 class="size-5 cursor-pointer hover:text-primary"
-                title="Retour"
+                :title="$t('common.back')"
                 @click="goBack"
             />
             <h1 class="py-3 text-primary font-medium">
-                Remplacement immédiat <strong>pour aujourd'hui</strong>
+                {{ $t('replacements.immediateHeading') }} <strong>{{ $t('replacements.immediateHeadingStrong') }}</strong>
             </h1>
         </div>
 
@@ -18,7 +18,7 @@
                 class="bg-gray-100 rounded-xl px-6 sm:px-8 md:px-10 py-8 mx-auto max-w-5xl w-full"
             >
                 <h3 class="text-center text-lg text-primary py-4 mb-2 font-bold">
-                    Besoin d’aide rapidement ? Rien de plus simple !
+                    {{ $t('replacements.immediateHelp') }}
                 </h3>
                 <div class="space-y-4">
                     <div class="flex flex-wrap gap-6 mt-4">
@@ -324,6 +324,7 @@ const hasMultipleValidRoles = computed(() => {
 });
 
 const { careTypes, fetchCareTypes } = useCareTypes();
+const { t } = useI18n();
 const { $toast } = useNuxtApp();
 const { sendUrgentReplacement } = useReplacements();
 const { getCitiesFomZipCode, getZipCodesFromCity } = useLocation();
@@ -458,7 +459,7 @@ const { submit, inProgress } = useSubmit(async () => {
 });
 
 useHead({
-    title: 'Remplacement rapide',
+    title: () => t('replacements.immediateTitle'),
 });
 
 definePageMeta({

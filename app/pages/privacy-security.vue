@@ -10,6 +10,12 @@
             </p>
         </template>
         <div class="max-w-7xl mx-auto p-6">
+            <p
+                v-if="locale === 'nl'"
+                class="container md:mx-8 lg:mx-16 mx-auto mb-6 text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-lg p-4"
+            >
+                {{ $t('legal.privacyBody') }}
+            </p>
             <div class="container md:mx-8 lg:mx-16 mx-auto font-light mb-4 lg:mb-6 space-y-2">
                 <p>
                     La présente politique informe sur la manière dont
@@ -59,11 +65,13 @@
 </template>
 
 <script lang="ts" setup>
+const { locale, t } = useI18n();
+
 useHead({
-    title: 'Politique & Sécurité',
+    title: () => t('legal.privacyTitle'),
     meta: [{
         name: 'description',
-        content: 'Politique de protection des données personnelles InfiSwap (RGPD) : finalités, non-vente des données, sous-traitants, droits et sécurité.',
+        content: () => t('legal.privacyBody'),
     }],
 });
 

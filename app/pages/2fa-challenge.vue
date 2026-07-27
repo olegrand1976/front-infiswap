@@ -23,16 +23,16 @@
                     <LayoutsLogo class="w-64" />
                 </div>
                 <h1 class="md:text-2xl sm:text-xl text-center text-primary">
-                    Vérifiez votre<span class="font-bold"> boite email</span>
+                    {{ $t('auth.twoFactorHeading') }}<span class="font-bold"> {{ $t('auth.twoFactorHeadingStrong') }}</span>
                 </h1>
                 <p class="text-center lg:w-96 2xl:w-auto">
-                    Entrez le code à 6 chiffres qui a été envoyé à votre adresse e-mail
+                    {{ $t('auth.twoFactorHint') }}
                 </p>
                 <Button
                     class="border-none rounded-none shadow-none hover:text-blue-600 hover:bg-transparent bg-transparent underline text-blue-500 text-center xl:text-sm sm:text-xs"
                     @click="resendCode"
                 >
-                    Renvoyer le code
+                    {{ $t('auth.twoFactorResend') }}
                 </Button>
 
                 <Form @submit="submit">
@@ -55,12 +55,12 @@
 
                     <div class="flex flex-row justify-center space-x-12 mt-16">
                         <div>
-                            <NuxtLink to="/login">
+                            <NuxtLink :to="localePath('/login')">
                                 <Button
                                     variant="outline"
                                     class="w-full rounded-full px-16"
                                 >
-                                    Retour
+                                    {{ $t('common.back') }}
                                 </Button>
                             </NuxtLink>
                         </div>
@@ -70,7 +70,7 @@
                                 class="w-full px-16"
                                 :in-progress="inProgress"
                             >
-                                Vérifier
+                                {{ $t('auth.twoFactorVerify') }}
                             </Button>
                         </div>
                     </div>
@@ -83,16 +83,16 @@
 
             <div class="container mt-32 flex flex-col space-y-8">
                 <h1 class="text-lg text-center text-primary">
-                    Vérifiez votre <span class="font-bold">email</span>
+                    {{ $t('auth.twoFactorHeading') }} <span class="font-bold">{{ $t('auth.twoFactorHeadingStrong') }}</span>
                 </h1>
                 <p class="text-center text-sm">
-                    Entrez le code à 6 chiffres qui a été envoyé à votre adresse e-mail
+                    {{ $t('auth.twoFactorHint') }}
                 </p>
                 <Button
                     class="border-none rounded-none shadow-none hover:text-blue-600 hover:bg-transparent bg-transparent underline text-blue-500 text-xs text-center"
                     @click="resendCode"
                 >
-                    Renvoyer le code
+                    {{ $t('auth.twoFactorResend') }}
                 </Button>
             </div>
 
@@ -125,12 +125,12 @@
 
                 <div class="flex flex-row justify-center space-x-8 mt-16">
                     <div>
-                        <NuxtLink to="/login">
+                        <NuxtLink :to="localePath('/login')">
                             <Button
                                 variant="outline"
                                 class="w-full rounded-full px-12"
                             >
-                                Retour
+                                {{ $t('common.back') }}
                             </Button>
                         </NuxtLink>
                     </div>
@@ -140,7 +140,7 @@
                             class="w-full rounded-full px-12"
                             :in-progress="inProgress"
                         >
-                            Vérifier
+                            {{ $t('auth.twoFactorVerify') }}
                         </Button>
                     </div>
                 </div>
@@ -161,6 +161,7 @@ import { useCookie } from '#app';
 import { getErrorMessage } from '~/lib/utils';
 import { safeLoginRedirectPath } from '~/utils/accessReturn';
 
+const { t, localePath } = useI18n();
 const { verify2fa } = useAuth();
 const { $apifetch, $toast } = useNuxtApp();
 const route = useRoute();
@@ -178,7 +179,7 @@ onMounted(() => {
 const resendCode = async () => {
     if (!hash.value) {
         $toast({
-            description: 'Session 2FA expirée. Reconnectez-vous.',
+            description: t('auth.twoFactorSessionExpired'),
         });
         return;
     }
@@ -192,12 +193,12 @@ const resendCode = async () => {
         });
         await nextTick();
         $toast({
-            description: 'Un nouveau code a été envoyé.',
+            description: t('auth.twoFactorResent'),
         });
     }
     catch {
         $toast({
-            description: 'Impossible de renvoyer le code. Reconnectez-vous.',
+            description: t('auth.twoFactorResendFailed'),
         });
     }
     finally {
@@ -225,6 +226,6 @@ definePageMeta({
 });
 
 useHead({
-    title: 'Vérification 2FA',
+    title: t('auth.twoFactorPageTitle'),
 });
 </script>

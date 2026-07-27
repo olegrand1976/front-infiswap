@@ -69,3 +69,15 @@ test.describe('Connexion', () => {
         await expect(page).toHaveURL(/\/dashboard/, { timeout: 15_000 });
     });
 });
+
+test.describe('Connexion NL', () => {
+    test.beforeEach(async ({ page }) => {
+        await seedCookieConsent(page);
+        await page.goto('/nl/login');
+    });
+
+    test('page login NL affiche les libellés néerlandais', async ({ page }) => {
+        await expect(page.getByPlaceholder(/Wachtwoord|Mot de passe/).first()).toBeVisible();
+        await expect(page.getByTestId('login-submit').or(page.getByRole('button', { name: /Inloggen|Se connecter/ })).first()).toBeVisible();
+    });
+});

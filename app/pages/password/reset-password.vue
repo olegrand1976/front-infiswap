@@ -38,12 +38,12 @@
             </div>
 
             <div class="hidden lg:flex bg-white container w-full flex-col space-y-12 justify-center items-center relative">
-                <BackButton to="/login" />
+                <BackButton :to="localePath('/login')" />
                 <div>
                     <LayoutsLogo class="sm:w-64 lg:w-72" />
                 </div>
                 <h1 class="md:text-2xl sm:text-xl text-center text-primary">
-                    Réinitialisez votre <span class="font-bold">mot de passe</span>
+                    {{ $t('auth.resetPasswordTitle') }} <span class="font-bold">{{ $t('auth.resetPasswordTitleStrong') }}</span>
                 </h1>
                 <div class="w-full container max-w-xl">
                     <form
@@ -51,19 +51,18 @@
                         @submit.prevent="submitForm"
                     >
                         <div class="text-xs text-primary font-bold mb-2">
-                            Votre adresse e-mail
+                            {{ $t('auth.yourEmail') }}
                         </div>
                         <InputIcon
                             v-model="email"
                             type="email"
-                            placeholder="Votre email"
+                            :placeholder="$t('auth.yourEmailPlaceholder')"
                             :icon="Mail"
                         />
 
                         <div class="px-8 pt-8">
                             <h4 class="font-light lg:text-sm text-xs text-center">
-                                Saisissez votre adresse éléctronique et nous vous enverrons un code
-                                pour réinitialiser votre mot de passe
+                                {{ $t('auth.resetPasswordHint') }}
                             </h4>
                         </div>
 
@@ -72,7 +71,7 @@
                                 type="submit"
                                 class="font-bold w-[70%] md:text-sm sm:text-xs"
                             >
-                                Réinitialiser
+                                {{ $t('auth.resetSubmit') }}
                             </Button>
                         </div>
                     </form>
@@ -82,11 +81,11 @@
 
         <div class="lg:hidden min-h-screen w-full flex flex-col justify-between relative overflow-y-auto">
             <LayoutsHeaderMobile />
-            <BackButton to="/login" />
+            <BackButton :to="localePath('/login')" />
 
             <div class="flex flex-col justify-center items-center px-6 grow py-12">
                 <h1 class="text-lg text-center text-primary mb-8">
-                    Réinitialisez votre <span class="font-bold">mot de passe</span>
+                    {{ $t('auth.resetPasswordTitle') }} <span class="font-bold">{{ $t('auth.resetPasswordTitleStrong') }}</span>
                 </h1>
 
                 <div class="w-full max-w-sm">
@@ -98,13 +97,13 @@
                             <FormField name="email">
                                 <FormItem>
                                     <FormLabel class="text-xs text-primary font-bold mb-2 block">
-                                        Votre adresse e-mail
+                                        {{ $t('auth.yourEmail') }}
                                     </FormLabel>
                                     <FormControl>
                                         <InputIcon
                                             v-model="email"
                                             type="email"
-                                            placeholder="Votre email"
+                                            :placeholder="$t('auth.yourEmailPlaceholder')"
                                             :icon="Mail"
                                         />
                                     </FormControl>
@@ -113,8 +112,7 @@
 
                             <div class="pt-8">
                                 <h4 class="font-light text-xs text-center px-4">
-                                    Saisissez votre adresse éléctronique et nous vous enverrons un code
-                                    pour réinitialiser votre mot de passe
+                                    {{ $t('auth.resetPasswordHint') }}
                                 </h4>
                             </div>
 
@@ -123,7 +121,7 @@
                                     type="submit"
                                     class="font-bold px-12 text-xs"
                                 >
-                                    Réinitialiser
+                                    {{ $t('auth.resetSubmit') }}
                                 </Button>
                             </div>
                         </form>
@@ -145,13 +143,14 @@ import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
 import { Form, FormField, FormItem, FormLabel, FormControl } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 
+const { t, localePath } = useI18n();
 const { $toast } = useNuxtApp();
 definePageMeta({
     layout: 'auth',
 });
 
 useHead({
-    title: 'Réinitialisation de mot de passe',
+    title: t('auth.resetPageTitle'),
 });
 
 const email = ref('');
@@ -163,7 +162,7 @@ const submitForm = async (event: Event) => {
 
     if (!email.value) {
         $toast({
-            description: 'Veuillez entrer une adresse email valide.',
+            description: t('auth.resetEmailRequired'),
             variant: 'destructive',
         });
         return;
@@ -180,8 +179,8 @@ const submitForm = async (event: Event) => {
 
         if (response.status === 200) {
             $toast({
-                title: 'Succès',
-                description: 'Vérifiez votre boîte de réception.',
+                title: t('common.success'),
+                description: t('auth.resetCheckInbox'),
             });
             setTimeout(() => {
                 navigateTo('/');
@@ -189,8 +188,8 @@ const submitForm = async (event: Event) => {
         }
         else {
             $toast({
-                title: 'Succès',
-                description: 'Vérifiez votre boîte de réception.',
+                title: t('common.success'),
+                description: t('auth.resetCheckInbox'),
             });
             setTimeout(() => {
                 navigateTo('/');
@@ -200,7 +199,7 @@ const submitForm = async (event: Event) => {
     catch (error) {
         console.error('Erreur API:', error);
         $toast({
-            title: 'Oups! Une erreur s\'est produite',
+            title: t('auth.oopsError'),
             description: getErrorMessage(error),
             variant: 'destructive',
         });

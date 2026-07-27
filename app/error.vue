@@ -15,7 +15,7 @@
 import type { NuxtError } from '#app';
 
 useHead({
-    title: 'Erreur | InfiSwap',
+    title: 'Erreur',
 });
 
 defineProps({
