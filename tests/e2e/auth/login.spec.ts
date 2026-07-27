@@ -1,9 +1,10 @@
 import { expect, test } from '@playwright/test';
 import { AUTH_TOKEN_COOKIE } from '../fixtures/test-data';
-import { fillLoginForm, submitLogin } from '../fixtures/auth-helpers';
+import { fillLoginForm, seedCookieConsent, submitLogin } from '../fixtures/auth-helpers';
 
 test.describe('Connexion', () => {
     test.beforeEach(async ({ page }) => {
+        await seedCookieConsent(page);
         await page.goto('/login');
     });
 
@@ -66,5 +67,17 @@ test.describe('Connexion', () => {
 
         await page.goto('/login');
         await expect(page).toHaveURL(/\/dashboard/, { timeout: 15_000 });
+    });
+});
+
+test.describe('Connexion NL', () => {
+    test.beforeEach(async ({ page }) => {
+        await seedCookieConsent(page);
+        await page.goto('/nl/login');
+    });
+
+    test('page login NL affiche les libellés néerlandais', async ({ page }) => {
+        await expect(page.getByPlaceholder(/Wachtwoord|Mot de passe/).first()).toBeVisible();
+        await expect(page.getByTestId('login-submit').or(page.getByRole('button', { name: /Inloggen|Se connecter/ })).first()).toBeVisible();
     });
 });

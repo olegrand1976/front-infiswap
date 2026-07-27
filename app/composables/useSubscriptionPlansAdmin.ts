@@ -1,6 +1,6 @@
 export const SUBSCRIPTION_TABS: SubscriptionTab[] = [
-    { key: 'access', label: 'Accès plateforme', group: 'access' },
     { key: 'boost_replacement', label: 'Boost remplacement', group: 'boost', feature: 'replacement' },
+    { key: 'access', label: 'Accès plateforme (historique)', group: 'access' },
 ];
 
 export const resolveSubscriptionTab = (tabKey: string): SubscriptionTab =>

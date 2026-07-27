@@ -29,7 +29,7 @@
                                         >info@infiswap.be</a> ou au 0478.02.33.77 pour plus d'informations.
                                     </p>
                                     <p class="mt-2">
-                                        Accès réseau infirmière : paiement unique 9,90 € (accès permanent). Boost remplacement : Boost 1 à 2 € (3 jours) ou Boost 2 à 4,40 € (7 jours).
+                                        Boost remplacement : Boost 1 à 2 € (3 jours) ou Boost 2 à 4,40 € (7 jours).
                                     </p>
                                 </div>
 

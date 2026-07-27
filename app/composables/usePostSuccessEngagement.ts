@@ -24,11 +24,8 @@ export function usePostSuccessEngagement() {
     const activeEngagement = useState<PostSuccessEngagementState | null>('postSuccessEngagementActive', () => null);
     const pendingNavigation = useState<string | null>('postSuccessEngagementPendingNavigation', () => null);
 
-    const shouldShowReviewSection = computed(() => !hasLeftGoogleReview(user.value));
-    const shouldShowSponsorSection = computed(() => true);
-
     function shouldShowEngagement(): boolean {
-        return shouldShowReviewSection.value || shouldShowSponsorSection.value;
+        return !hasLeftGoogleReview(user.value);
     }
 
     function updateUserSettingsCache(value: GoogleReviewSetting): void {
@@ -81,10 +78,7 @@ export function usePostSuccessEngagement() {
 
         updateUserSettingsCache(value);
         trackEvent('google_review_cta_click', { source });
-
-        if (!shouldShowSponsorSection.value) {
-            await finishEngagement();
-        }
+        await finishEngagement();
     }
 
     async function dismissEngagement(): Promise<void> {
@@ -111,26 +105,10 @@ export function usePostSuccessEngagement() {
     return {
         activeEngagement,
         pendingNavigation,
-        shouldShowReviewSection,
-        shouldShowSponsorSection,
         shouldShowEngagement,
         requestEngagement,
         markReviewLeft,
         dismissEngagement,
         finishEngagement,
-    };
-}
-
-/** @deprecated Utiliser usePostSuccessEngagement */
-export function useGoogleReviewPrompt() {
-    const engagement = usePostSuccessEngagement();
-
-    return {
-        activePrompt: engagement.activeEngagement,
-        pendingNavigation: engagement.pendingNavigation,
-        shouldShowPrompt: engagement.shouldShowEngagement,
-        requestPrompt: engagement.requestEngagement,
-        markReviewLeft: engagement.markReviewLeft,
-        dismissPrompt: engagement.dismissEngagement,
     };
 }

@@ -119,6 +119,10 @@
                             <div class="flex flex-col">
                                 <span class="text-[11px] sm:text-xs text-gray-400 font-medium">Diplôme requis</span>
                                 <span class="text-sm font-semibold text-gray-800 mt-0.5">{{ mission.required_diploma }}</span>
+                                <template v-if="mission.required_education_level_label">
+                                    <span class="text-[11px] sm:text-xs text-gray-400 font-medium mt-2">Niveau d'études</span>
+                                    <span class="text-sm font-semibold text-gray-800 mt-0.5">{{ mission.required_education_level_label }}</span>
+                                </template>
                             </div>
                         </div>
                     </div>

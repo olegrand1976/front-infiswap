@@ -5,7 +5,7 @@
                 <label class="font-semibold text-primary flex items-center gap-1.5">
                     Codes postaux
                     <SettingsFieldHint
-                        :text="SETTINGS_TOOLTIPS.zipCodesPreference"
+                        :text="$t(SETTINGS_TOOLTIPS.zipCodesPreference)"
                         label="Codes postaux"
                     />
                 </label>
@@ -44,7 +44,7 @@
                 <label class="font-semibold text-primary flex items-center gap-1.5">
                     Villes
                     <SettingsFieldHint
-                        :text="SETTINGS_TOOLTIPS.citiesPreference"
+                        :text="$t(SETTINGS_TOOLTIPS.citiesPreference)"
                         label="Villes"
                     />
                 </label>

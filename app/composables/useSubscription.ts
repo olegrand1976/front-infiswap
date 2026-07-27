@@ -1,10 +1,4 @@
-import {
-    hasPaidPlatformAccess,
-    isLocallyExemptFromPlatformPayment,
-    isOneTimeAccessPlan,
-    resolvePlatformAccessPromptAction,
-} from '~/utils/platformAccess';
-import { parseConfirmAccessOutcome, safeReturnPath, type ConfirmAccessOutcome } from '~/utils/accessReturn';
+import { parseConfirmAccessOutcome, type ConfirmAccessOutcome } from '~/utils/accessReturn';
 
 export type ConfirmAccessResult = {
     outcome: ConfirmAccessOutcome;
@@ -15,103 +9,65 @@ export type ConfirmBoostResult = {
     planDays: number | null;
 };
 
+/** @deprecated Paywall retiré — conservé pour compat callers. */
+export type PlatformAccessTrigger =
+    | 'create'
+    | 'apply'
+    | 'banner'
+    | 'header'
+    | 'settings'
+    | 'onboarding_banner'
+    | 'quest'
+    | 'direct';
+
 export const useSubscription = () => {
     const { $apifetch, $toast } = useNuxtApp();
-    const { refresh } = useAuth();
 
     const accessPlan = useState<AccessPlan | null>('accessPlan', () => null);
     const loading = useState<boolean>('subscriptionLoading', () => false);
     const current = useState<ActiveAccess | null>('currentAccess', () => null);
     const platformAccessModalOpen = useState<boolean>('platformAccessModalOpen', () => false);
     const platformAccessRedirectTo = useState<string | null>('platformAccessRedirectTo', () => null);
+    const platformAccessTrigger = useState<PlatformAccessTrigger | null>('platformAccessTrigger', () => null);
     const user = useUser();
-    const route = useRoute();
-
-    const bypassesPlatformAccess = (): boolean => {
-        const { isInfiswapStaff, isInstitution } = useAuth();
-
-        if (!user.value?.id) {
-            return true;
-        }
-
-        if (isInstitution.value) {
-            return true;
-        }
-
-        return isInfiswapStaff.value;
-    };
-
-    const isLocallyExemptFromPlatformPaymentFn = (): boolean => {
-        return isLocallyExemptFromPlatformPayment(user.value, {
-            bypassesPlatformAccess: bypassesPlatformAccess(),
-        });
-    };
 
     const hasPlatformAccess = async (): Promise<boolean> => {
-        if (bypassesPlatformAccess()) {
-            return true;
-        }
-
-        const response = await check(user.value!.id);
-
-        if (!response) {
-            return false;
-        }
-
-        return response.status === 'active';
+        return true;
     };
 
-    const redirectToAccesPlan = async (redirectTo?: string) => {
-        await navigateTo({
-            path: '/acces-plan',
-            query: { redirectTo: safeReturnPath(redirectTo ?? route.fullPath) },
-        });
+    /** Paywall retiré — redirige vers le dashboard. */
+    const redirectToAccesPlan = async (
+        _redirectTo?: string,
+        _options?: { checkout?: boolean; trigger?: PlatformAccessTrigger },
+    ) => {
+        await navigateTo('/dashboard');
     };
 
-    const openPlatformAccessModal = (redirectTo?: string | null) => {
-        platformAccessRedirectTo.value = redirectTo ?? safeReturnPath(route.fullPath);
-        platformAccessModalOpen.value = true;
+    const openPlatformAccessModal = (
+        _redirectTo?: string | null,
+        _trigger: PlatformAccessTrigger = 'direct',
+    ) => {
+        // Modal retirée — no-op.
     };
 
     const closePlatformAccessModal = () => {
         platformAccessModalOpen.value = false;
         platformAccessRedirectTo.value = null;
+        platformAccessTrigger.value = null;
     };
 
-    /** Opens the payment modal when cotisation is required; call after form validation. */
-    const promptPlatformAccessIfRequired = async (redirectTo?: string): Promise<boolean> => {
-        if (bypassesPlatformAccess()) {
-            return true;
-        }
-
-        if (hasPaidPlatformAccess(user.value)) {
-            return true;
-        }
-
-        if (!user.value?.id) {
-            return false;
-        }
-
-        const response = await check(user.value.id);
-        const action = resolvePlatformAccessPromptAction(response, false);
-
-        if (action === 'allow') {
-            await refresh();
-
-            return true;
-        }
-
-        if (action === 'deny') {
-            return false;
-        }
-
-        openPlatformAccessModal(redirectTo ?? safeReturnPath(route.fullPath));
-
-        return false;
+    const promptPlatformAccessIfRequired = async (
+        _redirectTo?: string,
+        _trigger: PlatformAccessTrigger = 'direct',
+    ): Promise<boolean> => {
+        return true;
     };
 
-    const requirePlatformAccess = async (redirectTo?: string): Promise<boolean> => {
-        return promptPlatformAccessIfRequired(redirectTo);
+    const requirePlatformAccess = async (
+        _redirectTo?: string,
+        _trigger: PlatformAccessTrigger = 'direct',
+    ): Promise<boolean> => {
+        return true;
     };
 
     const isPlatformAccessError = (error: unknown): boolean => {
@@ -121,57 +77,20 @@ export const useSubscription = () => {
     };
 
     const getAccessPlan = async (): Promise<void> => {
-        loading.value = true;
-        try {
-            const response = await $apifetch<{ access: AccessPlan | null }>('api/subscription/plans');
-            accessPlan.value = response.access?.interval === 'one_time' ? response.access : null;
-        }
-        catch (error) {
-            console.error('Error fetching access plan:', error);
-        }
-        finally {
-            loading.value = false;
-        }
+        accessPlan.value = null;
     };
 
-    const purchaseAccess = async (priceId: string): Promise<CheckoutResponse | null> => {
-        if (!user.value) {
-            await navigateTo({
-                path: '/login',
-                query: { redirect: route.fullPath },
-            });
-            return null;
-        }
+    /** Produit retiré — refuse tout nouvel achat. */
+    const purchaseAccess = async (
+        _priceId: string,
+        _options?: { redirectTo?: string | null; trigger?: PlatformAccessTrigger | string | null; source?: string },
+    ): Promise<CheckoutResponse | null> => {
+        $toast({
+            variant: 'destructive',
+            description: 'L\'accès réseau payant a été retiré. Publiez et postulez librement.',
+        });
 
-        if (!accessPlan.value || !isOneTimeAccessPlan(accessPlan.value)) {
-            $toast({
-                variant: 'destructive',
-                description: 'Le plan d\'accès unique n\'est pas disponible pour le moment.',
-            });
-            return null;
-        }
-
-        loading.value = true;
-        try {
-            return await $apifetch<CheckoutResponse>('api/subscription/create', {
-                method: 'POST',
-                body: {
-                    priceId,
-                    redirectTo: safeReturnPath(route.query.redirectTo),
-                },
-            });
-        }
-        catch (error: unknown) {
-            $toast({
-                variant: 'destructive',
-                description: getApiErrorMessage(error, 'Erreur lors de l\'achat de l\'accès'),
-                duration: 3000,
-            });
-            return null;
-        }
-        finally {
-            loading.value = false;
-        }
+        return null;
     };
 
     const confirmAccess = async (sessionId: string): Promise<ConfirmAccessResult> => {
@@ -282,6 +201,7 @@ export const useSubscription = () => {
         accessPlan,
         platformAccessModalOpen,
         platformAccessRedirectTo,
+        platformAccessTrigger,
         getAccessPlan,
         purchaseAccess,
         confirmAccess,

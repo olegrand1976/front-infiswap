@@ -66,7 +66,7 @@ function iconFor(key: string) {
 
 function descriptionFor(tab: SubscriptionTab) {
     if (tab.group === 'access') {
-        return 'Tarif d\'accès permanent à la plateforme';
+        return 'Ancien produit accès réseau (historique, plus proposé)';
     }
 
     return 'Mise en avant des annonces de remplacement';

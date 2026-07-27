@@ -1,8 +1,7 @@
 <template>
     <Select
-        v-model="defaultLanguage"
-        :default-value="defaultLanguage"
-        disabled
+        :model-value="currentLocale"
+        @update:model-value="onLocaleChange"
     >
         <SelectTrigger
             class="flex md:w-24 lg:w-auto space-x-1 lg:space-x-2 border border-none lg:text-sm md:text-xs"
@@ -45,6 +44,19 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { LANGUAGES } from '~/lib/constants';
+import { isAppLocale, type AppLocale } from '~/utils/appLocale';
 
-const defaultLanguage = ref('fr');
+const { locale: currentLocale, applyLocale } = useAppLocale();
+const switchLocalePath = useSwitchLocalePath();
+const router = useRouter();
+
+async function onLocaleChange(value: unknown) {
+    if (!isAppLocale(value)) {
+        return;
+    }
+
+    const next = value as AppLocale;
+    await applyLocale(next);
+    await router.push(switchLocalePath(next));
+}
 </script>

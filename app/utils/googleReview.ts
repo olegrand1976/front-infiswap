@@ -84,7 +84,7 @@ export function parseGoogleReviewSetting(user: GoogleReviewUser | null | undefin
 
     return {
         left_at: setting.left_at,
-        source: setting.source ?? 'platform_access',
+        source: setting.source ?? 'onboarding_complete',
     };
 }
 
@@ -100,8 +100,6 @@ export function mapCelebrationVariantToReviewSource(
     variant: PurchaseCelebrationVariant,
 ): GoogleReviewSource {
     switch (variant) {
-        case 'platform_access':
-            return 'platform_access';
         case 'boost':
             return 'boost';
         case 'contract':

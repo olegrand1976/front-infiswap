@@ -115,9 +115,6 @@
             :key="selectedUserId"
             :user-id="selectedUserId"
             :commercial-name="selectedCommercialLabel"
-            :grades="careerGrades"
-            :allow-initial-assignment="selectedRow?.can_manage_career ?? false"
-            @updated="onCareerUpdated"
         />
 
         <div
@@ -162,64 +159,6 @@
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
-
-        <Dialog v-model:open="initDialogOpen">
-            <DialogContent class="max-w-md">
-                <DialogHeader>
-                    <DialogTitle>Grade de démarrage</DialogTitle>
-                    <DialogDescription v-if="initTarget">
-                        Définir le statut initial de calcul de commission pour {{ initTarget.full_name }}.
-                    </DialogDescription>
-                </DialogHeader>
-
-                <form
-                    class="space-y-4"
-                    @submit.prevent="confirmInitGrade"
-                >
-                    <p class="text-xs text-muted-foreground">
-                        Le grade initial sert de base au calcul des commissions. Les promotions suivantes sont automatiques selon les BC signés et le CA équipe.
-                    </p>
-                    <div>
-                        <Label for="init_career_grade_id">Grade initial</Label>
-                        <Select v-model="initForm.career_grade_id">
-                            <SelectTrigger
-                                id="init_career_grade_id"
-                                class="mt-1 rounded-md"
-                            >
-                                <SelectValue placeholder="Choisir un grade" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem
-                                    v-for="grade in careerGrades"
-                                    :key="grade.id ?? grade.slug"
-                                    :value="String(grade.id ?? '')"
-                                    :disabled="!grade.id"
-                                >
-                                    {{ grade.name }}
-                                </SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <DialogFooter>
-                        <Button
-                            type="button"
-                            variant="outline"
-                            class="rounded-md"
-                            @click="initDialogOpen = false"
-                        >
-                            Annuler
-                        </Button>
-                        <Button
-                            type="submit"
-                            class="rounded-md"
-                            :disabled="initializing || !initForm.career_grade_id"
-                        >
-                            {{ initializing ? 'Enregistrement…' : 'Initialiser' }}
-                        </Button>
-                    </DialogFooter>
-                </form>
-            </DialogContent>
-        </Dialog>
     </div>
 </template>
 
@@ -228,15 +167,6 @@ import { RefreshCw, Trash2 } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { h } from 'vue';
 import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { InputIcon } from '~/components/ui/input-with-icon';
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
@@ -249,7 +179,7 @@ import type { CommercialCareerGrade, MyCareerStatus } from '@/composables/useIns
 
 const { $apifetch } = useNuxtApp();
 const { getCommercialActivity, revokeCommercialAccess } = useCrm();
-const { getSettings, getCommercialCareerStatus, assignCareerGrade } = useInstitutionCrmSettings();
+const { getSettings, getCommercialCareerStatus } = useInstitutionCrmSettings();
 const user = useUser();
 const { $toast } = useNuxtApp();
 
@@ -272,10 +202,6 @@ const commercialOptions = ref<CommercialOption[]>([]);
 const revokeDialogOpen = ref(false);
 const revokeTarget = ref<CrmCommercialActivityRow | null>(null);
 const revoking = ref(false);
-const initDialogOpen = ref(false);
-const initTarget = ref<CrmCommercialActivityRow | null>(null);
-const initializing = ref(false);
-const initForm = reactive({ career_grade_id: '' });
 const careerGrades = ref<CommercialCareerGrade[]>([]);
 const gradesLoading = ref(true);
 const selectedCareerStatus = ref<MyCareerStatus | null>(null);
@@ -290,10 +216,6 @@ const selectedUserId = computed(() => {
     const parsed = Number(selectedCommercial.value);
     return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
 });
-
-const selectedRow = computed(() =>
-    rows.value.find(row => row.user_id === selectedUserId.value) ?? null,
-);
 
 const showCareerColumns = computed(() => selectedUserId.value !== null);
 
@@ -449,10 +371,6 @@ async function loadSelectedCareerStatus() {
     }
 }
 
-async function onCareerUpdated() {
-    await loadSelectedCareerStatus();
-}
-
 function careerProgressPercent(current?: number | null, min?: number | null) {
     if (!min || min <= 0) return 0;
     return Math.min(100, Math.round(((current ?? 0) / min) * 100));
@@ -510,42 +428,6 @@ function resetFilters() {
     commercialSearch.value = '';
     selectedCareerStatus.value = null;
     refresh();
-}
-
-function openInitDialog(row: CrmCommercialActivityRow) {
-    initTarget.value = row;
-    initForm.career_grade_id = row.career_grade_id ? String(row.career_grade_id) : '';
-    initDialogOpen.value = true;
-}
-
-async function confirmInitGrade() {
-    if (!initTarget.value || !initForm.career_grade_id || initializing.value) {
-        return;
-    }
-
-    initializing.value = true;
-    try {
-        await assignCareerGrade(initTarget.value.user_id, {
-            career_grade_id: Number(initForm.career_grade_id),
-            assignment_type: 'initial',
-            notify: true,
-            notes: 'Grade initial défini depuis le récap activité',
-        });
-        $toast({ description: 'Grade de démarrage enregistré.' });
-        initDialogOpen.value = false;
-        initTarget.value = null;
-        initForm.career_grade_id = '';
-        await refresh();
-    }
-    catch {
-        $toast({
-            description: 'Impossible d\'initialiser le grade de carrière.',
-            variant: 'destructive',
-        });
-    }
-    finally {
-        initializing.value = false;
-    }
 }
 
 function openRevokeDialog(row: CrmCommercialActivityRow) {
@@ -623,16 +505,7 @@ const columns = computed<ColumnDef<CrmCommercialActivityRow>[]>(() => {
                 if (row.original.has_initial_assignment) {
                     return h('span', { class: 'text-xs text-emerald-700' }, 'Initialisé');
                 }
-                return h(
-                    Button,
-                    {
-                        variant: 'outline',
-                        size: 'sm',
-                        class: 'rounded-md h-7 text-xs',
-                        onClick: () => openInitDialog(row.original),
-                    },
-                    () => 'Initialiser',
-                );
+                return h('span', { class: 'text-xs text-muted-foreground' }, 'Non initialisé');
             },
         },
     ];

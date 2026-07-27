@@ -3,7 +3,7 @@
         <DashboardAdminPageHeader title="Abonnement">
             <template #action>
                 <Button
-                    v-if="isSuperAdmin && currentTab"
+                    v-if="isSuperAdmin && currentTab && currentTab.group !== 'access'"
                     class="rounded-lg shadow-sm"
                     :href="createHref"
                 >
@@ -68,7 +68,7 @@ const { isSuperAdmin } = useAuth();
 
 function normalizeTabKey(tab: unknown): string {
     const value = typeof tab === 'string' ? tab.trim() : '';
-    return value || 'access';
+    return value || 'boost_replacement';
 }
 
 const selectedTabKey = computed(() => normalizeTabKey(route.query.tab));
@@ -92,7 +92,7 @@ watch(selectedTabKey, (tabKey) => {
 
 onMounted(() => {
     if (!route.query.tab || String(route.query.tab).trim() === '') {
-        router.replace({ query: { tab: 'access' } });
+        router.replace({ query: { tab: 'boost_replacement' } });
     }
 });
 </script>

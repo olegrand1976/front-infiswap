@@ -136,10 +136,13 @@
                     </span>
                     <div
                         v-if="isBelgium"
-                        class="flex items-center space-x-2 border-l pl-6 border-slate-200"
+                        class="flex items-center space-x-3 border-l pl-6 border-slate-200"
                     >
-                        <span class="text-xs text-slate-400">Partenariat officiel :</span>
-                        <span class="font-bold text-slate-700 tracking-wider text-sm bg-slate-50 px-2 py-1 rounded">JAUMANA <span class="text-[#46d88e]">Soins</span></span>
+                        <OffreInstitutionJaumanaToggle v-model="showJaumanaOffer" />
+                        <template v-if="showJaumana">
+                            <span class="text-xs text-slate-400">Partenariat officiel :</span>
+                            <span class="font-bold text-slate-700 tracking-wider text-sm bg-slate-50 px-2 py-1 rounded">JAUMANA <span class="text-[#46d88e]">Soins</span></span>
+                        </template>
                     </div>
                 </div>
 
@@ -153,6 +156,16 @@
                 </a>
             </div>
         </header>
+
+        <div
+            v-if="hasSelectedCountry && isBelgium"
+            class="md:hidden bg-white border-b border-slate-100 px-4 py-2.5"
+        >
+            <OffreInstitutionJaumanaToggle
+                v-model="showJaumanaOffer"
+                layout="between"
+            />
+        </div>
 
         <template v-if="hasSelectedCountry">
             <!-- TRUST STATS -->
@@ -209,7 +222,7 @@
                 <!-- TWO PILLARS -->
                 <div
                     class="grid grid-cols-1 gap-6 mb-10"
-                    :class="isBelgium ? 'lg:grid-cols-2' : 'lg:grid-cols-1'"
+                    :class="showJaumana ? 'lg:grid-cols-2' : 'lg:grid-cols-1'"
                 >
                     <div class="bg-white border border-slate-100 rounded-xl p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-all relative overflow-hidden">
                         <div class="absolute top-0 right-0 bg-emerald-50 text-emerald-800 text-[10px] font-bold px-3 py-1 rounded-bl-lg">
@@ -217,7 +230,7 @@
                         </div>
                         <div>
                             <div class="flex items-center justify-between mb-4">
-                                <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full">Option 1 : Do-It-Yourself (Abonnement)</span>
+                                <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full">{{ showJaumana ? 'Option 1 : ' : '' }}InfiSwap Institut (Abonnement)</span>
                                 <div class="text-right">
                                     <span class="text-slate-950 font-extrabold text-sm block">{{ diyMonthlyLabel }}</span>
                                     <span
@@ -240,7 +253,7 @@
                                     <i class="fa-solid fa-laptop-code text-lg" />
                                 </div>
                                 <h3 class="text-xl font-bold text-slate-800">
-                                    La Plateforme InfiSwap
+                                    InfiSwap Institut
                                 </h3>
                             </div>
                             <p class="text-slate-600 text-sm mb-4 leading-relaxed">
@@ -268,7 +281,7 @@
                     </div>
 
                     <div
-                        v-if="isBelgium"
+                        v-if="showJaumana"
                         class="bg-white border border-slate-100 rounded-xl p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-all relative overflow-hidden"
                     >
                         <div class="absolute top-0 right-0 bg-slate-900 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg">
@@ -280,7 +293,7 @@
                                 <span class="text-slate-700 font-extrabold text-sm">Sécurisation &amp; suivi</span>
                             </div>
                             <p class="text-[10px] text-[#d3405c] font-semibold mb-3">
-                                {{ OFFRE_INSTITUTION_JAUMANA_BELGIUM_ONLY_LABEL }}
+                                {{ jaumanaBelgiumOnlyLabel }}
                             </p>
                             <div class="flex items-center gap-3 mb-3">
                                 <div class="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center text-[#d3405c]">
@@ -365,7 +378,7 @@
                             class="space-y-6"
                         >
                             <div class="border-b border-slate-100 pb-4">
-                                <span class="text-xs font-semibold text-[#d3405c] uppercase tracking-wider">Partie 1</span>
+                                <span class="text-xs font-semibold text-[#d3405c] uppercase tracking-wider">{{ partLabel('accueil') }}</span>
                                 <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
                                     Le coût de la pénurie : sortir du piège de l'intérim classique
                                 </h2>
@@ -395,7 +408,7 @@
                             </div>
                             <div class="p-5 bg-[#46d88e]/10 border border-[#46d88e]/20 rounded-xl">
                                 <h4 class="font-bold text-slate-900 flex items-center gap-2 mb-2">
-                                    <i class="fa-solid fa-lightbulb text-[#46d88e]" /> {{ countryContent?.insightTitle }}
+                                    <i class="fa-solid fa-lightbulb text-[#46d88e]" /> {{ insightTitle }}
                                 </h4>
                                 <p
                                     class="text-slate-700 text-sm leading-relaxed"
@@ -419,7 +432,7 @@
                             class="space-y-6"
                         >
                             <div class="border-b border-slate-100 pb-4">
-                                <span class="text-xs font-semibold text-[#46d88e] uppercase tracking-wider">Partie 2</span>
+                                <span class="text-xs font-semibold text-[#46d88e] uppercase tracking-wider">{{ partLabel('reseau') }}</span>
                                 <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
                                     La force et la sécurité d'un réseau d'indépendantes
                                 </h2>
@@ -468,7 +481,7 @@
                                     class="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all"
                                     @click="switchTab('diy-infiswap')"
                                 >
-                                    Voir la solution Plateforme DIY <i class="fa-solid fa-arrow-right" />
+                                    Voir la solution InfiSwap Institut <i class="fa-solid fa-arrow-right" />
                                 </button>
                             </div>
                         </div>
@@ -479,9 +492,9 @@
                             class="space-y-6"
                         >
                             <div class="border-b border-slate-100 pb-4">
-                                <span class="text-xs font-semibold text-[#46d88e] uppercase tracking-wider">Partie 3</span>
+                                <span class="text-xs font-semibold text-[#46d88e] uppercase tracking-wider">{{ partLabel('diy-infiswap') }}</span>
                                 <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
-                                    InfiSwap DIY : La plateforme d'autonomie
+                                    InfiSwap Institut : La plateforme d'autonomie
                                 </h2>
                             </div>
                             <p class="text-slate-600 leading-relaxed">
@@ -560,7 +573,7 @@
                                     <i class="fa-solid fa-arrow-left" /> Retour
                                 </button>
                                 <button
-                                    v-if="isBelgium"
+                                    v-if="showJaumana"
                                     type="button"
                                     class="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all"
                                     @click="switchTab('jaumana-premium')"
@@ -580,17 +593,17 @@
 
                         <!-- TAB: jaumana -->
                         <div
-                            v-if="isBelgium"
+                            v-if="showJaumana"
                             v-show="activeTab === 'jaumana-premium'"
                             class="space-y-6"
                         >
                             <div class="border-b border-slate-100 pb-4">
-                                <span class="text-xs font-semibold text-[#d3405c] uppercase tracking-wider">Partie 4</span>
+                                <span class="text-xs font-semibold text-[#d3405c] uppercase tracking-wider">{{ partLabel('jaumana-premium') }}</span>
                                 <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
                                     Partenariat InfiSwap × Jaumana Soins
                                 </h2>
                                 <p class="text-sm text-[#d3405c] font-semibold mt-2">
-                                    {{ OFFRE_INSTITUTION_JAUMANA_BELGIUM_ONLY_LABEL }}
+                                    {{ jaumanaBelgiumOnlyLabel }}
                                 </p>
                                 <p class="text-sm text-slate-500 mt-2">
                                     Pour mieux vous accompagner, pour mieux vous soutenir — des soins de qualité, sans interruption.
@@ -727,7 +740,7 @@
                             class="space-y-6"
                         >
                             <div class="border-b border-slate-100 pb-4">
-                                <span class="text-xs font-semibold text-[#46d88e] uppercase tracking-wider">Partie 5</span>
+                                <span class="text-xs font-semibold text-[#46d88e] uppercase tracking-wider">{{ partLabel('simulateur-annonce') }}</span>
                                 <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
                                     Démo interactive : Publiez votre besoin en 30 secondes
                                 </h2>
@@ -829,7 +842,7 @@
                                 <button
                                     type="button"
                                     class="text-slate-600 hover:text-slate-900 text-xs font-semibold flex items-center gap-2"
-                                    @click="switchTab(isBelgium ? 'jaumana-premium' : 'diy-infiswap')"
+                                    @click="switchTab(showJaumana ? 'jaumana-premium' : 'diy-infiswap')"
                                 >
                                     <i class="fa-solid fa-arrow-left" /> Retour
                                 </button>
@@ -849,9 +862,9 @@
                             class="space-y-6"
                         >
                             <div class="border-b border-slate-100 pb-4">
-                                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Partie 6</span>
+                                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">{{ partLabel('comparatif') }}</span>
                                 <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
-                                    Quelle formule convient le mieux à votre situation ?
+                                    {{ showJaumana ? 'Quelle formule convient le mieux à votre situation ?' : 'InfiSwap Institut : les atouts pour votre établissement' }}
                                 </h2>
                             </div>
                             <div class="overflow-x-auto border border-slate-100 rounded-xl">
@@ -863,12 +876,12 @@
                                             </th>
                                             <th
                                                 class="p-4 text-sm text-[#46d88e]"
-                                                :class="isBelgium ? 'w-3/8' : 'w-3/4'"
+                                                :class="showJaumana ? 'w-3/8' : 'w-3/4'"
                                             >
-                                                InfiSwap DIY (Abonnement)
+                                                InfiSwap Institut (Abonnement)
                                             </th>
                                             <th
-                                                v-if="isBelgium"
+                                                v-if="showJaumana"
                                                 class="p-4 text-sm text-[#d3405c] w-3/8"
                                             >
                                                 Jaumana Soins (Encadrement pro.)
@@ -889,7 +902,7 @@
                                                 v-html="row.diy"
                                             />
                                             <td
-                                                v-if="isBelgium"
+                                                v-if="showJaumana"
                                                 class="p-4 text-slate-800 text-xs"
                                                 v-html="row.jaumana"
                                             />
@@ -921,7 +934,7 @@
                             class="space-y-6"
                         >
                             <div class="border-b border-slate-100 pb-4">
-                                <span class="text-xs font-semibold text-[#d3405c] uppercase tracking-wider">Partie 7</span>
+                                <span class="text-xs font-semibold text-[#d3405c] uppercase tracking-wider">{{ partLabel('contact') }}</span>
                                 <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
                                     Discutons de vos besoins de remplacement
                                 </h2>
@@ -1051,7 +1064,7 @@
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Tarif direct moyen de l'indépendante (DIY) :</label>
+                                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Tarif direct moyen de l'indépendante (InfiSwap Institut) :</label>
                                 <select
                                     v-model.number="calcIndieRate"
                                     class="w-full p-2 border border-slate-200 bg-white rounded-md text-xs font-semibold focus:ring-1 focus:ring-[#46d88e] outline-none"
@@ -1071,7 +1084,7 @@
                         <div class="bg-slate-900 text-white rounded-xl p-6 relative overflow-hidden flex flex-col justify-between h-full min-h-[280px]">
                             <div>
                                 <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-1">
-                                    <span class="w-2 h-2 rounded-full bg-[#46d88e]" /> Votre économie mensuelle moyenne (DIY)
+                                    <span class="w-2 h-2 rounded-full bg-[#46d88e]" /> Votre économie mensuelle moyenne (InfiSwap Institut)
                                 </p>
                                 <div class="text-4xl font-extrabold text-white mt-1">
                                     {{ formatEur(savingsDiy) }}
@@ -1086,14 +1099,14 @@
                                     <span class="font-extrabold text-slate-200 font-mono">{{ formatEur(totalInterimCost) }}</span>
                                 </div>
                                 <div
-                                    v-if="isBelgium"
+                                    v-if="showJaumana"
                                     class="flex justify-between items-center"
                                 >
                                     <span class="text-slate-400"><i class="fa-solid fa-handshake-angle text-[#d3405c] mr-1.5" /> Jaumana — Encadrement pro. (6% inc.) :</span>
                                     <span class="font-extrabold text-slate-200 font-mono">{{ formatEur(totalJaumanaCost) }}</span>
                                 </div>
                                 <div class="flex justify-between items-center">
-                                    <span class="text-slate-400"><i class="fa-solid fa-laptop-code text-[#46d88e] mr-1.5" /> InfiSwap DIY (Honoraires + Abo) :</span>
+                                    <span class="text-slate-400"><i class="fa-solid fa-laptop-code text-[#46d88e] mr-1.5" /> InfiSwap Institut (Honoraires + Abo) :</span>
                                     <span class="font-extrabold text-[#46d88e] font-mono">{{ formatEur(totalDiyCost) }}</span>
                                 </div>
                             </div>
@@ -1127,10 +1140,10 @@
                                     class="hover:text-white transition-all"
                                     @click="switchTab('diy-infiswap')"
                                 >
-                                    Formule DIY Platform ({{ diyMonthlyPrice }}€)
+                                    Formule InfiSwap Institut ({{ diyMonthlyPrice }}€)
                                 </button>
                             </li>
-                            <li v-if="isBelgium">
+                            <li v-if="showJaumana">
                                 <button
                                     type="button"
                                     class="hover:text-white transition-all"
@@ -1198,7 +1211,7 @@
                     </div>
                 </div>
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-6 border-t border-slate-800 text-center text-[11px] text-slate-600">
-                    <p>© {{ currentYear }} InfiSwap. Tous droits réservés. {{ countryContent?.footerCopyright }}</p>
+                    <p>© {{ currentYear }} InfiSwap. Tous droits réservés. {{ footerCopyright }}</p>
                 </div>
             </footer>
         </template>
@@ -1213,6 +1226,7 @@ import {
     getOffreInstitutionCountryContent,
     getOffreInstitutionNetworkMembersLabel,
     getOffreInstitutionNetworkProfilesLabel,
+    getOffreInstitutionJaumanaBelgiumOnlyLabel,
     interpolateOffreInstitutionContent,
     OFFRE_INSTITUTION_JAUMANA_BELGIUM_ONLY_LABEL,
 } from '~/lib/offreInstitutionContent';
@@ -1226,13 +1240,22 @@ import {
 import { getInstitutionCommitmentLabel, loadInstitutionSubscriptionPolicy } from '~/lib/institutionSubscriptionPolicy';
 import { submitInstitutionOfferStudy } from '~/composables/useContact';
 import OffreInstitutionCountryModal from '~/components/offre-institution/OffreInstitutionCountryModal.vue';
+import OffreInstitutionJaumanaToggle from '~/components/offre-institution/OffreInstitutionJaumanaToggle.vue';
 
 type TabId = 'accueil' | 'reseau' | 'diy-infiswap' | 'jaumana-premium' | 'simulateur-annonce' | 'comparatif' | 'contact';
+
+type FolderTabDef = {
+    id: TabId;
+    baseLabel: string;
+    icon: string;
+    jaumanaOnly?: boolean;
+};
 
 const props = defineProps<{
     contact: OffreInstitutionContact;
 }>();
 
+const { locale } = useI18n();
 const commitmentLabel = computed(() => getInstitutionCommitmentLabel('monthly'));
 
 const {
@@ -1260,6 +1283,9 @@ const {
     isFrance,
     setCountry,
 } = useOffreInstitutionCountry();
+
+const showJaumanaOffer = ref(false);
+const showJaumana = computed(() => isBelgium.value && showJaumanaOffer.value);
 
 const activeTab = ref<TabId>('accueil');
 const presentationFolderRef = ref<HTMLElement | null>(null);
@@ -1291,35 +1317,77 @@ const calcIndieRate = ref(45);
 
 const currentYear = new Date().getFullYear();
 
-const contentInterpolationValues = computed(() => ({
-    networkMembers: getOffreInstitutionNetworkMembersLabel(),
-    networkCountShort: `${formatOffreInstitutionNetworkCount()}+`,
-    diyMonthlyLabel: diyMonthlyLabel.value,
-}));
+const contentInterpolationValues = computed(() => {
+    const appLocale = locale.value === 'nl' ? 'nl' as const : 'fr' as const;
+
+    return {
+        networkMembers: getOffreInstitutionNetworkMembersLabel(undefined, appLocale),
+        networkCountShort: `${formatOffreInstitutionNetworkCount(undefined, appLocale)}+`,
+        diyMonthlyLabel: diyMonthlyLabel.value,
+    };
+});
 
 const countryContent = computed(() => {
     if (!selectedCountry.value) {
         return null;
     }
 
-    return getOffreInstitutionCountryContent(selectedCountry.value);
+    const appLocale = locale.value === 'nl' ? 'nl' as const : 'fr' as const;
+
+    return getOffreInstitutionCountryContent(selectedCountry.value, appLocale);
 });
 
 function interpolateCountryContent(template: string): string {
     return interpolateOffreInstitutionContent(template, contentInterpolationValues.value);
 }
 
-const heroDescriptionHtml = computed(() =>
-    countryContent.value ? interpolateCountryContent(countryContent.value.heroDescription) : '',
-);
+const heroDescriptionHtml = computed(() => {
+    if (!countryContent.value) {
+        return '';
+    }
+
+    const template = showJaumana.value && countryContent.value.heroDescriptionJaumana
+        ? countryContent.value.heroDescriptionJaumana
+        : countryContent.value.heroDescription;
+
+    return interpolateCountryContent(template);
+});
 
 const institutionContextLeadHtml = computed(() =>
     countryContent.value ? countryContent.value.institutionContextLead : '',
 );
 
-const insightParagraphHtml = computed(() =>
-    countryContent.value ? interpolateCountryContent(countryContent.value.insightParagraph) : '',
-);
+const insightTitle = computed(() => {
+    if (!countryContent.value) {
+        return '';
+    }
+
+    return showJaumana.value && countryContent.value.insightTitleJaumana
+        ? countryContent.value.insightTitleJaumana
+        : countryContent.value.insightTitle;
+});
+
+const insightParagraphHtml = computed(() => {
+    if (!countryContent.value) {
+        return '';
+    }
+
+    const template = showJaumana.value && countryContent.value.insightParagraphJaumana
+        ? countryContent.value.insightParagraphJaumana
+        : countryContent.value.insightParagraph;
+
+    return interpolateCountryContent(template);
+});
+
+const footerCopyright = computed(() => {
+    if (!countryContent.value) {
+        return '';
+    }
+
+    return showJaumana.value && countryContent.value.footerCopyrightJaumana
+        ? countryContent.value.footerCopyrightJaumana
+        : countryContent.value.footerCopyright;
+});
 
 const networkHighlightHtml = computed(() =>
     countryContent.value ? interpolateCountryContent(countryContent.value.networkHighlight) : '',
@@ -1329,21 +1397,49 @@ const diyCommunityLabel = computed(() =>
     countryContent.value ? interpolateCountryContent(countryContent.value.diyCommunityLabel) : '',
 );
 
-const networkProfilesLabel = computed(() => getOffreInstitutionNetworkProfilesLabel());
+const jaumanaBelgiumOnlyLabel = computed(() => getOffreInstitutionJaumanaBelgiumOnlyLabel(locale.value === 'nl' ? 'nl' : 'fr'));
 
-const allFolderTabs = [
-    { id: 'accueil' as TabId, label: '1. Contexte & Enjeux', icon: 'fa-solid fa-circle-info' },
-    { id: 'reseau' as TabId, label: '2. Force des Indépendantes', icon: 'fa-solid fa-users' },
-    { id: 'diy-infiswap' as TabId, label: '3. Formule InfiSwap (DIY)', icon: 'fa-solid fa-laptop-code' },
-    { id: 'jaumana-premium' as TabId, label: '4. Partenariat Jaumana Soins', icon: 'fa-solid fa-handshake-angle', belgiumOnly: true },
-    { id: 'simulateur-annonce' as TabId, label: '5. Démo : Publier un besoin', icon: 'fa-solid fa-mobile-screen-button' },
-    { id: 'comparatif' as TabId, label: '6. Tableau Comparatif', icon: 'fa-solid fa-scale-balanced' },
-    { id: 'contact' as TabId, label: '7. Prendre Contact', icon: 'fa-solid fa-paper-plane' },
+const networkProfilesLabel = computed(() => {
+    const appLocale = locale.value === 'nl' ? 'nl' as const : 'fr' as const;
+
+    return getOffreInstitutionNetworkProfilesLabel(undefined, appLocale);
+});
+
+const folderTabDefs: FolderTabDef[] = [
+    { id: 'accueil', baseLabel: 'Contexte & Enjeux', icon: 'fa-solid fa-circle-info' },
+    { id: 'reseau', baseLabel: 'Force des Indépendantes', icon: 'fa-solid fa-users' },
+    { id: 'diy-infiswap', baseLabel: 'InfiSwap Institut', icon: 'fa-solid fa-laptop-code' },
+    { id: 'jaumana-premium', baseLabel: 'Partenariat Jaumana Soins', icon: 'fa-solid fa-handshake-angle', jaumanaOnly: true },
+    { id: 'simulateur-annonce', baseLabel: 'Démo : Publier un besoin', icon: 'fa-solid fa-mobile-screen-button' },
+    { id: 'comparatif', baseLabel: 'Tableau Comparatif', icon: 'fa-solid fa-scale-balanced' },
+    { id: 'contact', baseLabel: 'Prendre Contact', icon: 'fa-solid fa-paper-plane' },
 ];
 
-const folderTabs = computed(() =>
-    allFolderTabs.filter(tab => !tab.belgiumOnly || isBelgium.value),
-);
+const folderTabs = computed(() => {
+    const visible = folderTabDefs.filter(tab => !tab.jaumanaOnly || showJaumana.value);
+
+    return visible.map((tab, index) => ({
+        id: tab.id,
+        icon: tab.icon,
+        label: `${index + 1}. ${tab.baseLabel}`,
+        partNumber: index + 1,
+    }));
+});
+
+const partNumberByTab = computed(() => {
+    const map: Partial<Record<TabId, number>> = {};
+
+    for (const tab of folderTabs.value) {
+        map[tab.id] = tab.partNumber;
+    }
+
+    return map;
+});
+
+function partLabel(tabId: TabId): string {
+    const partNumber = partNumberByTab.value[tabId];
+    return partNumber ? `Partie ${partNumber}` : '';
+}
 
 const enjeuxCards = [
     { icon: 'fa-solid fa-euro-sign text-lg', title: 'Le piège des 100 € / heure', text: 'Les agences d\'intérim facturent des marges colossales sans valoriser le travail réel des soignants.' },
@@ -1438,10 +1534,20 @@ function formatEur(value: number) {
 function handleCountrySelect(country: OffreInstitutionCountry) {
     setCountry(country);
 
-    if (country === 'fr' && activeTab.value === 'jaumana-premium') {
-        activeTab.value = 'accueil';
+    if (country === 'fr') {
+        showJaumanaOffer.value = false;
+    }
+
+    if (!showJaumana.value && activeTab.value === 'jaumana-premium') {
+        activeTab.value = 'diy-infiswap';
     }
 }
+
+watch(showJaumana, (visible) => {
+    if (!visible && activeTab.value === 'jaumana-premium') {
+        activeTab.value = 'diy-infiswap';
+    }
+});
 
 function tabNavClass(tabId: TabId) {
     return activeTab.value === tabId

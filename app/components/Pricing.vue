@@ -8,16 +8,15 @@
         <div class="relative container px-4 sm:px-6 py-14 lg:py-20 max-w-6xl mx-auto flex-1 flex flex-col">
             <div class="text-center max-w-2xl mx-auto mb-14 lg:mb-16">
                 <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
-                    Des tarifs clairs,<br>
-                    <span class="text-primary">pensés pour votre pratique</span>
+                    {{ $t('pricing.title') }}<br>
+                    <span class="text-primary">{{ $t('pricing.titleHighlight') }}</span>
                 </h1>
                 <p class="mt-5 text-gray-600 text-base lg:text-lg leading-relaxed">
-                    Explorez les opportunités gratuitement. Débloquez la publication et les candidatures avec l'accès
-                    plateforme. Boostez une annonce ponctuellement pour gagner en visibilité.
+                    {{ $t('pricing.subtitle') }}
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto items-stretch">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 max-w-4xl mx-auto items-stretch">
                 <article class="relative flex flex-col rounded-xl border border-success/20 bg-white shadow-lg shadow-success/5 overflow-hidden transition-transform duration-300 hover:-translate-y-1">
                     <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-success/80 via-success to-emerald-400" />
                     <div class="p-7 lg:p-8 flex flex-col flex-1">
@@ -27,10 +26,10 @@
                             </div>
                             <div>
                                 <p class="text-xs font-semibold uppercase tracking-wide text-success">
-                                    Découverte
+                                    {{ $t('pricing.discovery') }}
                                 </p>
                                 <h2 class="text-xl font-bold text-gray-900">
-                                    Gratuit
+                                    {{ $t('pricing.free') }}
                                 </h2>
                             </div>
                         </div>
@@ -41,13 +40,12 @@
                                 <span class="text-2xl font-semibold text-gray-700 mb-1">€</span>
                             </div>
                             <p class="mt-2 text-sm text-gray-500">
-                                Compte gratuit · sans carte bancaire
+                                {{ $t('pricing.freeAccount') }}
                             </p>
                         </div>
 
                         <p class="text-gray-600 text-sm leading-relaxed mb-6 lg:min-h-[4.5rem]">
-                            Idéal pour explorer InfiSwap et rester informé des remplacements près de chez vous,
-                            sans engagement.
+                            {{ $t('pricing.freeDesc') }}
                         </p>
 
                         <ul class="space-y-3 mb-8 flex-1">
@@ -72,75 +70,15 @@
                         <Button
                             variant="outline"
                             class="w-full font-semibold border-success/40 text-success hover:text-success/80 hover:bg-success/5 h-11"
-                            href="/register"
+                            :href="localePath('/register')"
                         >
-                            Créer un compte gratuit
+                            {{ $t('pricing.createFree') }}
                         </Button>
                         <p class="text-center text-xs text-gray-400 mt-3">
-                            Déjà inscrit ? <NuxtLink
-                                to="/login"
+                            {{ $t('pricing.alreadyRegistered') }} <NuxtLink
+                                :to="localePath('/login')"
                                 class="text-primary hover:underline"
-                            >Se connecter</NuxtLink>
-                        </p>
-                    </div>
-                </article>
-
-                <article class="relative flex flex-col rounded-xl border border-primary/15 bg-white shadow-xl shadow-primary/5 overflow-hidden transition-transform duration-300 hover:-translate-y-1 lg:scale-[1.02] lg:z-10">
-                    <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-primary via-primary/80 to-success" />
-                    <span class="absolute top-4 right-4 px-2.5 py-0.5 rounded-full bg-primary text-white text-[10px] font-bold uppercase tracking-wide">
-                        Populaire
-                    </span>
-                    <div class="p-7 lg:p-8 flex flex-col flex-1">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-11 h-11 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
-                                <KeyRound class="w-5 h-5 text-primary" />
-                            </div>
-                            <div>
-                                <p class="text-xs font-semibold uppercase tracking-wide text-primary">
-                                    Essentiel
-                                </p>
-                                <h2 class="text-xl font-bold text-gray-900">
-                                    Accès InfiSwap
-                                </h2>
-                            </div>
-                        </div>
-
-                        <div class="lg:min-h-[5.25rem] mb-4">
-                            <div class="flex items-end gap-1">
-                                <span class="text-5xl font-bold text-gray-900 tracking-tight leading-none">
-                                    {{ formatAmount(accessPlan?.amount, '9,90') }}
-                                </span>
-                                <span class="text-2xl font-semibold text-gray-700 mb-1">€</span>
-                            </div>
-                            <p class="mt-2 text-sm text-gray-500">
-                                Paiement unique · accès permanent
-                            </p>
-                        </div>
-
-                        <p class="text-gray-600 text-sm leading-relaxed mb-6 lg:min-h-[4.5rem]">
-                            {{ accessDescription }}
-                        </p>
-
-                        <ul class="space-y-3 mb-8 flex-1">
-                            <li
-                                v-for="item in accessFeatures"
-                                :key="item"
-                                class="flex items-start gap-2.5 text-sm text-gray-700"
-                            >
-                                <CircleCheck class="w-4 h-4 text-success shrink-0 mt-0.5" />
-                                <span>{{ item }}</span>
-                            </li>
-                        </ul>
-
-                        <Button
-                            class="w-full font-semibold bg-primary rounded hover:bg-primary/90 h-11"
-                            :in-progress="purchasing"
-                            @click="handleAccessCta"
-                        >
-                            {{ user ? 'Obtenir mon accès' : 'Créer un compte et accéder' }}
-                        </Button>
-                        <p class="text-center text-xs text-gray-400 mt-3">
-                            Paiement sécurisé · Activation immédiate
+                            >{{ $t('auth.signIn') }}</NuxtLink>
                         </p>
                     </div>
                 </article>
@@ -154,10 +92,10 @@
                             </div>
                             <div>
                                 <p class="text-xs font-semibold uppercase tracking-wide text-amber-600">
-                                    Optionnel
+                                    {{ $t('pricing.optional') }}
                                 </p>
                                 <h2 class="text-xl font-bold text-gray-900">
-                                    Boost remplacement
+                                    {{ $t('pricing.boost') }}
                                 </h2>
                             </div>
                         </div>
@@ -172,7 +110,7 @@
                                     :key="plan.id"
                                     class="flex items-baseline justify-between gap-3"
                                 >
-                                    <span class="text-sm text-gray-600">{{ plan.duration_days }} jours</span>
+                                    <span class="text-sm text-gray-600">{{ $t('pricing.days', { n: plan.duration_days }) }}</span>
                                     <span class="text-2xl font-bold text-gray-900">{{ formatAmount(plan.amount) }} €</span>
                                 </div>
                             </div>
@@ -185,7 +123,7 @@
                                 </div>
                             </template>
                             <p class="mt-2 text-sm text-gray-500">
-                                Paiement unique · 3 ou 7 jours de visibilité
+                                {{ $t('pricing.oneTimeVisibility') }}
                             </p>
                         </div>
 
@@ -209,10 +147,10 @@
                             class="w-full font-semibold border-amber-300 text-amber-800 rounded hover:text-amber-800/60 hover:bg-amber-50 h-11"
                             @click="handleBoostCta"
                         >
-                            {{ user ? 'Gérer mes remplacements' : 'Commencer gratuitement' }}
+                            {{ user ? $t('pricing.manageReplacements') : $t('pricing.startFree') }}
                         </Button>
                         <p class="text-center text-xs text-gray-400 mt-3">
-                            Activable depuis « Mes remplacements » sur chaque annonce
+                            {{ $t('pricing.activableFrom') }}
                         </p>
                     </div>
                 </article>
@@ -220,25 +158,24 @@
 
             <div class="mt-12 lg:hidden max-w-xl mx-auto">
                 <h3 class="text-center text-lg font-semibold text-gray-800 mb-4">
-                    Comment ça marche ?
+                    {{ $t('pricing.howItWorks') }}
                 </h3>
                 <div class="rounded-2xl border border-gray-100 bg-white/80 p-5 shadow-sm text-center">
                     <Search class="w-6 h-6 text-primary mx-auto mb-3" />
                     <p class="font-semibold text-sm text-gray-800">
-                        Un parcours progressif
+                        {{ $t('pricing.progressiveTitle') }}
                     </p>
                     <p class="text-xs text-gray-500 mt-2 leading-relaxed">
-                        Créez un compte gratuit pour explorer les remplacements, activez l'accès à 9,90 €
-                        pour publier ou postuler, puis boostez une annonce dès 2 € (3 jours) si besoin.
+                        {{ $t('pricing.progressiveBody') }}
                     </p>
                 </div>
             </div>
 
             <div class="mt-16 lg:mt-20 max-w-4xl mx-auto hidden lg:block">
                 <h3 class="text-center text-lg font-semibold text-gray-800 mb-8">
-                    Comment ça marche ?
+                    {{ $t('pricing.howItWorks') }}
                 </h3>
-                <div class="grid grid-cols-4 gap-4 text-center">
+                <div class="grid grid-cols-3 gap-4 text-center">
                     <div
                         v-for="tip in tips"
                         :key="tip.title"
@@ -261,15 +198,15 @@
             <div class="mt-10 lg:mt-14 flex flex-col sm:flex-row flex-wrap justify-center gap-4 sm:gap-6 text-sm text-gray-500 px-2">
                 <span class="flex items-center gap-2">
                     <ShieldCheck class="w-4 h-4 text-success" />
-                    Paiement sécurisé Stripe
+                    {{ $t('pricing.secureStripe') }}
                 </span>
                 <span class="flex items-center gap-2">
                     <HeartHandshake class="w-4 h-4 text-primary" />
-                    Conçu par des professionnels de santé
+                    {{ $t('pricing.madeByPros') }}
                 </span>
                 <span class="flex items-center gap-2">
                     <Zap class="w-4 h-4 text-amber-500" />
-                    Durée fixe, sans abonnement
+                    {{ $t('pricing.fixedDuration') }}
                 </span>
             </div>
         </div>
@@ -282,7 +219,6 @@ import {
     CircleX,
     Gift,
     HeartHandshake,
-    KeyRound,
     Rocket,
     Search,
     ShieldCheck,
@@ -290,22 +226,13 @@ import {
     Zap,
 } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
-import { useSubscription } from '~/composables/useSubscription';
 
 const { $apifetch } = useNuxtApp();
+const { t, locale } = useI18n();
 const user = useUser();
-const { purchaseAccess } = useSubscription();
-
-const purchasing = ref(false);
+const localePath = useLocalePath();
 
 type PricingPlansResponse = {
-    access: {
-        name?: string;
-        amount?: string | number;
-        currency?: string;
-        description?: string | null;
-        stripe_price_id?: string;
-    } | null;
     boosts: {
         replacement: {
             label?: string;
@@ -327,16 +254,12 @@ const { data: plansData } = await useAsyncData('pricing-plans', async () => {
         return await $apifetch<PricingPlansResponse>('api/subscription/plans');
     }
     catch {
-        return { access: null, boosts: { replacement: null, replacement_plans: [] } } satisfies PricingPlansResponse;
+        return { boosts: { replacement: null, replacement_plans: [] } } satisfies PricingPlansResponse;
     }
 });
 
-const accessPlan = computed(() => plansData.value?.access ?? null);
 const boostPlan = computed(() => plansData.value?.boosts?.replacement ?? null);
 const boostPlans = computed(() => plansData.value?.boosts?.replacement_plans ?? []);
-
-const DEFAULT_ACCESS_DESCRIPTION = 'Passez à l\'action : publiez vos besoins et candidatez aux remplacements qui vous correspondent.';
-const DEFAULT_BOOST_DESCRIPTION = 'Mettez votre annonce en tête des recherches et augmentez votre visibilité auprès des remplaçants disponibles.';
 
 const isUsableDescription = (value?: string | null) => {
     if (!value) return false;
@@ -345,107 +268,66 @@ const isUsableDescription = (value?: string | null) => {
     return !/(.)\1{5,}/.test(trimmed);
 };
 
-const accessDescription = computed(() => (
-    isUsableDescription(accessPlan.value?.description)
-        ? accessPlan.value!.description!
-        : DEFAULT_ACCESS_DESCRIPTION
-));
-
 const boostDescription = computed(() => (
     isUsableDescription(boostPlan.value?.description)
         ? boostPlan.value!.description!
-        : DEFAULT_BOOST_DESCRIPTION
+        : t('pricing.boostDefaultDesc')
 ));
 
-const freeFeatures = [
-    { label: 'Rechercher les remplacements disponibles', available: true },
-    { label: 'Consulter les annonces et missions institution', available: true },
-    { label: 'Alertes et notifications personnalisées', available: true },
-    { label: 'Filtres par zone, dates et type de soins', available: true },
-    { label: 'Aperçu des détails avant de postuler', available: true },
-    { label: 'Publier et gérer vos remplacements', available: false },
-    { label: 'Postuler aux annonces qui vous intéressent', available: false },
-    { label: 'Modifier ou fermer vos publications', available: false },
-    { label: 'Publier un remplacement urgent', available: false },
-    { label: 'Mise en avant en tête de liste', available: false },
-];
+const freeFeatures = computed(() => [
+    { label: t('pricing.freeFeatures.f1'), available: true },
+    { label: t('pricing.freeFeatures.f2'), available: true },
+    { label: t('pricing.freeFeatures.f3'), available: true },
+    { label: t('pricing.freeFeatures.f4'), available: true },
+    { label: t('pricing.freeFeatures.f5'), available: true },
+    { label: t('pricing.freeFeatures.f6'), available: true },
+    { label: t('pricing.freeFeatures.f7'), available: true },
+    { label: t('pricing.freeFeatures.f8'), available: true },
+    { label: t('pricing.freeFeatures.f9'), available: true },
+    { label: t('pricing.freeFeatures.f10'), available: false },
+]);
 
-const accessFeatures = [
-    'Rechercher les remplacements disponibles',
-    'Consulter les annonces et missions institution',
-    'Alertes et notifications personnalisées',
-    'Filtres par zone, dates et type de soins',
-    'Aperçu des détails avant de postuler',
-    'Publier et gérer vos remplacements',
-    'Postuler aux annonces qui vous intéressent',
-    'Modifier ou fermer vos publications',
-    'Publier un remplacement urgent',
-    'Accès permanent — paiement unique',
-];
+const boostFeatures = computed(() => [
+    t('pricing.boostFeatures.b1'),
+    t('pricing.boostFeatures.b2'),
+    t('pricing.boostFeatures.b3'),
+    t('pricing.boostFeatures.b4'),
+    t('pricing.boostFeatures.b5'),
+]);
 
-const boostFeatures = [
-    'Boost 2 : 7 jours à 4,40 € — recommandé',
-    'Boost 1 : 3 jours à 2,00 € — option rapide',
-    'Annonce en tête des résultats de recherche',
-    'Activation en un clic sur vos annonces',
-    'Contrat de remplacement optionnel — 3 €',
-];
-
-const tips = [
+const tips = computed(() => [
     {
         icon: Gift,
-        title: 'Gratuit',
-        text: 'Parfait pour surveiller le marché et recevoir les bonnes opportunités, sans payer.',
-    },
-    {
-        icon: KeyRound,
-        title: 'Accès 9,90 €',
-        text: 'Indispensable dès que vous souhaitez publier une annonce ou postuler à une offre.',
+        title: t('pricing.tips.freeTitle'),
+        text: t('pricing.tips.freeText'),
     },
     {
         icon: Rocket,
-        title: 'Boost dès 2 €',
-        text: 'Option ponctuelle (3 ou 7 jours) pour accélérer le remplissage d\'une annonce déjà publiée.',
+        title: t('pricing.tips.boostTitle'),
+        text: t('pricing.tips.boostText'),
     },
     {
         icon: Search,
-        title: 'Progressif',
-        text: 'Commencez gratuitement, activez l\'accès quand vous êtes prêt à passer à l\'action.',
+        title: t('pricing.tips.progressiveTitle'),
+        text: t('pricing.tips.progressiveText'),
     },
-];
+]);
 
 const formatAmount = (amount?: string | number | null, fallback = '—') => {
     if (amount === undefined || amount === null || amount === '') return fallback;
     const num = Number(amount);
     if (Number.isNaN(num)) return String(amount);
-    return num.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-};
-
-const handleAccessCta = async () => {
-    if (!user.value) {
-        return navigateTo('/register');
-    }
-
-    if (!accessPlan.value?.stripe_price_id) {
-        return navigateTo('/acces-plan');
-    }
-
-    purchasing.value = true;
-    try {
-        const response = await purchaseAccess(accessPlan.value.stripe_price_id);
-        if (response?.url) {
-            window.location.href = response.url;
-        }
-    }
-    finally {
-        purchasing.value = false;
-    }
+    const numberLocale = locale.value === 'nl' ? 'nl-BE' : 'fr-BE';
+    return num.toLocaleString(numberLocale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 };
 
 const handleBoostCta = () => {
     if (!user.value) {
-        return navigateTo('/register');
+        return navigateTo(localePath('/register'));
     }
-    navigateTo('/dashboard/replacements?type=me');
+    return navigateTo({
+        path: localePath('/dashboard/replacements'),
+        query: { type: 'me' },
+    });
 };
 </script>

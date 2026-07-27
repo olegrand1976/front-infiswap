@@ -224,8 +224,14 @@
                             <Input
                                 id="ai-model"
                                 v-model="modalForm.model"
-                                placeholder="gemini-3.5-flash"
+                                placeholder="gemini-3.6-flash"
                             />
+                            <p class="text-xs text-muted-foreground">
+                                Recommandé :
+                                <code class="text-[11px]">gemini-3.6-flash</code>
+                                (agentique / multimodal). Haut débit :
+                                <code class="text-[11px]">gemini-3.5-flash-lite</code>.
+                            </p>
                         </div>
 
                         <DialogFooter class="gap-2 pt-2">
@@ -297,13 +303,13 @@ if (!isSuperAdmin.value) {
 
 const form = reactive({
     provider: 'gemini' as AiProvider,
-    model: 'gemini-3.5-flash',
+    model: 'gemini-3.6-flash',
     active: true,
 });
 
 const modalForm = reactive({
     provider: 'gemini' as AiProvider,
-    model: 'gemini-3.5-flash',
+    model: 'gemini-3.6-flash',
 });
 
 const savedActive = ref(true);

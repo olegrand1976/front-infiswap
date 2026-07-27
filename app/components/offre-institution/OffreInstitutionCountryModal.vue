@@ -27,7 +27,7 @@
                     >🇧🇪</span>
                     <span class="font-bold text-slate-900">Belgique</span>
                     <span class="text-[11px] text-slate-500 text-center leading-snug">
-                        DIY InfiSwap + partenariat Jaumana Soins
+                        InfiSwap Institut + Jaumana Soins (optionnel)
                     </span>
                 </button>
                 <button
@@ -41,7 +41,7 @@
                     >🇫🇷</span>
                     <span class="font-bold text-slate-900">France</span>
                     <span class="text-[11px] text-slate-500 text-center leading-snug">
-                        Formule DIY InfiSwap uniquement
+                        InfiSwap Institut uniquement
                     </span>
                 </button>
             </div>

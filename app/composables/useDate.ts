@@ -1,10 +1,15 @@
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/fr';
+import 'dayjs/locale/nl';
 
 dayjs.extend(relativeTime);
 
 dayjs.locale('fr');
+
+export function setDayjsLocale(locale: string) {
+    dayjs.locale(locale === 'nl' ? 'nl' : 'fr');
+}
 
 export function formatRelativeDate(dateString: string) {
     return dayjs(dateString).fromNow();
@@ -45,7 +50,7 @@ export function formatToDMY(
         const hours = date.getHours().toString().padStart(2, '0');
         const minutes = date.getMinutes().toString().padStart(2, '0');
 
-        formattedDate += ` à ${hours}:${minutes}`;
+        formattedDate += ` ${hours}:${minutes}`;
     }
 
     return formattedDate;

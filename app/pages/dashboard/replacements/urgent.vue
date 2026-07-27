@@ -3,11 +3,11 @@
         <div class="mt-6 flex items-center gap-2 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
             <ArrowLeftIcon
                 class="size-5 cursor-pointer hover:text-primary"
-                title="Retour"
+                :title="$t('common.back')"
                 @click="goBack"
             />
             <h1 class="py-3 text-primary font-bold">
-                Liste des remplacements urgentes <strong>pour aujourd'hui</strong>
+                {{ $t('replacements.urgentHeading') }} <strong>{{ $t('replacements.urgentHeadingStrong') }}</strong>
             </h1>
         </div>
 
@@ -16,19 +16,19 @@
                 <thead class="bg-gray-100">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                            Date
+                            {{ $t('replacements.colDate') }}
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                            Heures concernées
+                            {{ $t('replacements.colHours') }}
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                            Codes postaux
+                            {{ $t('replacements.colZip') }}
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                            Villes
+                            {{ $t('replacements.colCities') }}
                         </th>
                         <th class="px-6 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
-                            Action
+                            {{ $t('replacements.colAction') }}
                         </th>
                     </tr>
                 </thead>
@@ -124,15 +124,16 @@ const handleInterest = async (replacementId, nurseId) => {
             },
         });
         interestedReplacements.value.push(replacementId);
-        toast.success('Intérêt marqué avec succès !');
+        toast.success(t('replacements.interestSuccess'));
     }
     catch (error) {
         toast.error(getErrorMessage(error));
     }
 };
 
+const { t } = useI18n();
 useHead({
-    title: 'Liste des remplacements rapides',
+    title: () => t('replacements.urgentPageTitle'),
 });
 
 definePageMeta({

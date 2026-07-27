@@ -297,6 +297,9 @@ gcp-monitoring-prod-smoke:
 e2e-auth-staging:
 	cd "$(FRONT_DIR)" && npm run test:e2e -- tests/e2e/auth/
 
+e2e-replacements-staging:
+	cd "$(FRONT_DIR)" && npm run test:e2e -- tests/e2e/replacements/
+
 gcp-scale-up:
 	@"$(BACK_DIR)/infra/gcp/scale-staging.sh" 1
 

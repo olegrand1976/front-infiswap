@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { Users } from 'lucide-vue-next';
 
+const { locale } = useI18n();
 const { stats, loading, copy, kpiDefinitions, fetchStats, getKpiValue } = usePlatformStats();
 
 await fetchStats();
+
+const dateLocale = computed(() => (locale.value === 'nl' ? 'nl-BE' : 'fr-BE'));
 
 const formattedAsOf = computed(() => {
     if (!stats.value.as_of) {
@@ -15,7 +18,7 @@ const formattedAsOf = computed(() => {
         return stats.value.as_of;
     }
 
-    return new Intl.DateTimeFormat('fr-BE', {
+    return new Intl.DateTimeFormat(dateLocale.value, {
         day: 'numeric',
         month: 'long',
         year: 'numeric',

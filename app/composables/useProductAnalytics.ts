@@ -5,6 +5,8 @@ type ProductEventName =
     | 'email_cta_clicked'
     | 'platform_access_impression'
     | 'platform_access_cta_click'
+    | 'platform_access_checkout_started'
+    | 'platform_access_paid'
     | 'onboarding_banner_click'
     | 'referral_dashboard_copy'
     | 'boost_impression'
@@ -18,8 +20,6 @@ type ProductEventName =
     | 'google_review_impression'
     | 'google_review_cta_click'
     | 'google_review_dismiss'
-    | 'sponsorship_impression'
-    | 'sponsorship_tier_click'
     | 'sponsorship_paid'
     | 'nurstech_impression'
     | 'nurstech_cta_click'
@@ -34,9 +34,14 @@ type ProductEventName =
 
 export function useProductAnalytics() {
     const { gtag } = useGtag();
+    const { hasAnalyticsConsent } = useCookieConsent();
 
     function trackEvent(eventName: ProductEventName, params?: Record<string, string | number | boolean>) {
         if (import.meta.server) {
+            return;
+        }
+
+        if (!hasAnalyticsConsent()) {
             return;
         }
 

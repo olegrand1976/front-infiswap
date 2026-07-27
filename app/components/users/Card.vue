@@ -742,7 +742,14 @@
                         class="shrink-0 text-primary"
                         :class="iconSz"
                     />
-                    <span class="min-w-0 break-words leading-snug">{{ user.identifier_number || 'Non renseigné' }}</span>
+                    <span class="min-w-0 break-words leading-snug">{{ identifierDisplay }}</span>
+                    <template v-if="educationLevelDisplay">
+                        <GraduationCap
+                            class="shrink-0 text-primary"
+                            :class="iconSz"
+                        />
+                        <span class="min-w-0 break-words leading-snug">{{ educationLevelDisplay }}</span>
+                    </template>
                 </template>
                 <template v-else>
                     <Building2
@@ -772,10 +779,11 @@
 </template>
 
 <script lang="ts" setup>
-import { Building2, Calendar, CircleCheck, CircleUser, IdCard, Inbox, Mail, Phone, Users, XCircle } from 'lucide-vue-next';
+import { Building2, Calendar, CircleCheck, CircleUser, GraduationCap, IdCard, Inbox, Mail, Phone, Users, XCircle } from 'lucide-vue-next';
 import type { User } from '~/lib/types';
 import { useRuntimeConfig } from '#app';
 import { formatRelativeDate } from '@/composables/useDate';
+import { educationLevelLabel, hasRealIdentifier } from '~/utils/educationLevel';
 
 const { isAdmin, isCollaborator } = useAuth();
 const activeTab = ref('information');
@@ -794,6 +802,18 @@ const props = withDefaults(defineProps<{
 });
 
 const iconSz = computed(() => (props.compact ? 'size-4' : 'size-5'));
+
+const identifierDisplay = computed(() => {
+    if (props.user.identifier_unavailable || !hasRealIdentifier(props.user)) {
+        return 'Pas de numéro INAMI renseigné';
+    }
+    return props.user.identifier_number || 'Pas de numéro INAMI renseigné';
+});
+
+const educationLevelDisplay = computed(() => (
+    props.user.education_level_label
+    || educationLevelLabel(props.user.education_level)
+));
 
 const { activityUser } = useReplacements();
 const { getAll } = useProduct();

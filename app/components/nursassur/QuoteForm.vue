@@ -54,6 +54,11 @@
                     />
                 </div>
 
+                <SharedPartnerShareConsent
+                    v-model="formData.partner_share_consent"
+                    partner-name="NursAssur"
+                />
+
                 <Button
                     class="mt-12! mb-4! rounded-md! w-full!"
                     type="submit"
@@ -103,7 +108,8 @@ const formData = reactive({
     email: '',
     phone: '',
     description: '',
-    interested_products: [],
+    interested_products: [] as string[],
+    partner_share_consent: false,
 });
 
 onMounted(() => {
@@ -121,6 +127,7 @@ const resetFormData = () => {
     formData.phone = '';
     formData.description = '';
     formData.interested_products = [];
+    formData.partner_share_consent = false;
 
     const selected = ref<string[]>(props.selectedItems ? [...props.selectedItems] : []);
     selected.value = [];
@@ -133,7 +140,16 @@ const {
     inProgress,
 } = useSubmit(
     () => {
-        formData.interested_products = props.selectedItems.filter(
+        if (!formData.partner_share_consent) {
+            $toast({
+                description: 'Veuillez accepter la transmission de vos coordonnées au partenaire pour envoyer la demande.',
+                status: 'error',
+                variant: 'destructive',
+            });
+            return Promise.resolve();
+        }
+
+        formData.interested_products = (props.selectedItems ?? []).filter(
             item => item !== 'Autre (à préciser dans le formulaire)',
         );
 

@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { FileCheck, Sparkles } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
-import ProfileLifetimeAccessBadge from '@/components/profile/ProfileLifetimeAccessBadge.vue';
 import ReplacementBoostStars from '@/components/replacements/ReplacementBoostStars.vue';
-import { hasLifetimeNetworkAccess } from '~/utils/platformAccess';
 import type { PurchaseCelebrationVariant } from '~/utils/purchaseCelebration';
 
 const props = withDefaults(
@@ -26,16 +24,10 @@ const emit = defineEmits<{
 
 const { trackEvent } = useProductAnalytics();
 const { markCelebrationSeen } = usePurchaseCelebration();
-const user = useUser();
 
-const revealActive = ref(true);
 const prefersReducedMotion = ref(false);
 const titleId = `purchase-celebration-title-${useId()}`;
 let autoTimer: ReturnType<typeof setTimeout> | null = null;
-
-const showPaidBadge = computed(() =>
-    props.variant !== 'platform_access' || hasLifetimeNetworkAccess(user.value),
-);
 
 const effectiveAutoContinueMs = computed(() =>
     prefersReducedMotion.value ? 0 : props.autoContinueMs,
@@ -54,21 +46,6 @@ const variantConfig = computed(() => {
         : 'Explorer le tableau de bord';
 
     switch (props.variant) {
-        case 'platform_access':
-            return {
-                chip: 'Accès activé',
-                title: 'Bienvenue dans le réseau à vie',
-                subtitle: props.displayName
-                    ? `${props.displayName}, votre badge membre est visible sur votre profil.`
-                    : 'Votre badge membre est visible sur votre profil.',
-                tips: [
-                    'Publiez une annonce pour être visible par les collègues de votre zone.',
-                    'Postulez aux missions qui correspondent à vos disponibilités.',
-                    'Configurez vos alertes pour ne manquer aucune opportunité.',
-                ],
-                primaryCta: { label: 'Publier un remplacement', to: '/dashboard/replacements/create' },
-                secondaryCta: { label: secondaryLabel, to: secondaryTo },
-            };
         case 'boost':
             return {
                 chip: 'Boost activé',
@@ -185,41 +162,7 @@ onBeforeUnmount(() => {
             />
 
             <div
-                v-if="variant === 'platform_access' && showPaidBadge"
-                class="relative"
-            >
-                <ProfileLifetimeAccessBadge
-                    size="lg"
-                    :reveal="revealActive"
-                >
-                    <div class="relative size-24 sm:size-28 rounded-full overflow-hidden border-4 border-white shadow-xl ring-2 ring-amber-300/60 bg-muted">
-                        <img
-                            v-if="avatarUrl"
-                            :src="avatarUrl"
-                            alt=""
-                            class="size-full object-cover"
-                        >
-                        <div
-                            v-else
-                            class="flex size-full items-center justify-center bg-primary/10 text-2xl font-semibold text-primary"
-                        >
-                            {{ (displayName ?? 'M').slice(0, 1).toUpperCase() }}
-                        </div>
-                    </div>
-                </ProfileLifetimeAccessBadge>
-            </div>
-
-            <div
-                v-else-if="variant === 'platform_access'"
-                class="flex size-24 sm:size-28 items-center justify-center rounded-full border-4 border-white bg-muted shadow-xl ring-2 ring-amber-300/30 animate-pulse"
-            >
-                <p class="px-3 text-xs text-muted-foreground">
-                    Activation en cours…
-                </p>
-            </div>
-
-            <div
-                v-else-if="variant === 'boost'"
+                v-if="variant === 'boost'"
                 :class="{ 'purchase-celebration-boost-pop': !prefersReducedMotion }"
             >
                 <ReplacementBoostStars size="lg" />

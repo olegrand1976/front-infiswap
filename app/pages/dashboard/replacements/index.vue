@@ -8,7 +8,7 @@
                         title="Retour"
                         @click="goBack"
                     />
-                    Chercher <strong>un remplacement</strong>
+                    {{ $t('replacements.searchHeading') }} <strong>{{ $t('replacements.searchHeadingStrong') }}</strong>
                 </div>
             </h1>
 
@@ -206,6 +206,20 @@
             </div>
         </div>
 
+        <div
+            v-if="!user?.institution"
+            class="mt-4 mb-2 rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-slate-700"
+            data-testid="own-replacements-hidden-banner"
+        >
+            Vos propres annonces n’apparaissent pas ici.
+            <NuxtLink
+                to="/dashboard/replacements/me"
+                class="ml-1 font-semibold text-primary underline underline-offset-2"
+            >
+                Voir mes remplacements
+            </NuxtLink>
+        </div>
+
         <Replacement
             v-model:selected-regions="selectedRegions"
             :filters="selectedFilters"
@@ -215,19 +229,38 @@
             :display-mode="displayMode"
             :available-missions="availableMissions"
         />
+
+        <ConfirmProfileCountryModal
+            v-if="showCountryModal"
+            :pending="countryPending"
+            @select="onCountrySelect"
+            @dismiss="cancelCountryModal"
+        />
     </div>
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n();
 import { ArrowLeft, Filter, LayoutGrid, Map, Table } from 'lucide-vue-next';
 import { useCookie } from '#app';
 import { regions, departments, goBack } from '~/lib/utils';
 import Replacement from '~/components/Replacement.vue';
+import ConfirmProfileCountryModal from '~/components/replacements/ConfirmProfileCountryModal.vue';
 import type { User } from '~/lib/types';
 import { useMissions } from '~/composables/useMission';
 import { PERPAGE } from '~/lib/constants';
+import { normalizeSelectedFilters } from '~/utils/selectedFilters';
+import { resolveProfileCountryCode } from '~/utils/profileCountry';
+import { useConfirmProfileCountry } from '~/composables/useConfirmProfileCountry';
 
 const user = useState<User>('user');
+const {
+    showModal: showCountryModal,
+    pending: countryPending,
+    ensureProfileCountry,
+    onSelect: onCountrySelect,
+    cancel: cancelCountryModal,
+} = useConfirmProfileCountry();
 const { allowedCountryCodes, defaultCountryCode, availableCountries } = useCountry();
 const selectedCountry = ref(
     allowedCountryCodes.value.includes(user.value.profile.country as 'be' | 'fr')
@@ -238,9 +271,33 @@ const selectedCountry = ref(
 const { getAll: getMissions, missions } = useMissions();
 const availableMissions = computed(() => missions.value.data ?? []);
 
-onMounted(() => {
+function syncSelectedCountryFromProfile(): void {
+    const code = resolveProfileCountryCode(user.value?.profile);
+    if (code && allowedCountryCodes.value.includes(code)) {
+        selectedCountry.value = code;
+        return;
+    }
+    if (allowedCountryCodes.value.includes(defaultCountryCode.value)) {
+        selectedCountry.value = defaultCountryCode.value;
+    }
+}
+
+onMounted(async () => {
+    await ensureProfileCountry();
+    syncSelectedCountryFromProfile();
     getMissions(1, PERPAGE, { type: 'nurse' });
 });
+
+watch(
+    () => [
+        user.value?.profile?.country,
+        user.value?.profile?.working_at,
+        allowedCountryCodes.value.join(','),
+    ],
+    () => {
+        syncSelectedCountryFromProfile();
+    },
+);
 
 const countries = availableCountries;
 
@@ -315,12 +372,27 @@ const selectedProvincesPlaceholder = computed(() => {
 
 onMounted(() => {
     if (filterCookies.value) {
-        selectedFilters.value = filterCookies.value;
+        const normalized = normalizeSelectedFilters({
+            type: filterCookies.value.type ?? 'all',
+            role: filterCookies.value.role ?? 'all',
+            status: (filterCookies.value as { status?: string }).status ?? 'open',
+        });
+        selectedFilters.value = {
+            type: normalized.type,
+            role: normalized.role,
+            status: normalized.status ?? 'open',
+        };
+        if (filterCookies.value.type === 'urgent') {
+            filterCookies.value = { type: normalized.type, role: normalized.role };
+        }
     }
 });
 
 watch(selectedFilters, (newFilters) => {
-    filterCookies.value = newFilters;
+    filterCookies.value = normalizeSelectedFilters({
+        type: newFilters.type,
+        role: newFilters.role,
+    });
 }, { deep: true });
 
 watch(selectedCountry, () => {
@@ -332,7 +404,7 @@ const replacementStatusFilters = {
     all: 'Tous',
 };
 useHead({
-    title: 'Chercher un remplacement',
+    title: () => t('replacements.searchTitle'),
 });
 
 definePageMeta({

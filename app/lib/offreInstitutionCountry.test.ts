@@ -33,5 +33,8 @@ describe('offreInstitutionContent', () => {
         expect(getOffreInstitutionNetworkMembersLabel()).toBe(
             'plus de 2\u202f300 infirmières indépendantes inscrites',
         );
+        expect(getOffreInstitutionNetworkMembersLabel(undefined, 'nl')).toBe(
+            `meer dan ${formatOffreInstitutionNetworkCount(undefined, 'nl')} zelfstandige verpleegkundigen ingeschreven`,
+        );
     });
 });

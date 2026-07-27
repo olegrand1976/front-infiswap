@@ -156,8 +156,10 @@ export const useAuth = () => {
             }
 
             if (response.hash) {
-                localStorage.setItem('credentials', JSON.stringify(credentials));
                 useCookie('2fa_hash').value = response.hash;
+                if (import.meta.client) {
+                    localStorage.removeItem('credentials');
+                }
                 return;
             }
             throw createError({
@@ -254,6 +256,31 @@ export const useAuth = () => {
             body: formData,
         });
     };
+
+    async function updateEducationLevel(educationLevel: 'a1' | 'a2') {
+        const response = await $apifetch(`/api/users/${user.value.id}/education-level`, {
+            method: 'put',
+            body: { educationLevel },
+        });
+        if (response?.user) {
+            user.value = { ...user.value, ...response.user };
+        }
+        return response;
+    }
+
+    async function updateIdentifier(payload: {
+        identifierNumber?: string | null;
+        identifierUnavailable?: boolean;
+    }) {
+        const response = await $apifetch(`/api/users/${user.value.id}/identifier`, {
+            method: 'put',
+            body: payload,
+        });
+        if (response?.user) {
+            user.value = { ...user.value, ...response.user };
+        }
+        return response;
+    }
 
     async function updateAddressUser(formData) {
         return await $apifetch(`/api/users/${user.value.id}/update-address`, {
@@ -409,7 +436,7 @@ export const useAuth = () => {
         group: number;
         phoneNumber: string;
         dateOfBirth: string | null;
-        language: 'fr' | 'en' | string;
+        language: 'fr' | 'nl' | string;
         roles: AccountType[];
         address: Address;
     };
@@ -650,6 +677,8 @@ export const useAuth = () => {
         registerImmediate,
         resendEmailVerification,
         updateUser,
+        updateEducationLevel,
+        updateIdentifier,
         updateAddressUser,
         updatePasswordUser,
         updateAvatarUser,

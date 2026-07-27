@@ -115,11 +115,12 @@ import { useCookie } from '#app';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import Replacement from '~/components/Replacement.vue';
 import { goBack } from '~/lib/utils';
+import { normalizeSelectedFilters } from '~/utils/selectedFilters';
 
 const replacementTypeFilters = {
     all: 'Tous',
     classic: 'Classique',
-    urgent: 'Urgent',
+    immediate: 'Urgent',
 };
 
 const replacementRoleFilters = {
@@ -163,13 +164,20 @@ const toggleGroupByProvince = () => {
 
 onMounted(() => {
     if (filterCookies.value) {
-        selectedFilters.value = filterCookies.value;
+        const normalized = normalizeSelectedFilters({
+            type: filterCookies.value.type ?? 'all',
+            role: filterCookies.value.role ?? 'all',
+        });
+        selectedFilters.value = { type: normalized.type, role: normalized.role };
+        if (filterCookies.value.type === 'urgent') {
+            filterCookies.value = selectedFilters.value;
+        }
     }
 });
 
 watch(selectedFilters, (newFilters) => {
-    filterCookies.value = newFilters;
-});
+    filterCookies.value = normalizeSelectedFilters(newFilters);
+}, { deep: true });
 
 useHead({
     title: 'Mes remplacements',

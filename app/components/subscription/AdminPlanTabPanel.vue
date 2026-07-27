@@ -39,7 +39,7 @@
             </div>
 
             <div
-                v-if="isSuperAdmin"
+                v-if="isSuperAdmin && !isHistoricalAccess"
                 class="flex flex-wrap justify-center gap-2 border-t border-gray-100 bg-gray-50/50 px-6 py-4"
             >
                 <Button
@@ -64,6 +64,19 @@
                     Désactiver
                 </Button>
             </div>
+            <div
+                v-else-if="isSuperAdmin && isHistoricalAccess"
+                class="flex flex-wrap justify-center gap-2 border-t border-gray-100 bg-gray-50/50 px-6 py-4"
+            >
+                <Button
+                    class="rounded"
+                    variant="outline"
+                    :in-progress="deactivating"
+                    @click="handleDeactivate"
+                >
+                    Désactiver
+                </Button>
+            </div>
         </div>
 
         <div
@@ -71,10 +84,12 @@
             class="rounded-2xl border border-dashed border-gray-200 bg-gray-50/60 py-10 text-center"
         >
             <p class="text-gray-500">
-                Aucun plan actif pour le moment.
+                {{ isHistoricalAccess
+                    ? 'Aucun plan accès réseau actif (produit retiré).'
+                    : 'Aucun plan actif pour le moment.' }}
             </p>
             <Button
-                v-if="isSuperAdmin"
+                v-if="isSuperAdmin && !isHistoricalAccess"
                 class="mt-4 rounded-lg"
                 :href="createHref"
             >
@@ -104,7 +119,7 @@
                     </p>
                 </div>
                 <Button
-                    v-if="isSuperAdmin"
+                    v-if="isSuperAdmin && !isHistoricalAccess"
                     class="rounded shrink-0"
                     variant="outline"
                     size="sm"
@@ -144,25 +159,32 @@ const { isSuperAdmin } = useAuth();
 const activatingId = ref<number | null>(null);
 const deactivating = ref(false);
 
+const isHistoricalAccess = computed(() => props.group === 'access');
+
 const createHref = computed(() => {
     const params = new URLSearchParams({ tab: props.tabKey });
     return `/dashboard/admin/subscription-plans/create?${params.toString()}`;
 });
 
 const helpText = computed(() =>
-    props.group === 'access'
-        ? 'Ce plan est proposé aux infirmières pour l\'accès permanent. Pour changer le tarif, créez un nouveau prix ou réactivez un ancien plan.'
+    isHistoricalAccess.value
+        ? 'Produit accès réseau retiré — consultation historique uniquement (création / réactivation bloquées).'
         : 'Ce plan est proposé pour la mise en avant des remplacements. Pour changer le tarif, créez un nouveau prix ou réactivez un ancien plan.',
 );
 
 const currencySymbol = (currency: string) => (currency?.toLowerCase() === 'gbp' ? '£' : '€');
 
 const intervalDescription = (plan: StripePlanAdmin) => {
-    if (plan.type === 'platform_access' || plan.interval === 'one_time') {
+    if (plan.type === 'platform_access') {
+        return 'Paiement unique — historique';
+    }
+
+    if (plan.interval === 'one_time') {
         if (plan.duration_days) {
             return `Paiement unique · ${plan.duration_days} jours`;
         }
-        return 'Paiement unique — accès permanent';
+
+        return 'Paiement unique';
     }
 
     const labels: Record<string, string> = {

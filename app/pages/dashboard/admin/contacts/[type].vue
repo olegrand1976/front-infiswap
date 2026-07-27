@@ -30,6 +30,7 @@
                 :data="dataContacts"
                 :columns="columns"
             />
+
             <div>
                 <CustomPagination
                     :default-page="page"
@@ -145,7 +146,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowUpDown, Eye, Paperclip, Pencil, RefreshCw, X } from 'lucide-vue-next';
+import { ArrowUpDown, CheckCheck, Eye, Paperclip, Pencil, RefreshCw, Trash2, X } from 'lucide-vue-next';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { Button } from '@/components/ui/button';
 import { PERPAGE } from '~/lib/constants';
@@ -167,6 +168,10 @@ const route = useRoute();
 const router = useRouter();
 const type = computed<string>(() => (route.params.type as string) || 'nurstech');
 const typeLabel = computed(() => type.value.charAt(0).toUpperCase() + type.value.slice(1));
+
+if (type.value === 'inficoncept') {
+    await navigateTo('/dashboard/admin/contacts/infiswap');
+}
 
 const perPageCookie = useCookie<number>('contact_per_page');
 const pageCookie = useCookie<number>('contact_page');
@@ -202,10 +207,67 @@ const resetFilter = async () => {
 
 const debouncedFilter = debounce(filter, 100);
 
-const { contacts, count, getContacts } = useContact();
+const { contacts, count, getContacts, markAsRead, deleteContact, fetchUnreadCounts } = useContact();
 
 await getContacts(type, page.value, perPage.value, option.value);
+try {
+    await fetchUnreadCounts();
+}
+catch {
+    // badges optionnels
+}
 const dataContacts = computed(() => contacts.value ?? []);
+
+const sort = reactive({
+    order: 'DESC',
+    by: null,
+});
+
+const reloadList = async () => {
+    await getContacts(type, page.value, perPage.value, {
+        ...option.value,
+        sortOrder: sort.order,
+        sortKey: sort.by,
+    });
+};
+
+const handleMarkAsRead = async (contact: Contact) => {
+    try {
+        await markAsRead(type.value, contact.id);
+        await reloadList();
+        $toast({
+            title: 'Succès !',
+            description: 'Message marqué comme lu',
+        });
+    }
+    catch (err) {
+        $toast({
+            description: getErrorMessage(err),
+            variant: 'destructive',
+        });
+    }
+};
+
+const handleDelete = async (contact: Contact) => {
+    if (!confirm(`Supprimer le message de ${contact.name} ?`)) {
+        return;
+    }
+
+    try {
+        await deleteContact(type.value, contact.id);
+        await reloadList();
+        $toast({
+            title: 'Succès !',
+            description: 'Message supprimé',
+        });
+    }
+    catch (err) {
+        $toast({
+            description: getErrorMessage(err),
+            variant: 'destructive',
+        });
+    }
+};
 
 const handlePerPageChange = async (value: number) => {
     perPage.value = value;
@@ -226,10 +288,6 @@ const refresh = async (newPage: number) => {
         sortKey: sort.by,
     });
 };
-const sort = reactive({
-    order: 'DESC',
-    by: null,
-});
 
 const toggleSort = () => {
     sort.order = sort.order === 'ASC' ? 'DESC' : 'ASC';
@@ -267,7 +325,10 @@ watch(
     { deep: true },
 );
 
-const columns: ColumnDef<Contact>[] = [
+const unreadCellClass = (contact: Contact, base = '') =>
+    [base, contact.is_read === false ? 'font-semibold text-neutral-900' : 'text-neutral-600'].filter(Boolean).join(' ');
+
+const columns = computed<ColumnDef<Contact>[]>(() => [
     {
         accessorKey: 'name',
         header: () => {
@@ -276,7 +337,7 @@ const columns: ColumnDef<Contact>[] = [
                 onClick: () => setSort('name'),
             }, () => ['Nom', h(ArrowUpDown, { class: '' })]);
         },
-        cell: ({ row }) => h('div', { class: 'min-h-8 flex items-center capitalize' }, row.getValue('name')),
+        cell: ({ row }) => h('div', { class: unreadCellClass(row.original, 'min-h-8 flex items-center capitalize') }, row.getValue('name')),
     },
     {
         accessorKey: 'email',
@@ -286,7 +347,7 @@ const columns: ColumnDef<Contact>[] = [
                 onClick: () => setSort('email'),
             }, () => ['Email', h(ArrowUpDown, { class: '' })]);
         },
-        cell: ({ row }) => h('div', { class: '' }, row.getValue('email')),
+        cell: ({ row }) => h('div', { class: unreadCellClass(row.original) }, row.getValue('email')),
     },
     {
         accessorKey: 'phone_number',
@@ -296,7 +357,7 @@ const columns: ColumnDef<Contact>[] = [
                 onClick: () => setSort('phone_number'),
             }, () => ['Téléphone', h(ArrowUpDown, { class: '' })]);
         },
-        cell: ({ row }) => h('div', { class: 'capitalize' }, row.getValue('phone_number')),
+        cell: ({ row }) => h('div', { class: unreadCellClass(row.original, 'capitalize') }, row.getValue('phone_number')),
     },
     {
         accessorKey: 'description',
@@ -306,7 +367,7 @@ const columns: ColumnDef<Contact>[] = [
                 onClick: () => setSort('description'),
             }, () => ['Description', h(ArrowUpDown, { class: '' })]);
         },
-        cell: ({ row }) => h('div', { class: 'whitespace-pre-wrap' }, row.getValue('description')),
+        cell: ({ row }) => h('div', { class: unreadCellClass(row.original, 'whitespace-pre-wrap') }, row.getValue('description')),
     },
     {
         accessorKey: 'created_at',
@@ -323,38 +384,48 @@ const columns: ColumnDef<Contact>[] = [
             ]);
         },
         cell: ({ row }) => {
-            return h('div', { class: 'flex items-center justify-center' }, formatRelativeDate(row.getValue('created_at')));
+            return h('div', { class: unreadCellClass(row.original, 'flex items-center justify-center') }, formatRelativeDate(row.getValue('created_at')));
         },
     },
-    ...(type.value === 'infiswap'
-        ? [{
-                accessorKey: 'action',
-                header: 'Action',
-                cell: ({ row }) => {
-                    const contact = row.original;
+    {
+        accessorKey: 'action',
+        header: 'Action',
+        cell: ({ row }) => {
+            const contact = row.original;
+            const isUnread = contact.is_read === false;
 
-                    return h(
-                        'div',
-                        { class: 'flex ml-4 items-center gap-2' },
-                        [
-                            !contact.hasResponded
-                            && h(Pencil, {
-                                class: 'w-5 h-5 text-gray-600 cursor-pointer hover:text-gray-800 transition-colors',
-                                title: 'Répondre',
-                                onClick: () => handleReply(contact),
-                            }),
-                            contact.hasResponded
-                            && h(Eye, {
-                                class: 'w-5 h-5 text-gray-600 cursor-pointer hover:text-gray-800 transition-colors',
-                                title: 'Voir la réponse',
-                                onClick: () => router.push('/dashboard/admin/mails'),
-                            }),
-                        ].filter(Boolean),
-                    );
-                },
-            }]
-        : []),
-];
+            return h(
+                'div',
+                { class: 'flex ml-4 items-center gap-2' },
+                [
+                    type.value === 'infiswap' && !contact.hasResponded
+                    && h(Pencil, {
+                        class: 'w-5 h-5 text-gray-600 cursor-pointer hover:text-gray-800 transition-colors',
+                        title: 'Répondre',
+                        onClick: () => handleReply(contact),
+                    }),
+                    type.value === 'infiswap' && contact.hasResponded
+                    && h(Eye, {
+                        class: 'w-5 h-5 text-gray-600 cursor-pointer hover:text-gray-800 transition-colors',
+                        title: 'Voir la réponse',
+                        onClick: () => router.push('/dashboard/admin/mails'),
+                    }),
+                    isUnread
+                    && h(CheckCheck, {
+                        class: 'w-5 h-5 text-primary cursor-pointer hover:text-primary/80 transition-colors',
+                        title: 'Marquer comme lu',
+                        onClick: () => handleMarkAsRead(contact),
+                    }),
+                    h(Trash2, {
+                        class: 'w-5 h-5 text-red-500 cursor-pointer hover:text-red-700 transition-colors',
+                        title: 'Supprimer',
+                        onClick: () => handleDelete(contact),
+                    }),
+                ].filter(Boolean),
+            );
+        },
+    },
+]);
 
 const newMail = ref<{
     object: string;

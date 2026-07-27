@@ -25,7 +25,7 @@
             <div class="p-4 border-b">
                 <div class="flex items-center justify-between">
                     <h3 class="font-semibold text-gray-900">
-                        Notifications
+                        {{ $t('notifications.title') }}
                     </h3>
                     <div class="flex gap-2">
                         <Button
@@ -35,7 +35,7 @@
                             class="text-xs"
                             @click="handleMarkAllAsRead"
                         >
-                            Tout marquer comme lu
+                            {{ $t('notifications.markAllRead') }}
                         </Button>
                     </div>
                 </div>
@@ -43,7 +43,7 @@
 
             <div v-if="loading">
                 <div class="p-4 text-center text-gray-500">
-                    Chargement...
+                    {{ $t('notifications.loading') }}
                 </div>
             </div>
 
@@ -52,7 +52,7 @@
                 class="p-8 text-center text-gray-500"
             >
                 <BellRing class="w-12 h-12 mx-auto mb-2 text-gray-300" />
-                <p>Aucune notification</p>
+                <p>{{ $t('notifications.empty') }}</p>
             </div>
 
             <div v-else>
@@ -130,7 +130,7 @@
                     class="w-full text-sm justify-start text-gray-500"
                     @click="handleOpenSettings"
                 >
-                    Paramètres de notifications
+                    {{ $t('notifications.notifSettings') }}
                 </Button>
             </div>
         </DropdownMenuContent>
@@ -138,6 +138,7 @@
 </template>
 
 <script lang="ts" setup>
+const { t } = useI18n();
 import { BellRing, X } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import {
@@ -221,6 +222,8 @@ const getNotificationTitle = (notification: Notification): string => {
             return 'Annonce';
         case 'system.update':
             return 'Mise à jour';
+        case 'identifier.inami_invalid':
+            return 'Numéro INAMI';
         default:
             return data.title || 'Notification';
     }
@@ -260,6 +263,8 @@ const getNotificationMessage = (notification: Notification): string => {
             return data.message || 'Nouvelle annonce de la plateforme';
         case 'system.update':
             return data.message || 'Mise à jour de la plateforme';
+        case 'identifier.inami_invalid':
+            return data.message || 'Votre numéro INAMI n\'a pas pu être vérifié. Merci de le mettre à jour.';
         default:
             return data.message || 'Nouvelle notification';
     }
@@ -315,6 +320,13 @@ const getNotificationDetailLink = (
             path: isReplacementListType
                 ? `/dashboard/replacements/detail/${data.replacement_id}/list`
                 : `/dashboard/replacements/detail/${data.replacement_id}`,
+        };
+    }
+
+    if (type === 'identifier.inami_invalid') {
+        return {
+            label: t('notifications.settings'),
+            path: '/dashboard/settings',
         };
     }
 
@@ -379,6 +391,9 @@ const handleNotificationClick = async (notification: Notification) => {
     }
     else if (type.includes('partnership')) {
         router.push('/dashboard/partners');
+    }
+    else if (type === 'identifier.inami_invalid') {
+        router.push('/dashboard/settings');
     }
 };
 

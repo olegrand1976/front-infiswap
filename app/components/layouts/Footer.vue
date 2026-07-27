@@ -32,15 +32,13 @@
 
                 <div class="flex flex-col py-8 space-y-4 w-96 md:py-0">
                     <h3 class="font-semibold text-center md:text-start lg:text-base md:text-sm text-primary">
-                        S'inscrire à la newsletter
+                        {{ $t('footer.newsletter') }}
                     </h3>
                     <p class="hidden text-sm md:block md:text-xs lg:text-sm">
-                        Inscrivez-vous à notre newsletter pour recevoir nos futures communications.
-                        Vous pouvez vous désabonner à tout moment. Pour en savoir plus sur notre politique
-                        de protection des données cliquez ici.
+                        {{ $t('footer.newsletterDesc') }}
                     </p>
                     <p class="mx-auto text-sm text-center md:hidden w-80 md:text-xs lg:text-sm">
-                        Inscrivez-vous à notre newsletter pour recevoir nos futures communications.
+                        {{ $t('footer.newsletterDesc') }}
                     </p>
 
                     <form
@@ -97,10 +95,17 @@
                 class="text-center text-[0.6em] md:text-xs"
             >
                 <NuxtLink
-                    to="/legal-notice"
-                >Mentions légales</NuxtLink> -
-                <NuxtLink to="/privacy-security">Politique de Protection des données personnelles & Sécurité</NuxtLink> -
-                <NuxtLink to="/terms">CGU</NuxtLink>
+                    :to="localePath('/legal-notice')"
+                >{{ $t('footer.legalNotice') }}</NuxtLink> -
+                <NuxtLink :to="localePath('/privacy-security')">{{ $t('footer.privacy') }}</NuxtLink> -
+                <NuxtLink :to="localePath('/terms')">{{ $t('footer.terms') }}</NuxtLink> -
+                <button
+                    type="button"
+                    class="underline"
+                    @click="openCookiePreferences"
+                >
+                    {{ $t('footer.cookies') }}
+                </button>
             </p>
         </div>
 
@@ -121,6 +126,8 @@ import { Globe, Mail, MapPin, Phone } from 'lucide-vue-next';
 import { useNewsletter } from '@/composables/useNewsletter';
 
 const { email, isLoading, subscribeNewsletter } = useNewsletter();
+const { openPreferences: openCookiePreferences } = useCookieConsent();
+const localePath = useLocalePath();
 </script>
 
 <style scoped>

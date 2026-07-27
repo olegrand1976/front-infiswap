@@ -56,50 +56,40 @@ export function isNurseSubjectToPlatformAccessPayment(user: {
         && isRegisteredAfterPlatformAccessCutoff(user.created_at);
 }
 
-/** Badge header : infirmière ayant souscrit l'accès réseau (post-cutoff + payé). */
-export function showsPaidNetworkAccessBadge(user: {
-    roles?: string[];
-    account_type?: string | null;
-    created_at?: string | null;
-    platform_access_paid_at?: string | null;
-} | null | undefined): boolean {
-    return isSubjectToPlatformAccessPayment(user) && hasPaidPlatformAccess(user);
+/** @deprecated Paywall retiré — toujours false. */
+export function showsPaidNetworkAccessBadge(_user: unknown): boolean {
+    return false;
 }
 
-/** Accès réseau à vie : cotisation payée ou inscription antérieure au cutoff (tous profils). */
+/** Badge or : compte non-institution avec e-mail confirmé. */
+export function hasVerifiedMemberBadge(user: {
+    type?: string | null;
+    account_type?: string | null;
+    email_verified_at?: string | null;
+} | null | undefined): boolean {
+    if (!user) {
+        return false;
+    }
+
+    if (user.type === 'institution' || user.account_type === 'institution') {
+        return false;
+    }
+
+    return Boolean(user.email_verified_at);
+}
+
+/** Alias badge membre vérifié (remplace l’ancien critère paiement / legacy cutoff). */
 export function hasLifetimeNetworkAccess(user: {
     type?: string | null;
-    roles?: string[];
     account_type?: string | null;
-    created_at?: string | null;
-    platform_access_paid_at?: string | null;
+    email_verified_at?: string | null;
 } | null | undefined): boolean {
-    if (!user) {
-        return false;
-    }
-
-    if (user.type === 'institution') {
-        return false;
-    }
-
-    if (hasPaidPlatformAccess(user)) {
-        return true;
-    }
-
-    return !isRegisteredAfterPlatformAccessCutoff(user.created_at);
+    return hasVerifiedMemberBadge(user);
 }
 
-export function isSubjectToPlatformAccessPayment(user: {
-    roles?: string[];
-    account_type?: string | null;
-    created_at?: string | null;
-} | null | undefined): boolean {
-    if (!user) {
-        return false;
-    }
-
-    return isPlatformAccessRole(resolvePlatformAccessRoles(user))
-        && isRegisteredAfterPlatformAccessCutoff(user.created_at);
+/** Paywall accès réseau retiré — toujours false. */
+export function isSubjectToPlatformAccessPayment(_user: unknown): boolean {
+    return false;
 }
 
 export function isLocallyExemptFromPlatformPayment(user: {

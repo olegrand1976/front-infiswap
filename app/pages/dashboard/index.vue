@@ -9,6 +9,26 @@
 
         <template v-else>
             <div
+                v-if="canAccessMarketingAnalytics"
+                class="mb-4"
+            >
+                <NuxtLink
+                    to="/dashboard/admin/marketing-analytics"
+                    class="flex items-center justify-between gap-3 rounded-md border border-gray-100 bg-white px-4 py-3 shadow-sm transition-colors hover:bg-gray-50"
+                >
+                    <span class="flex items-center gap-2 text-sm font-semibold text-gray-800">
+                        <BarChart3
+                            class="size-4 shrink-0 text-primary"
+                            aria-hidden="true"
+                        />
+                        {{ $t('dashboard.marketing') }}
+                    </span>
+                    <span class="text-xs font-medium text-primary">
+                        {{ $t('dashboard.open') }}
+                    </span>
+                </NuxtLink>
+            </div>
+            <div
                 v-if="isAdmin || isCommunityManager"
                 class="mb-4 space-y-4"
             >
@@ -25,12 +45,14 @@
 </template>
 
 <script lang="ts" setup>
+import { BarChart3 } from 'lucide-vue-next';
 import { useReports } from '~/composables/useReports';
 
 const { reports, getReports, loading } = useReports();
-const { isAdmin, isCommunityManager } = useAuth();
+const { isAdmin, isCommunityManager, canAccessMarketingAnalytics } = useAuth();
 
-useHead({ title: 'Tableau de bord' });
+const { t } = useI18n();
+useHead({ title: () => t('dashboard.title') });
 
 definePageMeta({
     layout: 'dashboard',

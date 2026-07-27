@@ -41,8 +41,8 @@ export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
 
         async onResponseError({ response }) {
             const status = response.status;
-            if ([500].includes(status)) {
-                console.error('[Error]', response.statusText, response._data);
+            if ([500].includes(status) && import.meta.dev) {
+                console.error('[Error]', response.statusText);
             }
         },
     });

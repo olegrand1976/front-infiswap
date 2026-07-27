@@ -97,6 +97,14 @@ export type User = {
     site?: boolean | number;
     ambassador?: boolean | number;
     professional_category?: string | null;
+    education_level?: 'a1' | 'a2' | null;
+    education_level_label?: string | null;
+    identifier_unavailable?: boolean;
+    has_real_identifier?: boolean;
+    inami_cobrha_enabled?: boolean;
+    identifier_verified?: boolean | null;
+    identifier_verification_status?: string | null;
+    identifier_verified_at?: string | null;
     comment_crm?: string | null;
     historic_activity?: UserActivity;
     contact_date?: string;
@@ -282,6 +290,7 @@ export interface Nurse {
     user_id: string;
     full_name: string;
     zip_code: string;
+    education_level?: 'a1' | 'a2' | null;
     user: User;
 }
 
@@ -516,6 +525,8 @@ export type Contact = {
     description?: string;
     created_at?: string;
     hasResponded?: boolean;
+    read_at?: string | null;
+    is_read?: boolean;
 };
 
 export type Group = {
@@ -605,6 +616,8 @@ export type Mission = {
     description: string;
     status: 'open' | 'in_progress' | 'completed' | 'cancelled';
     required_diploma: string;
+    required_education_level?: 'a1' | 'a2' | null;
+    required_education_level_label?: string | null;
     is_long_term?: boolean;
     availabilities?: { day: string; start_time?: string; end_time?: string; morning_start_at?: string; morning_end_at?: string; afternoon_start_at?: string; afternoon_end_at?: string }[];
     pool_id?: number | null;
@@ -729,9 +742,11 @@ export interface Institution {
     validation_date?: string | null;
     registration_source?: 'site' | 'file';
     registered_at?: string | null;
+    can_create_account?: boolean;
     histories?: InstitutionHistory[];
     email?: string | null;
     phone_number?: string | null;
+    profile?: Profile;
     referred_by?: Referrer;
     crm?: {
         contact_user_id?: number | null;
@@ -739,6 +754,11 @@ export interface Institution {
         last_contact_date?: string | null;
         last_contact_method?: string | null;
         last_comment?: string | null;
+        nb_call?: number;
+        nb_sale?: number;
+        nb_recommandation?: number;
+        nb_meeting?: number;
+        nb_pending?: number;
     };
 }
 

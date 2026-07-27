@@ -163,8 +163,8 @@
                                 <Button
                                     size="sm"
                                     class="rounded-md"
-                                    :disabled="!commercialUserId"
-                                    @click="commercialDialogOpen = true"
+                                    :disabled="ensuringContact"
+                                    @click="openCommercialActionDialog"
                                 >
                                     Enregistrer une action
                                 </Button>
@@ -172,161 +172,13 @@
                         </div>
                     </section>
 
-                    <section
+                    <InstitutionAiInsightPanel
                         v-if="isInstitution && activeInstitution"
-                        class="rounded-lg border p-4 space-y-4"
-                    >
-                        <div class="flex flex-wrap items-center justify-between gap-3">
-                            <div>
-                                <h3 class="text-sm font-semibold text-primary">
-                                    Veille IA
-                                </h3>
-                                <p class="text-xs text-muted-foreground mt-0.5">
-                                    Sources web automatiques — à vérifier avant usage commercial.
-                                </p>
-                                <p
-                                    v-if="aiInsight?.generated_at"
-                                    class="text-xs text-muted-foreground mt-1"
-                                >
-                                    Dernière mise à jour : {{ formatToDMY(aiInsight.generated_at) }}
-                                </p>
-                            </div>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                class="rounded-md"
-                                :in-progress="aiRefreshing"
-                                @click="refreshAiInsight"
-                            >
-                                Mettre à jour via IA
-                            </Button>
-                        </div>
-
-                        <div
-                            v-if="aiLoading"
-                            class="flex justify-center py-8"
-                        >
-                            <RollingLoader :loading="true" />
-                        </div>
-
-                        <template v-else-if="aiInsight?.status === 'completed'">
-                            <div
-                                v-if="aiInsight.company_summary"
-                                class="space-y-1"
-                            >
-                                <h4 class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                                    Informations société
-                                </h4>
-                                <p class="text-sm leading-relaxed whitespace-pre-wrap">
-                                    {{ aiInsight.company_summary }}
-                                </p>
-                            </div>
-
-                            <div
-                                v-if="(aiInsight.news_items ?? []).length"
-                                class="space-y-2"
-                            >
-                                <h4 class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                                    Actualités & veille
-                                </h4>
-                                <ul class="space-y-2">
-                                    <li
-                                        v-for="item in aiInsight.news_items"
-                                        :key="item.url"
-                                        class="rounded-md border bg-background px-3 py-2 text-sm"
-                                    >
-                                        <div class="flex flex-wrap items-start justify-between gap-2">
-                                            <a
-                                                :href="item.url"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                class="font-medium text-primary underline"
-                                            >
-                                                {{ item.title }}
-                                            </a>
-                                            <span
-                                                v-if="item.source_name"
-                                                class="text-[10px] uppercase tracking-wide text-muted-foreground"
-                                            >
-                                                {{ item.source_name }}
-                                            </span>
-                                        </div>
-                                        <p
-                                            v-if="item.summary"
-                                            class="mt-1 text-xs text-muted-foreground leading-relaxed"
-                                        >
-                                            {{ item.summary }}
-                                        </p>
-                                    </li>
-                                </ul>
-                            </div>
-                            <p
-                                v-else-if="aiInsight.status === 'completed'"
-                                class="text-sm text-muted-foreground"
-                            >
-                                Aucune actualité trouvée.
-                            </p>
-
-                            <div
-                                v-if="(aiInsight.job_items ?? []).length"
-                                class="space-y-2"
-                            >
-                                <h4 class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                                    Offres d'emploi
-                                </h4>
-                                <ul class="space-y-2">
-                                    <li
-                                        v-for="item in aiInsight.job_items"
-                                        :key="item.url"
-                                        class="rounded-md border bg-background px-3 py-2 text-sm"
-                                    >
-                                        <div class="flex flex-wrap items-start justify-between gap-2">
-                                            <a
-                                                :href="item.url"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                class="font-medium text-primary underline"
-                                            >
-                                                {{ item.title }}
-                                            </a>
-                                            <span
-                                                v-if="item.source_name"
-                                                class="text-[10px] uppercase tracking-wide text-muted-foreground"
-                                            >
-                                                {{ item.source_name }}
-                                            </span>
-                                        </div>
-                                        <p
-                                            v-if="item.summary"
-                                            class="mt-1 text-xs text-muted-foreground leading-relaxed"
-                                        >
-                                            {{ item.summary }}
-                                        </p>
-                                    </li>
-                                </ul>
-                            </div>
-                            <p
-                                v-else-if="aiInsight.status === 'completed'"
-                                class="text-sm text-muted-foreground"
-                            >
-                                Aucune offre d'emploi trouvée.
-                            </p>
-                        </template>
-
-                        <p
-                            v-else-if="aiInsight?.status === 'failed'"
-                            class="text-sm text-destructive"
-                        >
-                            {{ aiInsight.error_message ?? 'La veille IA a échoué.' }}
-                        </p>
-
-                        <p
-                            v-else
-                            class="text-sm text-muted-foreground"
-                        >
-                            Aucune veille enregistrée. Cliquez sur « Mettre à jour via IA ».
-                        </p>
-                    </section>
+                        :insight="aiInsight"
+                        :loading="aiLoading"
+                        :refreshing="aiRefreshing"
+                        @refresh="refreshAiInsight"
+                    />
 
                     <section class="rounded-lg border p-4 space-y-3">
                         <h3 class="text-sm font-semibold text-primary">
@@ -365,8 +217,10 @@ import { formatToDMY } from '@/composables/useDate';
 import type { CrmHistoryEntry } from '@/composables/useCrm';
 import type { CrmInstitution, User } from '~/lib/types';
 import { formatPhoneNumber } from '~/lib/utils';
+import { needsInstitutionCrmEnsure } from '~/utils/institutionCrmContact';
 import CrmHistoryEntryList from '@/components/crm/CrmHistoryEntryList.vue';
 import CommercialQuickActionDialog from '@/components/crm/CommercialQuickActionDialog.vue';
+import InstitutionAiInsightPanel from '@/components/crm/InstitutionAiInsightPanel.vue';
 import RollingLoader from '~/components/RollingLoader.vue';
 import { Button } from '@/components/ui/button';
 
@@ -390,6 +244,7 @@ const activeCrmUserId = ref<number | null>(null);
 const commercialUserId = ref<number | null>(null);
 const commercialClientType = ref('user');
 const commercialDialogOpen = ref(false);
+const ensuringContact = ref(false);
 
 const activeUser = ref<User | null>(null);
 const activeInstitution = ref<CrmInstitution | null>(null);
@@ -523,25 +378,40 @@ const lastCommentText = computed(() => {
         ?? '';
 });
 
-async function resolveInstitutionContact(institution: CrmInstitution): Promise<CrmInstitution> {
-    if (institution.representative_user_id && institution.crm?.id) {
+async function resolveInstitutionContact(institution: CrmInstitution): Promise<CrmInstitution | null> {
+    if (!needsInstitutionCrmEnsure(institution)) {
         return institution;
     }
 
     const email = institution.email?.trim();
-    if (!email) {
-        return institution;
+    if (!email && !institution.representative_user_id) {
+        $toast({
+            description: 'Renseignez l\'e-mail de l\'institution pour créer le contact CRM.',
+            variant: 'destructive',
+        });
+        return null;
     }
 
     try {
         const response = await ensureCrmInstitutionContact(institution.id);
+        const crmId = response.crm?.id ?? institution.crm?.id ?? null;
+        const representativeUserId = response.representative_user_id ?? institution.representative_user_id ?? null;
+
+        if (!crmId || !representativeUserId) {
+            $toast({
+                description: 'Impossible de créer le contact CRM.',
+                variant: 'destructive',
+            });
+            return null;
+        }
+
         return {
             ...institution,
-            representative_user_id: response.representative_user_id ?? institution.representative_user_id,
+            representative_user_id: representativeUserId,
             crm: {
                 ...(institution.crm ?? {} as NonNullable<CrmInstitution['crm']>),
-                id: response.crm?.id ?? institution.crm?.id ?? 0,
-                user_id: response.representative_user_id ?? institution.representative_user_id ?? 0,
+                id: crmId,
+                user_id: representativeUserId,
                 client_type: response.crm?.client_type ?? institution.crm?.client_type ?? 'user',
                 nb_call: response.crm?.nb_call ?? institution.crm?.nb_call,
                 nb_sale: response.crm?.nb_sale ?? institution.crm?.nb_sale,
@@ -555,8 +425,42 @@ async function resolveInstitutionContact(institution: CrmInstitution): Promise<C
             },
         };
     }
-    catch {
-        return institution;
+    catch (error: unknown) {
+        const message = (error as { data?: { message?: string } })?.data?.message;
+        $toast({
+            description: message ?? 'Impossible de créer le contact CRM.',
+            variant: 'destructive',
+        });
+        return null;
+    }
+}
+
+function applyResolvedInstitution(institution: CrmInstitution) {
+    activeInstitution.value = institution;
+    commercialUserId.value = institution.representative_user_id ?? null;
+    activeCrmUserId.value = institution.crm?.id ?? null;
+    commercialClientType.value = institution.crm?.client_type ?? 'user';
+}
+
+async function ensureActiveInstitutionContact(): Promise<boolean> {
+    if (!activeInstitution.value) {
+        return false;
+    }
+    if (!needsInstitutionCrmEnsure(activeInstitution.value)) {
+        return true;
+    }
+
+    ensuringContact.value = true;
+    try {
+        const resolved = await resolveInstitutionContact(activeInstitution.value);
+        if (!resolved) {
+            return false;
+        }
+        applyResolvedInstitution(resolved);
+        return !needsInstitutionCrmEnsure(resolved);
+    }
+    finally {
+        ensuringContact.value = false;
     }
 }
 
@@ -636,11 +540,8 @@ async function initializeProfile() {
             commercialClientType.value = activeUser.value.crm?.client_type ?? 'user';
         }
         else if (isInstitution.value && profileInstitution.value) {
-            activeInstitution.value = await resolveInstitutionContact({ ...profileInstitution.value });
             activeUser.value = null;
-            commercialUserId.value = activeInstitution.value.representative_user_id ?? null;
-            activeCrmUserId.value = activeInstitution.value.crm?.id ?? null;
-            commercialClientType.value = activeInstitution.value.crm?.client_type ?? 'user';
+            applyResolvedInstitution({ ...profileInstitution.value });
             await loadAiInsight();
         }
 
@@ -651,14 +552,31 @@ async function initializeProfile() {
     }
 }
 
-function emitProfileAction(type: 'contact' | 'comment' | 'referrer') {
+async function emitProfileAction(type: 'contact' | 'comment' | 'referrer') {
     if (isUser.value && activeUser.value) {
         dispatchAction({ type, user: activeUser.value });
         return;
     }
     if (isInstitution.value && activeInstitution.value) {
+        const ready = await ensureActiveInstitutionContact();
+        if (!ready || !activeInstitution.value) {
+            return;
+        }
         dispatchAction({ type, institution: activeInstitution.value });
     }
+}
+
+async function openCommercialActionDialog() {
+    if (isInstitution.value) {
+        const ready = await ensureActiveInstitutionContact();
+        if (!ready) {
+            return;
+        }
+    }
+    if (!commercialUserId.value) {
+        return;
+    }
+    commercialDialogOpen.value = true;
 }
 
 function onCommercialUpdated(crm: Record<string, unknown>) {

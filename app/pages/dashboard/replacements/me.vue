@@ -123,7 +123,7 @@
                         value="me"
                         class="w-full md:w-48 h-12"
                     >
-                        Mes remplacements
+                        {{ $t('replacements.myTitle') }}
                     </TabsTrigger>
                     <TabsTrigger
                         value="groups"
@@ -158,20 +158,39 @@
                 :display-mode="displayMode"
             />
         </template>
+
+        <ConfirmProfileCountryModal
+            v-if="showCountryModal"
+            :pending="countryPending"
+            @select="onCountrySelect"
+            @dismiss="cancelCountryModal"
+        />
     </div>
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n();
 import { ArrowLeft, Filter, LayoutGrid, ListOrdered, Map } from 'lucide-vue-next';
 import { useCookie } from '#app';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import Replacement from '~/components/Replacement.vue';
+import ConfirmProfileCountryModal from '~/components/replacements/ConfirmProfileCountryModal.vue';
 import { goBack } from '~/lib/utils';
+import { normalizeSelectedFilters } from '~/utils/selectedFilters';
+import { useConfirmProfileCountry } from '~/composables/useConfirmProfileCountry';
+
+const {
+    showModal: showCountryModal,
+    pending: countryPending,
+    ensureProfileCountry,
+    onSelect: onCountrySelect,
+    cancel: cancelCountryModal,
+} = useConfirmProfileCountry();
 
 const replacementTypeFilters = {
     all: 'Tous',
     classic: 'Classique',
-    urgent: 'Urgent',
+    immediate: 'Urgent',
 };
 
 const replacementRoleFilters = {
@@ -225,18 +244,23 @@ const toggleGroupByProvince = () => {
 
 const selectedType = ref('me');
 
-onMounted(() => {
+onMounted(async () => {
+    await ensureProfileCountry();
     if (filterCookies.value) {
-        selectedFilters.value = {
+        const normalized = normalizeSelectedFilters({
             type: filterCookies.value.type ?? 'all',
             role: filterCookies.value.role ?? 'all',
-            status: filterCookies.value.status ?? 'open', // fallback si ancien cookie sans status
-        };
+            status: filterCookies.value.status ?? 'open',
+        });
+        selectedFilters.value = normalized;
+        if (filterCookies.value.type === 'urgent') {
+            filterCookies.value = { ...normalized };
+        }
     }
 });
 
 watch(selectedFilters, (newFilters) => {
-    filterCookies.value = newFilters;
+    filterCookies.value = normalizeSelectedFilters(newFilters);
 }, { deep: true });
 
 try {
@@ -248,7 +272,7 @@ catch (e) {
 }
 
 useHead({
-    title: 'Mes remplacements',
+    title: () => t('replacements.myTitle'),
 });
 
 definePageMeta({

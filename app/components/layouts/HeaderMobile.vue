@@ -15,7 +15,7 @@
                 class="flex items-center"
             >
                 <div class="flex items-center gap-1 pt-2">
-                    <span class="text-xs text-foreground/70">Contactez-nous au :</span>
+                    <span class="text-xs text-foreground/70">{{ $t('home.contactUsAt') }} :</span>
                     <span class="text-sm font-bold text-primary">(+32) 478 02 33 77</span>
                 </div>
             </a>

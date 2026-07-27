@@ -18,6 +18,8 @@ const props = withDefaults(defineProps<BaseChartProps<T> & {
     yTickTextSize?: number;
     showAllXTicks?: boolean;
     legendLabels?: string[];
+    xAxisLabel?: string;
+    yAxisLabel?: string;
 }>(), {
     type: 'grouped',
     margin: () => ({ top: 10, bottom: 40, left: 0, right: 20 }),
@@ -34,6 +36,8 @@ const props = withDefaults(defineProps<BaseChartProps<T> & {
     yTickTextSize: 12,
     showAllXTicks: false,
     legendLabels: () => ['Nombre'],
+    xAxisLabel: 'Période',
+    yAxisLabel: 'Nombre',
 });
 
 const emits = defineEmits<{
@@ -80,14 +84,22 @@ const selectorsBar = computed(() => props.type === 'grouped' ? GroupedBar.select
 
 const xTickFormat = computed(() => {
     return (tick: number) => {
-        const label = props.xFormatter ? props.xFormatter(tick) : props.data[tick][index] ?? `Index ${tick}`;
-        return label;
+        if (props.xFormatter) {
+            return props.xFormatter(tick);
+        }
+
+        const row = props.data[tick];
+        const label = row?.[index.value];
+
+        return label != null && label !== '' ? String(label) : `Index ${tick}`;
     };
 });
 
 const hasData = computed(() => {
-    const valid = Array.isArray(props.data) && props.data.length > 0 && props.data.every(item => item && typeof item === 'object' && 'name' in item);
-    return valid;
+    const indexKey = props.index;
+    return Array.isArray(props.data)
+        && props.data.length > 0
+        && props.data.every(item => item && typeof item === 'object' && indexKey in item);
 });
 </script>
 
@@ -145,7 +157,7 @@ const hasData = computed(() => {
                 tick-text-color="var(--axis-text-color, #333)"
                 :domain-line="true"
                 tick-margin="15"
-                label="Période"
+                :label="xAxisLabel"
                 :label-margin="30"
                 label-position="center"
             />
@@ -167,7 +179,7 @@ const hasData = computed(() => {
                     },
                 }"
                 tick-text-color="var(--axis-text-color, #333)"
-                label="Nombre"
+                :label="yAxisLabel"
                 label-position="center"
             />
 

@@ -1,4 +1,4 @@
-import { extractStripeSessionId, isStripeCheckoutSessionId } from '~/utils/accessReturn';
+import { assertAllowedExternalRedirectUrl, extractStripeSessionId, isStripeCheckoutSessionId } from '~/utils/accessReturn';
 import type { SponsorshipPlan } from '~/utils/sponsorship';
 import type { GoogleReviewSource } from '~/utils/googleReview';
 
@@ -49,8 +49,9 @@ export function useSponsorship() {
                 },
             });
 
-            if (response?.url) {
-                window.location.assign(response.url);
+            const checkoutUrl = assertAllowedExternalRedirectUrl(response?.url);
+            if (checkoutUrl) {
+                window.location.assign(checkoutUrl);
             }
         }
         finally {

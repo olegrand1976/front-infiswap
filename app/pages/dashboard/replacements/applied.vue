@@ -3,16 +3,16 @@
         <div class="mt-6 flex items-center gap-2 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
             <ArrowLeftIcon
                 class="size-5 cursor-pointer hover:text-primary"
-                title="Retour"
+                :title="$t('common.back')"
                 @click="goBack"
             />
             <h1 class="py-3 text-primary">
-                Les remplacements <strong>auxquels j'ai répondu</strong>
+                {{ $t('replacements.appliedHeading') }} <strong>{{ $t('replacements.appliedHeadingStrong') }}</strong>
             </h1>
         </div>
         <template v-if="!listApply || listApply.length === 0">
             <p class="text-black/50 mt-16 text-center">
-                Aucune donnée à afficher pour le moment
+                {{ $t('replacements.empty') }}
             </p>
         </template>
         <template v-else>
@@ -25,16 +25,16 @@
                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-2">
                         <div>
                             <p class="text-gray-800 text-lg font-medium leading-snug">
-                                Remplacement du
+                                {{ $t('replacements.replacementFrom') }}
                                 <span class="text-primary">{{ formatDate(item.replacement.start_date) }}</span>
-                                au
+                                {{ $t('replacements.to') }}
                                 <span class="text-primary">{{ formatDate(item.replacement.end_date) }}</span>
                             </p>
                             <p
                                 v-if="item.replacement.type === 'immediate'"
                                 class="text-sm sm:text-base bg-primary text-white font-bold mt-3 px-3 py-1 rounded inline-block leading-snug"
                             >
-                                <span class="capitalize">URGENT</span>
+                                <span class="capitalize">{{ $t('replacements.urgentBadge') }}</span>
                             </p>
                         </div>
 
@@ -87,12 +87,13 @@ import type { User } from '~/lib/types';
 import { goBack } from '~/lib/utils';
 
 const user = useState<User>('user');
+const { t } = useI18n();
 const { listApply, getReplacementApply } = useListResponse(user.value.id);
 
 await getReplacementApply();
 
 useHead({
-    title: 'Mes accords',
+    title: () => t('replacements.appliedPageTitle'),
 });
 
 definePageMeta({
@@ -121,10 +122,10 @@ const formatArray = (jsonString: string): string => {
 
 const formatStatus = (status: string): string => {
     const statuses: Record<string, string> = {
-        pending: 'En attente',
-        confirmed: 'Confirmé',
-        chat_enabled: 'Chat activé',
-        cancelled: 'Annulé',
+        pending: t('replacements.statusPending'),
+        confirmed: t('replacements.statusConfirmed'),
+        chat_enabled: t('replacements.statusChat'),
+        cancelled: t('replacements.statusCancelled'),
     };
     return statuses[status] || status;
 };

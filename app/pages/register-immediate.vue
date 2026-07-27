@@ -97,11 +97,63 @@
                         />
                     </div>
 
+                    <div class="col-span-2 lg:col-span-4 mt-2 space-y-2 rounded-lg border border-gray-200 bg-white p-4 text-sm">
+                        <label class="flex items-start gap-2 cursor-pointer">
+                            <Checkbox
+                                :checked="termsAccepted"
+                                class="mt-0.5"
+                                @update:checked="termsAccepted = $event === true"
+                            />
+                            <span>
+                                J'accepte les
+                                <NuxtLink
+                                    to="/terms"
+                                    target="_blank"
+                                    class="text-primary underline font-semibold"
+                                >CGU</NuxtLink>
+                                <span class="text-red-500">*</span>
+                            </span>
+                        </label>
+                        <label class="flex items-start gap-2 cursor-pointer">
+                            <Checkbox
+                                :checked="privacyAccepted"
+                                class="mt-0.5"
+                                @update:checked="privacyAccepted = $event === true"
+                            />
+                            <span>
+                                J'accepte la
+                                <NuxtLink
+                                    to="/privacy-security"
+                                    target="_blank"
+                                    class="text-primary underline font-semibold"
+                                >politique de confidentialité</NuxtLink>
+                                <span class="text-red-500">*</span>
+                            </span>
+                        </label>
+                        <label class="flex items-start gap-2 cursor-pointer">
+                            <Checkbox
+                                :checked="charteAccepted"
+                                class="mt-0.5"
+                                @update:checked="charteAccepted = $event === true"
+                            />
+                            <span>
+                                J'accepte la
+                                <NuxtLink
+                                    to="/legal-chart"
+                                    target="_blank"
+                                    class="text-primary underline font-semibold"
+                                >charte de bonne conduite</NuxtLink>
+                                <span class="text-red-500">*</span>
+                            </span>
+                        </label>
+                    </div>
+
                     <div class="col-span-2 lg:col-span-4 mt-4 flex justify-center items-center">
                         <Button
                             class="w-[50%]"
                             type="submit"
                             :in-progress="inProgress"
+                            :disabled="!canSubmit"
                         >
                             S'inscrire
                         </Button>
@@ -124,14 +176,29 @@
 <script lang="ts" setup>
 import { CircleUser, Mail, Phone } from 'lucide-vue-next';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useAuthTokenCookie } from '~/lib/authTokenCookie';
 
 const formData = reactive({
     lastname: '',
     firstname: '',
     email: '',
-    phoneNumber: undefined,
+    phoneNumber: undefined as string | undefined,
 });
+
+const termsAccepted = ref(false);
+const privacyAccepted = ref(false);
+const charteAccepted = ref(false);
+
+const canSubmit = computed(() => (
+    termsAccepted.value
+    && privacyAccepted.value
+    && charteAccepted.value
+    && Boolean(formData.lastname?.trim())
+    && Boolean(formData.firstname?.trim())
+    && Boolean(formData.email?.trim())
+    && Boolean(formData.phoneNumber?.trim())
+));
 
 const route = useRoute();
 const router = useRouter();
@@ -148,9 +215,20 @@ const status = ref(
 const { submit, inProgress } = useSubmit(
     async () => {
         status.value = '';
+        if (!canSubmit.value) {
+            $toast({
+                variant: 'destructive',
+                description: 'Veuillez accepter les CGU, la politique de confidentialité et la charte.',
+            });
+            return;
+        }
+
         const response = await registerImmediate({
             ...formData,
             referralCode: referralCode.value ?? undefined,
+            termsAccepted: termsAccepted.value,
+            privacyAccepted: privacyAccepted.value,
+            charteAccepted: charteAccepted.value,
         });
         clearReferralRegistration();
         const pendingReplacement = useState('pendingReplacement');

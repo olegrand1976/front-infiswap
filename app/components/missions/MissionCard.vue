@@ -115,6 +115,12 @@
                 </p>
                 <div class="text-gray-600 text-xs">
                     <p>{{ mission.required_diploma || 'Non spécifié' }}</p>
+                    <p
+                        v-if="mission.required_education_level_label"
+                        class="mt-1"
+                    >
+                        {{ mission.required_education_level_label }}
+                    </p>
                 </div>
             </div>
         </div>

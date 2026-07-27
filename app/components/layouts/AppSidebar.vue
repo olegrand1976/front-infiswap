@@ -48,8 +48,17 @@
                                             class="size-5 opacity-80"
                                         />
                                         <span>{{ item.label }}</span>
+                                        <Badge
+                                            v-if="item.badge"
+                                            class="ml-auto mr-1 h-5 min-w-5 justify-center rounded-full bg-primary px-1.5 text-[0.65rem] text-white"
+                                        >
+                                            {{ item.badge > 99 ? '99+' : item.badge }}
+                                        </Badge>
                                         <ChevronRight
-                                            class="ml-auto size-4 transition-transform group-data-[state=open]/collapsible:rotate-90"
+                                            :class="[
+                                                'size-4 transition-transform group-data-[state=open]/collapsible:rotate-90',
+                                                item.badge ? '' : 'ml-auto',
+                                            ]"
                                         />
                                     </SidebarMenuButton>
                                 </CollapsibleTrigger>
@@ -65,7 +74,7 @@
                                                 :class="subMenuButtonClass(isActiveRoute(subItem.route))"
                                             >
                                                 <NuxtLink
-                                                    :to="subItem.route"
+                                                    :to="localePath(subItem.route)"
                                                     class="flex h-10 w-full items-center rounded px-2"
                                                     @click="closeSidebar"
                                                 >
@@ -73,7 +82,13 @@
                                                         :is="subItem.icon"
                                                         class="mr-2 size-4 opacity-80"
                                                     />
-                                                    <span>{{ subItem.label }}</span>
+                                                    <span class="flex-1">{{ subItem.label }}</span>
+                                                    <Badge
+                                                        v-if="subItem.badge"
+                                                        class="ml-2 h-5 min-w-5 justify-center rounded-full bg-primary px-1.5 text-[0.65rem] text-white"
+                                                    >
+                                                        {{ subItem.badge > 99 ? '99+' : subItem.badge }}
+                                                    </Badge>
                                                 </NuxtLink>
                                             </SidebarMenuSubButton>
                                         </SidebarMenuSubItem>
@@ -89,7 +104,7 @@
                                 :class="menuButtonClass(isActiveRoute(item.route))"
                             >
                                 <NuxtLink
-                                    :to="item.route"
+                                    :to="item.external ? item.route : localePath(item.route)"
                                     class="flex w-full items-center justify-between rounded-lg p-3"
                                     :target="item.external ? '_blank' : undefined"
                                     @click="closeSidebar"
@@ -102,10 +117,10 @@
                                         <span>{{ item.label }}</span>
                                     </div>
                                     <Badge
-                                        v-if="item.route === '/dashboard/admin/contacts'"
-                                        class="ml-2 bg-primary text-white"
+                                        v-if="item.badge"
+                                        class="ml-2 h-5 min-w-5 justify-center rounded-full bg-primary px-1.5 text-[0.65rem] text-white"
                                     >
-                                        5
+                                        {{ item.badge > 99 ? '99+' : item.badge }}
                                     </Badge>
                                 </NuxtLink>
                             </SidebarMenuButton>
@@ -192,7 +207,7 @@
 </template>
 
 <script lang="ts" setup>
-import { BarChart3, Briefcase, ChevronRight, CircleHelp, CirclePlay, CircleUser, ClipboardList, Cog, CreditCard, Euro, FileSearch, FileText, Inbox, LayoutGrid, Link, List, Mail, MessageSquare, Network, Plus, Power, RefreshCw, Search, ShieldAlert, ShieldCheck, ShoppingBag, Sparkles, Star, UserCheck, Users, UserSearch, Wrench } from 'lucide-vue-next';
+import { BarChart3, Briefcase, ChevronRight, CircleHelp, CirclePlay, CircleUser, ClipboardList, Cog, CreditCard, Euro, FileSearch, FileText, Inbox, LayoutGrid, Link, List, Mail, MapPin, MessageSquare, Plus, Power, RefreshCw, Search, ShieldAlert, ShieldCheck, ShoppingBag, Sparkles, Star, UserCheck, Users, UserSearch, Wrench, IdCard } from 'lucide-vue-next';
 import type { FunctionalComponent } from 'vue';
 import QuickReplacementIcon from '../icons/QuickReplacementIcon.vue';
 import { useSidebar } from '../ui/sidebar';
@@ -214,6 +229,8 @@ const {
     isInstitutionAdmin,
     logout,
 } = useAuth();
+const { t } = useI18n();
+const localePath = useLocalePath();
 const config = useRuntimeConfig();
 const user = useUser();
 const showGoogleReviewLink = computed(() => !hasLeftGoogleReview(user.value));
@@ -239,10 +256,38 @@ const subMenuButtonClass = (active: boolean) =>
 const perPage = ref(PERPAGE);
 const page = ref(1);
 const { products, getProducts } = useProduct();
+const { unreadCounts, fetchUnreadCounts } = useContact();
 
 if (!isInstitution.value) {
     await getProducts(page.value, perPage.value);
 }
+
+const canSeeContactBadges = computed(() => isSuperAdmin.value || isAdmin.value || isManager.value);
+
+if (canSeeContactBadges.value) {
+    try {
+        await fetchUnreadCounts();
+    }
+    catch {
+        // badges optionnels — ne pas bloquer le sidebar
+    }
+}
+
+const unreadBadgeForRoute = (route: string): number | undefined => {
+    const match = route.match(/\/dashboard\/admin\/contacts\/([^/]+)/);
+    if (!match) {
+        return undefined;
+    }
+
+    const type = match[1].toLowerCase() as keyof typeof unreadCounts.value;
+    if (type === 'total') {
+        return undefined;
+    }
+
+    const count = unreadCounts.value[type] ?? 0;
+
+    return count > 0 ? count : undefined;
+};
 
 type StaffRole = 'super_admin' | 'admin' | 'manager' | 'community_manager' | 'sale_representative';
 
@@ -254,6 +299,7 @@ interface NavigationItem {
     visible?: boolean;
     external?: boolean;
     roles?: StaffRole[];
+    badge?: number;
 }
 
 interface NavigationSection {
@@ -318,12 +364,20 @@ const contactChildren = computed<NavigationItem[]>(() => [
         label: 'Infiswap',
         route: '/dashboard/admin/contacts/infiswap',
         icon: Inbox,
+        badge: unreadBadgeForRoute('/dashboard/admin/contacts/infiswap'),
     },
-    ...products.value.map(p => ({
-        label: p.name,
-        route: `/dashboard/admin/contacts/${p.name.toLowerCase()}`,
-        icon: Inbox,
-    })),
+    ...products.value
+        .filter(p => p.name.toLowerCase() !== 'inficoncept')
+        .map(p => {
+            const route = `/dashboard/admin/contacts/${p.name.toLowerCase()}`;
+
+            return {
+                label: p.name,
+                route,
+                icon: Inbox,
+                badge: unreadBadgeForRoute(route),
+            };
+        }),
 ]);
 
 const crmChildren = computed<NavigationItem[]>(() => [
@@ -351,18 +405,6 @@ const crmChildren = computed<NavigationItem[]>(() => [
         visible: isSuperAdmin.value || isAdmin.value || isSaleRepresentative.value,
     },
     {
-        label: 'Ma carrière',
-        route: '/dashboard/admin/users/crm/my-career',
-        icon: Sparkles,
-        visible: isSuperAdmin.value || isAdmin.value || isSaleRepresentative.value || isCommunityManager.value,
-    },
-    {
-        label: 'Simulateur équipe',
-        route: '/dashboard/admin/users/crm/team-simulator',
-        icon: Network,
-        visible: isSuperAdmin.value || isAdmin.value || isSaleRepresentative.value || isCommunityManager.value,
-    },
-    {
         label: 'Paramètres BC institution',
         route: '/dashboard/admin/institution-crm-settings',
         icon: Euro,
@@ -380,75 +422,82 @@ const crmChildren = computed<NavigationItem[]>(() => [
     },
 ].filter(item => item.visible !== false));
 
-const nurseNavigationItems: NavigationItem[] = [
-    {
-        label: 'Informations',
-        route: '/dashboard',
-        icon: LayoutGrid,
-    },
-    {
-        label: 'Remplacement rapide',
-        route: '/dashboard/replacements/immediate',
-        icon: QuickReplacementIcon,
-    },
-    {
-        label: 'Demander un(e) remplaçant(e)',
-        route: '/dashboard/replacements/create',
-        icon: RefreshCw,
-    },
-    {
-        label: 'Mes remplacements',
-        route: '/dashboard/replacements/me',
-        icon: List,
-    },
-    {
-        label: 'Chercher un remplacement',
-        route: '/dashboard/replacements',
-        icon: FileSearch,
-    },
-    {
-        label: 'Mes réponses reçues',
-        route: '/dashboard/replacements/responses',
-        icon: Users,
-    },
-    {
-        label: 'Missions',
-        route: '/dashboard/missions',
-        icon: Briefcase,
-    },
-    {
-        label: 'Binômes',
-        route: '/dashboard/partners',
-        icon: Users,
-        children: [
-            {
-                label: 'Rechercher',
-                route: '/dashboard/partners',
-                icon: Search,
-            },
-            {
-                label: 'Demander',
-                route: '/dashboard/partners/create',
-                icon: Plus,
-            },
-            {
-                label: 'Réponses',
-                route: '/dashboard/partners/responses',
-                icon: MessageSquare,
-            },
-        ],
-    },
-    {
-        label: 'Mon groupement',
-        route: '/dashboard/group',
-        icon: Users,
-    },
-    {
-        label: 'Paramètres',
-        route: '/dashboard/settings',
-        icon: Cog,
-    },
-];
+const nurseNavigationItems = computed<NavigationItem[]>(() => {
+    return [
+        {
+            label: t('nav.dashboard'),
+            route: '/dashboard',
+            icon: LayoutGrid,
+        },
+        {
+            label: t('nav.nurseMap'),
+            route: '/dashboard/nurses-map',
+            icon: MapPin,
+        },
+        {
+            label: t('nav.quickReplacement'),
+            route: '/dashboard/replacements/immediate',
+            icon: QuickReplacementIcon,
+        },
+        {
+            label: t('nav.requestReplacement'),
+            route: '/dashboard/replacements/create',
+            icon: RefreshCw,
+        },
+        {
+            label: t('nav.myReplacements'),
+            route: '/dashboard/replacements/me',
+            icon: List,
+        },
+        {
+            label: t('nav.findReplacement'),
+            route: '/dashboard/replacements',
+            icon: FileSearch,
+        },
+        {
+            label: t('nav.myResponses'),
+            route: '/dashboard/replacements/responses',
+            icon: Users,
+        },
+        {
+            label: t('nav.missions'),
+            route: '/dashboard/missions',
+            icon: Briefcase,
+        },
+        {
+            label: t('nav.pairings'),
+            route: '/dashboard/partners',
+            icon: Users,
+            children: [
+                {
+                    label: t('common.search'),
+                    route: '/dashboard/partners',
+                    icon: Search,
+                },
+                {
+                    label: t('nav.requestReplacement'),
+                    route: '/dashboard/partners/create',
+                    icon: Plus,
+                },
+                {
+                    label: t('nav.myResponses'),
+                    route: '/dashboard/partners/responses',
+                    icon: MessageSquare,
+                },
+            ],
+        },
+        {
+            label: t('nav.network'),
+            route: '/dashboard/group',
+            icon: Users,
+        },
+        {
+            label: t('nav.settings'),
+            route: '/dashboard/settings',
+            icon: Cog,
+        },
+    ];
+});
 
 const adminNavigationSections = computed<NavigationSection[]>(() => [
     {
@@ -464,7 +513,7 @@ const adminNavigationSections = computed<NavigationSection[]>(() => [
     },
     {
         label: 'Opérations',
-        roles: ['super_admin', 'admin', 'community_manager', 'manager'],
+        roles: ['super_admin', 'admin', 'community_manager', 'manager', 'sale_representative'],
         items: [
             {
                 label: 'Remplacements',
@@ -482,17 +531,25 @@ const adminNavigationSections = computed<NavigationSection[]>(() => [
                         icon: List,
                     },
                 ],
+                roles: ['super_admin', 'admin', 'community_manager', 'manager'],
             },
             {
                 label: 'Suivi inscriptions',
                 route: '/dashboard/admin/registrations',
                 icon: BarChart3,
+                roles: ['super_admin', 'admin', 'community_manager', 'manager'],
             },
             {
                 label: 'Binômes',
                 route: '/dashboard/admin/partners',
                 icon: UserSearch,
                 roles: ['super_admin', 'admin', 'manager'],
+            },
+            {
+                label: 'Carte infirmières',
+                route: '/dashboard/admin/nurses-map',
+                icon: MapPin,
+                roles: ['super_admin', 'admin', 'community_manager', 'sale_representative', 'manager'],
             },
         ],
     },
@@ -529,6 +586,7 @@ const adminNavigationSections = computed<NavigationSection[]>(() => [
                 route: '/dashboard/admin/contacts/infiswap',
                 icon: Inbox,
                 roles: ['super_admin', 'admin', 'manager'],
+                badge: unreadCounts.value.total > 0 ? unreadCounts.value.total : undefined,
                 children: contactChildren.value,
             },
         ],
@@ -560,6 +618,11 @@ const adminNavigationSections = computed<NavigationSection[]>(() => [
                 route: '/dashboard/admin/marketing-analytics',
                 icon: BarChart3,
                 visible: canAccessMarketingAnalytics.value,
+            },
+            {
+                label: 'Carte infirmières',
+                route: '/dashboard/admin/nurses-map',
+                icon: MapPin,
             },
         ],
     },
@@ -629,6 +692,12 @@ const adminNavigationSections = computed<NavigationSection[]>(() => [
                 visible: isSuperAdmin.value,
             },
             {
+                label: 'INAMI / CoBRHA',
+                route: '/dashboard/admin/inami-settings',
+                icon: IdCard,
+                visible: isSuperAdmin.value,
+            },
+            {
                 label: 'Logs',
                 route: '/dashboard/admin/monitoring-errors',
                 icon: ClipboardList,
@@ -642,6 +711,11 @@ const institutionNavigationItems: NavigationItem[] = [
         label: 'Tableau de bord',
         route: '/dashboard/institution',
         icon: LayoutGrid,
+    },
+    {
+        label: 'Carte infirmières',
+        route: '/dashboard/nurses-map',
+        icon: MapPin,
     },
     {
         label: 'Membres',
@@ -711,7 +785,7 @@ const navigationSections = computed(() => {
         return [{
             label: '',
             roles: [] as StaffRole[],
-            items: nurseNavigationItems,
+            items: nurseNavigationItems.value,
         }];
     }
 
@@ -727,7 +801,10 @@ const navigationSections = computed(() => {
 });
 
 const route = useRoute();
-const isActiveRoute = (routePath: string) => route.path === routePath;
+const isActiveRoute = (routePath: string) => {
+    const localized = localePath(routePath);
+    return route.path === localized || route.path === routePath;
+};
 
 const isGroupActive = (item: NavigationItem) => {
     if (route.path.startsWith(item.route)) {

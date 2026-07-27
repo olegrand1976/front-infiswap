@@ -4,6 +4,13 @@
             <template #action>
                 <div class="flex items-center gap-2">
                     <Button
+                        v-if="institution?.can_create_account"
+                        class="rounded-md"
+                        @click="navigateTo(`/dashboard/admin/institutions/${institution.id}/create-account`)"
+                    >
+                        Créer le compte
+                    </Button>
+                    <Button
                         v-if="!editMode"
                         variant="default"
                         class="rounded-md"
@@ -18,6 +25,12 @@
                         @click="toggleEditMode(false)"
                     >
                         Annuler
+                    </Button>
+                    <Button
+                        variant="outline"
+                        @click="navigateTo('/dashboard/admin/nurses-map')"
+                    >
+                        Retour carte
                     </Button>
                     <Button
                         variant="outline"
@@ -103,7 +116,7 @@
                 <div class="bg-white rounded-lg shadow p-6">
                     <div class="flex items-center justify-between mb-4">
                         <h2 class="text-xl font-bold">
-                            Coordonnées & suivi CRM
+                            Coordonnées
                         </h2>
                         <Button
                             v-if="editMode"
@@ -129,24 +142,6 @@
                             <label class="text-sm font-medium text-gray-500">Téléphone</label>
                             <p class="text-base">
                                 {{ institution.phone_number || institution.main_user?.phone_number || '—' }}
-                            </p>
-                        </div>
-                        <div v-if="institution.crm?.contact_user_id">
-                            <label class="text-sm font-medium text-gray-500">Date de contact</label>
-                            <p class="text-base">
-                                {{ formatContactDate(institution.crm?.last_contact_date) }}
-                            </p>
-                        </div>
-                        <div v-if="institution.crm?.contact_user_id">
-                            <label class="text-sm font-medium text-gray-500">Contacté par</label>
-                            <p class="text-base">
-                                {{ formatContactMethod(institution.crm?.last_contact_method) }}
-                            </p>
-                        </div>
-                        <div v-if="institution.crm?.contact_user_id">
-                            <label class="text-sm font-medium text-gray-500">Dernier commentaire</label>
-                            <p class="text-base whitespace-pre-wrap">
-                                {{ institution.crm?.last_comment || '—' }}
                             </p>
                         </div>
                         <div>
@@ -258,6 +253,29 @@
                             />
                         </div>
                     </form>
+                </div>
+
+                <div class="bg-white rounded-lg shadow p-6 space-y-6">
+                    <CrmCommercialFollowUpPanel
+                        ref="followUpPanelRef"
+                        :crm-user-id="institution.crm?.crm_id ?? null"
+                        :user-id="institution.crm?.contact_user_id ?? null"
+                        client-type="user"
+                        :entity-label="institution.name"
+                        :counters="institutionCrmCounters"
+                        :last-contact-date="institution.crm?.last_contact_date"
+                        :last-contact-method="institution.crm?.last_contact_method"
+                        :last-comment="institution.crm?.last_comment"
+                        @action="onFollowUpAction"
+                        @crm-updated="onInstitutionCrmUpdated"
+                    />
+
+                    <InstitutionAiInsightPanel
+                        :insight="aiInsight"
+                        :loading="aiLoading"
+                        :refreshing="aiRefreshing"
+                        @refresh="refreshAiInsight"
+                    />
                 </div>
 
                 <div
@@ -486,11 +504,15 @@
 </template>
 
 <script setup lang="ts">
-import type { Institution, InstitutionHistory, Referrer } from '~/lib/types';
+import type { Institution, InstitutionAiInsight, InstitutionHistory, Referrer } from '~/lib/types';
 import Checkbox from '~/components/ui/checkbox/Checkbox.vue';
 import RollingLoader from '~/components/RollingLoader.vue';
 import { InputIcon } from '~/components/ui/input-with-icon';
 import { Textarea } from '~/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import CrmCommercialFollowUpPanel from '@/components/crm/CrmCommercialFollowUpPanel.vue';
+import InstitutionAiInsightPanel from '@/components/crm/InstitutionAiInsightPanel.vue';
+import type { CrmFollowUpAction } from '@/components/crm/CrmCommercialFollowUpPanel.vue';
 
 useHead({ title: 'Détails de l\'institution' });
 
@@ -508,12 +530,133 @@ const validatingChanges = ref(false);
 const editMode = ref(route.query.edit === '1');
 const savingCrm = ref(false);
 const { get, validateInstitution, validateInstitutionChanges, rejectInstitution, forceDelete } = useInstitutions();
-const { updateCrmInstitutionContact, updateCrmUser } = useCrm();
+const { updateCrmInstitutionContact, updateCrmUser, ensureCrmInstitutionContact } = useCrm();
 const { updateInstitutionReferrer, getUserReferrer, userReferrer, referrerDisplayLabel } = useReferrer();
 const { store: storeComment } = useComment();
 const { isSuperAdmin } = useAuth();
+const { getInsight, refreshInsight } = useInstitutionAiInsight();
 const { $toast } = useNuxtApp();
 const id = computed(() => route.params.id);
+
+const followUpPanelRef = ref<{ reloadHistories: () => Promise<void> } | null>(null);
+const aiInsight = ref<InstitutionAiInsight | null>(null);
+const aiLoading = ref(false);
+const aiRefreshing = ref(false);
+
+const institutionCrmCounters = computed(() => {
+    const crm = institution.value?.crm;
+    if (!crm) {
+        return null;
+    }
+    return {
+        nb_call: crm.nb_call ?? 0,
+        nb_sale: crm.nb_sale ?? 0,
+        nb_recommandation: crm.nb_recommandation ?? 0,
+        nb_meeting: crm.nb_meeting ?? 0,
+        nb_pending: crm.nb_pending ?? 0,
+    };
+});
+
+async function ensureInstitutionCrmReady() {
+    if (!institution.value) {
+        return;
+    }
+    if (institution.value.crm?.contact_user_id && institution.value.crm?.crm_id) {
+        return;
+    }
+
+    const email = (institution.value.email || institution.value.main_user?.email || '').trim();
+    if (!email) {
+        return;
+    }
+
+    try {
+        const response = await ensureCrmInstitutionContact(institution.value.id);
+        institution.value = {
+            ...institution.value,
+            crm: {
+                ...(institution.value.crm ?? {}),
+                contact_user_id: response.representative_user_id ?? institution.value.crm?.contact_user_id,
+                crm_id: response.crm?.id ?? institution.value.crm?.crm_id,
+                nb_call: response.crm?.nb_call ?? institution.value.crm?.nb_call ?? 0,
+                nb_sale: response.crm?.nb_sale ?? institution.value.crm?.nb_sale ?? 0,
+                nb_recommandation: response.crm?.nb_recommandation ?? institution.value.crm?.nb_recommandation ?? 0,
+                nb_meeting: response.crm?.nb_meeting ?? institution.value.crm?.nb_meeting ?? 0,
+                nb_pending: response.crm?.nb_pending ?? institution.value.crm?.nb_pending ?? 0,
+                last_contact_date: response.crm?.last_contact_date ?? institution.value.crm?.last_contact_date,
+                last_contact_method: response.crm?.last_contact_method ?? institution.value.crm?.last_contact_method,
+                last_comment: institution.value.crm?.last_comment,
+            },
+        };
+        await followUpPanelRef.value?.reloadHistories();
+    }
+    catch (error: unknown) {
+        const message = (error as { data?: { message?: string } })?.data?.message;
+        if (message) {
+            $toast({ description: message, variant: 'destructive' });
+        }
+    }
+}
+
+async function onFollowUpAction(_type: CrmFollowUpAction) {
+    await ensureInstitutionCrmReady();
+    await toggleEditMode(true);
+}
+
+function onInstitutionCrmUpdated(crm: Record<string, unknown>) {
+    if (!institution.value?.crm) {
+        return;
+    }
+    institution.value = {
+        ...institution.value,
+        crm: {
+            ...institution.value.crm,
+            nb_call: Number(crm.nb_call) || 0,
+            nb_sale: Number(crm.nb_sale) || 0,
+            nb_recommandation: Number(crm.nb_recommandation) || 0,
+            nb_meeting: Number(crm.nb_meeting) || 0,
+            nb_pending: Number(crm.nb_pending) || 0,
+            last_contact_date: (crm.last_contact_date as string | undefined) ?? institution.value.crm.last_contact_date,
+            last_contact_method: (crm.last_contact_method as string | undefined) ?? institution.value.crm.last_contact_method,
+        },
+    };
+}
+
+async function loadAiInsight() {
+    const institutionId = institution.value?.id;
+    if (!institutionId) {
+        return;
+    }
+    aiLoading.value = true;
+    try {
+        aiInsight.value = await getInsight(institutionId);
+    }
+    finally {
+        aiLoading.value = false;
+    }
+}
+
+async function refreshAiInsight() {
+    const institutionId = institution.value?.id;
+    if (!institutionId) {
+        return;
+    }
+    aiRefreshing.value = true;
+    try {
+        aiInsight.value = await refreshInsight(institutionId);
+        $toast({ description: 'Veille IA mise à jour.' });
+    }
+    catch (error: unknown) {
+        const message = (error as { data?: { message?: string } })?.data?.message;
+        $toast({
+            description: message ?? 'Impossible de mettre à jour la veille IA.',
+            variant: 'destructive',
+        });
+    }
+    finally {
+        aiRefreshing.value = false;
+    }
+}
 
 const editForm = reactive({
     email: '',
@@ -556,34 +699,6 @@ function populateEditForm() {
     }
 }
 
-function formatContactMethod(method?: string | null): string {
-    if (method === 'mail') {
-        return 'Mail';
-    }
-    if (method === 'phone') {
-        return 'Téléphone';
-    }
-    if (method === 'visio') {
-        return 'Visioconférence';
-    }
-
-    return method || '—';
-}
-
-function formatContactDate(value?: string | null): string {
-    if (!value) {
-        return '—';
-    }
-
-    const date = new Date(value);
-
-    if (Number.isNaN(date.getTime())) {
-        return value;
-    }
-
-    return date.toLocaleDateString('fr-BE');
-}
-
 async function toggleEditMode(enable: boolean) {
     editMode.value = enable;
 
@@ -617,7 +732,7 @@ async function saveCrmEdits() {
         if (contactUserId && crmTargetId) {
             await updateCrmUser(crmTargetId, {
                 userId: contactUserId,
-                clientType: 'institution',
+                clientType: 'user',
                 lastContactDate: editForm.last_contact_date || null,
                 lastContactMethod: editForm.last_contact_method || null,
             });
@@ -641,6 +756,7 @@ async function saveCrmEdits() {
 
         $toast({ description: 'Modifications enregistrées', variant: 'success' });
         await refreshInstitution();
+        await followUpPanelRef.value?.reloadHistories();
         await toggleEditMode(false);
     }
     catch (error) {
@@ -656,6 +772,7 @@ const response = await get(Number(id.value));
 institution.value = response.data;
 institutionHistories.value = response.data?.histories ?? [];
 loading.value = false;
+await loadAiInsight();
 
 if (editMode.value) {
     populateEditForm();

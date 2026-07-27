@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useNuxtApp } from '#app';
+import { assertAllowedExternalRedirectUrl } from '~/utils/accessReturn';
 
 export const useContract = () => {
     const loading = ref(false);
@@ -42,8 +43,9 @@ export const useContract = () => {
                 }
             }
 
-            if (response.signature_url && newWindow) {
-                newWindow.location.href = response.signature_url;
+            const signatureUrl = assertAllowedExternalRedirectUrl(response.signature_url);
+            if (signatureUrl && newWindow) {
+                newWindow.location.href = signatureUrl;
             }
             else if (newWindow) {
                 newWindow.close();
