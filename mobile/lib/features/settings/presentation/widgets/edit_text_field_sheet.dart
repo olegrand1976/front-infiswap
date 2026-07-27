@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'settings_sheet_scaffold.dart';
 
-/// Generic single-field editor — the caller owns the actual save (API call),
-/// this only collects and validates the new value.
 Future<String?> showEditTextFieldSheet({
   required BuildContext context,
   required String title,

@@ -10,9 +10,6 @@ import '../data/notifications_list_notifier.dart';
 import '../models/notification_item.dart';
 import 'widgets/notification_card.dart';
 
-// Owner-side replacement notifications (someone applied to / canceled on
-// *their* post) vs candidate-side ones (their own application changed
-// status) — mirrors who each NotificationService listener actually notifies.
 const _ownerNotificationTypes = {'replacement.response', 'replacement.canceled'};
 
 class NotificationsScreen extends ConsumerStatefulWidget {

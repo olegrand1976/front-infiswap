@@ -19,9 +19,6 @@ const _androidChannel = AndroidNotificationChannel(
 
 final _localNotifications = FlutterLocalNotificationsPlugin();
 
-// firebase_options.dart only has web/Android/iOS configs (FlutterFire CLI
-// was never run for desktop) — Firebase.initializeApp() throws on
-// linux/macos/windows, so nothing Firebase-related may run there.
 bool get isFirebaseSupportedPlatform =>
     kIsWeb ||
     defaultTargetPlatform == TargetPlatform.android ||
@@ -38,9 +35,6 @@ class PushNotificationService {
   final Ref _ref;
   bool _initialized = false;
 
-  // Lazy: touching FirebaseMessaging.instance throws if Firebase was never
-  // initialized (desktop platforms skip Firebase.initializeApp entirely), so
-  // this must not run until a platform-gated caller actually needs it.
   FirebaseMessaging get _messaging => FirebaseMessaging.instance;
 
   // Push (FCM) is only wired for Android/iOS — web push would need a VAPID

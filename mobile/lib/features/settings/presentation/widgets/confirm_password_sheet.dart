@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import 'settings_sheet_scaffold.dart';
 
-/// Generic password re-entry prompt, used to confirm a sensitive action
-/// (disabling 2FA, deleting the account) — mirrors the web's re-auth dialogs.
 Future<String?> showConfirmPasswordSheet({
   required BuildContext context,
   required String title,

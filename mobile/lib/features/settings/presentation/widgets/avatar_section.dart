@@ -7,8 +7,6 @@ import '../../../../core/theme/app_radii.dart';
 import '../../data/settings_repository.dart';
 import 'settings_sheet_scaffold.dart';
 
-/// Centered avatar header: tapping the camera badge is the only entry point
-/// for changing the photo (gallery / camera / remove), no separate buttons.
 class AvatarSection extends StatefulWidget {
   const AvatarSection({
     super.key,

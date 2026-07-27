@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/api/api_exception.dart';
+import '../../../../core/location/location_repository.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/settings_repository.dart';
 import '../../models/settings_models.dart';
 import 'settings_sheet_scaffold.dart';
 
-/// Zone matching preferences (zip codes / cities used to notify the nurse of
-/// nearby replacements). The API only ever merges new values in — there is no
-/// endpoint to remove one — so this editor is add-only, matching what the
-/// backend actually supports.
 class ZonePreferencesCard extends StatefulWidget {
   const ZonePreferencesCard({
     super.key,
     required this.repository,
+    required this.locationRepository,
     required this.initial,
   });
 
   final SettingsRepository repository;
+  final LocationRepository locationRepository;
   final ReplacementZonePreferences initial;
 
   @override
@@ -51,10 +50,20 @@ class _ZonePreferencesCardState extends State<ZonePreferencesCard> {
 
     setState(() => _isSaving = true);
     try {
-      final next = [..._cities, value];
-      await widget.repository.addZonePreferences(cities: next, zipCodes: _zipCodes);
+      final nextCities = [..._cities, value];
+      var nextZipCodes = _zipCodes;
+      try {
+        final matches = await widget.locationRepository.getZipCodesFromCity(value);
+        if (matches.isNotEmpty) {
+          nextZipCodes = {..._zipCodes, ...matches}.toList();
+        }
+      } catch (_) {}
+
+      await widget.repository
+          .addZonePreferences(cities: nextCities, zipCodes: nextZipCodes);
       setState(() {
-        _cities = next;
+        _cities = nextCities;
+        _zipCodes = nextZipCodes;
         _cityController.clear();
       });
     } on ApiException catch (error) {
@@ -70,10 +79,20 @@ class _ZonePreferencesCardState extends State<ZonePreferencesCard> {
 
     setState(() => _isSaving = true);
     try {
-      final next = [..._zipCodes, value];
-      await widget.repository.addZonePreferences(cities: _cities, zipCodes: next);
+      final nextZipCodes = [..._zipCodes, value];
+      var nextCities = _cities;
+      try {
+        final matches = await widget.locationRepository.getCitiesFromZipCode(value);
+        if (matches.isNotEmpty) {
+          nextCities = {..._cities, ...matches}.toList();
+        }
+      } catch (_) {}
+
+      await widget.repository
+          .addZonePreferences(cities: nextCities, zipCodes: nextZipCodes);
       setState(() {
-        _zipCodes = next;
+        _zipCodes = nextZipCodes;
+        _cities = nextCities;
         _zipController.clear();
       });
     } on ApiException catch (error) {

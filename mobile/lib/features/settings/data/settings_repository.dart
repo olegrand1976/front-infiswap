@@ -17,9 +17,6 @@ class SettingsRepository {
         : <String, dynamic>{};
   }
 
-  // update-information/update-address/update-profil return the raw Eloquent
-  // User model, not the flat UserResource shape the rest of the app relies
-  // on — callers should refetch /user afterwards rather than trust this body.
   Future<void> updateInformation({
     required int userId,
     required PersonalInfoData data,

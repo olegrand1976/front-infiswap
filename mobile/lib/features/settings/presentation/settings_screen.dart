@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/api/api_exception.dart';
 import '../../../core/config/app_config.dart';
+import '../../../core/location/location_repository.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../auth/data/auth_repository.dart';
 import '../../auth/providers/auth_session_provider.dart';
@@ -80,8 +81,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     }
   }
 
-  // update-information/update-address/update-profil don't return a reliable
-  // user shape, so refetch /user (which does) instead of merging their body.
   Future<void> _refreshUser() async {
     final session = ref.read(authSessionProvider);
     if (session == null) return;
@@ -397,15 +396,38 @@ class _SettingsBody extends ConsumerWidget {
           _SettingsRow(
             label: 'Code postal',
             value: address.zipCode.isEmpty ? '-' : address.zipCode,
-            onTap: () => _editTextRow(
-              context: context,
-              title: 'Code postal',
-              initialValue: address.zipCode,
-              onSave: (value) async {
+            onTap: () async {
+              final value = await showEditTextFieldSheet(
+                context: context,
+                title: 'Code postal',
+                initialValue: address.zipCode,
+                keyboardType: TextInputType.number,
+              );
+              if (value == null || !context.mounted) return;
+
+              String? matchedCity;
+              try {
+                final matches =
+                    await ref.read(locationRepositoryProvider).getCitiesFromZipCode(value);
+                if (matches.length == 1) {
+                  matchedCity = matches.first;
+                } else if (matches.length > 1 && context.mounted) {
+                  matchedCity = await showSelectOptionSheet<String>(
+                    context: context,
+                    title: 'Ville correspondante',
+                    options: [for (final city in matches) (city, city)],
+                    initial: matches.contains(address.city) ? address.city : null,
+                  );
+                }
+              } catch (_) {}
+              if (!context.mounted) return;
+
+              await _runSave(context, () async {
                 address.zipCode = value;
+                if (matchedCity != null) address.city = matchedCity;
                 await saveAddress();
-              },
-            ),
+              });
+            },
           ),
           _SettingsRow(
             label: 'Complément',
@@ -448,7 +470,11 @@ class _SettingsBody extends ConsumerWidget {
           _SettingsGroup(children: [
             Padding(
               padding: const EdgeInsets.all(16),
-              child: ZonePreferencesCard(repository: repository, initial: zonePrefs),
+              child: ZonePreferencesCard(
+                repository: repository,
+                locationRepository: ref.read(locationRepositoryProvider),
+                initial: zonePrefs,
+              ),
             ),
           ]),
           const SizedBox(height: 24),
@@ -518,9 +544,6 @@ Future<void> _editSelectRow<T>({
 }
 
 Future<void> _runSave(BuildContext context, Future<void> Function() action) async {
-  // barrierDismissible alone doesn't block the Android back gesture — without
-  // PopScope, a back-press while `action` is in flight closes this dialog
-  // early, and the pop below then removes the settings screen itself instead.
   var dialogIsOpen = true;
   showDialog<void>(
     context: context,

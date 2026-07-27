@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/api/api_exception.dart';
+import '../../../core/location/location_repository.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/date_time_format.dart';
 import '../../auth/providers/auth_session_provider.dart';
@@ -58,22 +59,38 @@ class _CreateImmediateScreenState extends ConsumerState<CreateImmediateScreen> {
     return roles.where(_validRoleKeys.contains).length != 1;
   }
 
-  void _addZip() {
+  Future<void> _addZip() async {
     final value = _zipController.text.trim();
     if (value.isEmpty) return;
     if (!_zipCodes.contains(value)) {
       setState(() => _zipCodes = [..._zipCodes, value]);
     }
     _zipController.clear();
+
+    try {
+      final matches =
+          await ref.read(locationRepositoryProvider).getCitiesFromZipCode(value);
+      if (matches.isNotEmpty && mounted) {
+        setState(() => _cities = {..._cities, ...matches}.toList());
+      }
+    } catch (_) {}
   }
 
-  void _addCity() {
+  Future<void> _addCity() async {
     final value = _cityController.text.trim();
     if (value.isEmpty) return;
     if (!_cities.contains(value)) {
       setState(() => _cities = [..._cities, value]);
     }
     _cityController.clear();
+
+    try {
+      final matches =
+          await ref.read(locationRepositoryProvider).getZipCodesFromCity(value);
+      if (matches.isNotEmpty && mounted) {
+        setState(() => _zipCodes = {..._zipCodes, ...matches}.toList());
+      }
+    } catch (_) {}
   }
 
   void _showSnack(String message, {bool isError = true}) {

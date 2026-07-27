@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'settings_sheet_scaffold.dart';
 
-/// Generic single-choice picker — returns the selected value, or null if
-/// dismissed without a choice.
 Future<T?> showSelectOptionSheet<T>({
   required BuildContext context,
   required String title,

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/location/location_repository.dart';
 import '../../../../core/theme/app_colors.dart';
 import 'section_label.dart';
 
-class ReplacementSearchModal extends StatefulWidget {
+class ReplacementSearchModal extends ConsumerStatefulWidget {
   const ReplacementSearchModal({
     super.key,
     required this.initialZipCodes,
@@ -40,10 +42,12 @@ class ReplacementSearchModal extends StatefulWidget {
   }
 
   @override
-  State<ReplacementSearchModal> createState() => _ReplacementSearchModalState();
+  ConsumerState<ReplacementSearchModal> createState() =>
+      _ReplacementSearchModalState();
 }
 
-class _ReplacementSearchModalState extends State<ReplacementSearchModal> {
+class _ReplacementSearchModalState
+    extends ConsumerState<ReplacementSearchModal> {
   late List<String> _zipCodes;
   late List<String> _cities;
   final _zipController = TextEditingController();
@@ -63,7 +67,7 @@ class _ReplacementSearchModalState extends State<ReplacementSearchModal> {
     super.dispose();
   }
 
-  void _addZip() {
+  Future<void> _addZip() async {
     final value = _zipController.text.trim();
     if (value.isEmpty || !RegExp(r'^\d+$').hasMatch(value)) {
       return;
@@ -72,9 +76,17 @@ class _ReplacementSearchModalState extends State<ReplacementSearchModal> {
       setState(() => _zipCodes = [..._zipCodes, value]);
     }
     _zipController.clear();
+
+    try {
+      final matches =
+          await ref.read(locationRepositoryProvider).getCitiesFromZipCode(value);
+      if (matches.isNotEmpty && mounted) {
+        setState(() => _cities = {..._cities, ...matches}.toList());
+      }
+    } catch (_) {}
   }
 
-  void _addCity() {
+  Future<void> _addCity() async {
     final value = _cityController.text.trim();
     if (value.isEmpty || RegExp(r'^\d+$').hasMatch(value)) {
       return;
@@ -83,6 +95,14 @@ class _ReplacementSearchModalState extends State<ReplacementSearchModal> {
       setState(() => _cities = [..._cities, value]);
     }
     _cityController.clear();
+
+    try {
+      final matches =
+          await ref.read(locationRepositoryProvider).getZipCodesFromCity(value);
+      if (matches.isNotEmpty && mounted) {
+        setState(() => _zipCodes = {..._zipCodes, ...matches}.toList());
+      }
+    } catch (_) {}
   }
 
   void _reset() {
