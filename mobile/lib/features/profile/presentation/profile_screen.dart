@@ -209,7 +209,6 @@ class _MenuTile extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.onTap,
-    this.angle = 0,
     this.nudge = Offset.zero,
   });
 
@@ -217,7 +216,6 @@ class _MenuTile extends StatelessWidget {
   final IconData icon;
   final String title;
   final VoidCallback onTap;
-  final double angle;
   final Offset nudge;
 
   @override
@@ -234,10 +232,7 @@ class _MenuTile extends StatelessWidget {
           child: Center(
             child: Transform.translate(
               offset: nudge,
-              child: Transform.rotate(
-                angle: angle,
-                child: Icon(icon, size: 22, color: colors.primary),
-              ),
+              child: Icon(icon, size: 22, color: colors.primary),
             ),
           ),
         ),
