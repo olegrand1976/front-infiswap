@@ -7,6 +7,10 @@ class AuthSession {
   final String token;
   final Map<String, dynamic> user;
 
+  AuthSession copyWithUser(Map<String, dynamic> user) {
+    return AuthSession(token: token, user: user);
+  }
+
   String? get displayName {
     final fullName = user['full_name'];
     if (fullName is String && fullName.isNotEmpty) {

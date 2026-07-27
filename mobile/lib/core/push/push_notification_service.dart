@@ -19,6 +19,14 @@ const _androidChannel = AndroidNotificationChannel(
 
 final _localNotifications = FlutterLocalNotificationsPlugin();
 
+// firebase_options.dart only has web/Android/iOS configs (FlutterFire CLI
+// was never run for desktop) — Firebase.initializeApp() throws on
+// linux/macos/windows, so nothing Firebase-related may run there.
+bool get isFirebaseSupportedPlatform =>
+    kIsWeb ||
+    defaultTargetPlatform == TargetPlatform.android ||
+    defaultTargetPlatform == TargetPlatform.iOS;
+
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -28,18 +36,23 @@ class PushNotificationService {
   PushNotificationService(this._ref);
 
   final Ref _ref;
-  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
   bool _initialized = false;
+
+  // Lazy: touching FirebaseMessaging.instance throws if Firebase was never
+  // initialized (desktop platforms skip Firebase.initializeApp entirely), so
+  // this must not run until a platform-gated caller actually needs it.
+  FirebaseMessaging get _messaging => FirebaseMessaging.instance;
 
   // Push (FCM) is only wired for Android/iOS — web push would need a VAPID
   // key and a service worker, out of scope for now.
   String? get platformName {
-    if (kIsWeb) return null;
-    return defaultTargetPlatform == TargetPlatform.iOS ? 'ios' : 'android';
+    if (defaultTargetPlatform == TargetPlatform.android) return 'android';
+    if (defaultTargetPlatform == TargetPlatform.iOS) return 'ios';
+    return null;
   }
 
   Future<void> initialize() async {
-    if (_initialized || kIsWeb) return;
+    if (_initialized || platformName == null) return;
     _initialized = true;
 
     await _localNotifications.initialize(
@@ -69,7 +82,7 @@ class PushNotificationService {
     }
   }
 
-  Future<String?> getToken() => kIsWeb ? Future.value(null) : _messaging.getToken();
+  Future<String?> getToken() => platformName == null ? Future.value(null) : _messaging.getToken();
 
   Stream<String> get onTokenRefresh => _messaging.onTokenRefresh;
 

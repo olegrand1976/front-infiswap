@@ -63,7 +63,6 @@ class DefaultFirebaseOptions {
     projectId: 'infiswap-1c10f',
     storageBucket: 'infiswap-1c10f.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyD8Rk1fS5DyBgiQZSX8c1trTtvNHmAPEvw',
     appId: '1:249150725582:ios:34c2005ca7af19cef49f9f',

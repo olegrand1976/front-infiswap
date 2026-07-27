@@ -84,6 +84,16 @@ class ProfileScreen extends ConsumerWidget {
                   const SizedBox(height: 16),
                   _MenuCard(
                     colors: colors,
+                    child: _MenuTile(
+                      colors: colors,
+                      icon: Icons.settings_outlined,
+                      title: 'Paramètres',
+                      onTap: () => context.push('/settings'),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  _MenuCard(
+                    colors: colors,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
                       vertical: 4,
