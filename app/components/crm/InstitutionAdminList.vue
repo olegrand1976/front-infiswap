@@ -568,6 +568,7 @@ import { formatRelativeDate, formatToDMY } from '@/composables/useDate';
 import { useCrm } from '@/composables/useCrm';
 import { institutionStatusBadgeClassFromCode, institutionStatusLabelFromCode } from '@/composables/useInstitutionStatusDisplay';
 import { useComment } from '~/composables/useComment';
+import { needsInstitutionCrmEnsure } from '~/utils/institutionCrmContact';
 
 const props = defineProps<{
     institutions: Pagination<CrmInstitution>;
@@ -908,12 +909,12 @@ function patchInstitutionContactFromEnsure(
 }
 
 async function resolveInstitutionCrmContact(institution: CrmInstitution): Promise<CrmInstitution | null> {
-    if (institution.representative_user_id) {
+    if (!needsInstitutionCrmEnsure(institution)) {
         return institution;
     }
 
     const email = institution.email?.trim();
-    if (!email) {
+    if (!email && !institution.representative_user_id) {
         $toast({
             description: 'Renseignez l\'e-mail de l\'institution pour créer le contact CRM.',
             variant: 'destructive',
@@ -1019,8 +1020,10 @@ async function incrementCommercialAction(institution: CrmInstitution, actionType
             variant: 'success',
         });
     }
-    catch {
-        $toast({ description: 'Erreur lors de l\'enregistrement', variant: 'destructive' });
+    catch (error: unknown) {
+        const message = (error as { data?: { message?: string } })?.data?.message
+            ?? 'Erreur lors de l\'enregistrement';
+        $toast({ description: message, variant: 'destructive' });
     }
     finally {
         commercialResolvingId.value = null;

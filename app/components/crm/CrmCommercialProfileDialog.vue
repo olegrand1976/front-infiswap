@@ -217,6 +217,7 @@ import { formatToDMY } from '@/composables/useDate';
 import type { CrmHistoryEntry } from '@/composables/useCrm';
 import type { CrmInstitution, User } from '~/lib/types';
 import { formatPhoneNumber } from '~/lib/utils';
+import { needsInstitutionCrmEnsure } from '~/utils/institutionCrmContact';
 import CrmHistoryEntryList from '@/components/crm/CrmHistoryEntryList.vue';
 import CommercialQuickActionDialog from '@/components/crm/CommercialQuickActionDialog.vue';
 import InstitutionAiInsightPanel from '@/components/crm/InstitutionAiInsightPanel.vue';
@@ -378,12 +379,12 @@ const lastCommentText = computed(() => {
 });
 
 async function resolveInstitutionContact(institution: CrmInstitution): Promise<CrmInstitution | null> {
-    if (institution.representative_user_id && institution.crm?.id) {
+    if (!needsInstitutionCrmEnsure(institution)) {
         return institution;
     }
 
     const email = institution.email?.trim();
-    if (!email) {
+    if (!email && !institution.representative_user_id) {
         $toast({
             description: 'Renseignez l\'e-mail de l\'institution pour créer le contact CRM.',
             variant: 'destructive',
@@ -393,13 +394,24 @@ async function resolveInstitutionContact(institution: CrmInstitution): Promise<C
 
     try {
         const response = await ensureCrmInstitutionContact(institution.id);
+        const crmId = response.crm?.id ?? institution.crm?.id ?? null;
+        const representativeUserId = response.representative_user_id ?? institution.representative_user_id ?? null;
+
+        if (!crmId || !representativeUserId) {
+            $toast({
+                description: 'Impossible de créer le contact CRM.',
+                variant: 'destructive',
+            });
+            return null;
+        }
+
         return {
             ...institution,
-            representative_user_id: response.representative_user_id ?? institution.representative_user_id,
+            representative_user_id: representativeUserId,
             crm: {
                 ...(institution.crm ?? {} as NonNullable<CrmInstitution['crm']>),
-                id: response.crm?.id ?? institution.crm?.id ?? 0,
-                user_id: response.representative_user_id ?? institution.representative_user_id ?? 0,
+                id: crmId,
+                user_id: representativeUserId,
                 client_type: response.crm?.client_type ?? institution.crm?.client_type ?? 'user',
                 nb_call: response.crm?.nb_call ?? institution.crm?.nb_call,
                 nb_sale: response.crm?.nb_sale ?? institution.crm?.nb_sale,
@@ -434,7 +446,7 @@ async function ensureActiveInstitutionContact(): Promise<boolean> {
     if (!activeInstitution.value) {
         return false;
     }
-    if (activeInstitution.value.representative_user_id && activeInstitution.value.crm?.id) {
+    if (!needsInstitutionCrmEnsure(activeInstitution.value)) {
         return true;
     }
 
@@ -445,7 +457,7 @@ async function ensureActiveInstitutionContact(): Promise<boolean> {
             return false;
         }
         applyResolvedInstitution(resolved);
-        return true;
+        return !needsInstitutionCrmEnsure(resolved);
     }
     finally {
         ensuringContact.value = false;
