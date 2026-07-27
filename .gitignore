@@ -17,6 +17,16 @@ launch-docker.sh
 .qodo
 android
 ios
+linux
+windows
+macos
+build
+.dart_tool
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache
+.pub
+*.iml
 /test-results/
 /playwright-report/
 /blob-report/
