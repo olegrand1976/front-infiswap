@@ -13,13 +13,18 @@ import '../../features/shell/presentation/main_shell.dart';
 import '../../features/splash/presentation/splash_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
-  final authSession = ref.watch(authSessionProvider);
-  final bootstrap = ref.watch(authBootstrapProvider);
-
+  // Must not `ref.watch` auth state here: watching would rebuild this
+  // Provider (and thus create a brand-new GoRouter, resetting to
+  // initialLocation) on every session change — e.g. every settings save —
+  // wiping out whatever route was pushed (like /settings) and bouncing to
+  // /home. _RouterRefresh below is what lets `redirect` react to auth
+  // changes without recreating the router; it reads fresh state via `read`.
   return GoRouter(
     initialLocation: '/splash',
     refreshListenable: _RouterRefresh(ref),
     redirect: (context, state) {
+      final bootstrap = ref.read(authBootstrapProvider);
+      final authSession = ref.read(authSessionProvider);
       final isBootstrapping = bootstrap.isLoading;
       final isAuthenticated = authSession != null;
       final location = state.matchedLocation;

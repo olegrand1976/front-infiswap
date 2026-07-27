@@ -12,11 +12,39 @@ import '../models/settings_models.dart';
 import 'widgets/avatar_section.dart';
 import 'widgets/change_password_sheet.dart';
 import 'widgets/delete_account_section.dart';
-import 'widgets/edit_address_sheet.dart';
-import 'widgets/edit_personal_info_sheet.dart';
+import 'widgets/edit_text_field_sheet.dart';
 import 'widgets/notification_preferences_card.dart';
+import 'widgets/select_option_sheet.dart';
+import 'widgets/settings_sheet_scaffold.dart';
 import 'widgets/two_factor_section.dart';
 import 'widgets/zone_preferences_card.dart';
+
+const _genderOptions = <(String, String)>[
+  ('M', 'Homme'),
+  ('F', 'Femme'),
+  ('X', 'X'),
+];
+const _genderLabels = {'M': 'Homme', 'F': 'Femme', 'X': 'X'};
+
+const _professionalCategoryOptions = <(String, String)>[
+  ('salaried', 'Salarié(e)'),
+  ('independent', 'Indépendant(e)'),
+];
+const _professionalCategoryLabels = {
+  'salaried': 'Salarié(e)',
+  'independent': 'Indépendant(e)',
+};
+
+const _countryOptions = <(String, String)>[
+  ('be', 'Belgique'),
+  ('fr', 'France'),
+];
+const _countryLabels = {'be': 'Belgique', 'fr': 'France'};
+
+const _workingAtOptions = <(String, String)>[
+  ('Belgique', 'Belgique'),
+  ('France', 'France'),
+];
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -95,27 +123,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   else
                     const SizedBox(width: 8),
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Paramètres',
-                          style: TextStyle(
-                            color: colors.textPrimary,
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Container(
-                          width: 48,
-                          height: 3,
-                          decoration: BoxDecoration(
-                            color: colors.primary,
-                            borderRadius: BorderRadius.circular(2),
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      'Paramètres',
+                      style: TextStyle(
+                        color: colors.textPrimary,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
@@ -166,7 +180,6 @@ class _SettingsBody extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors = context.appColors;
     final personalInfo = PersonalInfoData.fromUser(user);
     final address = AddressData.fromUser(user);
     final notificationPrefs = NotificationPreferences.fromJson(
@@ -181,116 +194,360 @@ class _SettingsBody extends ConsumerWidget {
         : (avatarPath.startsWith('http') ? avatarPath : '$apiBaseUrl/storage/$avatarPath');
     final displayName = _displayNameFor(user);
 
+    Future<void> saveInformation() =>
+        repository.updateInformation(userId: userId, data: personalInfo).then((_) => onUserChanged());
+    Future<void> saveAddress() =>
+        repository.updateAddress(userId: userId, data: address).then((_) => onUserChanged());
+
     return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
       children: [
-        _SectionCard(
-          colors: colors,
-          child: AvatarSection(
-            repository: repository,
-            userId: userId,
-            initialImageUrl: avatarUrl,
-            displayName: displayName,
-            onAvatarChanged: onUserChanged,
-          ),
-        ),
-        const SizedBox(height: 16),
-        _SectionCard(
-          colors: colors,
-          title: 'Informations personnelles',
-          icon: Icons.badge_outlined,
-          onEdit: () async {
-            final saved = await showEditPersonalInfoSheet(
-              context: context,
-              repository: repository,
-              userId: userId,
-              initial: personalInfo,
-              isInstitution: isInstitution,
-            );
-            if (saved == true) await onUserChanged();
-          },
-          child: _InfoRows(rows: [
-            if (isInstitution && personalInfo.institutionName != null)
-              ("Nom de l'institution", personalInfo.institutionName!),
-            ('Nom', personalInfo.lastname),
-            ('Prénom', personalInfo.firstname),
-            ('Email', personalInfo.email),
-            if (personalInfo.phoneNumber != null) ('Téléphone', personalInfo.phoneNumber!),
-          ]),
-        ),
-        const SizedBox(height: 16),
-        _SectionCard(
-          colors: colors,
-          title: 'Adresse',
-          icon: Icons.map_outlined,
-          onEdit: () async {
-            final saved = await showEditAddressSheet(
-              context: context,
-              repository: repository,
-              userId: userId,
-              initial: address,
-            );
-            if (saved == true) await onUserChanged();
-          },
-          child: _InfoRows(rows: [
-            ('Rue', address.streetAddress.isEmpty ? '-' : address.streetAddress),
-            ('Ville', address.city.isEmpty ? '-' : address.city),
-            ('Code postal', address.zipCode.isEmpty ? '-' : address.zipCode),
-          ]),
-        ),
-        const SizedBox(height: 16),
-        _SectionCard(
-          colors: colors,
-          title: 'Sécurité',
-          icon: Icons.shield_outlined,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _ActionRow(
-                label: 'Mot de passe',
-                onTap: () => showChangePasswordSheet(
-                  context: context,
-                  repository: repository,
-                  userId: userId,
-                ),
-              ),
-              const Divider(height: 24),
-              TwoFactorSection(
-                repository: repository,
-                initialEnabled: user['two_factor_enabled'] == true,
-                email: personalInfo.email,
-              ),
-            ],
-          ),
-        ),
-        if (!isInstitution) ...[
-          const SizedBox(height: 16),
-          _SectionCard(
-            colors: colors,
-            title: 'Préférences de zone',
-            icon: Icons.travel_explore_outlined,
-            child: ZonePreferencesCard(repository: repository, initial: zonePrefs),
-          ),
-          const SizedBox(height: 16),
-          _SectionCard(
-            colors: colors,
-            title: 'Notifications',
-            icon: Icons.notifications_outlined,
-            child: NotificationPreferencesCard(repository: repository, initial: notificationPrefs),
-          ),
-        ],
-        const SizedBox(height: 24),
-        DeleteAccountSection(
+        AvatarSection(
           repository: repository,
           userId: userId,
-          onDeleted: () async {
-            await ref.read(authRepositoryProvider).logout();
-          },
+          initialImageUrl: avatarUrl,
+          displayName: displayName,
+          subtitle: personalInfo.email,
+          onAvatarChanged: onUserChanged,
         ),
+        const SizedBox(height: 28),
+        const _SectionLabel('Compte'),
+        _SettingsGroup(children: [
+          if (isInstitution && personalInfo.institutionName != null)
+            _SettingsRow(label: "Nom de l'institution", value: personalInfo.institutionName!),
+          _SettingsRow(
+            label: 'Nom',
+            value: personalInfo.lastname,
+            onTap: () => _editTextRow(
+              context: context,
+              title: 'Nom',
+              initialValue: personalInfo.lastname,
+              onSave: (value) async {
+                personalInfo.lastname = value;
+                await saveInformation();
+              },
+            ),
+          ),
+          _SettingsRow(
+            label: 'Prénom',
+            value: personalInfo.firstname,
+            onTap: () => _editTextRow(
+              context: context,
+              title: 'Prénom',
+              initialValue: personalInfo.firstname,
+              onSave: (value) async {
+                personalInfo.firstname = value;
+                await saveInformation();
+              },
+            ),
+          ),
+          _SettingsRow(
+            label: 'Date de naissance',
+            value: personalInfo.dateOfBirth != null ? _formatDate(personalInfo.dateOfBirth!) : '-',
+            onTap: () async {
+              final now = DateTime.now();
+              final picked = await showDatePicker(
+                context: context,
+                initialDate: personalInfo.dateOfBirth ?? DateTime(now.year - 30),
+                firstDate: DateTime(1900),
+                lastDate: now,
+              );
+              if (picked == null || !context.mounted) return;
+              await _runSave(context, () async {
+                personalInfo.dateOfBirth = picked;
+                await saveInformation();
+              });
+            },
+          ),
+          _SettingsRow(
+            label: 'Email',
+            value: personalInfo.email,
+            onTap: () => _editTextRow(
+              context: context,
+              title: 'Email',
+              initialValue: personalInfo.email,
+              keyboardType: TextInputType.emailAddress,
+              validator: (v) {
+                if (v == null || v.trim().isEmpty) return 'Champ requis';
+                if (!v.contains('@')) return 'Email invalide';
+                return null;
+              },
+              onSave: (value) async {
+                personalInfo.email = value;
+                await saveInformation();
+              },
+            ),
+          ),
+          _SettingsRow(
+            label: "N° d'identification",
+            value: personalInfo.identifierNumber ?? '-',
+            onTap: () => _editTextRow(
+              context: context,
+              title: "Numéro d'identification",
+              initialValue: personalInfo.identifierNumber ?? '',
+              required: false,
+              onSave: (value) async {
+                personalInfo.identifierNumber = value.isEmpty ? null : value;
+                await saveInformation();
+              },
+            ),
+          ),
+          _SettingsRow(
+            label: 'Téléphone',
+            value: personalInfo.phoneNumber ?? '-',
+            onTap: () => _editTextRow(
+              context: context,
+              title: 'Téléphone',
+              initialValue: personalInfo.phoneNumber ?? '',
+              keyboardType: TextInputType.phone,
+              required: false,
+              onSave: (value) async {
+                personalInfo.phoneNumber = value.isEmpty ? null : value;
+                await saveInformation();
+              },
+            ),
+          ),
+          _SettingsRow(
+            label: 'Sexe',
+            value: _genderLabels[personalInfo.gender] ?? '-',
+            onTap: () => _editSelectRow<String>(
+              context: context,
+              title: 'Sexe',
+              options: _genderOptions,
+              initial: personalInfo.gender,
+              onSave: (value) async {
+                personalInfo.gender = value;
+                await saveInformation();
+              },
+            ),
+          ),
+          if (!isInstitution)
+            _SettingsRow(
+              label: 'Catégorie pro.',
+              value: _professionalCategoryLabels[personalInfo.professionalCategory] ?? '-',
+              onTap: () => _editSelectRow<String>(
+                context: context,
+                title: 'Catégorie professionnelle',
+                options: _professionalCategoryOptions,
+                initial: personalInfo.professionalCategory,
+                onSave: (value) async {
+                  personalInfo.professionalCategory = value;
+                  await saveInformation();
+                },
+              ),
+            ),
+        ]),
+        const SizedBox(height: 24),
+        const _SectionLabel('Adresse'),
+        _SettingsGroup(children: [
+          _SettingsRow(
+            label: 'Rue',
+            value: address.streetAddress.isEmpty ? '-' : address.streetAddress,
+            onTap: () => _editTextRow(
+              context: context,
+              title: 'Rue',
+              initialValue: address.streetAddress,
+              onSave: (value) async {
+                address.streetAddress = value;
+                await saveAddress();
+              },
+            ),
+          ),
+          _SettingsRow(
+            label: 'Ville',
+            value: address.city.isEmpty ? '-' : address.city,
+            onTap: () => _editTextRow(
+              context: context,
+              title: 'Ville',
+              initialValue: address.city,
+              onSave: (value) async {
+                address.city = value;
+                await saveAddress();
+              },
+            ),
+          ),
+          _SettingsRow(
+            label: 'Pays',
+            value: _countryLabels[address.country] ?? '-',
+            onTap: () => _editSelectRow<String>(
+              context: context,
+              title: 'Pays',
+              options: _countryOptions,
+              initial: address.country,
+              onSave: (value) async {
+                address.country = value;
+                await saveAddress();
+              },
+            ),
+          ),
+          _SettingsRow(
+            label: 'Pays de travail',
+            value: address.workingAt ?? '-',
+            onTap: () => _editSelectRow<String>(
+              context: context,
+              title: 'Pays de travail',
+              options: _workingAtOptions,
+              initial: address.workingAt,
+              onSave: (value) async {
+                address.workingAt = value;
+                await saveAddress();
+              },
+            ),
+          ),
+          _SettingsRow(
+            label: 'Code postal',
+            value: address.zipCode.isEmpty ? '-' : address.zipCode,
+            onTap: () => _editTextRow(
+              context: context,
+              title: 'Code postal',
+              initialValue: address.zipCode,
+              onSave: (value) async {
+                address.zipCode = value;
+                await saveAddress();
+              },
+            ),
+          ),
+          _SettingsRow(
+            label: 'Complément',
+            value: address.additionalInfo ?? '-',
+            onTap: () => _editTextRow(
+              context: context,
+              title: 'Complément',
+              initialValue: address.additionalInfo ?? '',
+              required: false,
+              onSave: (value) async {
+                address.additionalInfo = value.isEmpty ? null : value;
+                await saveAddress();
+              },
+            ),
+          ),
+        ]),
+        const SizedBox(height: 24),
+        const _SectionLabel('Sécurité'),
+        _SettingsGroup(children: [
+          _SettingsRow(
+            label: 'Mot de passe',
+            onTap: () => showChangePasswordSheet(
+              context: context,
+              repository: repository,
+              userId: userId,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: TwoFactorSection(
+              repository: repository,
+              initialEnabled: user['two_factor_enabled'] == true,
+              email: personalInfo.email,
+            ),
+          ),
+        ]),
+        if (!isInstitution) ...[
+          const SizedBox(height: 24),
+          const _SectionLabel('Préférences de zone'),
+          _SettingsGroup(children: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: ZonePreferencesCard(repository: repository, initial: zonePrefs),
+            ),
+          ]),
+          const SizedBox(height: 24),
+          const _SectionLabel('Notifications'),
+          _SettingsGroup(children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: NotificationPreferencesCard(repository: repository, initial: notificationPrefs),
+            ),
+          ]),
+        ],
+        const SizedBox(height: 24),
+        const _SectionLabel('Compte'),
+        _SettingsGroup(children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: DeleteAccountSection(
+              repository: repository,
+              userId: userId,
+              onDeleted: () async {
+                await ref.read(authRepositoryProvider).logout();
+              },
+            ),
+          ),
+        ]),
       ],
     );
   }
 }
+
+Future<void> _editTextRow({
+  required BuildContext context,
+  required String title,
+  required String initialValue,
+  TextInputType? keyboardType,
+  bool required = true,
+  String? Function(String?)? validator,
+  required Future<void> Function(String value) onSave,
+}) async {
+  final value = await showEditTextFieldSheet(
+    context: context,
+    title: title,
+    initialValue: initialValue,
+    keyboardType: keyboardType,
+    required: required,
+    validator: validator,
+  );
+  if (value == null || !context.mounted) return;
+  await _runSave(context, () => onSave(value));
+}
+
+Future<void> _editSelectRow<T>({
+  required BuildContext context,
+  required String title,
+  required List<(T, String)> options,
+  required T? initial,
+  required Future<void> Function(T value) onSave,
+}) async {
+  final value = await showSelectOptionSheet<T>(
+    context: context,
+    title: title,
+    options: options,
+    initial: initial,
+  );
+  if (value == null || !context.mounted) return;
+  await _runSave(context, () => onSave(value));
+}
+
+Future<void> _runSave(BuildContext context, Future<void> Function() action) async {
+  // barrierDismissible alone doesn't block the Android back gesture — without
+  // PopScope, a back-press while `action` is in flight closes this dialog
+  // early, and the pop below then removes the settings screen itself instead.
+  var dialogIsOpen = true;
+  showDialog<void>(
+    context: context,
+    barrierDismissible: false,
+    builder: (_) => const PopScope(
+      canPop: false,
+      child: Center(child: CircularProgressIndicator()),
+    ),
+  ).then((_) => dialogIsOpen = false);
+
+  ApiException? error;
+  try {
+    await action();
+  } on ApiException catch (e) {
+    error = e;
+  }
+
+  if (dialogIsOpen && context.mounted) {
+    Navigator.of(context).pop();
+  }
+  if (error != null && context.mounted) {
+    showSettingsErrorSnackBar(context, error.message);
+  }
+}
+
+String _formatDate(DateTime date) =>
+    '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
 
 String _displayNameFor(Map<String, dynamic> user) {
   final fullName = user['full_name'];
@@ -300,26 +557,41 @@ String _displayNameFor(Map<String, dynamic> user) {
   return 'Utilisateur';
 }
 
-class _SectionCard extends StatelessWidget {
-  const _SectionCard({
-    required this.colors,
-    required this.child,
-    this.title,
-    this.icon,
-    this.onEdit,
-  });
+class _SectionLabel extends StatelessWidget {
+  const _SectionLabel(this.label);
 
-  final AppPalette colors;
-  final Widget child;
-  final String? title;
-  final IconData? icon;
-  final VoidCallback? onEdit;
+  final String label;
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 4, bottom: 8),
+      child: Text(
+        label.toUpperCase(),
+        style: TextStyle(
+          color: colors.textSecondary,
+          fontSize: 12,
+          fontWeight: FontWeight.w700,
+          letterSpacing: .4,
+        ),
+      ),
+    );
+  }
+}
+
+class _SettingsGroup extends StatelessWidget {
+  const _SettingsGroup({required this.children});
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: colors.card,
         borderRadius: BorderRadius.circular(16),
@@ -329,83 +601,24 @@ class _SectionCard extends StatelessWidget {
         ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          if (title != null) ...[
-            Row(
-              children: [
-                if (icon != null) ...[
-                  Icon(icon, size: 20, color: colors.textSecondary),
-                  const SizedBox(width: 10),
-                ],
-                Expanded(
-                  child: Text(
-                    title!,
-                    style: TextStyle(
-                      color: colors.textPrimary,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                if (onEdit != null)
-                  IconButton(
-                    visualDensity: VisualDensity.compact,
-                    onPressed: onEdit,
-                    icon: Icon(Icons.edit_outlined, size: 18, color: colors.primary),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 12),
+          for (var i = 0; i < children.length; i++) ...[
+            if (i > 0) Divider(height: 1, indent: 16, color: colors.divider),
+            children[i],
           ],
-          child,
         ],
       ),
     );
   }
 }
 
-class _InfoRows extends StatelessWidget {
-  const _InfoRows({required this.rows});
-
-  final List<(String, String)> rows;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        for (final (label, value) in rows)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 110,
-                  child: Text(label, style: TextStyle(color: colors.textSecondary, fontSize: 13)),
-                ),
-                Expanded(
-                  child: Text(
-                    value,
-                    style: TextStyle(color: colors.textPrimary, fontSize: 14),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-          ),
-      ],
-    );
-  }
-}
-
-class _ActionRow extends StatelessWidget {
-  const _ActionRow({required this.label, required this.onTap});
+class _SettingsRow extends StatelessWidget {
+  const _SettingsRow({required this.label, this.value, this.onTap});
 
   final String label;
-  final VoidCallback onTap;
+  final String? value;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -413,15 +626,25 @@ class _ActionRow extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Row(
           children: [
-            Expanded(
-              child: Text(label, style: TextStyle(color: colors.textPrimary, fontSize: 14)),
-            ),
-            Icon(Icons.chevron_right, color: colors.textSecondary),
+            Text(label, style: TextStyle(color: colors.textPrimary, fontSize: 14)),
+            const Spacer(),
+            if (value != null)
+              Flexible(
+                child: Text(
+                  value!,
+                  textAlign: TextAlign.right,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: colors.textSecondary, fontSize: 14),
+                ),
+              ),
+            if (onTap != null) ...[
+              const SizedBox(width: 6),
+              Icon(Icons.chevron_right, size: 20, color: colors.textSecondary),
+            ],
           ],
         ),
       ),
