@@ -44,6 +44,19 @@ class ReplacementsRepository {
     });
   }
 
+  Future<ReplacementItem> fetchById(int id) async {
+    final response = await _api.get<Map<String, dynamic>>('/replacements/$id');
+    final data = response.data?['replacement'];
+    if (data is! Map) {
+      throw ApiException(message: 'Remplacement introuvable.');
+    }
+
+    return ReplacementMapper.fromMergedJson(
+      data.map((key, value) => MapEntry(key.toString(), value)),
+      storageBaseUrl: _config.apiBaseUrl,
+    );
+  }
+
   Future<List<ReplacementCandidate>> fetchCandidates(int replacementId) async {
     final response = await _api.get<Map<String, dynamic>>(
       '/replacement-responses/$replacementId',

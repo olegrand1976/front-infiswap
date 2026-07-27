@@ -3,8 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/api/api_exception.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../replacements/data/replacements_repository.dart';
+import '../../replacements/models/replacement_item.dart';
+import '../../replacements/presentation/replacement_detail_screen.dart';
 import '../data/notifications_list_notifier.dart';
+import '../models/notification_item.dart';
 import 'widgets/notification_card.dart';
+
+// Owner-side replacement notifications (someone applied to / canceled on
+// *their* post) vs candidate-side ones (their own application changed
+// status) — mirrors who each NotificationService listener actually notifies.
+const _ownerNotificationTypes = {'replacement.response', 'replacement.canceled'};
 
 class NotificationsScreen extends ConsumerStatefulWidget {
   const NotificationsScreen({super.key});
@@ -150,6 +159,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                             if (!item.isRead) {
                               notifier.markAsRead(item.id);
                             }
+                            _openReplacementIfAny(context, ref, item);
                           },
                         );
                       },
@@ -160,6 +170,59 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+Future<void> _openReplacementIfAny(
+  BuildContext context,
+  WidgetRef ref,
+  NotificationItem item,
+) async {
+  if (!item.type.startsWith('replacement.')) return;
+
+  final rawId = item.data['replacement_id'];
+  final replacementId = rawId is int ? rawId : int.tryParse(rawId?.toString() ?? '');
+  if (replacementId == null) return;
+
+  var dialogIsOpen = true;
+  showDialog<void>(
+    context: context,
+    barrierDismissible: false,
+    builder: (_) => const PopScope(
+      canPop: false,
+      child: Center(child: CircularProgressIndicator()),
+    ),
+  ).then((_) => dialogIsOpen = false);
+
+  ReplacementItem? replacement;
+  ApiException? error;
+  try {
+    replacement = await ref.read(replacementsRepositoryProvider).fetchById(replacementId);
+  } on ApiException catch (e) {
+    error = e;
+  }
+
+  if (dialogIsOpen && context.mounted) {
+    Navigator.of(context).pop();
+  }
+  if (!context.mounted) return;
+
+  if (replacement != null) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => ReplacementDetailScreen(
+          item: replacement!,
+          isOwner: _ownerNotificationTypes.contains(item.type),
+        ),
+      ),
+    );
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(error?.message ?? 'Ce remplacement est introuvable.'),
+        backgroundColor: AppColors.coral,
       ),
     );
   }
