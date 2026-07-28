@@ -1,6 +1,5 @@
 import {
     COOKIE_CONSENT_STORAGE_KEY,
-    DEFAULT_COOKIE_CONSENT,
     parseCookieConsent,
     type CookieConsentPreferences,
 } from '@/utils/cookieConsent';
@@ -12,9 +11,6 @@ import {
     resolveMetaPixelEnsureAction,
     type MetaPixelHost,
 } from '@/utils/metaPixelLifecycle';
-
-export type { CookieConsentPreferences };
-export { COOKIE_CONSENT_STORAGE_KEY, DEFAULT_COOKIE_CONSENT, parseCookieConsent };
 
 type MetaWindow = Window & MetaPixelHost;
 
