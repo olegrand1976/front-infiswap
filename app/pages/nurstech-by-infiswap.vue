@@ -7,6 +7,7 @@
         <NurstechProcess id="process" />
         <NurstechSpecialOffer id="special-offer" />
         <NurstechInformationForm id="information-form" />
+        <SharedPartnerInfiswapNetworkPromo />
         <NurstechCommunity id="community" />
         <!-- <NurstechPartners id="partners" /> -->
     </div>

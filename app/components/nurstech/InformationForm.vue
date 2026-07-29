@@ -72,7 +72,7 @@
                                 :in-progress="inProgress"
                                 class="bg-primary text-white px-6 py-3 rounded font-semibold text-sm w-full"
                             >
-                                CRÉER MA PAGE MAINTENANT
+                                Demander mon devis gratuit
                             </Button>
                         </div>
                     </form>

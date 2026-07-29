@@ -30,7 +30,8 @@ type ProductEventName =
     | 'nursassur_form_start'
     | 'nursassur_form_submit'
     | 'partner_banner_impression'
-    | 'partner_banner_click';
+    | 'partner_banner_click'
+    | 'infiswap_replacements_cta_click';
 
 export function useProductAnalytics() {
     const { gtag } = useGtag();

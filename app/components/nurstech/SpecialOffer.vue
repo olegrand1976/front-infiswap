@@ -93,6 +93,15 @@
                     </p>
                 </div>
             </div>
+
+            <div class="flex justify-center pt-2">
+                <a
+                    href="#information-form"
+                    class="inline-flex items-center justify-center rounded-md bg-white px-5 py-2.5 text-sm font-semibold text-primary shadow-sm hover:bg-white/90 transition"
+                >
+                    Devis gratuit — dès 450 €
+                </a>
+            </div>
         </div>
     </div>
 </template>

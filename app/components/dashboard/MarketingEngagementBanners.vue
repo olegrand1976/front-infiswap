@@ -48,6 +48,17 @@ const showPartnerBanner = computed(() => {
 const partnerCtaPath = computed(() => activeCampaign.value?.cta_path ?? '/nurstech-by-infiswap');
 const partnerIsNursAssur = computed(() => activeCampaign.value?.featured === 'nursassur');
 
+const localePath = useLocalePath();
+const partnerCtaTo = computed(() => {
+    const raw = partnerCtaPath.value;
+    const hashIndex = raw.indexOf('#');
+    if (hashIndex === -1) {
+        return localePath(raw);
+    }
+
+    return `${localePath(raw.slice(0, hashIndex))}#${raw.slice(hashIndex + 1)}`;
+});
+
 async function loadPendingResponseCount() {
     if (!user.value?.id) {
         pendingResponseCount.value = 0;
@@ -87,7 +98,8 @@ watch(showPartnerBanner, (visible) => {
 });
 
 function onPartnerBannerClick() {
-    trackPartnerBannerClick();
+    const cta = partnerIsNursAssur.value ? 'see_offer' : 'request_callback';
+    trackPartnerBannerClick(cta);
     if (activeCampaign.value?.featured) {
         registerPartnerClickFromProduct(
             activeCampaign.value.featured,
@@ -138,12 +150,12 @@ function onPartnerBannerClick() {
                 </p>
             </div>
             <NuxtLink
-                :to="partnerCtaPath"
+                :to="partnerCtaTo"
                 class="inline-flex shrink-0 items-center gap-1 rounded-md px-3 py-1.5 text-sm font-semibold text-white"
                 :class="partnerIsNursAssur ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-blue-600 hover:bg-blue-700'"
                 @click="onPartnerBannerClick"
             >
-                En savoir plus
+                {{ partnerIsNursAssur ? $t('partnerPromo.bannerCtaNursassur') : $t('partnerPromo.bannerCtaNurstech') }}
                 <ArrowRight class="size-4" />
             </NuxtLink>
         </div>

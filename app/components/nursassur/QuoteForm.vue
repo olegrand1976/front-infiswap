@@ -64,7 +64,7 @@
                     type="submit"
                     :in-progress="inProgress"
                 >
-                    CRÉER MON DEVIS NURSASSUR
+                    Obtenir mon devis gratuit
                 </Button>
             </form>
 

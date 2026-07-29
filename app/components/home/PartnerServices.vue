@@ -10,7 +10,7 @@
                     {{ $t('home.partners.nurstechDesc') }}
                 </p>
                 <NuxtLink
-                    :to="localePath('/nurstech-by-infiswap')"
+                    :to="`${localePath('/nurstech-by-infiswap')}#information-form`"
                     class="mx-auto px-4 py-2 border border-primarytech text-primarytech rounded-md text-sm font-medium hover:bg-primarytech hover:text-white transition"
                     @click="onDiscover('nurstech')"
                 >
@@ -23,7 +23,7 @@
                     {{ $t('home.partners.nursassurDesc') }}
                 </p>
                 <NuxtLink
-                    :to="localePath('/nursassur-by-infiswap')"
+                    :to="`${localePath('/nursassur-by-infiswap')}#quote`"
                     class="mx-auto px-4 py-2 border border-primaryassur text-primaryassur rounded-md text-sm font-medium hover:bg-primaryassur hover:text-white transition"
                     @click="onDiscover('nursassur')"
                 >
@@ -46,7 +46,8 @@ onMounted(() => {
 });
 
 function onDiscover(product: PartnerProduct) {
-    trackPartnerCtaClick(product, 'home_partners', 'discover', 'home');
+    const cta = product === 'nursassur' ? 'see_offer' : 'request_callback';
+    trackPartnerCtaClick(product, 'home_partners', cta, 'home');
     registerPartnerClickFromProduct(product, 'home', 'home_partners');
 }
 </script>
