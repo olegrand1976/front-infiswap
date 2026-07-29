@@ -189,10 +189,10 @@
                     </p>
                     <div class="flex justify-center lg:justify-start">
                         <Button
-                            :href="localePath('/nurstech-by-infiswap')"
+                            :href="`${localePath('/nurstech-by-infiswap')}#information-form`"
                             @click="onServicesLearnMore('nurstech')"
                         >
-                            {{ $t('services.learnMore') }}
+                            {{ $t('services.ctaNurstech') }}
                         </Button>
                     </div>
                 </div>
@@ -215,10 +215,10 @@
                     </p>
                     <div class="flex justify-center lg:justify-start">
                         <Button
-                            :href="localePath('/nursassur-by-infiswap')"
+                            :href="`${localePath('/nursassur-by-infiswap')}#quote`"
                             @click="onServicesLearnMore('nursassur')"
                         >
-                            {{ $t('services.learnMore') }}
+                            {{ $t('services.ctaNursassur') }}
                         </Button>
                     </div>
                 </div>
@@ -508,7 +508,8 @@ onMounted(() => {
 });
 
 function onServicesLearnMore(product: PartnerProduct) {
-    trackPartnerCtaClick(product, 'services_section', 'learn_more', 'services');
+    const cta = product === 'nursassur' ? 'see_offer' : 'request_callback';
+    trackPartnerCtaClick(product, 'services_section', cta, 'services');
     registerPartnerClickFromProduct(product, 'services', 'services_section');
 }
 </script>

@@ -184,8 +184,8 @@
       "title": "Services partenaires",
       "nurstechDesc": "Créez votre page web pro — formules dès 450 €.",
       "nursassurDesc": "RC pro et prévoyance — devis sous 48h.",
-      "discoverNurstech": "Découvrir NursTech",
-      "discoverNursassur": "Découvrir NursAssur"
+      "discoverNurstech": "Demander ma page pro",
+      "discoverNursassur": "Voir l’offre NursAssur"
     },
     "institution": {
       "titleMobile": "InfiSwap, au service\ndes institutions et des\nmaisons de repos",
@@ -553,6 +553,21 @@
     "loading": "Chargement...",
     "notifSettings": "Paramètres de notifications"
   },
+  "partnerPromo": {
+    "bannerCtaNursassur": "Voir mon offre RC pro",
+    "bannerCtaNurstech": "Demander mon devis page web",
+    "ctaNurstechDevis": "Demander mon devis page web",
+    "ctaNurstechCallback": "Être rappelé sous 24h",
+    "ctaNursassurOffer": "Voir mon offre RC pro",
+    "ctaNursassurAdvisor": "Parler à un conseiller",
+    "networkTitle": "Sur InfiSwap, trouvez ou publiez un remplacement en quelques clics",
+    "networkProof": "Le plus gros réseau d’infirmiers indépendants du pays — rapide, local et simple.",
+    "networkLi1": "Missions près de chez vous, chaque jour",
+    "networkLi2": "Réponse en un clic",
+    "networkLi3": "Publication en moins de 2 minutes",
+    "networkSee": "Voir les remplacements",
+    "networkPublish": "Publier un remplacement"
+  },
   "services": {
     "title": "Nos",
     "titleStrong": "services",
@@ -560,6 +575,8 @@
     "metaDescription": "Découvrez les services InfiSwap, la plateforme complète dédiée aux infirmiers indépendants. Recherche de remplacements, notifications en temps réel, gestion de planning, communication sécurisée, NursTech, NursAssur et outils d'organisation.",
     "seoTitle": "Services",
     "learnMore": "En savoir plus",
+    "ctaNurstech": "Demander mon devis page web",
+    "ctaNursassur": "Voir mon offre RC pro",
     "replacementTitle": "Recherche et gestion\nde remplacement",
     "replacementSubtitle": "Accès rapide aux offres",
     "replacementBody": "Recherchez facilement les offres de remplacement disponibles grâce à notre moteur de recherche intelligent.\nFiltrez les annonces par localisation, date, type de soins et autres critères spécifiques à vos besoins.",

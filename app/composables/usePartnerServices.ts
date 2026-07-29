@@ -39,7 +39,7 @@ export function usePartnerServices() {
     function trackPartnerCtaClick(
         product: PartnerProduct,
         placement: string,
-        cta: 'discover' | 'contact' | 'learn_more' | 'banner',
+        cta: 'discover' | 'contact' | 'learn_more' | 'banner' | 'see_offer' | 'request_callback',
         source = 'web',
     ) {
         trackEvent(`${product}_cta_click`, {
@@ -70,7 +70,7 @@ export function usePartnerServices() {
         });
     }
 
-    function trackPartnerBannerClick() {
+    function trackPartnerBannerClick(cta: 'see_offer' | 'request_callback' | 'banner' = 'banner') {
         if (!activeCampaign.value) {
             return;
         }
@@ -78,6 +78,7 @@ export function usePartnerServices() {
         trackEvent('partner_banner_click', {
             product: activeCampaign.value.featured,
             campaign_period: activeCampaign.value.period,
+            cta,
         });
     }
 

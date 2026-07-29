@@ -184,8 +184,8 @@
       "title": "Partnerdiensten",
       "nurstechDesc": "Maak uw professionele webpagina — formules vanaf 450 €.",
       "nursassurDesc": "Beroepsaansprakelijkheid en voorzorg — offerte binnen 48u.",
-      "discoverNurstech": "Ontdek NursTech",
-      "discoverNursassur": "Ontdek NursAssur"
+      "discoverNurstech": "Vraag mijn professionele pagina aan",
+      "discoverNursassur": "Bekijk het NursAssur-aanbod"
     },
     "institution": {
       "titleMobile": "InfiSwap, ten dienste\nvan instellingen en\nwoonzorgcentra",
@@ -553,6 +553,21 @@
     "loading": "Laden...",
     "notifSettings": "Meldingsinstellingen"
   },
+  "partnerPromo": {
+    "bannerCtaNursassur": "Bekijk mijn BA-aanbod",
+    "bannerCtaNurstech": "Vraag mijn webpagina-offerte aan",
+    "ctaNurstechDevis": "Vraag mijn webpagina-offerte aan",
+    "ctaNurstechCallback": "Binnen 24u teruggebeld worden",
+    "ctaNursassurOffer": "Bekijk mijn BA-aanbod",
+    "ctaNursassurAdvisor": "Spreek met een adviseur",
+    "networkTitle": "Op InfiSwap vindt of publiceert u een vervanging in enkele klikken",
+    "networkProof": "Het grootste netwerk van zelfstandige verpleegkundigen van het land — snel, lokaal en eenvoudig.",
+    "networkLi1": "Missies bij u in de buurt, elke dag",
+    "networkLi2": "Antwoorden in één klik",
+    "networkLi3": "Publiceren in minder dan 2 minuten",
+    "networkSee": "Vervangingen bekijken",
+    "networkPublish": "Een vervanging publiceren"
+  },
   "services": {
     "title": "Onze",
     "titleStrong": "diensten",
@@ -560,6 +575,8 @@
     "metaDescription": "Ontdek de InfiSwap-diensten: vervangingen zoeken, realtime meldingen, planning, beveiligde communicatie, NursTech, NursAssur en organisatietools voor zelfstandige verpleegkundigen.",
     "seoTitle": "Diensten",
     "learnMore": "Meer weten",
+    "ctaNurstech": "Vraag mijn webpagina-offerte aan",
+    "ctaNursassur": "Bekijk mijn BA-aanbod",
     "replacementTitle": "Zoeken en beheer\nvan vervangingen",
     "replacementSubtitle": "Snelle toegang tot aanbiedingen",
     "replacementBody": "Zoek eenvoudig beschikbare vervangingsaanbiedingen met onze intelligente zoekmachine.\nFilter aankondigingen op locatie, datum, zorgtype en andere criteria die bij uw behoeften passen.",

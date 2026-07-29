@@ -86,7 +86,7 @@
                         :in-progress="inProgress"
                         class="px-4 py-2 bg-primary text-white text-sm rounded hover:bg-primary/90 hover:shadow transition"
                     >
-                        Nous contacter
+                        Être rappelé sous 24h
                     </Button>
                 </div>
             </form>
@@ -127,7 +127,7 @@
                         :in-progress="inProgressLoggedIn"
                         class="px-4 py-2 bg-primary text-white text-sm rounded hover:bg-primary/90 transition"
                     >
-                        Nous contacter
+                        Être rappelé sous 24h
                     </Button>
                 </div>
             </form>

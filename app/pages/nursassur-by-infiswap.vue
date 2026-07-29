@@ -12,6 +12,7 @@
             id="quote"
             v-model:selected-items="selectedItems"
         />
+        <SharedPartnerInfiswapNetworkPromo />
     </div>
 </template>
 
