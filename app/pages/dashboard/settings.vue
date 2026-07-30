@@ -74,8 +74,6 @@
                     />
                     <div class="flex flex-wrap items-center gap-2">
                         <Button
-                            variant="none"
-                            class="h-auto rounded-md bg-primary px-3.5 py-2 text-[13px] font-medium text-primary-foreground transition-colors hover:bg-primary/90 md:text-[13px] lg:text-[13px]"
                             :loading="profileUpload.loading"
                             @click="submit"
                         >
@@ -83,16 +81,13 @@
                         </Button>
                         <Button
                             v-if="user.profile?.profil_url"
-                            variant="none"
-                            class="h-auto inline-flex items-center gap-1.5 rounded-md border border-destructive/40 bg-destructive/5 px-3.5 py-2 text-[13px] font-medium text-destructive transition-colors hover:bg-destructive/10 md:text-[13px] lg:text-[13px]"
                             @click="deleteAvatarDialog = true"
                         >
                             <Trash2 class="size-4" />
                             {{ $t('settings.confirmDelete') }}
                         </Button>
                         <Button
-                            variant="none"
-                            class="h-auto rounded-md border border-transparent px-3.5 py-2 text-[13px] font-medium text-muted-foreground transition-colors hover:text-foreground md:text-[13px] lg:text-[13px]"
+                            variant="ghost"
                             @click="profileDialog = false"
                         >
                             {{ $t('common.cancel') }}
@@ -124,7 +119,7 @@
             <div class="flex flex-col gap-6 mt-12">
                 <div class="space-y-6">
                     <section class="rounded-lg border border-border bg-card p-6">
-                        <div class="flex items-start justify-between gap-3">
+                        <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
                             <h3 class="flex items-center gap-3">
                                 <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
                                     <IdCard class="size-5" />
@@ -133,8 +128,7 @@
                             </h3>
                             <Button
                                 v-if="!personalInfoDialog"
-                                variant="none"
-                                class="h-auto inline-flex items-center gap-1.5 rounded-md border border-border bg-muted px-3.5 py-2 text-[13px] font-medium text-muted-foreground transition-colors hover:border-primary hover:text-primary md:text-[13px] lg:text-[13px]"
+                                variant="outline"
                                 @click="personalInfoDialog = true"
                             >
                                 <SquarePen class="size-4" />
@@ -142,7 +136,6 @@
                             </Button>
                         </div>
 
-                        <!-- Vue lecture -->
                         <div
                             v-if="!personalInfoDialog"
                             class="mt-4 divide-y divide-border"
@@ -151,87 +144,87 @@
                                 v-if="user.type == 'institution'"
                                 class="flex items-center justify-between gap-3 py-2.5"
                             >
-                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <Building2 class="size-4" />
                                     {{ $t('settings.institutionName') }}
                                 </span>
-                                <span class="text-sm font-medium">{{ user.institution?.name || '-' }}</span>
+                                <span class="min-w-0 truncate text-sm font-medium">{{ user.institution?.name || '-' }}</span>
                             </div>
                             <div class="flex items-center justify-between gap-3 py-2.5">
-                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <CircleUser class="size-4" />
                                     {{ $t('settings.lastname') }}
                                 </span>
-                                <span class="text-sm font-medium">{{ user.lastname }}</span>
+                                <span class="min-w-0 truncate text-sm font-medium">{{ user.lastname }}</span>
                             </div>
                             <div class="flex items-center justify-between gap-3 py-2.5">
-                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <UserPlus class="size-4" />
                                     {{ $t('settings.firstname') }}
                                 </span>
-                                <span class="text-sm font-medium">{{ user.firstname }}</span>
+                                <span class="min-w-0 truncate text-sm font-medium">{{ user.firstname }}</span>
                             </div>
                             <div class="flex items-center justify-between gap-3 py-2.5">
-                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <Calendar class="size-4" />
                                     {{ $t('settings.birthDate') }}
                                 </span>
-                                <span class="text-sm font-medium">{{ formatStringDate(user.date_of_birth) !== '01/01/1970' ? formatStringDate(user.date_of_birth) : 'jj/mm/aaaa' }}</span>
+                                <span class="min-w-0 truncate text-sm font-medium">{{ formatStringDate(user.date_of_birth) !== '01/01/1970' ? formatStringDate(user.date_of_birth) : 'jj/mm/aaaa' }}</span>
                             </div>
                             <div class="flex items-center justify-between gap-3 py-2.5">
-                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <Mail class="size-4" />
                                     {{ $t('settings.email') }}
                                 </span>
-                                <span class="truncate text-sm font-medium">{{ user.email }}</span>
+                                <span class="min-w-0 truncate text-sm font-medium">{{ user.email }}</span>
                             </div>
                             <div class="flex items-center justify-between gap-3 py-2.5">
-                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <span class="font-bold">N°</span>
                                     {{ identifierLabel }}
                                 </span>
                                 <span
-                                    class="text-sm font-medium"
+                                    class="min-w-0 truncate text-sm font-medium"
                                     :class="{ 'text-muted-foreground': !hasRealIdentifierDisplay }"
                                 >
                                     {{ identifierDisplayLabel }}
                                 </span>
                             </div>
                             <div class="flex items-center justify-between gap-3 py-2.5">
-                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <Phone class="size-4" />
                                     {{ $t('settings.phone') }}
                                 </span>
                                 <span
-                                    class="text-sm font-medium"
+                                    class="min-w-0 truncate text-sm font-medium"
                                     :class="{ 'text-muted-foreground': !user?.phone_number }"
                                 >
                                     {{ user?.phone_number || '00 32 2 374 XX XX' }}
                                 </span>
                             </div>
                             <div class="flex items-center justify-between gap-3 py-2.5">
-                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <VenusAndMars class="size-4" />
                                     {{ $t('settings.gender') }}
                                 </span>
-                                <span class="text-sm font-medium">{{ formattedGender || ' - ' }}</span>
+                                <span class="min-w-0 truncate text-sm font-medium">{{ formattedGender || ' - ' }}</span>
                             </div>
                             <div class="flex items-center justify-between gap-3 py-2.5">
-                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <Users class="size-4" />
                                     {{ $t('settings.professionalCategory') }}
                                 </span>
-                                <span class="text-sm font-medium">{{ formattedCategory || ' - ' }}</span>
+                                <span class="min-w-0 truncate text-sm font-medium">{{ formattedCategory || ' - ' }}</span>
                             </div>
                             <div
                                 v-if="showEducationLevelSettings"
                                 class="flex items-center justify-between gap-3 py-2.5"
                             >
-                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <GraduationCap class="size-4" />
                                     {{ $t('settings.educationLevel') }}
                                 </span>
-                                <span class="text-sm font-medium">{{ formattedEducationLevel || ' - ' }}</span>
+                                <span class="min-w-0 truncate text-sm font-medium">{{ formattedEducationLevel || ' - ' }}</span>
                             </div>
                         </div>
 
@@ -454,20 +447,15 @@
                                 </div>
                             </div>
 
-                            <div class="flex justify-end gap-2 border-t border-border pt-4">
+                            <div class="flex flex-wrap justify-end gap-2 border-t border-border pt-4">
                                 <Button
                                     type="button"
-                                    variant="none"
-                                    class="h-auto rounded-md border border-transparent px-3.5 py-2 text-[13px] font-medium text-muted-foreground transition-colors hover:text-foreground md:text-[13px] lg:text-[13px]"
+                                    variant="ghost"
                                     @click="personalInfoDialog = false"
                                 >
                                     {{ $t('common.cancel') }}
                                 </Button>
-                                <Button
-                                    type="submit"
-                                    variant="none"
-                                    class="h-auto rounded-md bg-primary px-3.5 py-2 text-[13px] font-medium text-primary-foreground transition-colors hover:bg-primary/90 md:text-[13px] lg:text-[13px]"
-                                >
+                                <Button type="submit">
                                     Enregistrer
                                 </Button>
                             </div>
@@ -478,7 +466,7 @@
                         v-if="user.type != 'institution'"
                         class="rounded-lg border border-border bg-card p-6"
                     >
-                        <div class="flex items-start justify-between gap-3">
+                        <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
                             <h3 class="flex items-center gap-3">
                                 <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
                                     <MapPin class="size-5" />
@@ -487,8 +475,7 @@
                             </h3>
                             <Button
                                 v-if="!addressInfoDialog"
-                                variant="none"
-                                class="h-auto inline-flex items-center gap-1.5 rounded-md border border-border bg-muted px-3.5 py-2 text-[13px] font-medium text-muted-foreground transition-colors hover:border-primary hover:text-primary md:text-[13px] lg:text-[13px]"
+                                variant="outline"
                                 @click="addressInfoDialog = true"
                             >
                                 <SquarePen class="size-4" />
@@ -502,46 +489,46 @@
                             class="mt-4 divide-y divide-border"
                         >
                             <div class="flex items-center justify-between gap-3 py-2.5">
-                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <Map class="size-4" />
                                     {{ $t('settings.street') }}
                                 </span>
-                                <span class="text-sm font-medium">{{ user.profile?.street_address || ' - ' }}</span>
+                                <span class="min-w-0 truncate text-sm font-medium">{{ user.profile?.street_address || ' - ' }}</span>
                             </div>
                             <div class="flex items-center justify-between gap-3 py-2.5">
-                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <Building2 class="size-4" />
                                     {{ $t('settings.city') }}
                                 </span>
-                                <span class="text-sm font-medium">{{ user.profile?.city || ' - ' }}</span>
+                                <span class="min-w-0 truncate text-sm font-medium">{{ user.profile?.city || ' - ' }}</span>
                             </div>
                             <div class="flex items-center justify-between gap-3 py-2.5">
-                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <Flag class="size-4" />
                                     {{ $t('settings.country') }}
                                 </span>
-                                <span class="text-sm font-medium">{{ formattedCountry || ' - ' }}</span>
+                                <span class="min-w-0 truncate text-sm font-medium">{{ formattedCountry || ' - ' }}</span>
                             </div>
                             <div class="flex items-center justify-between gap-3 py-2.5">
-                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <Building2 class="size-4" />
                                     {{ $t('settings.workCountry') }}
                                 </span>
-                                <span class="text-sm font-medium">{{ user.profile?.working_at || ' - ' }}</span>
+                                <span class="min-w-0 truncate text-sm font-medium">{{ user.profile?.working_at || ' - ' }}</span>
                             </div>
                             <div class="flex items-center justify-between gap-3 py-2.5">
-                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <Mailbox class="size-4" />
                                     {{ $t('settings.zipCode') }}
                                 </span>
-                                <span class="text-sm font-medium">{{ user.profile?.zip_code || ' - ' }}</span>
+                                <span class="min-w-0 truncate text-sm font-medium">{{ user.profile?.zip_code || ' - ' }}</span>
                             </div>
                             <div class="flex items-center justify-between gap-3 py-2.5">
-                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <CircleEllipsis class="size-4" />
                                     {{ $t('settings.extra') }}
                                 </span>
-                                <span class="truncate text-sm font-medium">{{ user.additional_info || ' - ' }}</span>
+                                <span class="min-w-0 truncate text-sm font-medium">{{ user.additional_info || ' - ' }}</span>
                             </div>
                         </div>
 
@@ -677,20 +664,15 @@
                                 </div>
                             </div>
 
-                            <div class="flex justify-end gap-2 border-t border-border pt-4">
+                            <div class="flex flex-wrap justify-end gap-2 border-t border-border pt-4">
                                 <Button
                                     type="button"
-                                    variant="none"
-                                    class="h-auto rounded-md border border-transparent px-3.5 py-2 text-[13px] font-medium text-muted-foreground transition-colors hover:text-foreground md:text-[13px] lg:text-[13px]"
+                                    variant="ghost"
                                     @click="addressInfoDialog = false"
                                 >
                                     {{ $t('common.cancel') }}
                                 </Button>
-                                <Button
-                                    type="submit"
-                                    variant="none"
-                                    class="h-auto rounded-md bg-primary px-3.5 py-2 text-[13px] font-medium text-primary-foreground transition-colors hover:bg-primary/90 md:text-[13px] lg:text-[13px]"
-                                >
+                                <Button type="submit">
                                     Enregistrer
                                 </Button>
                             </div>
@@ -1004,7 +986,7 @@
                     </section>
 
                     <section class="rounded-lg border border-border bg-card p-6">
-                        <div class="flex items-start justify-between gap-3">
+                        <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
                             <h3 class="flex items-center gap-3">
                                 <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
                                     <ShieldCheck class="size-5" />
@@ -1013,8 +995,7 @@
                             </h3>
                             <Button
                                 v-if="!changePasswordDialog"
-                                variant="none"
-                                class="h-auto inline-flex items-center gap-1.5 rounded-md border border-border bg-muted px-3.5 py-2 text-[13px] font-medium text-muted-foreground transition-colors hover:border-primary hover:text-primary md:text-[13px] lg:text-[13px]"
+                                variant="outline"
                                 @click="changePasswordDialog = true"
                             >
                                 <KeyRound class="size-4" />
@@ -1027,7 +1008,7 @@
                                 v-if="!changePasswordDialog"
                                 class="flex items-center justify-between gap-3 py-2.5"
                             >
-                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <KeyRound class="size-4" />
                                     {{ $t('settings.password') }}
                                     <SettingsFieldHint
@@ -1035,7 +1016,7 @@
                                         :label="$t('settings.password')"
                                     />
                                 </span>
-                                <span class="text-sm font-medium text-muted-foreground">••••••••••</span>
+                                <span class="min-w-0 truncate text-sm font-medium text-muted-foreground">••••••••••</span>
                             </div>
 
                             <!-- Édition en ligne (remplace le Dialog) -->
@@ -1082,27 +1063,22 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="flex justify-end gap-2">
+                                <div class="flex flex-wrap justify-end gap-2">
                                     <Button
                                         type="button"
-                                        variant="none"
-                                        class="h-auto rounded-md border border-transparent px-3.5 py-2 text-[13px] font-medium text-muted-foreground transition-colors hover:text-foreground md:text-[13px] lg:text-[13px]"
+                                        variant="ghost"
                                         @click="changePasswordDialog = false"
                                     >
                                         {{ $t('common.cancel') }}
                                     </Button>
-                                    <Button
-                                        type="submit"
-                                        variant="none"
-                                        class="h-auto rounded-md bg-primary px-3.5 py-2 text-[13px] font-medium text-primary-foreground transition-colors hover:bg-primary/90 md:text-[13px] lg:text-[13px]"
-                                    >
+                                    <Button type="submit">
                                         Enregistrer
                                     </Button>
                                 </div>
                             </form>
 
                             <div class="flex items-center justify-between gap-3 py-2.5">
-                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <Smartphone class="size-4" />
                                     {{ $t('settings.twoFactor') }}
                                     <SettingsFieldHint
@@ -1210,7 +1186,7 @@
                         v-if="user.type != 'institution'"
                         class="rounded-lg border border-border bg-card p-6"
                     >
-                        <div class="flex items-start justify-between gap-3">
+                        <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
                             <h3 class="flex items-center gap-3">
                                 <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
                                     <Wrench class="size-5" />
@@ -1219,8 +1195,7 @@
                             </h3>
 
                             <Button
-                                variant="none"
-                                class="h-auto inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-primary to-primary/80 px-3.5 py-1.5 text-xs font-semibold text-primary-foreground shadow-md shadow-primary/25 transition-colors hover:brightness-95"
+                                variant="outline"
                                 @click="proposalDialog = true"
                             >
                                 <Sparkles class="size-4" />
@@ -1511,8 +1486,7 @@
                         <div class="flex flex-col sm:flex-row gap-3 sm:justify-end">
                             <Button
                                 type="button"
-                                variant="none"
-                                class="h-auto inline-flex items-center gap-1.5 rounded-md border border-border bg-muted px-3.5 py-2 text-[13px] font-medium text-muted-foreground transition-colors hover:border-primary hover:text-primary md:text-[13px] lg:text-[13px]"
+                                variant="outline"
                                 @click="openCookiePreferences"
                             >
                                 <Cookie class="size-4" />
@@ -1520,8 +1494,6 @@
                             </Button>
                             <Button
                                 type="button"
-                                variant="none"
-                                class="h-auto inline-flex items-center gap-1.5 rounded-md bg-primary px-3.5 py-2 text-[13px] font-medium text-primary-foreground transition-colors hover:bg-primary/90 md:text-[13px] lg:text-[13px]"
                                 :in-progress="isExportingData"
                                 :disabled="isExportingData"
                                 @click="exportPersonalData"

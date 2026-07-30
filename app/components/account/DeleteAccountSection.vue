@@ -15,8 +15,7 @@
         <div class="mt-4">
             <Button
                 v-if="!deleteAccountDialog"
-                variant="none"
-                class="h-auto inline-flex items-center gap-1.5 rounded-md border border-destructive/40 bg-destructive/5 px-3.5 py-2 text-[13px] font-medium text-destructive transition-colors hover:bg-destructive/10 md:text-[13px] lg:text-[13px]"
+                variant="outline"
                 @click="deleteAccountDialog = true"
             >
                 <Trash2 class="size-4" />
@@ -42,8 +41,7 @@
                 <div class="flex gap-2">
                     <Button
                         type="button"
-                        variant="none"
-                        class="h-auto rounded-md border border-transparent px-3.5 py-2 text-[13px] font-medium text-muted-foreground transition-colors hover:text-foreground md:text-[13px] lg:text-[13px]"
+                        variant="ghost"
                         :disabled="isDeleting"
                         @click="deleteAccountDialog = false"
                     >
@@ -51,8 +49,7 @@
                     </Button>
                     <Button
                         type="submit"
-                        variant="none"
-                        class="h-auto rounded-md bg-destructive px-3.5 py-2 text-[13px] font-medium text-destructive-foreground transition-colors hover:bg-destructive/90 md:text-[13px] lg:text-[13px]"
+                        variant="destructive"
                         :in-progress="isDeleting"
                         :disabled="isDeleting || !password.trim()"
                     >
