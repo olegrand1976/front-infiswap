@@ -34,28 +34,52 @@
             <template v-else>
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
                     <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
-                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">Users BE</p>
-                        <p class="text-2xl font-bold text-primary tabular-nums mt-0.5">{{ userBelgianCount }}</p>
+                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">
+                            Users BE
+                        </p>
+                        <p class="text-2xl font-bold text-primary tabular-nums mt-0.5">
+                            {{ userBelgianCount }}
+                        </p>
                     </div>
                     <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
-                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">Users FR</p>
-                        <p class="text-2xl font-bold text-success tabular-nums mt-0.5">{{ userFrenchCount }}</p>
+                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">
+                            Users FR
+                        </p>
+                        <p class="text-2xl font-bold text-success tabular-nums mt-0.5">
+                            {{ userFrenchCount }}
+                        </p>
                     </div>
                     <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
-                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">Users total</p>
-                        <p class="text-2xl font-bold text-gray-800 tabular-nums mt-0.5">{{ userTotal }}</p>
+                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">
+                            Users total
+                        </p>
+                        <p class="text-2xl font-bold text-gray-800 tabular-nums mt-0.5">
+                            {{ userTotal }}
+                        </p>
                     </div>
                     <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
-                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">Users 30 j</p>
-                        <p class="text-2xl font-bold text-orange-600 tabular-nums mt-0.5">{{ userLast30 }}</p>
+                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">
+                            Users 30 j
+                        </p>
+                        <p class="text-2xl font-bold text-orange-600 tabular-nums mt-0.5">
+                            {{ userLast30 }}
+                        </p>
                     </div>
                     <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
-                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">Rempl. acceptés 30 j</p>
-                        <p class="text-2xl font-bold text-indigo-600 tabular-nums mt-0.5">{{ acceptedLast30 }}</p>
+                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">
+                            Rempl. acceptés 30 j
+                        </p>
+                        <p class="text-2xl font-bold text-indigo-600 tabular-nums mt-0.5">
+                            {{ acceptedLast30 }}
+                        </p>
                     </div>
                     <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
-                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">Réponses 30 j</p>
-                        <p class="text-2xl font-bold text-pink-600 tabular-nums mt-0.5">{{ responsesLast30 }}</p>
+                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">
+                            Réponses 30 j
+                        </p>
+                        <p class="text-2xl font-bold text-pink-600 tabular-nums mt-0.5">
+                            {{ responsesLast30 }}
+                        </p>
                     </div>
                 </div>
 
@@ -65,7 +89,9 @@
                         :key="kpi.label"
                         class="bg-white rounded-md border border-gray-100 shadow-sm p-3"
                     >
-                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">{{ kpi.label }}</p>
+                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">
+                            {{ kpi.label }}
+                        </p>
                         <p
                             class="text-2xl font-bold tabular-nums mt-0.5"
                             :class="kpi.valueClass"
@@ -83,20 +109,36 @@
 
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
-                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">Institutions</p>
-                        <p class="text-xl font-bold text-gray-800 tabular-nums mt-0.5">{{ institutionStats.total }}</p>
+                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">
+                            Institutions
+                        </p>
+                        <p class="text-xl font-bold text-gray-800 tabular-nums mt-0.5">
+                            {{ institutionStats.total }}
+                        </p>
                     </div>
                     <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
-                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">Inst. BE</p>
-                        <p class="text-xl font-bold text-primary tabular-nums mt-0.5">{{ institutionStats.total_belgian }}</p>
+                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">
+                            Inst. BE
+                        </p>
+                        <p class="text-xl font-bold text-primary tabular-nums mt-0.5">
+                            {{ institutionStats.total_belgian }}
+                        </p>
                     </div>
                     <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
-                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">Inst. FR</p>
-                        <p class="text-xl font-bold text-success tabular-nums mt-0.5">{{ institutionStats.total_french }}</p>
+                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">
+                            Inst. FR
+                        </p>
+                        <p class="text-xl font-bold text-success tabular-nums mt-0.5">
+                            {{ institutionStats.total_french }}
+                        </p>
                     </div>
                     <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
-                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">Inst. 30 j</p>
-                        <p class="text-xl font-bold text-orange-600 tabular-nums mt-0.5">{{ institutionStats.last_30_days }}</p>
+                        <p class="text-[11px] uppercase tracking-wide text-gray-500 font-semibold">
+                            Inst. 30 j
+                        </p>
+                        <p class="text-xl font-bold text-orange-600 tabular-nums mt-0.5">
+                            {{ institutionStats.last_30_days }}
+                        </p>
                     </div>
                 </div>
             </template>
@@ -197,7 +239,9 @@
                 </template>
                 <template v-else>
                     <div>
-                        <p class="mb-1 font-semibold text-sm text-gray-800">Inscriptions — semaine</p>
+                        <p class="mb-1 font-semibold text-sm text-gray-800">
+                            Inscriptions — semaine
+                        </p>
                         <div class="bg-white rounded-md shadow-sm border border-gray-100 p-2">
                             <ClientOnly>
                                 <BarChart
@@ -216,7 +260,9 @@
                     </div>
 
                     <div>
-                        <p class="mb-1 font-semibold text-sm text-gray-800">Remplacements — semaine</p>
+                        <p class="mb-1 font-semibold text-sm text-gray-800">
+                            Remplacements — semaine
+                        </p>
                         <div class="bg-white rounded-md shadow-sm border border-gray-100 p-2">
                             <ClientOnly>
                                 <BarChart
@@ -235,7 +281,9 @@
                     </div>
 
                     <div>
-                        <p class="mb-1 font-semibold text-sm text-gray-800">Inscriptions — mois</p>
+                        <p class="mb-1 font-semibold text-sm text-gray-800">
+                            Inscriptions — mois
+                        </p>
                         <div class="bg-white rounded-md shadow-sm border border-gray-100 p-2">
                             <ClientOnly>
                                 <BarChart
@@ -254,7 +302,9 @@
                     </div>
 
                     <div>
-                        <p class="mb-1 font-semibold text-sm text-gray-800">Remplacements — mois</p>
+                        <p class="mb-1 font-semibold text-sm text-gray-800">
+                            Remplacements — mois
+                        </p>
                         <div class="bg-white rounded-md shadow-sm border border-gray-100 p-2">
                             <ClientOnly>
                                 <BarChart
@@ -273,7 +323,9 @@
                     </div>
 
                     <div>
-                        <p class="mb-1 font-semibold text-sm text-gray-800">Inscriptions — année</p>
+                        <p class="mb-1 font-semibold text-sm text-gray-800">
+                            Inscriptions — année
+                        </p>
                         <div class="bg-white rounded-md shadow-sm border border-gray-100 p-2">
                             <ClientOnly>
                                 <BarChart
@@ -292,7 +344,9 @@
                     </div>
 
                     <div>
-                        <p class="mb-1 font-semibold text-sm text-gray-800">Remplacements — année</p>
+                        <p class="mb-1 font-semibold text-sm text-gray-800">
+                            Remplacements — année
+                        </p>
                         <div class="bg-white rounded-md shadow-sm border border-gray-100 p-2">
                             <ClientOnly>
                                 <BarChart
@@ -314,7 +368,9 @@
                         v-if="deletedUserChartData.data.length > 0"
                         class="lg:col-span-2"
                     >
-                        <p class="mb-1 font-semibold text-sm text-gray-800">Utilisateurs perdus</p>
+                        <p class="mb-1 font-semibold text-sm text-gray-800">
+                            Utilisateurs perdus
+                        </p>
                         <div class="bg-white rounded-md shadow-sm border border-gray-100 p-2">
                             <ClientOnly>
                                 <BarChart

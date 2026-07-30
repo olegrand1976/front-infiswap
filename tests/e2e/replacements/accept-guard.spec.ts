@@ -35,8 +35,8 @@ test.describe('Remplacements — garde anti double acceptation', () => {
 
         const applyResponse = await page.request.post(`${API_URL}/api/replacement-responses/send`, {
             headers: {
-                Authorization: `Bearer ${candidateToken}`,
-                Accept: 'application/json',
+                'Authorization': `Bearer ${candidateToken}`,
+                'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
             data: {

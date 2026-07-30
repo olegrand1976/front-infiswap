@@ -25,7 +25,7 @@ test.describe('Connexion', () => {
         await submitLogin(page);
 
         await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
-        expect(userRequestAuthorizations.some((value) => /^Bearer .+/.test(value))).toBe(true);
+        expect(userRequestAuthorizations.some(value => /^Bearer .+/.test(value))).toBe(true);
 
         await page.reload();
         await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
@@ -43,7 +43,7 @@ test.describe('Connexion', () => {
         await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
 
         const cookies = await context.cookies();
-        const authCookie = cookies.find((c) => c.name === AUTH_TOKEN_COOKIE);
+        const authCookie = cookies.find(c => c.name === AUTH_TOKEN_COOKIE);
         expect(authCookie?.value).toBeTruthy();
     });
 

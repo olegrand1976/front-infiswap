@@ -139,7 +139,7 @@ const props = withDefaults(defineProps<{
 });
 
 const emit = defineEmits<{
-    action: [type: CrmFollowUpAction];
+    'action': [type: CrmFollowUpAction];
     'crm-updated': [crm: Record<string, unknown>];
 }>();
 

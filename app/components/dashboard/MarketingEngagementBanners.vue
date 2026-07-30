@@ -74,7 +74,7 @@ async function loadPendingResponseCount() {
 
         pendingResponseCount.value = (response.data ?? []).reduce((sum, item) => {
             const pending = (item.responses ?? []).filter(
-                (candidate) => candidate.status === 'pending',
+                candidate => candidate.status === 'pending',
             ).length;
 
             return sum + pending;

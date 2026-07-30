@@ -18,7 +18,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     'update:open': [value: boolean];
-    accepted: [];
+    'accepted': [];
 }>();
 
 const { $toast } = useNuxtApp();

@@ -311,12 +311,13 @@
 </template>
 
 <script lang="ts" setup>
-const { t } = useI18n();
 import { ArrowLeft, BadgeCheck, Check, CircleUser, Eye, X } from 'lucide-vue-next';
 import { useRuntimeConfig } from '#app';
 import { getErrorMessage, goBack } from '~/lib/utils';
 import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
 import type { ReplacementResponse, User } from '~/lib/types';
+
+const { t } = useI18n();
 
 const user = useState<User>('user');
 const { $toast } = useNuxtApp();

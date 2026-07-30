@@ -14,29 +14,45 @@
             class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 text-sm"
         >
             <div>
-                <dt class="text-muted-foreground">Grade actuel</dt>
-                <dd class="font-medium">{{ status?.grade?.name ?? '—' }}</dd>
+                <dt class="text-muted-foreground">
+                    Grade actuel
+                </dt>
+                <dd class="font-medium">
+                    {{ status?.grade?.name ?? '—' }}
+                </dd>
             </div>
             <div>
-                <dt class="text-muted-foreground">Multiplicateur direct</dt>
-                <dd class="font-medium">×{{ status?.grade?.direct_commission_multiplier ?? 1 }}</dd>
+                <dt class="text-muted-foreground">
+                    Multiplicateur direct
+                </dt>
+                <dd class="font-medium">
+                    ×{{ status?.grade?.direct_commission_multiplier ?? 1 }}
+                </dd>
             </div>
             <div>
-                <dt class="text-muted-foreground">Override L1 / L2</dt>
+                <dt class="text-muted-foreground">
+                    Override L1 / L2
+                </dt>
                 <dd class="font-medium">
                     {{ status?.grade?.upline_override_level_1_rate ?? 0 }}% /
                     {{ status?.grade?.upline_override_level_2_rate ?? 0 }}%
                 </dd>
             </div>
             <div>
-                <dt class="text-muted-foreground">Upline</dt>
-                <dd class="font-medium">{{ status?.upline?.full_name ?? '—' }}</dd>
+                <dt class="text-muted-foreground">
+                    Upline
+                </dt>
+                <dd class="font-medium">
+                    {{ status?.upline?.full_name ?? '—' }}
+                </dd>
             </div>
             <div
                 v-if="status?.progression && status.next_grade"
                 class="sm:col-span-2 lg:col-span-4"
             >
-                <dt class="text-muted-foreground">Progression vers {{ status.next_grade.name }}</dt>
+                <dt class="text-muted-foreground">
+                    Progression vers {{ status.next_grade.name }}
+                </dt>
                 <dd class="font-medium mt-1">
                     {{ status.progression.direct_bc ?? 0 }}
                     / {{ status.progression.min_direct_bc ?? '—' }} BC directs

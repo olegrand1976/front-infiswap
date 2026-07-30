@@ -169,7 +169,6 @@
 </template>
 
 <script setup lang="ts">
-const { t } = useI18n();
 import { ArrowLeft, Filter, LayoutGrid, ListOrdered, Map } from 'lucide-vue-next';
 import { useCookie } from '#app';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -178,6 +177,8 @@ import ConfirmProfileCountryModal from '~/components/replacements/ConfirmProfile
 import { goBack } from '~/lib/utils';
 import { normalizeSelectedFilters } from '~/utils/selectedFilters';
 import { useConfirmProfileCountry } from '~/composables/useConfirmProfileCountry';
+
+const { t } = useI18n();
 
 const {
     showModal: showCountryModal,

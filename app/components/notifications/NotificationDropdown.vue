@@ -138,7 +138,6 @@
 </template>
 
 <script lang="ts" setup>
-const { t } = useI18n();
 import { BellRing, X } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import {
@@ -149,6 +148,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import type { Notification, User } from '~/lib/types';
 import { formatRelativeDate } from '~/composables/useDate';
+
+const { t } = useI18n();
 
 const {
     getAll,

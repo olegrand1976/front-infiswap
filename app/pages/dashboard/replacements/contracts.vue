@@ -80,11 +80,12 @@
 </template>
 
 <script setup lang="ts">
-const { t } = useI18n();
 import { ArrowLeft } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import { goBack } from '~/lib/utils';
 import type { ReplacementContractItem } from '~/composables/useReplacementContract';
+
+const { t } = useI18n();
 
 const { fetchContracts } = useReplacementContract();
 

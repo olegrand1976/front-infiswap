@@ -28,7 +28,8 @@ export function parseCookieConsent(raw: string | null): CookieConsentPreferences
             analytics: parsed.analytics,
             marketing: parsed.marketing,
         };
-    } catch {
+    }
+    catch {
         return null;
     }
 }

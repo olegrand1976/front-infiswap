@@ -52,8 +52,12 @@
                     >
                         <TableCell>
                             <div>
-                                <p class="font-medium">{{ commercial.full_name }}</p>
-                                <p class="text-xs text-muted-foreground">{{ commercial.email }}</p>
+                                <p class="font-medium">
+                                    {{ commercial.full_name }}
+                                </p>
+                                <p class="text-xs text-muted-foreground">
+                                    {{ commercial.email }}
+                                </p>
                             </div>
                         </TableCell>
                         <TableCell>
@@ -143,10 +147,18 @@
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="initial">Statut initial</SelectItem>
-                                <SelectItem value="manual">Manuel</SelectItem>
-                                <SelectItem value="promotion">Promotion</SelectItem>
-                                <SelectItem value="demotion">Rétrogradation</SelectItem>
+                                <SelectItem value="initial">
+                                    Statut initial
+                                </SelectItem>
+                                <SelectItem value="manual">
+                                    Manuel
+                                </SelectItem>
+                                <SelectItem value="promotion">
+                                    Promotion
+                                </SelectItem>
+                                <SelectItem value="demotion">
+                                    Rétrogradation
+                                </SelectItem>
                             </SelectContent>
                         </Select>
                     </div>

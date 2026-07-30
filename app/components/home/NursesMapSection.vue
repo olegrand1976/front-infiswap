@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { UserPlus } from 'lucide-vue-next';
 import type { NursesMapCountry } from '@/composables/useNursesMap';
 import NursesResidenceMap from '@/components/maps/NursesResidenceMap.vue';
-import { UserPlus } from 'lucide-vue-next';
 import { useAuth } from '~/composables/useAuth';
 import { usePublicNursesMapData } from '~/composables/usePublicNursesMapData';
 

@@ -1,66 +1,71 @@
 <template>
-    <section class="flex flex-col justify-end items-center pt-8 space-y-4">
-        <Button
-            class="flex w-48 ml-auto text-end text-primary bg-transparent border border-primary shadow-none hover:text-white"
-            @click="deleteAccountDialog = true"
-        >
-            <Trash2 class="w-5" />
-            <span>Se désinscrire du site</span>
-        </Button>
+    <section class="rounded-lg border border-destructive/30 bg-destructive/5 p-6">
+        <h3 class="flex items-center gap-3">
+            <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-destructive/15 text-destructive">
+                <TriangleAlert class="size-5" />
+            </span>
+            <span class="text-lg font-secondary">Zone de danger</span>
+        </h3>
+        <p class="mt-3 text-sm text-foreground">
+            Confirmez avec votre mot de passe. Votre compte sera désactivé, vos données personnelles
+            anonymisées (droit à l'effacement), et les administrateurs seront informés par e-mail.
+            Certaines données de facturation peuvent être conservées selon les obligations légales.
+        </p>
 
-        <Dialog v-model:open="deleteAccountDialog">
-            <DialogContent class="w-full max-w-sm sm:max-w-xl max-h-[90vh] overflow-y-auto">
-                <DialogHeader>
-                    <DialogTitle class="text-center">
-                        Se désinscrire du site
-                    </DialogTitle>
-                </DialogHeader>
-                <div class="mt-8">
-                    Confirmez avec votre mot de passe. Votre compte sera désactivé, vos données personnelles
-                    anonymisées (droit à l’effacement), et les administrateurs seront informés par e-mail.
-                    Certaines données de facturation peuvent être conservées selon les obligations légales.
-                </div>
+        <div class="mt-4">
+            <Button
+                v-if="!deleteAccountDialog"
+                variant="none"
+                class="h-auto inline-flex items-center gap-1.5 rounded-md border border-destructive/40 bg-destructive/5 px-3.5 py-2 text-[13px] font-medium text-destructive transition-colors hover:bg-destructive/10 md:text-[13px] lg:text-[13px]"
+                @click="deleteAccountDialog = true"
+            >
+                <Trash2 class="size-4" />
+                Se désinscrire du site
+            </Button>
 
-                <div class="mt-4 space-y-3">
-                    <div class="mb-0 sm:mb-12 grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                        <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
-                            Mot de passe
-                        </p>
+            <form
+                v-else
+                class="space-y-3"
+                @submit.prevent="handleDeleteAccount"
+            >
+                <div class="flex flex-col gap-1.5 sm:max-w-xs">
+                    <label class="text-xs font-medium text-muted-foreground">Mot de passe</label>
+                    <div class="flex h-11 items-center gap-2 rounded-md border border-input bg-background px-3 focus-within:border-destructive focus-within:ring-2 focus-within:ring-destructive/15">
+                        <KeyRound class="size-4 shrink-0 text-destructive" />
                         <Input
                             v-model="password"
                             type="password"
-                            class="mb-12 sm:mb-0 w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
-                            @keyup.enter="handleDeleteAccount"
+                            class="h-auto border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
                         />
                     </div>
-
-                    <DialogFooter class="mt-12 flex flex-col sm:flex-row justify-end items-center space-y-2 sm:space-y-0 sm:space-x-8">
-                        <Button
-                            variant="secondary"
-                            class="bg-gray-200 hover:bg-gray-300 w-full sm:w-auto"
-                            :disabled="isDeleting"
-                            @click="deleteAccountDialog = false"
-                        >
-                            Annuler
-                        </Button>
-                        <Button
-                            class="w-full sm:w-auto"
-                            :in-progress="isDeleting"
-                            :disabled="isDeleting || !password.trim()"
-                            @click="handleDeleteAccount"
-                        >
-                            Valider
-                        </Button>
-                    </DialogFooter>
                 </div>
-            </DialogContent>
-        </Dialog>
+                <div class="flex gap-2">
+                    <Button
+                        type="button"
+                        variant="none"
+                        class="h-auto rounded-md border border-transparent px-3.5 py-2 text-[13px] font-medium text-muted-foreground transition-colors hover:text-foreground md:text-[13px] lg:text-[13px]"
+                        :disabled="isDeleting"
+                        @click="deleteAccountDialog = false"
+                    >
+                        Annuler
+                    </Button>
+                    <Button
+                        type="submit"
+                        variant="none"
+                        class="h-auto rounded-md bg-destructive px-3.5 py-2 text-[13px] font-medium text-destructive-foreground transition-colors hover:bg-destructive/90 md:text-[13px] lg:text-[13px]"
+                        :in-progress="isDeleting"
+                        :disabled="isDeleting || !password.trim()"
+                    >
+                        Valider
+                    </Button>
+                </div>
+            </form>
+        </div>
     </section>
 </template>
 
 <script lang="ts" setup>
-import { Trash2 } from 'lucide-vue-next';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { KeyRound, Trash2, TriangleAlert } from 'lucide-vue-next';
 import { useAuthTokenCookie } from '~/lib/authTokenCookie';
 import { getErrorMessage } from '~/lib/utils';
 import { useAuth } from '~/composables/useAuth';

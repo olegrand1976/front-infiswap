@@ -83,7 +83,9 @@
             </h3>
             <div class="grid gap-4 sm:grid-cols-2">
                 <div class="rounded-lg border p-4 space-y-3">
-                    <p class="text-sm font-medium">Mensuel</p>
+                    <p class="text-sm font-medium">
+                        Mensuel
+                    </p>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <Label>Min</Label>
@@ -106,7 +108,9 @@
                     </div>
                 </div>
                 <div class="rounded-lg border p-4 space-y-3">
-                    <p class="text-sm font-medium">Annuel</p>
+                    <p class="text-sm font-medium">
+                        Annuel
+                    </p>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <Label>Min</Label>
@@ -195,7 +199,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-    save: [];
+    'save': [];
     'update:modelValue': [value: InstitutionCrmGeneralSettings];
 }>();
 

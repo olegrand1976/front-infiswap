@@ -94,8 +94,8 @@ export async function createReplacementViaApi(
 ): Promise<number> {
     const response = await page.request.post(`${API_URL}/api/replacements`, {
         headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: 'application/json',
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json',
             'Content-Type': 'application/json',
         },
         data: payload,

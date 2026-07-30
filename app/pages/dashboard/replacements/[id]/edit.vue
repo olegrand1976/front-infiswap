@@ -239,7 +239,6 @@
 </template>
 
 <script lang="ts" setup>
-const { t } = useI18n();
 import { ArrowLeft, Plus, X } from 'lucide-vue-next';
 import { toast } from 'vue-sonner';
 import { useReplacements } from '@/composables/useReplacements';
@@ -251,6 +250,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+const { t } = useI18n();
 import type { CareType, ReplacementPeriod } from '~/lib/types';
 import type { ReplacementCountryCode } from '~/lib/replacementCountry';
 import { toReplacementCountryCode } from '~/lib/replacementCountry';

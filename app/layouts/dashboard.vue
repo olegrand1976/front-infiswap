@@ -226,67 +226,67 @@
                                     </ProfileInamiVerifiedBadge>
                                 </ProfileLifetimeAccessBadge>
                             </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                            <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
-                            <template v-if="hasMultipleContexts">
-                                <DropdownMenuSeparator />
-                                <DropdownMenuLabel class="text-xs text-muted-foreground">
-                                    Changer d'espace
-                                </DropdownMenuLabel>
-                                <DropdownMenuItem
-                                    v-if="canAccessNurse"
-                                    :disabled="activeContext === 'nurse'"
-                                    @click="switchContext('nurse')"
-                                >
-                                    {{ activeContext === 'nurse' ? '✓ ' : '' }}Infirmier(e)
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    v-if="canAccessAdmin"
-                                    :disabled="activeContext === 'admin'"
-                                    @click="switchContext('admin')"
-                                >
-                                    {{ activeContext === 'admin' ? '✓ ' : '' }}Administration InfiSwap
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    v-if="canAccessInstitution"
-                                    :disabled="activeContext === 'institution'"
-                                    @click="switchContext('institution')"
-                                >
-                                    {{ activeContext === 'institution' ? '✓ ' : '' }} Institution
-                                </DropdownMenuItem>
-                            </template>
+                            <DropdownMenuContent>
+                                <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
+                                <template v-if="hasMultipleContexts">
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuLabel class="text-xs text-muted-foreground">
+                                        Changer d'espace
+                                    </DropdownMenuLabel>
+                                    <DropdownMenuItem
+                                        v-if="canAccessNurse"
+                                        :disabled="activeContext === 'nurse'"
+                                        @click="switchContext('nurse')"
+                                    >
+                                        {{ activeContext === 'nurse' ? '✓ ' : '' }}Infirmier(e)
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        v-if="canAccessAdmin"
+                                        :disabled="activeContext === 'admin'"
+                                        @click="switchContext('admin')"
+                                    >
+                                        {{ activeContext === 'admin' ? '✓ ' : '' }}Administration InfiSwap
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        v-if="canAccessInstitution"
+                                        :disabled="activeContext === 'institution'"
+                                        @click="switchContext('institution')"
+                                    >
+                                        {{ activeContext === 'institution' ? '✓ ' : '' }} Institution
+                                    </DropdownMenuItem>
+                                </template>
 
-                            <template v-if="secondaryRoles.length > 0">
+                                <template v-if="secondaryRoles.length > 0">
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem
+                                        v-for="role in secondaryRoles"
+                                        :key="role"
+                                        @click="switchRole(role)"
+                                    >
+                                        Passer en {{ getRole(role) }}
+                                    </DropdownMenuItem>
+                                </template>
+
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
-                                    v-for="role in secondaryRoles"
-                                    :key="role"
-                                    @click="switchRole(role)"
+                                    v-if="showReenableNetworkJourney"
+                                    @click="reenableNetworkJourney"
                                 >
-                                    Passer en {{ getRole(role) }}
+                                    Réactiver Mon réseau InfiSwap
                                 </DropdownMenuItem>
-                            </template>
-
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                                v-if="showReenableNetworkJourney"
-                                @click="reenableNetworkJourney"
-                            >
-                                Réactiver Mon réseau InfiSwap
-                            </DropdownMenuItem>
-                            <DropdownMenuItem as-child>
-                                <NuxtLink :to="settingsRoute">Paramètres</NuxtLink>
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                                class="hover:bg-primary"
-                                @click="logout"
-                            >
-                                Déconnexion
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </div>
+                                <DropdownMenuItem as-child>
+                                    <NuxtLink :to="settingsRoute">Paramètres</NuxtLink>
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem
+                                    class="hover:bg-primary"
+                                    @click="logout"
+                                >
+                                    Déconnexion
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
                 </div>
             </header>
             <OnboardingNetworkJourneyWidget v-if="showNetworkJourneyWidget" />

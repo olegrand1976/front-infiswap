@@ -173,7 +173,10 @@ onBeforeUnmount(() => {
                 class="flex size-24 sm:size-28 items-center justify-center rounded-full border-4 border-white bg-success/10 shadow-xl ring-2 ring-success/30"
                 :class="{ 'purchase-celebration-boost-pop': !prefersReducedMotion }"
             >
-                <FileCheck class="size-12 sm:size-14 text-success" aria-hidden="true" />
+                <FileCheck
+                    class="size-12 sm:size-14 text-success"
+                    aria-hidden="true"
+                />
             </div>
         </div>
 

@@ -272,12 +272,12 @@ const columns: ColumnDef<User>[] = [
 
             return h('div', { class: 'flex justify-center' }, [
                 h('span', {
-                    class: 'inline-flex size-7 items-center justify-center rounded-full border-2 border-white bg-gradient-to-br from-amber-400 via-yellow-500 to-amber-600 shadow-md ring-1 ring-amber-300/80',
-                    title: 'Inscription validée à vie — accès InfiSwap permanent',
+                    'class': 'inline-flex size-7 items-center justify-center rounded-full border-2 border-white bg-gradient-to-br from-amber-400 via-yellow-500 to-amber-600 shadow-md ring-1 ring-amber-300/80',
+                    'title': 'Inscription validée à vie — accès InfiSwap permanent',
                     'aria-label': 'Inscription validée à vie — accès InfiSwap permanent',
                 }, [
                     h(Medal, {
-                        class: 'size-3.5 text-white drop-shadow-sm',
+                        'class': 'size-3.5 text-white drop-shadow-sm',
                         'aria-hidden': 'true',
                     }),
                 ]),

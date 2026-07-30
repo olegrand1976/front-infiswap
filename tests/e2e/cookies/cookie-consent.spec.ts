@@ -31,7 +31,8 @@ test.describe('Consentement cookies RGPD', () => {
         await page.addInitScript((key) => {
             try {
                 localStorage.removeItem(key);
-            } catch {
+            }
+            catch {
                 // ignore
             }
         }, CONSENT_KEY);
@@ -56,7 +57,7 @@ test.describe('Consentement cookies RGPD', () => {
         await banner.getByRole('button', { name: 'Refuser' }).click();
         await expect(banner).toBeHidden();
 
-        const stored = await page.evaluate((key) => localStorage.getItem(key), CONSENT_KEY);
+        const stored = await page.evaluate(key => localStorage.getItem(key), CONSENT_KEY);
         expect(stored).toBeTruthy();
         const parsed = JSON.parse(stored!);
         expect(parsed.analytics).toBe(false);
@@ -83,7 +84,7 @@ test.describe('Consentement cookies RGPD', () => {
         await banner.getByRole('button', { name: 'Tout accepter' }).click();
         await expect(banner).toBeHidden();
 
-        const stored = await page.evaluate((key) => localStorage.getItem(key), CONSENT_KEY);
+        const stored = await page.evaluate(key => localStorage.getItem(key), CONSENT_KEY);
         const parsed = JSON.parse(stored!);
         expect(parsed.analytics).toBe(true);
         expect(parsed.marketing).toBe(true);

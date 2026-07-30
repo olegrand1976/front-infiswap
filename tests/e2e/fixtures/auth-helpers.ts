@@ -17,7 +17,8 @@ export async function seedCookieConsent(page: Page): Promise<void> {
                 'infiswap:cookie_consent:v1',
                 JSON.stringify({ necessary: true, analytics: false, marketing: false }),
             );
-        } catch {
+        }
+        catch {
             // storage indisponible : le bandeau s'affichera, sans bloquer le script
         }
     });
@@ -103,7 +104,7 @@ export async function cleanupE2eUsers(apiUrl: string): Promise<void> {
         method: 'POST',
         headers: {
             'X-Monitoring-Secret': secret,
-            Accept: 'application/json',
+            'Accept': 'application/json',
         },
     }).catch(() => undefined);
 }

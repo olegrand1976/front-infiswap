@@ -17,7 +17,9 @@
 
                         <p
                             class="text-center lg:text-left text-base px-8"
-                        >{{ $t('services.intro') }}</p>
+                        >
+                            {{ $t('services.intro') }}
+                        </p>
                     </div>
 
                     <div

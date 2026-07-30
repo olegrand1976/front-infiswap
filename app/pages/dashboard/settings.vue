@@ -1,890 +1,704 @@
 <template>
     <div class="lg:ml-20 xl:ml-0">
-        <ArrowLeft
-            class="size-6 cursor-pointer hover:text-primary mt-4"
-            :title="$t('common.back')"
-            @click="goBack"
-        />
-
-        <div class="mt-6 bg-gray-100 flex flex-col space-y-4 sm:space-y-0 sm:flex-row py-4 sm:py-0 px-4 rounded-lg items-center sm:h-12">
-            <h1 class="text-primary">
+        <div class="mt-4 flex items-center gap-3">
+            <button
+                type="button"
+                class="flex size-9 shrink-0 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                :title="$t('common.back')"
+                @click="goBack"
+            >
+                <ArrowLeft class="size-4" />
+            </button>
+            <p class="text-xs font-semibold uppercase tracking-wide text-primary">
                 {{ $t('settings.title') }}
-            </h1>
+            </p>
         </div>
 
-        <form class="mt-6 mb-12">
-            <div class="flex justify-center sm:justify-start space-x-4 items-center sm:w-96 h-20 sm:h-28 px-1 py-2 rounded-full border border-gray-300">
-                <ProfileLifetimeAccessBadge size="lg">
-                    <ProfileInamiVerifiedBadge size="lg">
-                        <div class="relative">
-                            <SquarePen
-                                class="w-5 text-gray-600 absolute -top-1 -right-2 sm:-right-1 cursor-pointer"
-                                @click="profileDialog = true"
-                            />
-                            <Trash2
-                                v-if="user.profile?.profil_url"
-                                class="w-5 text-primary absolute -bottom-1 -right-2 sm:-right-1 cursor-pointer"
-                                @click="deleteAvatarDialog = true"
-                            />
-                            <img
-                                v-if="user.profile?.profil_url != null"
-                                :src="useRuntimeConfig().public.API_URL + '/storage/' + user.profile?.profil_url"
-                                class="w-16 h-16 sm:w-24 sm:h-24 rounded-full"
-                            >
-                            <img
-                                v-else
-                                src="/images/icons/user-circle.png"
-                                class="w-16 h-16 sm:w-24 sm:h-24 rounded-full opacity-60"
-                            >
-                        </div>
-                    </ProfileInamiVerifiedBadge>
-                </ProfileLifetimeAccessBadge>
+        <form class="mt-4 mb-12">
+            <div class="rounded-lg border border-border bg-card p-4 sm:p-5">
+                <div class="flex flex-wrap items-center gap-4">
+                    <div
+                        class="relative group/avatar shrink-0 cursor-pointer rounded-full"
+                        role="button"
+                        tabindex="0"
+                        :aria-label="$t('settings.editPhoto')"
+                        @click="profileDialog = !profileDialog"
+                        @keydown.enter="profileDialog = !profileDialog"
+                    >
+                        <ProfileLifetimeAccessBadge size="lg">
+                            <ProfileInamiVerifiedBadge size="lg">
+                                <img
+                                    v-if="user.profile?.profil_url != null"
+                                    :src="useRuntimeConfig().public.API_URL + '/storage/' + user.profile?.profil_url"
+                                    class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover"
+                                >
+                                <img
+                                    v-else
+                                    src="/images/icons/user-circle.png"
+                                    class="w-16 h-16 sm:w-20 sm:h-20 rounded-full opacity-60"
+                                >
+                            </ProfileInamiVerifiedBadge>
+                        </ProfileLifetimeAccessBadge>
+                        <span class="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 transition-opacity group-hover/avatar:opacity-100">
+                            <Camera class="size-5 text-white" />
+                        </span>
+                    </div>
 
-                <Dialog v-model:open="profileDialog">
-                    <DialogContent class="sm:max-w-160">
-                        <DialogHeader>
-                            <DialogTitle>{{ $t('settings.editPhoto') }}</DialogTitle>
-                        </DialogHeader>
-                        <div class="grid gap-4 py-4">
-                            <div class="grid gap-2">
-                                <FileUpload
-                                    accept="image/*"
-                                    @file-selected="profileFile = $event"
-                                />
-                            </div>
-                        </div>
-                        <DialogFooter>
-                            <Button
-                                :loading="profileUpload.loading"
-                                @click="submit"
-                            >
-                                {{ $t('settings.save') }}
-                            </Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
+                    <div class="min-w-0 flex-1">
+                        <h1 class="font-secondary truncate text-xl font-semibold text-foreground sm:text-2xl">
+                            {{ user.type == 'institution' ? (user.institution?.name || '-') : `${user.firstname} ${user.lastname}` }}
+                        </h1>
+                        <p class="truncate text-sm text-muted-foreground">
+                            <template v-if="user.type == 'institution'">
+                                {{ user.email }}
+                            </template>
+                            <template v-else>
+                                {{ formattedCategory || $t('settings.title') }}
+                                <template v-if="user.profile?.city">
+                                    · {{ user.profile.city }}
+                                </template>
+                            </template>
+                        </p>
+                    </div>
 
-                <Dialog v-model:open="deleteAvatarDialog">
-                    <DialogContent class="sm:max-w-md h-52">
-                        <DialogHeader>
-                            <DialogTitle>{{ $t('settings.confirmDelete') }}</DialogTitle>
-                            <DialogDescription>
-                                {{ $t('settings.deletePhotoConfirm') }}
-                            </DialogDescription>
-                        </DialogHeader>
-                        <DialogFooter class="gap-4 sm:gap-4">
-                            <Button
-                                variant="outline"
-                                @click="deleteAvatarDialog = false"
-                            >
-                                {{ $t('common.cancel') }}
-                            </Button>
-                            <Button
-                                @click="handleDeleteAvatar"
-                            >
-                                {{ $t('common.confirm') }}
-                            </Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
+                    <LayoutsLogo class="hidden w-28 shrink-0 sm:block" />
+                </div>
 
-                <div>
-                    <LayoutsLogo class="w-36 sm:w-48" />
+                <div
+                    v-if="profileDialog"
+                    class="mt-4 flex flex-col gap-3 border-t border-border pt-4"
+                >
+                    <FileUpload
+                        accept="image/*"
+                        @file-selected="profileFile = $event"
+                    />
+                    <div class="flex flex-wrap items-center gap-2">
+                        <Button
+                            variant="none"
+                            class="h-auto rounded-md bg-primary px-3.5 py-2 text-[13px] font-medium text-primary-foreground transition-colors hover:bg-primary/90 md:text-[13px] lg:text-[13px]"
+                            :loading="profileUpload.loading"
+                            @click="submit"
+                        >
+                            {{ $t('settings.save') }}
+                        </Button>
+                        <Button
+                            v-if="user.profile?.profil_url"
+                            variant="none"
+                            class="h-auto inline-flex items-center gap-1.5 rounded-md border border-destructive/40 bg-destructive/5 px-3.5 py-2 text-[13px] font-medium text-destructive transition-colors hover:bg-destructive/10 md:text-[13px] lg:text-[13px]"
+                            @click="deleteAvatarDialog = true"
+                        >
+                            <Trash2 class="size-4" />
+                            {{ $t('settings.confirmDelete') }}
+                        </Button>
+                        <Button
+                            variant="none"
+                            class="h-auto rounded-md border border-transparent px-3.5 py-2 text-[13px] font-medium text-muted-foreground transition-colors hover:text-foreground md:text-[13px] lg:text-[13px]"
+                            @click="profileDialog = false"
+                        >
+                            {{ $t('common.cancel') }}
+                        </Button>
+                    </div>
+                    <div
+                        v-if="deleteAvatarDialog"
+                        class="flex items-center gap-2 text-sm text-destructive"
+                    >
+                        <span>{{ $t('settings.deletePhotoConfirm') }}</span>
+                        <button
+                            type="button"
+                            class="font-medium underline"
+                            @click="handleDeleteAvatar"
+                        >
+                            {{ $t('common.confirm') }}
+                        </button>
+                        <button
+                            type="button"
+                            class="underline"
+                            @click="deleteAvatarDialog = false"
+                        >
+                            {{ $t('common.cancel') }}
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-12">
-                <div class="space-y-12">
-                    <section class="shadow rounded-lg p-6">
-                        <div class="flex justify-between items-center">
-                            <h3 class="flex items-center space-x-4">
-                                <IdCard class="w-6 text-gray-400" />
-                                <span class="text-lg">{{ $t('settings.generalInfo') }}</span>
+            <div class="flex flex-col gap-6 mt-12">
+                <div class="space-y-6">
+                    <section class="rounded-lg border border-border bg-card p-6">
+                        <div class="flex items-start justify-between gap-3">
+                            <h3 class="flex items-center gap-3">
+                                <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+                                    <IdCard class="size-5" />
+                                </span>
+                                <span class="text-lg font-secondary">{{ $t('settings.generalInfo') }}</span>
                             </h3>
-
-                            <SquarePen
-                                class="w-5 text-black/60 hover:text-primary cursor-pointer"
-                                @click="personalInfoDialog = true"
-                            />
-
-                            <Dialog v-model:open="personalInfoDialog">
-                                <DialogContent class="w-full max-w-sm sm:max-w-xl max-h-[90vh] overflow-y-auto">
-                                    <DialogHeader>
-                                        <DialogTitle class="text-center">
-                                            {{ $t('settings.updateTitle') }}
-                                        </DialogTitle>
-                                    </DialogHeader>
-                                    <DialogDescription>
-                                        {{ $t('settings.updatePersonalDesc') }}
-                                    </DialogDescription>
-
-                                    <form class="mt-4 space-y-3">
-                                        <div
-                                            v-if="user.type == 'institution'"
-                                            class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full"
-                                        >
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
-                                                {{ $t('settings.institutionName') }}
-                                                <SettingsFieldHint
-                                                    variant="onPrimary"
-                                                    :text="$t(SETTINGS_TOOLTIPS.institutionName)"
-                                                    :label="$t('settings.institutionName')"
-                                                />
-                                            </p>
-                                            <Input
-                                                v-model="formPersonalInfo.institution.name"
-                                                type="text"
-                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
-                                            />
-                                        </div>
-
-                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
-                                                {{ $t('settings.lastname') }}
-                                                <SettingsFieldHint
-                                                    variant="onPrimary"
-                                                    :text="$t(SETTINGS_TOOLTIPS.lastname)"
-                                                    :label="$t('settings.lastname')"
-                                                />
-                                            </p>
-                                            <Input
-                                                v-model="formPersonalInfo.lastname"
-                                                type="text"
-                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
-                                            />
-                                        </div>
-
-                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
-                                                {{ $t('settings.firstname') }}
-                                                <SettingsFieldHint
-                                                    variant="onPrimary"
-                                                    :text="$t(SETTINGS_TOOLTIPS.firstname)"
-                                                    :label="$t('settings.firstname')"
-                                                />
-                                            </p>
-                                            <Input
-                                                v-model="formPersonalInfo.firstname"
-                                                type="text"
-                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
-                                            />
-                                        </div>
-
-                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
-                                                {{ $t('settings.birthDate') }}
-                                                <SettingsFieldHint
-                                                    variant="onPrimary"
-                                                    :text="$t(SETTINGS_TOOLTIPS.dateOfBirth)"
-                                                    :label="$t('settings.birthDate')"
-                                                />
-                                            </p>
-                                            <Input
-                                                v-model="formPersonalInfo.dateOfBirth"
-                                                type="date"
-                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
-                                            />
-                                        </div>
-
-                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary w-full truncate sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
-                                                {{ $t('settings.email') }}
-                                                <SettingsFieldHint
-                                                    variant="onPrimary"
-                                                    :text="$t(SETTINGS_TOOLTIPS.email)"
-                                                    :label="$t('settings.email')"
-                                                />
-                                            </p>
-                                            <Input
-                                                v-model="formPersonalInfo.email"
-                                                type="email"
-                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
-                                            />
-                                        </div>
-
-                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
-                                                {{ $t('settings.identifierNumber', { label: identifierLabel }) }}
-                                                <SettingsFieldHint
-                                                    variant="onPrimary"
-                                                    :text="$t(SETTINGS_TOOLTIPS.identifierNumber)"
-                                                    :label="$t('settings.identifierNumber', { label: identifierLabel })"
-                                                />
-                                            </p>
-                                            <Input
-                                                v-model="formPersonalInfo.identifierNumber"
-                                                type="text"
-                                                :placeholder="!formPersonalInfo.identifierNumber ? '19960116' : ''"
-                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-gray-400 h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
-                                            />
-                                        </div>
-
-                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
-                                                {{ $t('settings.phone') }}
-                                                <SettingsFieldHint
-                                                    variant="onPrimary"
-                                                    :text="$t(SETTINGS_TOOLTIPS.phoneNumber)"
-                                                    :label="$t('settings.phone')"
-                                                />
-                                            </p>
-                                            <Input
-                                                v-model="formPersonalInfo.phoneNumber"
-                                                type="text"
-                                                :placeholder="!formPersonalInfo.phoneNumber ? '00 32 2 374 XX XX' : ''"
-                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-gray-400 h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
-                                            />
-                                        </div>
-
-                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
-                                                {{ $t('settings.gender') }}
-                                                <SettingsFieldHint
-                                                    variant="onPrimary"
-                                                    :text="$t(SETTINGS_TOOLTIPS.gender)"
-                                                    :label="$t('settings.gender')"
-                                                />
-                                            </p>
-                                            <Select v-model="formPersonalInfo.gender">
-                                                <SelectTrigger
-                                                    class="w-full text-black bg-gray-100 sm:bg-transparent text-nowrap border-none"
-                                                    position="right"
-                                                >
-                                                    <SelectValue :value="formPersonalInfo.gender" />
-                                                </SelectTrigger>
-                                                <SelectContent class="border-none">
-                                                    <template
-                                                        v-for="[key, value] in Object.entries(genders)"
-                                                        :key="key"
-                                                    >
-                                                        <SelectItem :value="key">
-                                                            {{ value }}
-                                                        </SelectItem>
-                                                    </template>
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
-
-                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
-                                                {{ $t('settings.professionalCategory') }}
-                                                <SettingsFieldHint
-                                                    variant="onPrimary"
-                                                    :text="$t(SETTINGS_TOOLTIPS.professionalCategory)"
-                                                    :label="$t('settings.professionalCategory')"
-                                                />
-                                            </p>
-                                            <Select v-model="formPersonalInfo.professionalCategory">
-                                                <SelectTrigger
-                                                    class="w-full text-black bg-gray-100 sm:bg-transparent text-nowrap border-none"
-                                                    position="right"
-                                                >
-                                                    <SelectValue :value="formPersonalInfo.professionalCategory" />
-                                                </SelectTrigger>
-                                                <SelectContent class="border-none">
-                                                    <template
-                                                        v-for="[key, value] in Object.entries(professionalCategory)"
-                                                        :key="key"
-                                                    >
-                                                        <SelectItem :value="key">
-                                                            {{ value }}
-                                                        </SelectItem>
-                                                    </template>
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
-
-                                        <div
-                                            v-if="showEducationLevelSettings"
-                                            class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full"
-                                        >
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
-                                                {{ $t('settings.educationLevel') }}
-                                                <SettingsFieldHint
-                                                    variant="onPrimary"
-                                                    :text="$t(SETTINGS_TOOLTIPS.educationLevel)"
-                                                    :label="$t('settings.educationLevel')"
-                                                />
-                                            </p>
-                                            <Select v-model="formPersonalInfo.educationLevel">
-                                                <SelectTrigger
-                                                    class="w-full text-black bg-gray-100 sm:bg-transparent text-nowrap border-none"
-                                                    position="right"
-                                                >
-                                                    <SelectValue :value="formPersonalInfo.educationLevel" />
-                                                </SelectTrigger>
-                                                <SelectContent class="border-none">
-                                                    <SelectItem
-                                                        v-for="level in educationLevelOptions"
-                                                        :key="level.value"
-                                                        :value="level.value"
-                                                    >
-                                                        {{ level.label }}
-                                                    </SelectItem>
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
-
-                                        <div class="flex flex-col sm:flex-row justify-end items-center space-y-2 sm:space-y-0 sm:space-x-8 pt-6">
-                                            <Button
-                                                variant="secondary"
-                                                class="bg-gray-200 hover:bg-gray-300 w-full sm:w-auto"
-                                                @click="personalInfoDialog = false"
-                                            >
-                                                {{ $t('common.cancel') }}
-                                            </Button>
-                                            <Button
-                                                class="w-full sm:w-auto"
-                                                @click="updateInfoUser"
-                                            >
-                                                Enregistrer
-                                            </Button>
-                                        </div>
-                                    </form>
-                                </DialogContent>
-                            </Dialog>
-                        </div>
-
-                        <div class="mt-4 space-y-3">
-                            <div
-                                v-if="user.type == 'institution'"
-                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
+                            <Button
+                                v-if="!personalInfoDialog"
+                                variant="none"
+                                class="h-auto inline-flex items-center gap-1.5 rounded-md border border-border bg-muted px-3.5 py-2 text-[13px] font-medium text-muted-foreground transition-colors hover:border-primary hover:text-primary md:text-[13px] lg:text-[13px]"
                                 @click="personalInfoDialog = true"
                             >
-                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
-                                    <label
-                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
-                                    >
-                                        <Building2 class="w-5" />
-                                        <span>{{ $t('settings.institutionName') }}</span>
+                                <SquarePen class="size-4" />
+                                Modifier
+                            </Button>
+                        </div>
+
+                        <!-- Vue lecture -->
+                        <div
+                            v-if="!personalInfoDialog"
+                            class="mt-4 divide-y divide-border"
+                        >
+                            <div
+                                v-if="user.type == 'institution'"
+                                class="flex items-center justify-between gap-3 py-2.5"
+                            >
+                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                    <Building2 class="size-4" />
+                                    {{ $t('settings.institutionName') }}
+                                </span>
+                                <span class="text-sm font-medium">{{ user.institution?.name || '-' }}</span>
+                            </div>
+                            <div class="flex items-center justify-between gap-3 py-2.5">
+                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                    <CircleUser class="size-4" />
+                                    {{ $t('settings.lastname') }}
+                                </span>
+                                <span class="text-sm font-medium">{{ user.lastname }}</span>
+                            </div>
+                            <div class="flex items-center justify-between gap-3 py-2.5">
+                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                    <UserPlus class="size-4" />
+                                    {{ $t('settings.firstname') }}
+                                </span>
+                                <span class="text-sm font-medium">{{ user.firstname }}</span>
+                            </div>
+                            <div class="flex items-center justify-between gap-3 py-2.5">
+                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                    <Calendar class="size-4" />
+                                    {{ $t('settings.birthDate') }}
+                                </span>
+                                <span class="text-sm font-medium">{{ formatStringDate(user.date_of_birth) !== '01/01/1970' ? formatStringDate(user.date_of_birth) : 'jj/mm/aaaa' }}</span>
+                            </div>
+                            <div class="flex items-center justify-between gap-3 py-2.5">
+                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                    <Mail class="size-4" />
+                                    {{ $t('settings.email') }}
+                                </span>
+                                <span class="truncate text-sm font-medium">{{ user.email }}</span>
+                            </div>
+                            <div class="flex items-center justify-between gap-3 py-2.5">
+                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                    <span class="font-bold">N°</span>
+                                    {{ identifierLabel }}
+                                </span>
+                                <span
+                                    class="text-sm font-medium"
+                                    :class="{ 'text-muted-foreground': !hasRealIdentifierDisplay }"
+                                >
+                                    {{ identifierDisplayLabel }}
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-between gap-3 py-2.5">
+                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                    <Phone class="size-4" />
+                                    {{ $t('settings.phone') }}
+                                </span>
+                                <span
+                                    class="text-sm font-medium"
+                                    :class="{ 'text-muted-foreground': !user?.phone_number }"
+                                >
+                                    {{ user?.phone_number || '00 32 2 374 XX XX' }}
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-between gap-3 py-2.5">
+                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                    <VenusAndMars class="size-4" />
+                                    {{ $t('settings.gender') }}
+                                </span>
+                                <span class="text-sm font-medium">{{ formattedGender || ' - ' }}</span>
+                            </div>
+                            <div class="flex items-center justify-between gap-3 py-2.5">
+                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                    <Users class="size-4" />
+                                    {{ $t('settings.professionalCategory') }}
+                                </span>
+                                <span class="text-sm font-medium">{{ formattedCategory || ' - ' }}</span>
+                            </div>
+                            <div
+                                v-if="showEducationLevelSettings"
+                                class="flex items-center justify-between gap-3 py-2.5"
+                            >
+                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                    <GraduationCap class="size-4" />
+                                    {{ $t('settings.educationLevel') }}
+                                </span>
+                                <span class="text-sm font-medium">{{ formattedEducationLevel || ' - ' }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Édition en ligne (remplace le Dialog) -->
+                        <form
+                            v-else
+                            class="mt-4 space-y-4"
+                            @submit.prevent="updateInfoUser"
+                        >
+                            <div class="grid gap-4 sm:grid-cols-2">
+                                <div
+                                    v-if="user.type == 'institution'"
+                                    class="flex flex-col gap-1.5 sm:col-span-2"
+                                >
+                                    <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                                        {{ $t('settings.institutionName') }}
                                         <SettingsFieldHint
-                                            variant="onPrimary"
                                             :text="$t(SETTINGS_TOOLTIPS.institutionName)"
                                             :label="$t('settings.institutionName')"
                                         />
                                     </label>
+                                    <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
+                                        <Building2 class="size-4 shrink-0 text-primary" />
+                                        <Input
+                                            v-model="formPersonalInfo.institution.name"
+                                            type="text"
+                                            class="h-auto border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
+                                        />
+                                    </div>
                                 </div>
-                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ user.institution?.name || '' }}
-                                </p>
-                            </div>
 
-                            <div
-                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
-                                @click="personalInfoDialog = true"
-                            >
-                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
-                                    <label
-                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
-                                    >
-                                        <CircleUser class="w-5" />
-                                        <span>{{ $t('settings.lastname') }}</span>
+                                <div class="flex flex-col gap-1.5">
+                                    <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                                        {{ $t('settings.lastname') }}
                                         <SettingsFieldHint
-                                            variant="onPrimary"
                                             :text="$t(SETTINGS_TOOLTIPS.lastname)"
                                             :label="$t('settings.lastname')"
                                         />
                                     </label>
+                                    <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
+                                        <CircleUser class="size-4 shrink-0 text-primary" />
+                                        <Input
+                                            v-model="formPersonalInfo.lastname"
+                                            type="text"
+                                            class="h-auto border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
+                                        />
+                                    </div>
                                 </div>
-                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ user.lastname }}
-                                </p>
-                            </div>
 
-                            <div
-                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
-                                @click="personalInfoDialog = true"
-                            >
-                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
-                                    <label
-                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
-                                    >
-                                        <UserPlus class="w-5" />
-                                        <span>{{ $t('settings.firstname') }}</span>
+                                <div class="flex flex-col gap-1.5">
+                                    <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                                        {{ $t('settings.firstname') }}
                                         <SettingsFieldHint
-                                            variant="onPrimary"
                                             :text="$t(SETTINGS_TOOLTIPS.firstname)"
                                             :label="$t('settings.firstname')"
                                         />
                                     </label>
+                                    <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
+                                        <UserPlus class="size-4 shrink-0 text-primary" />
+                                        <Input
+                                            v-model="formPersonalInfo.firstname"
+                                            type="text"
+                                            class="h-auto border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
+                                        />
+                                    </div>
                                 </div>
-                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ user.firstname }}
-                                </p>
-                            </div>
 
-                            <div
-                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
-                                @click="personalInfoDialog = true"
-                            >
-                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
-                                    <label
-                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
-                                    >
-                                        <Calendar class="w-5" />
-                                        <span>{{ $t('settings.birthDate') }}</span>
+                                <div class="flex flex-col gap-1.5">
+                                    <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                                        {{ $t('settings.birthDate') }}
                                         <SettingsFieldHint
-                                            variant="onPrimary"
                                             :text="$t(SETTINGS_TOOLTIPS.dateOfBirth)"
                                             :label="$t('settings.birthDate')"
                                         />
                                     </label>
+                                    <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
+                                        <Calendar class="size-4 shrink-0 text-primary" />
+                                        <Input
+                                            v-model="formPersonalInfo.dateOfBirth"
+                                            type="date"
+                                            class="h-auto border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
+                                        />
+                                    </div>
                                 </div>
-                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ formatStringDate(user.date_of_birth) !== '01/01/1970' ? formatStringDate(user.date_of_birth) : 'jj/mm/aaaa' }}
-                                </p>
-                            </div>
 
-                            <div
-                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
-                                @click="personalInfoDialog = true"
-                            >
-                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
-                                    <label
-                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
-                                    >
-                                        <Mail class="w-5" />
-                                        <span class="truncate w-full">{{ $t('settings.email') }}</span>
+                                <div class="flex flex-col gap-1.5">
+                                    <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                                        {{ $t('settings.email') }}
                                         <SettingsFieldHint
-                                            variant="onPrimary"
                                             :text="$t(SETTINGS_TOOLTIPS.email)"
                                             :label="$t('settings.email')"
                                         />
                                     </label>
+                                    <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
+                                        <Mail class="size-4 shrink-0 text-primary" />
+                                        <Input
+                                            v-model="formPersonalInfo.email"
+                                            type="email"
+                                            class="h-auto border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
+                                        />
+                                    </div>
                                 </div>
-                                <p class="border w-full truncate border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ user.email }}
-                                </p>
-                            </div>
 
-                            <div
-                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
-                                @click="personalInfoDialog = true"
-                            >
-                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
-                                    <label
-                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
-                                    >
-                                        <span class="font-bold">N°</span>
-                                        <span>{{ identifierLabel }}</span>
+                                <div class="flex flex-col gap-1.5">
+                                    <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                                        {{ $t('settings.identifierNumber', { label: identifierLabel }) }}
                                         <SettingsFieldHint
-                                            variant="onPrimary"
                                             :text="$t(SETTINGS_TOOLTIPS.identifierNumber)"
                                             :label="$t('settings.identifierNumber', { label: identifierLabel })"
                                         />
                                     </label>
+                                    <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
+                                        <span class="text-sm font-bold text-primary">N°</span>
+                                        <Input
+                                            v-model="formPersonalInfo.identifierNumber"
+                                            type="text"
+                                            :placeholder="!formPersonalInfo.identifierNumber ? '19960116' : ''"
+                                            class="h-auto border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
+                                        />
+                                    </div>
                                 </div>
-                                <p
-                                    class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded"
-                                    :class="{ 'text-gray-400': !hasRealIdentifierDisplay }"
-                                >
-                                    {{ identifierDisplayLabel }}
-                                </p>
-                            </div>
 
-                            <div
-                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
-                                @click="personalInfoDialog = true"
-                            >
-                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
-                                    <label
-                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
-                                    >
-                                        <Phone class="w-5" />
-                                        <span>{{ $t('settings.phone') }}</span>
+                                <div class="flex flex-col gap-1.5">
+                                    <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                                        {{ $t('settings.phone') }}
                                         <SettingsFieldHint
-                                            variant="onPrimary"
                                             :text="$t(SETTINGS_TOOLTIPS.phoneNumber)"
                                             :label="$t('settings.phone')"
                                         />
                                     </label>
+                                    <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
+                                        <Phone class="size-4 shrink-0 text-primary" />
+                                        <Input
+                                            v-model="formPersonalInfo.phoneNumber"
+                                            type="text"
+                                            :placeholder="!formPersonalInfo.phoneNumber ? '00 32 2 374 XX XX' : ''"
+                                            class="h-auto border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
+                                        />
+                                    </div>
                                 </div>
-                                <p
-                                    class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded"
-                                    :class="{ 'text-gray-400': !user?.phone_number }"
-                                >
-                                    {{ user?.phone_number || '00 32 2 374 XX XX' }}
-                                </p>
-                            </div>
 
-                            <div
-                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
-                                @click="personalInfoDialog = true"
-                            >
-                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
-                                    <label
-                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
-                                    >
-                                        <img
-                                            src="/images/icons/gender_white.png"
-                                            class="w-5"
-                                        >
-                                        <span>{{ $t('settings.gender') }}</span>
+                                <div class="flex flex-col gap-1.5">
+                                    <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                                        {{ $t('settings.gender') }}
                                         <SettingsFieldHint
-                                            variant="onPrimary"
                                             :text="$t(SETTINGS_TOOLTIPS.gender)"
                                             :label="$t('settings.gender')"
                                         />
                                     </label>
+                                    <Select v-model="formPersonalInfo.gender">
+                                        <SelectTrigger class="h-11 w-full rounded-md border border-input">
+                                            <VenusAndMars class="size-4 shrink-0 text-primary" />
+                                            <SelectValue :value="formPersonalInfo.gender" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <template
+                                                v-for="[key, value] in Object.entries(genders)"
+                                                :key="key"
+                                            >
+                                                <SelectItem :value="key">
+                                                    {{ value }}
+                                                </SelectItem>
+                                            </template>
+                                        </SelectContent>
+                                    </Select>
                                 </div>
-                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ formattedGender || ' - ' }}
-                                </p>
-                            </div>
 
-                            <div
-                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
-                                @click="personalInfoDialog = true"
-                            >
-                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
-                                    <label
-                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
-                                    >
-                                        <Users class="text-white w-5" />
-                                        <span>{{ $t('settings.professionalCategory') }}</span>
+                                <div class="flex flex-col gap-1.5">
+                                    <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                                        {{ $t('settings.professionalCategory') }}
                                         <SettingsFieldHint
-                                            variant="onPrimary"
                                             :text="$t(SETTINGS_TOOLTIPS.professionalCategory)"
                                             :label="$t('settings.professionalCategory')"
                                         />
                                     </label>
+                                    <Select v-model="formPersonalInfo.professionalCategory">
+                                        <SelectTrigger class="h-11 w-full rounded-md border border-input">
+                                            <Users class="size-4 shrink-0 text-primary" />
+                                            <SelectValue :value="formPersonalInfo.professionalCategory" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <template
+                                                v-for="[key, value] in Object.entries(professionalCategory)"
+                                                :key="key"
+                                            >
+                                                <SelectItem :value="key">
+                                                    {{ value }}
+                                                </SelectItem>
+                                            </template>
+                                        </SelectContent>
+                                    </Select>
                                 </div>
-                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ formattedCategory || ' - ' }}
-                                </p>
-                            </div>
 
-                            <div
-                                v-if="showEducationLevelSettings"
-                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
-                                @click="personalInfoDialog = true"
-                            >
-                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
-                                    <label
-                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
-                                    >
-                                        <GraduationCap class="text-white w-5" />
-                                        <span>{{ $t('settings.educationLevel') }}</span>
+                                <div
+                                    v-if="showEducationLevelSettings"
+                                    class="flex flex-col gap-1.5 sm:col-span-2"
+                                >
+                                    <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                                        {{ $t('settings.educationLevel') }}
                                         <SettingsFieldHint
-                                            variant="onPrimary"
                                             :text="$t(SETTINGS_TOOLTIPS.educationLevel)"
                                             :label="$t('settings.educationLevel')"
                                         />
                                     </label>
+                                    <Select v-model="formPersonalInfo.educationLevel">
+                                        <SelectTrigger class="h-11 w-full rounded-md border border-input">
+                                            <GraduationCap class="size-4 shrink-0 text-primary" />
+                                            <SelectValue :value="formPersonalInfo.educationLevel" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem
+                                                v-for="level in educationLevelOptions"
+                                                :key="level.value"
+                                                :value="level.value"
+                                            >
+                                                {{ level.label }}
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
                                 </div>
-                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ formattedEducationLevel || ' - ' }}
-                                </p>
                             </div>
-                        </div>
+
+                            <div class="flex justify-end gap-2 border-t border-border pt-4">
+                                <Button
+                                    type="button"
+                                    variant="none"
+                                    class="h-auto rounded-md border border-transparent px-3.5 py-2 text-[13px] font-medium text-muted-foreground transition-colors hover:text-foreground md:text-[13px] lg:text-[13px]"
+                                    @click="personalInfoDialog = false"
+                                >
+                                    {{ $t('common.cancel') }}
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    variant="none"
+                                    class="h-auto rounded-md bg-primary px-3.5 py-2 text-[13px] font-medium text-primary-foreground transition-colors hover:bg-primary/90 md:text-[13px] lg:text-[13px]"
+                                >
+                                    Enregistrer
+                                </Button>
+                            </div>
+                        </form>
                     </section>
 
                     <section
                         v-if="user.type != 'institution'"
-                        class="shadow rounded-lg p-6"
+                        class="rounded-lg border border-border bg-card p-6"
                     >
-                        <div class="flex justify-between items-center">
-                            <h3 class="flex items-center space-x-4">
-                                <MapPin class="w-6 text-gray-400" />
-                                <span class="text-lg">{{ $t('settings.address') }}</span>
+                        <div class="flex items-start justify-between gap-3">
+                            <h3 class="flex items-center gap-3">
+                                <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+                                    <MapPin class="size-5" />
+                                </span>
+                                <span class="text-lg font-secondary">{{ $t('settings.address') }}</span>
                             </h3>
-
-                            <SquarePen
-                                class="w-5 text-black/50 hover:text-primary cursor-pointer"
-                                @click="addressInfoDialog = true"
-                            />
-
-                            <Dialog v-model:open="addressInfoDialog">
-                                <DialogContent class="w-full max-w-sm sm:max-w-xl max-h-[90vh] overflow-y-auto">
-                                    <DialogHeader>
-                                        <DialogTitle class="text-center">
-                                            {{ $t('settings.updateTitle') }}
-                                        </DialogTitle>
-                                    </DialogHeader>
-                                    <DialogDescription>
-                                        {{ $t('settings.updateAddressDesc') }}
-                                    </DialogDescription>
-
-                                    <form class="mt-4 space-y-3">
-                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
-                                                {{ $t('settings.street') }}
-                                                <SettingsFieldHint
-                                                    variant="onPrimary"
-                                                    :text="$t(SETTINGS_TOOLTIPS.street)"
-                                                    :label="$t('settings.street')"
-                                                />
-                                            </p>
-                                            <Input
-                                                v-model="formAddress.streetAddress"
-                                                type="text"
-                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
-                                            />
-                                        </div>
-
-                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
-                                                {{ $t('settings.city') }}
-                                                <SettingsFieldHint
-                                                    variant="onPrimary"
-                                                    :text="$t(SETTINGS_TOOLTIPS.city)"
-                                                    :label="$t('settings.city')"
-                                                />
-                                            </p>
-                                            <Input
-                                                v-model="formAddress.city"
-                                                type="text"
-                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
-                                            />
-                                        </div>
-
-                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
-                                                {{ $t('settings.country') }}
-                                                <SettingsFieldHint
-                                                    variant="onPrimary"
-                                                    :text="$t(SETTINGS_TOOLTIPS.country)"
-                                                    :label="$t('settings.country')"
-                                                />
-                                            </p>
-                                            <Select v-model="formAddress.country">
-                                                <SelectTrigger
-                                                    class="w-full text-black bg-gray-100 sm:bg-transparent text-nowrap border-none"
-                                                    position="right"
-                                                >
-                                                    <SelectValue :value="formAddress.country" />
-                                                </SelectTrigger>
-                                                <SelectContent class="border-none">
-                                                    <template
-                                                        v-for="[key, value] in Object.entries(countries)"
-                                                        :key="key"
-                                                    >
-                                                        <SelectItem :value="key">
-                                                            {{ value }}
-                                                        </SelectItem>
-                                                    </template>
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
-
-                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
-                                                {{ $t('settings.workCountry') }}
-                                                <SettingsFieldHint
-                                                    variant="onPrimary"
-                                                    :text="$t(SETTINGS_TOOLTIPS.workingAt)"
-                                                    :label="$t('settings.workCountry')"
-                                                />
-                                            </p>
-                                            <Select v-model="formAddress.workingAt">
-                                                <SelectTrigger
-                                                    class="w-full text-black bg-gray-100 sm:bg-transparent text-nowrap border-none"
-                                                    position="right"
-                                                >
-                                                    <SelectValue :value="formAddress.workingAt" />
-                                                </SelectTrigger>
-                                                <SelectContent class="border-none">
-                                                    <template
-                                                        v-for="(value, key) in ['Belgique', 'France']"
-                                                        :key="key"
-                                                    >
-                                                        <SelectItem :value="value">
-                                                            {{ value }}
-                                                        </SelectItem>
-                                                    </template>
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
-
-                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
-                                                {{ $t('settings.zipCode') }}
-                                                <SettingsFieldHint
-                                                    variant="onPrimary"
-                                                    :text="$t(SETTINGS_TOOLTIPS.zipCode)"
-                                                    :label="$t('settings.zipCode')"
-                                                />
-                                            </p>
-                                            <Input
-                                                v-model="formAddress.zipCode"
-                                                type="text"
-                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
-                                            />
-                                        </div>
-
-                                        <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                            <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
-                                                {{ $t('settings.extra') }}
-                                                <SettingsFieldHint
-                                                    variant="onPrimary"
-                                                    :text="$t(SETTINGS_TOOLTIPS.additionalInfo)"
-                                                    :label="$t('settings.extra')"
-                                                />
-                                            </p>
-                                            <Input
-                                                v-model="formAddress.additionalInfo"
-                                                type="text"
-                                                class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
-                                            />
-                                        </div>
-
-                                        <div class="flex flex-col sm:flex-row justify-end items-center space-y-2 sm:space-y-0 sm:space-x-8 pt-6">
-                                            <Button
-                                                variant="secondary"
-                                                class="bg-gray-200 hover:bg-gray-300 w-full sm:w-auto"
-                                                @click="addressInfoDialog = false"
-                                            >
-                                                {{ $t('common.cancel') }}
-                                            </Button>
-                                            <Button
-                                                class="w-full sm:w-auto"
-                                                @click="handleUpdateAddress"
-                                            >
-                                                Enregistrer
-                                            </Button>
-                                        </div>
-                                    </form>
-                                </DialogContent>
-                            </Dialog>
-                        </div>
-
-                        <div class="mt-4 space-y-3">
-                            <div
-                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
+                            <Button
+                                v-if="!addressInfoDialog"
+                                variant="none"
+                                class="h-auto inline-flex items-center gap-1.5 rounded-md border border-border bg-muted px-3.5 py-2 text-[13px] font-medium text-muted-foreground transition-colors hover:border-primary hover:text-primary md:text-[13px] lg:text-[13px]"
                                 @click="addressInfoDialog = true"
                             >
-                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
-                                    <label
-                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
-                                    >
-                                        <Map class="w-5" />
-                                        <span>{{ $t('settings.street') }}</span>
+                                <SquarePen class="size-4" />
+                                Modifier
+                            </Button>
+                        </div>
+
+                        <!-- Vue lecture -->
+                        <div
+                            v-if="!addressInfoDialog"
+                            class="mt-4 divide-y divide-border"
+                        >
+                            <div class="flex items-center justify-between gap-3 py-2.5">
+                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                    <Map class="size-4" />
+                                    {{ $t('settings.street') }}
+                                </span>
+                                <span class="text-sm font-medium">{{ user.profile?.street_address || ' - ' }}</span>
+                            </div>
+                            <div class="flex items-center justify-between gap-3 py-2.5">
+                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                    <Building2 class="size-4" />
+                                    {{ $t('settings.city') }}
+                                </span>
+                                <span class="text-sm font-medium">{{ user.profile?.city || ' - ' }}</span>
+                            </div>
+                            <div class="flex items-center justify-between gap-3 py-2.5">
+                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                    <Flag class="size-4" />
+                                    {{ $t('settings.country') }}
+                                </span>
+                                <span class="text-sm font-medium">{{ formattedCountry || ' - ' }}</span>
+                            </div>
+                            <div class="flex items-center justify-between gap-3 py-2.5">
+                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                    <Building2 class="size-4" />
+                                    {{ $t('settings.workCountry') }}
+                                </span>
+                                <span class="text-sm font-medium">{{ user.profile?.working_at || ' - ' }}</span>
+                            </div>
+                            <div class="flex items-center justify-between gap-3 py-2.5">
+                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                    <Mailbox class="size-4" />
+                                    {{ $t('settings.zipCode') }}
+                                </span>
+                                <span class="text-sm font-medium">{{ user.profile?.zip_code || ' - ' }}</span>
+                            </div>
+                            <div class="flex items-center justify-between gap-3 py-2.5">
+                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                    <CircleEllipsis class="size-4" />
+                                    {{ $t('settings.extra') }}
+                                </span>
+                                <span class="truncate text-sm font-medium">{{ user.additional_info || ' - ' }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Édition en ligne (remplace le Dialog) -->
+                        <form
+                            v-else
+                            class="mt-4 space-y-4"
+                            @submit.prevent="handleUpdateAddress"
+                        >
+                            <div class="grid gap-4 sm:grid-cols-2">
+                                <div class="flex flex-col gap-1.5 sm:col-span-2">
+                                    <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                                        {{ $t('settings.street') }}
                                         <SettingsFieldHint
-                                            variant="onPrimary"
                                             :text="$t(SETTINGS_TOOLTIPS.street)"
                                             :label="$t('settings.street')"
                                         />
                                     </label>
-                                </div>
-                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ user.profile?.street_address || ' - ' }}
-                                </p>
-                            </div>
-
-                            <div
-                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
-                                @click="addressInfoDialog = true"
-                            >
-                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
-                                    <label
-                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
-                                    >
-                                        <Building2 class="w-5" />
-                                        <span>{{ $t('settings.city') }}</span>
-                                        <SettingsFieldHint
-                                            variant="onPrimary"
-                                            :text="$t(SETTINGS_TOOLTIPS.city)"
-                                            :label="$t('settings.city')"
+                                    <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
+                                        <Map class="size-4 shrink-0 text-primary" />
+                                        <Input
+                                            v-model="formAddress.streetAddress"
+                                            type="text"
+                                            class="h-auto border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
                                         />
-                                    </label>
+                                    </div>
                                 </div>
-                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ user.profile?.city || ' - ' }}
-                                </p>
-                            </div>
 
-                            <div
-                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
-                                @click="addressInfoDialog = true"
-                            >
-                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
-                                    <label
-                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
-                                    >
-                                        <FlagIcon class="w-5" />
-                                        <span>{{ $t('settings.country') }}</span>
+                                <div class="flex flex-col gap-1.5">
+                                    <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                                        {{ $t('settings.zipCode') }}
                                         <SettingsFieldHint
-                                            variant="onPrimary"
-                                            :text="$t(SETTINGS_TOOLTIPS.country)"
-                                            :label="$t('settings.country')"
-                                        />
-                                    </label>
-                                </div>
-                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ formattedCountry || ' - ' }}
-                                </p>
-                            </div>
-
-                            <div
-                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
-                                @click="addressInfoDialog = true"
-                            >
-                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
-                                    <label
-                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
-                                    >
-                                        <Building2 class="w-5" />
-                                        <span>{{ $t('settings.workCountry') }}</span>
-                                        <SettingsFieldHint
-                                            variant="onPrimary"
-                                            :text="$t(SETTINGS_TOOLTIPS.workingAt)"
-                                            :label="$t('settings.workCountry')"
-                                        />
-                                    </label>
-                                </div>
-                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ user.profile?.working_at || ' - ' }}
-                                </p>
-                            </div>
-
-                            <div
-                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
-                                @click="addressInfoDialog = true"
-                            >
-                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
-                                    <label
-                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
-                                    >
-                                        <EnvelopeOpenIcon class="w-5" />
-                                        <span>{{ $t('settings.zipCode') }}</span>
-                                        <SettingsFieldHint
-                                            variant="onPrimary"
                                             :text="$t(SETTINGS_TOOLTIPS.zipCode)"
                                             :label="$t('settings.zipCode')"
                                         />
                                     </label>
+                                    <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
+                                        <Mailbox class="size-4 shrink-0 text-primary" />
+                                        <Input
+                                            v-model="formAddress.zipCode"
+                                            type="text"
+                                            class="h-auto border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
+                                        />
+                                    </div>
                                 </div>
-                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ user.profile?.zip_code || ' - ' }}
-                                </p>
-                            </div>
 
-                            <div
-                                class="block sm:grid sm:grid-cols-2 sm:border sm:border-primary sm:h-9 sm:rounded-full"
-                                @click="addressInfoDialog = true"
-                            >
-                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
-                                    <label
-                                        class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0  truncate text-nowrap"
-                                    >
-                                        <EllipsisHorizontalCircleIcon class="w-5" />
-                                        <span>{{ $t('settings.extra') }}</span>
+                                <div class="flex flex-col gap-1.5">
+                                    <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                                        {{ $t('settings.city') }}
                                         <SettingsFieldHint
-                                            variant="onPrimary"
+                                            :text="$t(SETTINGS_TOOLTIPS.city)"
+                                            :label="$t('settings.city')"
+                                        />
+                                    </label>
+                                    <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
+                                        <Building2 class="size-4 shrink-0 text-primary" />
+                                        <Input
+                                            v-model="formAddress.city"
+                                            type="text"
+                                            class="h-auto border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col gap-1.5">
+                                    <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                                        {{ $t('settings.country') }}
+                                        <SettingsFieldHint
+                                            :text="$t(SETTINGS_TOOLTIPS.country)"
+                                            :label="$t('settings.country')"
+                                        />
+                                    </label>
+                                    <Select v-model="formAddress.country">
+                                        <SelectTrigger class="h-11 w-full rounded-md border border-input">
+                                            <Flag class="size-4 shrink-0 text-primary" />
+                                            <SelectValue :value="formAddress.country" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <template
+                                                v-for="[key, value] in Object.entries(countries)"
+                                                :key="key"
+                                            >
+                                                <SelectItem :value="key">
+                                                    {{ value }}
+                                                </SelectItem>
+                                            </template>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+
+                                <div class="flex flex-col gap-1.5">
+                                    <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                                        {{ $t('settings.workCountry') }}
+                                        <SettingsFieldHint
+                                            :text="$t(SETTINGS_TOOLTIPS.workingAt)"
+                                            :label="$t('settings.workCountry')"
+                                        />
+                                    </label>
+                                    <Select v-model="formAddress.workingAt">
+                                        <SelectTrigger class="h-11 w-full rounded-md border border-input">
+                                            <Building2 class="size-4 shrink-0 text-primary" />
+                                            <SelectValue :value="formAddress.workingAt" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <template
+                                                v-for="(value, key) in ['Belgique', 'France']"
+                                                :key="key"
+                                            >
+                                                <SelectItem :value="value">
+                                                    {{ value }}
+                                                </SelectItem>
+                                            </template>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+
+                                <div class="flex flex-col gap-1.5 sm:col-span-2">
+                                    <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                                        {{ $t('settings.extra') }}
+                                        <SettingsFieldHint
                                             :text="$t(SETTINGS_TOOLTIPS.additionalInfo)"
                                             :label="$t('settings.extra')"
                                         />
                                     </label>
+                                    <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
+                                        <CircleEllipsis class="size-4 shrink-0 text-primary" />
+                                        <Input
+                                            v-model="formAddress.additionalInfo"
+                                            type="text"
+                                            class="h-auto border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
+                                        />
+                                    </div>
                                 </div>
-                                <p class="border border-gray-300 rounded-full h-9 flex items-center indent-3 bg-transparent sm:border-none sm:rounded">
-                                    {{ user.additional_info || ' - ' }}
-                                </p>
                             </div>
-                        </div>
+
+                            <div class="flex justify-end gap-2 border-t border-border pt-4">
+                                <Button
+                                    type="button"
+                                    variant="none"
+                                    class="h-auto rounded-md border border-transparent px-3.5 py-2 text-[13px] font-medium text-muted-foreground transition-colors hover:text-foreground md:text-[13px] lg:text-[13px]"
+                                    @click="addressInfoDialog = false"
+                                >
+                                    {{ $t('common.cancel') }}
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    variant="none"
+                                    class="h-auto rounded-md bg-primary px-3.5 py-2 text-[13px] font-medium text-primary-foreground transition-colors hover:bg-primary/90 md:text-[13px] lg:text-[13px]"
+                                >
+                                    Enregistrer
+                                </Button>
+                            </div>
+                        </form>
                     </section>
                 </div>
 
-                <div class="space-y-12 mt-4 xl:mt-0">
+                <div class="space-y-6">
                     <section
                         v-if="user.type == 'institution'"
                         class="shadow rounded-lg p-6 mb-6"
@@ -892,7 +706,7 @@
                         <div class="flex justify-between items-center">
                             <h3 class="flex items-center space-x-4">
                                 <MapPin class="w-6 text-gray-400" />
-                                <span class="text-lg">{{ $t('settings.address') }}</span>
+                                <span class="text-lg font-secondary">{{ $t('settings.address') }}</span>
                             </h3>
 
                             <SquarePen
@@ -1189,114 +1003,113 @@
                         </div>
                     </section>
 
-                    <section class="shadow rounded-lg p-6">
-                        <div class="flex justify-between items-center">
-                            <h3 class="flex items-center space-x-4">
-                                <ShieldCheck class="w-6 text-gray-400" />
-                                <span class="text-lg">{{ $t('settings.security') }}</span>
+                    <section class="rounded-lg border border-border bg-card p-6">
+                        <div class="flex items-start justify-between gap-3">
+                            <h3 class="flex items-center gap-3">
+                                <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+                                    <ShieldCheck class="size-5" />
+                                </span>
+                                <span class="text-lg font-secondary">{{ $t('settings.security') }}</span>
                             </h3>
+                            <Button
+                                v-if="!changePasswordDialog"
+                                variant="none"
+                                class="h-auto inline-flex items-center gap-1.5 rounded-md border border-border bg-muted px-3.5 py-2 text-[13px] font-medium text-muted-foreground transition-colors hover:border-primary hover:text-primary md:text-[13px] lg:text-[13px]"
+                                @click="changePasswordDialog = true"
+                            >
+                                <KeyRound class="size-4" />
+                                Changer le mot de passe
+                            </Button>
                         </div>
 
-                        <div class="mt-4 space-y-3">
-                            <div class="flex justify-between items-center">
-                                <div class="flex items-center gap-1.5 min-w-0">
-                                    <label
-                                        for="currentPassword"
-                                        class="font-normal flex items-center space-x-3"
-                                    >
-                                        <KeyIcon class="w-5 " />
-                                        <span>{{ $t('settings.password') }}</span>
-                                    </label>
+                        <div class="mt-4">
+                            <div
+                                v-if="!changePasswordDialog"
+                                class="flex items-center justify-between gap-3 py-2.5"
+                            >
+                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                    <KeyRound class="size-4" />
+                                    {{ $t('settings.password') }}
                                     <SettingsFieldHint
                                         :text="$t(SETTINGS_TOOLTIPS.password)"
                                         :label="$t('settings.password')"
                                     />
-                                </div>
-
-                                <SquarePen
-                                    class="w-5 text-black/50 hover:text-primary font-semibold text-sm cursor-pointer"
-                                    @click="changePasswordDialog = true"
-                                />
-
-                                <Dialog v-model:open="changePasswordDialog">
-                                    <DialogContent class="w-full max-w-sm sm:max-w-xl max-h-[90vh] overflow-y-auto">
-                                        <DialogHeader>
-                                            <DialogTitle class="text-center">
-                                                Changer le mot de passe
-                                            </DialogTitle>
-                                        </DialogHeader>
-                                        <DialogDescription>
-                                            Veuillez entrer votre mot de passe actuel et nouveau mot de passe ici
-                                        </DialogDescription>
-
-                                        <form class="mt-4 space-y-3">
-                                            <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                                <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
-                                                    Mot de passe actuel
-                                                </p>
-                                                <Input
-                                                    v-model="formPassword.currentPassword"
-                                                    type="password"
-                                                    class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
-                                                />
-                                            </div>
-
-                                            <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                                <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
-                                                    Nouveau mot de passe
-                                                </p>
-                                                <Input
-                                                    v-model="formPassword.password"
-                                                    type="password"
-                                                    class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
-                                                />
-                                            </div>
-
-                                            <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                                <p class="text-primary sm:text-white sm:bg-primary text-nowrap flex items-center h-full ps-4 rounded-s-full">
-                                                    {{ $t('common.confirm') }} mot de passe
-                                                </p>
-                                                <Input
-                                                    v-model="formPassword.password_confirmation"
-                                                    type="password"
-                                                    class="w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
-                                                />
-                                            </div>
-
-                                            <div class="flex flex-col sm:flex-row justify-end items-center space-y-2 sm:space-y-0 sm:space-x-8 pt-6">
-                                                <Button
-                                                    variant="secondary"
-                                                    class="bg-gray-200 hover:bg-gray-300 w-full sm:w-auto"
-                                                    @click="changePasswordDialog = false"
-                                                >
-                                                    {{ $t('common.cancel') }}
-                                                </Button>
-                                                <Button
-                                                    class="w-full sm:w-auto"
-                                                    @click="handleChangePassword"
-                                                >
-                                                    Enregistrer
-                                                </Button>
-                                            </div>
-                                        </form>
-                                    </DialogContent>
-                                </Dialog>
+                                </span>
+                                <span class="text-sm font-medium text-muted-foreground">••••••••••</span>
                             </div>
 
-                            <div class="flex justify-between items-center space-x-3">
-                                <div class="flex items-center gap-1.5 min-w-0">
-                                    <label
-                                        for="authTwoFactor"
-                                        class="text-primary truncate font-semibold sm:font-normal sm:text-black sm:flex sm:items-center sm:space-x-3"
+                            <!-- Édition en ligne (remplace le Dialog) -->
+                            <form
+                                v-else
+                                class="space-y-4 border-b border-border pb-5"
+                                @submit.prevent="handleChangePassword"
+                            >
+                                <p class="text-sm text-muted-foreground">
+                                    Veuillez entrer votre mot de passe actuel et nouveau mot de passe ici
+                                </p>
+                                <div class="grid gap-4 sm:grid-cols-3">
+                                    <div class="flex flex-col gap-1.5">
+                                        <label class="text-xs font-medium text-muted-foreground">Mot de passe actuel</label>
+                                        <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
+                                            <KeyRound class="size-4 shrink-0 text-primary" />
+                                            <Input
+                                                v-model="formPassword.currentPassword"
+                                                type="password"
+                                                class="h-auto border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col gap-1.5">
+                                        <label class="text-xs font-medium text-muted-foreground">Nouveau mot de passe</label>
+                                        <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
+                                            <KeyRound class="size-4 shrink-0 text-primary" />
+                                            <Input
+                                                v-model="formPassword.password"
+                                                type="password"
+                                                class="h-auto border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col gap-1.5">
+                                        <label class="text-xs font-medium text-muted-foreground">{{ $t('common.confirm') }} mot de passe</label>
+                                        <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
+                                            <KeyRound class="size-4 shrink-0 text-primary" />
+                                            <Input
+                                                v-model="formPassword.password_confirmation"
+                                                type="password"
+                                                class="h-auto border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex justify-end gap-2">
+                                    <Button
+                                        type="button"
+                                        variant="none"
+                                        class="h-auto rounded-md border border-transparent px-3.5 py-2 text-[13px] font-medium text-muted-foreground transition-colors hover:text-foreground md:text-[13px] lg:text-[13px]"
+                                        @click="changePasswordDialog = false"
                                     >
-                                        <Smartphone class="w-5 hidden sm:block" />
-                                        <span class="w-full truncate">{{ $t('settings.twoFactor') }}</span>
-                                    </label>
+                                        {{ $t('common.cancel') }}
+                                    </Button>
+                                    <Button
+                                        type="submit"
+                                        variant="none"
+                                        class="h-auto rounded-md bg-primary px-3.5 py-2 text-[13px] font-medium text-primary-foreground transition-colors hover:bg-primary/90 md:text-[13px] lg:text-[13px]"
+                                    >
+                                        Enregistrer
+                                    </Button>
+                                </div>
+                            </form>
+
+                            <div class="flex items-center justify-between gap-3 py-2.5">
+                                <span class="flex items-center gap-2.5 text-sm text-muted-foreground">
+                                    <Smartphone class="size-4" />
+                                    {{ $t('settings.twoFactor') }}
                                     <SettingsFieldHint
                                         :text="$t(SETTINGS_TOOLTIPS.twoFactor)"
                                         :label="$t('settings.twoFactor')"
                                     />
-                                </div>
+                                </span>
                                 <Switch
                                     id="authTwoFactor"
                                     v-model:checked="enableTwoFactor"
@@ -1395,19 +1208,22 @@
 
                     <section
                         v-if="user.type != 'institution'"
-                        class="mt-4 xl:mt-0 shadow rounded-lg p-6"
+                        class="rounded-lg border border-border bg-card p-6"
                     >
-                        <div class="flex justify-between items-center">
-                            <h3 class="flex items-center space-x-4">
-                                <Wrench class="w-6 text-gray-400" />
-                                <span class="text-lg">{{ $t('settings.preferences') }}</span>
+                        <div class="flex items-start justify-between gap-3">
+                            <h3 class="flex items-center gap-3">
+                                <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+                                    <Wrench class="size-5" />
+                                </span>
+                                <span class="text-lg font-secondary">{{ $t('settings.preferences') }}</span>
                             </h3>
 
                             <Button
-                                variant="outline"
-                                class="font-bold text-xs text-primary -mt-1 lg:-mt-2"
+                                variant="none"
+                                class="h-auto inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-primary to-primary/80 px-3.5 py-1.5 text-xs font-semibold text-primary-foreground shadow-md shadow-primary/25 transition-colors hover:brightness-95"
                                 @click="proposalDialog = true"
                             >
+                                <Sparkles class="size-4" />
                                 {{ $t('settings.aiBoost') }}
                             </Button>
                         </div>
@@ -1434,36 +1250,28 @@
                             @update:initial-cities="updateCities"
                         />
 
-                        <div class="mt-12 lg:mt-6 space-y-3">
-                            <div
-                                class="block sm:grid sm:grid-cols-[40%_60%] sm:border sm:border-primary sm:h-9 sm:rounded-full"
-                            >
-                                <div class="sm:bg-primary flex flex-col sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
-                                    <label
-                                        for="language"
-                                        class="text-primary mb-4 sm:mb-0 font-semibold sm:text-white sm:flex sm:items-center sm:space-x-3"
-                                    >
-                                        <LanguageIcon class="w-5 hidden sm:block" />
-                                        <span>{{ $t('common.language') }}</span>
-                                        <SettingsFieldHint
-                                            variant="onPrimary"
-                                            :text="$t('settings.languageTooltip')"
-                                            :label="$t('common.language')"
-                                        />
-                                    </label>
-                                </div>
+                        <div class="mt-8">
+                            <div class="flex flex-col gap-1.5">
+                                <label
+                                    for="language"
+                                    class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground"
+                                >
+                                    {{ $t('common.language') }}
+                                    <SettingsFieldHint
+                                        :text="$t('settings.languageTooltip')"
+                                        :label="$t('common.language')"
+                                    />
+                                </label>
                                 <Select
                                     v-model="formSetting"
                                     @update:model-value="handleChangeLanguage"
                                 >
-                                    <SelectTrigger
-                                        class="w-full text-black bg-white sm:bg-transparent text-nowrap border-2 border-gray-300 focus-within:border-primary sm:focus-within:border-none rounded-full sm:rounded-none sm:border-none"
-                                        position="right"
-                                    >
+                                    <SelectTrigger class="h-11 w-full max-w-xs rounded-md border border-input">
+                                        <Languages class="size-4 shrink-0 text-primary" />
                                         <SelectValue :placeholder="languages[formSetting]" />
                                     </SelectTrigger>
 
-                                    <SelectContent class="border border-none">
+                                    <SelectContent>
                                         <template
                                             v-for="[key, value] in Object.entries(languages)"
                                             :key="key"
@@ -1480,15 +1288,17 @@
 
                     <section
                         v-if="user.type != 'institution'"
-                        class="mt-4 xl:mt-0 shadow rounded-lg p-6"
+                        class="rounded-lg border border-border bg-card p-6"
                     >
-                        <h3 class="flex items-center space-x-4">
-                            <BellRing class="w-6 text-gray-400" />
-                            <span class="text-lg">{{ $t('settings.notification') }}</span>
+                        <h3 class="flex items-center gap-3">
+                            <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+                                <BellRing class="size-5" />
+                            </span>
+                            <span class="text-lg font-secondary">{{ $t('settings.notification') }}</span>
                         </h3>
 
-                        <div class="mt-4 space-y-4">
-                            <div class="flex justify-between items-center gap-3">
+                        <div class="mt-4 divide-y divide-border">
+                            <div class="flex items-center justify-between gap-3 py-3">
                                 <div class="flex items-center gap-1.5 min-w-0">
                                     <Label for="newReplacement">{{ $t('settings.newReplacementNotif') }}</Label>
                                     <SettingsFieldHint
@@ -1502,7 +1312,7 @@
                                     @update:checked="handleChangeNotif"
                                 />
                             </div>
-                            <div class="flex justify-between items-center gap-3">
+                            <div class="flex items-center justify-between gap-3 py-3">
                                 <div class="flex items-center gap-1.5 min-w-0">
                                     <Label for="acceptReplacement">{{ $t('settings.acceptedReplacementNotif') }}</Label>
                                     <SettingsFieldHint
@@ -1516,35 +1326,35 @@
                                     @update:checked="handleChangeNotif"
                                 />
                             </div>
-                                <div class="flex justify-between items-center gap-3">
-                                    <div class="flex items-center gap-1.5 min-w-0">
-                                        <Label for="digestWeekly">{{ $t('settings.weeklyDigest') }}</Label>
-                                        <SettingsFieldHint
-                                            :text="$t(SETTINGS_TOOLTIPS.digestWeekly)"
-                                            :label="$t('settings.weeklyDigest')"
-                                        />
-                                    </div>
-                                    <Switch
-                                        id="digestWeekly"
-                                        v-model:checked="notifDigestWeekly"
-                                        @update:checked="handleChangeNotif"
+                            <div class="flex items-center justify-between gap-3 py-3">
+                                <div class="flex items-center gap-1.5 min-w-0">
+                                    <Label for="digestWeekly">{{ $t('settings.weeklyDigest') }}</Label>
+                                    <SettingsFieldHint
+                                        :text="$t(SETTINGS_TOOLTIPS.digestWeekly)"
+                                        :label="$t('settings.weeklyDigest')"
                                     />
                                 </div>
-                                <div class="flex justify-between items-center gap-3">
-                                    <div class="flex items-center gap-1.5 min-w-0">
-                                        <Label for="marketingEmails">{{ $t('settings.marketingEmails') }}</Label>
-                                        <SettingsFieldHint
-                                            :text="$t(SETTINGS_TOOLTIPS.marketingEmails)"
-                                            :label="$t('settings.marketingEmails')"
-                                        />
-                                    </div>
-                                    <Switch
-                                        id="marketingEmails"
-                                        v-model:checked="notifMarketingEmails"
-                                        @update:checked="handleChangeNotif"
+                                <Switch
+                                    id="digestWeekly"
+                                    v-model:checked="notifDigestWeekly"
+                                    @update:checked="handleChangeNotif"
+                                />
+                            </div>
+                            <div class="flex items-center justify-between gap-3 py-3">
+                                <div class="flex items-center gap-1.5 min-w-0">
+                                    <Label for="marketingEmails">{{ $t('settings.marketingEmails') }}</Label>
+                                    <SettingsFieldHint
+                                        :text="$t(SETTINGS_TOOLTIPS.marketingEmails)"
+                                        :label="$t('settings.marketingEmails')"
                                     />
                                 </div>
-                            <div class="flex justify-between items-center gap-3">
+                                <Switch
+                                    id="marketingEmails"
+                                    v-model:checked="notifMarketingEmails"
+                                    @update:checked="handleChangeNotif"
+                                />
+                            </div>
+                            <div class="flex items-center justify-between gap-3 py-3">
                                 <div class="flex items-center gap-1.5 min-w-0">
                                     <Label for="urgentOnly">{{ $t('settings.urgencyOnly') }}</Label>
                                     <SettingsFieldHint
@@ -1558,7 +1368,7 @@
                                     @update:checked="handleChangeNotif"
                                 />
                             </div>
-                            <div class="flex justify-between items-center gap-3">
+                            <div class="flex items-center justify-between gap-3 py-3">
                                 <div class="flex items-center gap-1.5 min-w-0">
                                     <Label for="smsUrgent">{{ $t('settings.smsUrgency') }}</Label>
                                     <SettingsFieldHint
@@ -1688,31 +1498,35 @@
                         </div>
                     </section> -->
 
-                    <section class="mt-4 shadow rounded-lg p-6 space-y-4">
-                        <h3 class="flex items-center space-x-4">
-                            <ShieldCheck class="w-6 text-gray-400" />
-                            <span class="text-lg">{{ $t('settings.personalData') }}</span>
+                    <section class="rounded-lg border border-border bg-card p-6 space-y-4">
+                        <h3 class="flex items-center gap-3">
+                            <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+                                <ShieldCheck class="size-5" />
+                            </span>
+                            <span class="text-lg font-secondary">{{ $t('settings.personalData') }}</span>
                         </h3>
-                        <p class="text-sm text-gray-600">
+                        <p class="text-sm text-muted-foreground">
                             {{ $t('settings.personalDataDesc') }}
                         </p>
                         <div class="flex flex-col sm:flex-row gap-3 sm:justify-end">
                             <Button
                                 type="button"
-                                variant="outline"
-                                class="border-gray-300"
+                                variant="none"
+                                class="h-auto inline-flex items-center gap-1.5 rounded-md border border-border bg-muted px-3.5 py-2 text-[13px] font-medium text-muted-foreground transition-colors hover:border-primary hover:text-primary md:text-[13px] lg:text-[13px]"
                                 @click="openCookiePreferences"
                             >
+                                <Cookie class="size-4" />
                                 {{ $t('settings.manageCookies') }}
                             </Button>
                             <Button
                                 type="button"
-                                variant="outline"
-                                class="border-primary text-primary"
+                                variant="none"
+                                class="h-auto inline-flex items-center gap-1.5 rounded-md bg-primary px-3.5 py-2 text-[13px] font-medium text-primary-foreground transition-colors hover:bg-primary/90 md:text-[13px] lg:text-[13px]"
                                 :in-progress="isExportingData"
                                 :disabled="isExportingData"
                                 @click="exportPersonalData"
                             >
+                                <Download class="size-4" />
                                 {{ $t('settings.exportData') }}
                             </Button>
                         </div>
@@ -1728,7 +1542,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeft, BellRing, Building2, Calendar, CircleUser, GraduationCap, IdCard, Mail, Map, MapPin, Phone, ShieldCheck, Smartphone, SquarePen, Trash2, UserPlus, Users, Wrench } from 'lucide-vue-next';
+import { ArrowLeft, BellRing, Building2, Calendar, Camera, CircleEllipsis, CircleUser, Cookie, Download, Flag, GraduationCap, IdCard, KeyRound, Languages, Mail, Mailbox, Map, MapPin, Phone, ShieldCheck, Smartphone, Sparkles, SquarePen, Trash2, UserPlus, Users, VenusAndMars, Wrench } from 'lucide-vue-next';
 import { getErrorMessage, goBack } from '~/lib/utils';
 import { useRuntimeConfig } from '#app';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -1778,12 +1592,14 @@ async function exportPersonalData() {
         link.click();
         URL.revokeObjectURL(url);
         $toast({ description: 'Export téléchargé.' });
-    } catch (error) {
+    }
+    catch (error) {
         $toast({
             variant: 'destructive',
             description: getErrorMessage(error),
         });
-    } finally {
+    }
+    finally {
         isExportingData.value = false;
     }
 }

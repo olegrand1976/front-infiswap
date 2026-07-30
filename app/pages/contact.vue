@@ -140,7 +140,6 @@
 </template>
 
 <script lang="ts" setup>
-const { t } = useI18n();
 import { CircleUser, Globe, Mail, MapPin, Phone } from 'lucide-vue-next';
 import * as yup from 'yup';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
@@ -148,6 +147,8 @@ import { submitContact } from '~/composables/useContact';
 import { FormField, FormItem, FormControl, FormMessage } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+
+const { t } = useI18n();
 
 const { $toast } = useNuxtApp();
 

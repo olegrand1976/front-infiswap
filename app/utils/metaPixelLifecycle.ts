@@ -24,7 +24,8 @@ export function clearMetaPixelGlobals(target: MetaPixelHost): void {
     try {
         delete target.fbq;
         delete target._fbq;
-    } catch {
+    }
+    catch {
         target.fbq = undefined;
         target._fbq = undefined;
     }

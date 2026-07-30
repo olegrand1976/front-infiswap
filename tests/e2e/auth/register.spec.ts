@@ -49,7 +49,7 @@ test.describe('Inscription', () => {
         await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
 
         const cookies = await context.cookies();
-        const authCookie = cookies.find((c) => c.name === AUTH_TOKEN_COOKIE);
+        const authCookie = cookies.find(c => c.name === AUTH_TOKEN_COOKIE);
         expect(authCookie?.value).toBeTruthy();
     });
 });

@@ -368,7 +368,7 @@ const contactChildren = computed<NavigationItem[]>(() => [
     },
     ...products.value
         .filter(p => p.name.toLowerCase() !== 'inficoncept')
-        .map(p => {
+        .map((p) => {
             const route = `/dashboard/admin/contacts/${p.name.toLowerCase()}`;
 
             return {

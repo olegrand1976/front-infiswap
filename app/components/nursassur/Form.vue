@@ -235,8 +235,8 @@ function buildLoggedInPayload() {
         description: form.value.description,
         partner_share_consent: partnerShareConsent.value,
         interested_products: assurTypes.value
-            .filter((type) => form.value.types.includes(type.id))
-            .map((type) => type.label),
+            .filter(type => form.value.types.includes(type.id))
+            .map(type => type.label),
     };
 }
 

@@ -322,7 +322,6 @@
 </template>
 
 <script lang="ts" setup>
-const { t } = useI18n();
 import { ArrowLeft, Plus, X } from 'lucide-vue-next';
 import { toast } from 'vue-sonner';
 import { InputTime } from '@/components/ui/input-time';
@@ -333,6 +332,7 @@ import MultiRangeCalendar from '@/components/MultiRangeCalendar.vue';
 import ConfirmProfileCountryModal from '~/components/replacements/ConfirmProfileCountryModal.vue';
 import type { User } from '~/lib/types';
 import { goBack } from '~/lib/utils';
+const { t } = useI18n();
 import { validateCreateReplacementForm } from '~/utils/platformAccess';
 import { resolveProfileCountryCode } from '~/utils/profileCountry';
 import {

@@ -893,7 +893,7 @@ const columnDefs: ColumnDef<Replacement>[] = [
     },
     {
         id: 'contacted_count',
-        accessorFn: (row) => row.matching_users?.length ?? 0,
+        accessorFn: row => row.matching_users?.length ?? 0,
         header: ({ column }) =>
             h(Button, {
                 variant: 'ghost',
@@ -1038,7 +1038,7 @@ const columnOrder = [
 ] as const;
 
 const columns: ColumnDef<Replacement>[] = columnOrder
-    .map((key) => columnDefs.find(col => (col.id ?? col.accessorKey) === key))
+    .map(key => columnDefs.find(col => (col.id ?? col.accessorKey) === key))
     .filter((col): col is ColumnDef<Replacement> => Boolean(col));
 
 const excludedColumnsForModal = ['user_owner', 'substitute_user'];

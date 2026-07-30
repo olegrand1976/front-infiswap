@@ -154,7 +154,8 @@ async function loadUsers() {
         const response = await getUniqueUsers(props.period, accountType.value, page.value, perPage.value);
         users.value = response.users;
         count.value = response.count;
-    } finally {
+    }
+    finally {
         loading.value = false;
     }
 }

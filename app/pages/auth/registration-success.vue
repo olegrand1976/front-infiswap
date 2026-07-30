@@ -95,7 +95,7 @@
 
 <script lang="ts" setup>
 import { XCircle } from 'lucide-vue-next';
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { navigateTo } from '#app';
 
 definePageMeta({

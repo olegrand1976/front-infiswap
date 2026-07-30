@@ -314,7 +314,7 @@
             class="flex justify-center mt-12"
         >
             <div class="flex flex-row items-center space-x-32">
-                    <Form
+                <Form
                     v-if="replacement?.candidate == false"
                     class="flex flex-col items-center justify-center gap-2"
                     @submit="onInterestClick"

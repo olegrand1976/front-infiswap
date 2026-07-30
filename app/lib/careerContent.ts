@@ -15,20 +15,20 @@ export type CommercialOffering = {
     badge: string;
 };
 
-export const careerPageHeroIntro =
-    'Développez le réseau InfiSwap auprès des maisons de repos et de soins (MR/MRS), hôpitaux, EHPAD et établissements de santé, et proposez aux infirmières libérales une présence digitale sur mesure. Progressez dans une structure de carrière claire, basée sur vos résultats commerciaux.';
+export const careerPageHeroIntro
+    = 'Développez le réseau InfiSwap auprès des maisons de repos et de soins (MR/MRS), hôpitaux, EHPAD et établissements de santé, et proposez aux infirmières libérales une présence digitale sur mesure. Progressez dans une structure de carrière claire, basée sur vos résultats commerciaux.';
 
-export const careerLevelsIntro =
-    'Quatre grades structurés. Chaque niveau requiert un volume de Bons de Commande (BC) signés avec des institutions (MR/MRS, hôpitaux, EHPAD, cliniques…) et un développement de votre équipe commerciale directe.';
+export const careerLevelsIntro
+    = 'Quatre grades structurés. Chaque niveau requiert un volume de Bons de Commande (BC) signés avec des institutions (MR/MRS, hôpitaux, EHPAD, cliniques…) et un développement de votre équipe commerciale directe.';
 
-export const commercialOfferingsIntro =
-    'Deux axes commerciaux complémentaires : les abonnements institution et la présence digitale des infirmières libérales.';
+export const commercialOfferingsIntro
+    = 'Deux axes commerciaux complémentaires : les abonnements institution et la présence digitale des infirmières libérales.';
 
-export const careerBcProgressionNote =
-    'Seuls les BC institution signés comptent pour votre progression de grade. L\'offre digitale infirmière est un complément commercial, sans objectif ni seuil de carrière.';
+export const careerBcProgressionNote
+    = 'Seuls les BC institution signés comptent pour votre progression de grade. L\'offre digitale infirmière est un complément commercial, sans objectif ni seuil de carrière.';
 
-export const careerPageSeoDescription =
-    'Rejoignez le réseau commercial InfiSwap : développez les institutions (MR/MRS, hôpitaux, EHPAD) et la présence digitale des infirmières libérales. Progression structurée par BC institution.';
+export const careerPageSeoDescription
+    = 'Rejoignez le réseau commercial InfiSwap : développez les institutions (MR/MRS, hôpitaux, EHPAD) et la présence digitale des infirmières libérales. Progression structurée par BC institution.';
 
 export const publicCareerLevels: CareerLevelPublic[] = [
     {

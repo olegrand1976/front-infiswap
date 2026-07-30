@@ -240,7 +240,6 @@
 </template>
 
 <script setup lang="ts">
-const { t } = useI18n();
 import { ArrowLeft, Filter, LayoutGrid, Map, Table } from 'lucide-vue-next';
 import { useCookie } from '#app';
 import { regions, departments, goBack } from '~/lib/utils';
@@ -252,6 +251,8 @@ import { PERPAGE } from '~/lib/constants';
 import { normalizeSelectedFilters } from '~/utils/selectedFilters';
 import { resolveProfileCountryCode } from '~/utils/profileCountry';
 import { useConfirmProfileCountry } from '~/composables/useConfirmProfileCountry';
+
+const { t } = useI18n();
 
 const user = useState<User>('user');
 const {

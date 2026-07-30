@@ -24,7 +24,10 @@
                     class="flex items-start justify-between gap-3 px-3 py-2 text-sm"
                 >
                     <div class="min-w-0">
-                        <p class="font-medium text-gray-800 truncate" :title="screen.route_path">
+                        <p
+                            class="font-medium text-gray-800 truncate"
+                            :title="screen.route_path"
+                        >
                             <span class="mr-2 text-xs text-gray-400">{{ rank + 1 }}.</span>
                             {{ screen.route_path }}
                         </p>

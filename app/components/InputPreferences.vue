@@ -13,7 +13,7 @@
                     <div
                         v-for="i in 4"
                         :key="'zip-' + i"
-                        class="flex relative items-center gap-2 rounded-full border border-primary bg-white"
+                        class="flex relative items-center gap-2 rounded-md border border-input bg-background focus-within:border-primary"
                     >
                         <div
                             v-if="showZipTooltip[i - 1]"
@@ -31,7 +31,7 @@
                             @input="onZipInput(i - 1)"
                         />
                         <Button
-                            class="bg-primary text-white rounded-full hover:bg-primary/90 h-10"
+                            class="bg-primary text-white rounded-md hover:bg-primary/90 h-10"
                             @click="isInitialZip(i - 1) ? removeZip(i - 1) : saveZip(i - 1)"
                         >
                             {{ isInitialZip(i - 1) ? 'Retirer' : 'Ajouter' }}
@@ -52,7 +52,7 @@
                     <div
                         v-for="i in 4"
                         :key="'city-' + i"
-                        class="flex relative items-center gap-2 rounded-full border border-primary bg-white"
+                        class="flex relative items-center gap-2 rounded-md border border-input bg-background focus-within:border-primary"
                     >
                         <div
                             v-if="showCityTooltip[i - 1]"
@@ -71,7 +71,7 @@
                         />
                         <Button
                             size="sm"
-                            class="bg-primary text-white rounded-full hover:bg-primary/90 h-10"
+                            class="bg-primary text-white rounded-md hover:bg-primary/90 h-10"
                             @click="isInitialCity(i - 1) ? removeCity(i - 1) : saveCity(i - 1)"
                         >
                             {{ isInitialCity(i - 1) ? 'Retirer' : 'Ajouter' }}

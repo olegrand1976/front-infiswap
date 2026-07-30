@@ -314,9 +314,11 @@ const columns: ColumnDef<InstitutionSubscriptionItem>[] = [
             const pending = row.original.pending_payment;
             return h('div', { class: 'flex flex-col gap-1' }, [
                 h('span', label),
-                pending ? h('span', {
-                    class: 'inline-flex w-fit px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-100 text-amber-800',
-                }, 'Paiement en attente') : null,
+                pending
+                    ? h('span', {
+                            class: 'inline-flex w-fit px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-100 text-amber-800',
+                        }, 'Paiement en attente')
+                    : null,
             ]);
         },
     },

@@ -52,7 +52,8 @@ export function useCookieConsent() {
 
         if (prefs.marketing) {
             ensureMetaPixel();
-        } else {
+        }
+        else {
             revokeMetaPixel();
         }
     }
@@ -69,7 +70,8 @@ export function useCookieConsent() {
         if (action === 'grant_only') {
             try {
                 w.fbq?.('consent', 'grant');
-            } catch {
+            }
+            catch {
                 // older pixel builds may not support consent API
             }
             return;
@@ -117,12 +119,13 @@ export function useCookieConsent() {
         if (typeof w.fbq === 'function') {
             try {
                 w.fbq('consent', 'revoke');
-            } catch {
+            }
+            catch {
                 // ignore
             }
         }
 
-        document.querySelectorAll(`script[${META_PIXEL_SCRIPT_ATTR}]`).forEach((node) => node.remove());
+        document.querySelectorAll(`script[${META_PIXEL_SCRIPT_ATTR}]`).forEach(node => node.remove());
 
         // Best-effort purge of Meta cookies on current host
         const expire = 'Thu, 01 Jan 1970 00:00:00 GMT';

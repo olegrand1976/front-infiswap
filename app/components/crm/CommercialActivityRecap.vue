@@ -544,15 +544,15 @@ const columns = computed<ColumnDef<CrmCommercialActivityRow>[]>(() => {
                         ]),
                         caPct !== null
                             ? h('div', { class: 'flex items-center gap-2 text-xs' }, [
-                                h('span', { class: 'text-muted-foreground w-6' }, 'CA'),
-                                h('div', { class: 'flex-1 h-1.5 bg-muted rounded-full overflow-hidden' }, [
-                                    h('div', {
-                                        class: 'h-full bg-indigo-600 rounded-full',
-                                        style: { width: `${caPct}%` },
-                                    }),
-                                ]),
-                                h('span', { class: 'w-8 text-right' }, `${caPct}%`),
-                            ])
+                                    h('span', { class: 'text-muted-foreground w-6' }, 'CA'),
+                                    h('div', { class: 'flex-1 h-1.5 bg-muted rounded-full overflow-hidden' }, [
+                                        h('div', {
+                                            class: 'h-full bg-indigo-600 rounded-full',
+                                            style: { width: `${caPct}%` },
+                                        }),
+                                    ]),
+                                    h('span', { class: 'w-8 text-right' }, `${caPct}%`),
+                                ])
                             : null,
                     ]);
                 },

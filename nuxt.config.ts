@@ -71,25 +71,6 @@ export default defineNuxtConfig({
         transpile: [],
     },
 
-    i18n: {
-        locales: [
-            { code: 'fr', language: 'fr-BE', name: 'Français', file: 'fr.json' },
-            { code: 'nl', language: 'nl-BE', name: 'Nederlands', file: 'nl.json' },
-        ],
-        defaultLocale: 'fr',
-        strategy: 'prefix_except_default',
-        lazy: true,
-        langDir: 'locales',
-        detectBrowserLanguage: {
-            useCookie: true,
-            cookieKey: 'LANGUAGE',
-            redirectOn: 'root',
-            fallbackLocale: 'fr',
-            alwaysRedirect: false,
-        },
-        baseUrl: process.env.NUXT_PUBLIC_FRONT_END_URL || 'https://infiswap.ll-it-sc.be',
-    },
-
     routeRules: {
         '/': { prerender: true },
         '/nl': { prerender: true },
@@ -113,7 +94,7 @@ export default defineNuxtConfig({
                 'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
                 // Report-only CSP: tighten after monitoring violations in staging.
                 'Content-Security-Policy-Report-Only':
-                    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://js.stripe.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: wss:; frame-src https://js.stripe.com https://hooks.stripe.com; object-src 'none'; base-uri 'self'",
+                    'default-src \'self\'; script-src \'self\' \'unsafe-inline\' \'unsafe-eval\' https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://js.stripe.com; style-src \'self\' \'unsafe-inline\' https://fonts.googleapis.com; font-src \'self\' https://fonts.gstatic.com data:; img-src \'self\' data: blob: https:; connect-src \'self\' https: wss:; frame-src https://js.stripe.com https://hooks.stripe.com; object-src \'none\'; base-uri \'self\'',
             },
         },
     },
@@ -174,6 +155,25 @@ export default defineNuxtConfig({
         enableRouterSync: false,
         trackOnNextTick: true,
         devtools: process.env.NODE_ENV !== 'production',
+    },
+
+    i18n: {
+        locales: [
+            { code: 'fr', language: 'fr-BE', name: 'Français', file: 'fr.json' },
+            { code: 'nl', language: 'nl-BE', name: 'Nederlands', file: 'nl.json' },
+        ],
+        defaultLocale: 'fr',
+        strategy: 'prefix_except_default',
+        lazy: true,
+        langDir: 'locales',
+        detectBrowserLanguage: {
+            useCookie: true,
+            cookieKey: 'LANGUAGE',
+            redirectOn: 'root',
+            fallbackLocale: 'fr',
+            alwaysRedirect: false,
+        },
+        baseUrl: process.env.NUXT_PUBLIC_FRONT_END_URL || 'https://infiswap.ll-it-sc.be',
     },
     image: {
         format: ['webp'],

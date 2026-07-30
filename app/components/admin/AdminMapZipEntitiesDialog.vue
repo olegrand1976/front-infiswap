@@ -137,13 +137,13 @@ const typeLabel = computed(() => {
 const items = computed((): ListRow[] => {
     switch (props.type) {
         case 'institutions':
-            return props.institutionItems.map((item) => ({
+            return props.institutionItems.map(item => ({
                 id: item.id,
                 label: item.name,
                 href: `/dashboard/admin/institutions/${item.id}/show`,
             }));
         case 'nurses':
-            return props.nurseItems.map((item) => ({
+            return props.nurseItems.map(item => ({
                 id: item.id,
                 label: `${item.firstname} ${item.lastname}`.trim(),
                 subtitle: item.email ?? undefined,

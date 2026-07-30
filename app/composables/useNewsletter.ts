@@ -1,6 +1,6 @@
 import { ref } from 'vue';
-import { useNuxtApp } from '#app';
 import { toast } from 'vue-sonner';
+import { useNuxtApp } from '#app';
 
 export function useNewsletter() {
     const email = ref('');
