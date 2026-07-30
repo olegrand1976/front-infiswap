@@ -1,6 +1,6 @@
 <template>
     <div class="w-full mx-auto">
-        <div class="mt-6 flex items-center gap-2">
+        <div class="flex items-center gap-2">
             <button
                 type="button"
                 class="flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
