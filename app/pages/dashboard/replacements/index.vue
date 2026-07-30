@@ -1,224 +1,38 @@
 <template>
-    <div class="min-w-0 w-full max-w-full overflow-x-hidden lg:ml-20 xl:ml-0">
-        <div class="mt-6 flex min-w-0 w-full flex-col flex-wrap gap-4 lg:flex-row lg:items-center">
-            <h1 class="flex justify-between items-center sm:block py-3 text-primary sm:bg-gray-100 lg:w-auto lg:shrink-0 sm:px-6 rounded-lg">
-                <div class="flex items-center gap-2 text-base">
-                    <ArrowLeft
-                        class="size-5 cursor-pointer hover:text-primary shrink-0"
-                        title="Retour"
-                        @click="goBack"
-                    />
-                    {{ $t('replacements.searchHeading') }} <strong>{{ $t('replacements.searchHeadingStrong') }}</strong>
-                </div>
-            </h1>
-
-            <div class="mt-4 flex min-w-0 flex-wrap items-center justify-start gap-2 lg:mt-0">
-                <DropdownMenu>
-                    <DropdownMenuTrigger as-child>
-                        <Button
-                            variant="outline"
-                            class="flex gap-2 items-center border-gray-200 font-normal shadow text-black/90 h-9 text-xs px-3"
-                        >
-                            <Filter class="w-4 h-4 shrink-0" />
-                            <span>
-                                Filtrer
-                                <span
-                                    v-if="activeFiltersCount > 0"
-                                    class="ml-1.5 inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-primary rounded-full"
-                                >
-                                    {{ activeFiltersCount }}
-                                </span>
-                            </span>
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent class="w-64">
-                        <DropdownMenuGroup>
-                            <DropdownMenuLabel>Type de remplacement</DropdownMenuLabel>
-                            <DropdownMenuRadioGroup
-                                :model-value="selectedFilters.type"
-                                @update:model-value="selectedFilters.type = $event"
-                            >
-                                <DropdownMenuRadioItem
-                                    v-for="(label, key) in replacementTypeFilters"
-                                    :key="key"
-                                    :value="key"
-                                >
-                                    {{ label }}
-                                </DropdownMenuRadioItem>
-                            </DropdownMenuRadioGroup>
-                        </DropdownMenuGroup>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuGroup>
-                            <DropdownMenuLabel>Rôle</DropdownMenuLabel>
-                            <DropdownMenuRadioGroup
-                                :model-value="selectedFilters.role"
-                                @update:model-value="selectedFilters.role = $event"
-                            >
-                                <DropdownMenuRadioItem
-                                    v-for="(label, key) in replacementRoleFilters"
-                                    :key="key"
-                                    :value="key"
-                                >
-                                    {{ label }}
-                                </DropdownMenuRadioItem>
-                            </DropdownMenuRadioGroup>
-                        </DropdownMenuGroup>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuLabel>Statut</DropdownMenuLabel>
-                        <DropdownMenuRadioGroup v-model="selectedFilters.status">
-                            <DropdownMenuRadioItem
-                                v-for="(label, key) in replacementStatusFilters"
-                                :key="key"
-                                :value="key"
-                            >
-                                {{ label }}
-                            </DropdownMenuRadioItem>
-                        </DropdownMenuRadioGroup>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-
-                <Select v-model="selectedCountry">
-                    <SelectTrigger
-                        class="bg-white h-9 w-46 text-xs rounded-lg shadow border border-gray-200"
-                        position="right"
-                    >
-                        <SelectValue
-                            :placeholder="countries[selectedCountry]"
-                            class="text-xs"
-                        />
-                    </SelectTrigger>
-                    <SelectContent class="border-none">
-                        <SelectGroup class="w-46">
-                            <SelectItem
-                                v-for="[code, label] in Object.entries(countries)"
-                                :key="code"
-                                :value="code"
-                            >
-                                <div class="flex gap-2 items-center">
-                                    <LayoutsAppImage
-                                        v-if="code === 'fr'"
-                                        :src="'/icons/fr.png'"
-                                        alt="France"
-                                        class="w-3"
-                                    />
-                                    <LayoutsAppImage
-                                        v-else-if="code === 'be'"
-                                        :src="'/icons/belgium.png'"
-                                        alt="Belgique"
-                                        class="w-3"
-                                    />
-                                    <span>{{ label }}</span>
-                                </div>
-                            </SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-
-                <Select>
-                    <SelectTrigger
-                        class="bg-white h-9 w-46 text-xs rounded-lg shadow border border-gray-200"
-                        position="right"
-                    >
-                        <SelectValue
-                            :placeholder="selectedProvincesPlaceholder"
-                            class="text-xs truncate"
-                        />
-                    </SelectTrigger>
-                    <SelectContent class="border-none">
-                        <SelectGroup class="w-46">
-                            <div class="flex items-center gap-2 mb-2 px-1">
-                                <Checkbox
-                                    id="tous"
-                                    :checked="isAllSelected"
-                                    @update:checked="toggleAllRegions($event)"
-                                />
-                                <label
-                                    for="tous"
-                                    class="text-xs cursor-pointer"
-                                >Tous</label>
-                            </div>
-                            <div
-                                v-for="(region, index) in selectedCountry === 'fr' ? departments : regions"
-                                :key="index"
-                                class="flex items-center gap-2 mb-2 px-1"
-                            >
-                                <Checkbox
-                                    :id="region"
-                                    :checked="selectedRegions.includes(region)"
-                                    :value="region"
-                                    @update:checked="updateRegionSelection(region, $event)"
-                                />
-                                <label
-                                    :for="region"
-                                    class="text-xs truncate cursor-pointer"
-                                >{{ region }}</label>
-                            </div>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-
-                <div class="hidden sm:block w-px h-6 bg-gray-200" />
-
-                <TooltipProvider>
-                    <Tooltip>
-                        <TooltipTrigger as-child>
-                            <button
-                                class="flex items-center justify-center w-9 h-9 rounded-lg border shadow transition-colors"
-                                :class="groupByProvince
-                                    ? 'bg-primary/10 border-primary'
-                                    : 'bg-white border-gray-200 hover:bg-gray-50'"
-                                @click="toggleGroupByProvince"
-                            >
-                                <Map
-                                    class="w-4 h-4 transition-colors"
-                                    :class="groupByProvince ? 'text-primary' : 'text-black/60'"
-                                />
-                            </button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <p>{{ groupByProvince ? 'Désactiver la vue par province' : 'Vue par province' }}</p>
-                        </TooltipContent>
-                    </Tooltip>
-                </TooltipProvider>
-
-                <TooltipProvider>
-                    <Tooltip>
-                        <TooltipTrigger as-child>
-                            <button
-                                class="flex items-center gap-1.5 px-3 h-9 rounded-lg border border-gray-200 bg-white shadow hover:bg-gray-50 transition-colors text-xs font-medium text-black/70"
-                                @click="toggleDisplayMode"
-                            >
-                                <LayoutGrid
-                                    v-if="displayMode === 'table'"
-                                    class="w-5 h-5 shrink-0"
-                                />
-                                <Table
-                                    v-else
-                                    class="w-5 h-5 shrink-0"
-                                />
-                            </button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <p>{{ displayMode === 'cards' ? 'Passer en vue tableau' : 'Passer en vue cartes' }}</p>
-                        </TooltipContent>
-                    </Tooltip>
-                </TooltipProvider>
-            </div>
-        </div>
-
-        <div
-            v-if="!user?.institution"
-            class="mt-4 mb-2 rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-slate-700"
-            data-testid="own-replacements-hidden-banner"
-        >
-            Vos propres annonces n’apparaissent pas ici.
-            <NuxtLink
-                to="/dashboard/replacements/me"
-                class="ml-1 font-semibold text-primary underline underline-offset-2"
+    <div class="min-w-0 w-full max-w-full overflow-x-hidden">
+        <div class="flex items-center gap-2">
+            <button
+                type="button"
+                class="flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                title="Retour"
+                @click="goBack"
             >
-                Voir mes remplacements
-            </NuxtLink>
+                <ArrowLeft class="size-4" />
+            </button>
+            <Breadcrumb>
+                <BreadcrumbList>
+                    <BreadcrumbItem>
+                        <BreadcrumbLink as-child>
+                            <NuxtLink
+                                :to="localePath('/dashboard')"
+                                class="flex items-center gap-1.5"
+                            >
+                                <LayoutGrid class="size-3.5" />
+                                {{ t('nav.dashboard') }}
+                            </NuxtLink>
+                        </BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                        <BreadcrumbPage>{{ t('replacements.searchTitle') }}</BreadcrumbPage>
+                    </BreadcrumbItem>
+                </BreadcrumbList>
+            </Breadcrumb>
         </div>
+
+        <h1 class="mt-4 font-secondary text-xl sm:text-2xl font-semibold">
+            {{ t('replacements.searchHeading') }} <strong class="text-primary">{{ t('replacements.searchHeadingStrong') }}</strong>
+        </h1>
 
         <Replacement
             v-model:selected-regions="selectedRegions"
@@ -228,7 +42,220 @@
             :filtered-provinces="selectedRegions"
             :display-mode="displayMode"
             :available-missions="availableMissions"
-        />
+        >
+            <template #filters>
+                <div class="flex min-w-0 flex-wrap items-center gap-2">
+                    <Select v-model="selectedFilters.type">
+                        <SelectTrigger
+                            class="h-9 w-40 shrink-0 rounded-md border border-input bg-background text-xs"
+                            position="right"
+                        >
+                            <List class="size-4 shrink-0 text-muted-foreground" />
+                            <SelectValue :placeholder="replacementTypeFilters[selectedFilters.type]" />
+                        </SelectTrigger>
+                        <SelectContent class="border-none">
+                            <SelectGroup class="w-40">
+                                <SelectItem
+                                    v-for="[key, label] in Object.entries(replacementTypeFilters)"
+                                    :key="key"
+                                    :value="key"
+                                >
+                                    {{ label }}
+                                </SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+
+                    <Select v-model="selectedFilters.role">
+                        <SelectTrigger
+                            class="h-9 w-44 shrink-0 rounded-md border border-input bg-background text-xs"
+                            position="right"
+                        >
+                            <Users class="size-4 shrink-0 text-muted-foreground" />
+                            <SelectValue :placeholder="replacementRoleFilters[selectedFilters.role]" />
+                        </SelectTrigger>
+                        <SelectContent class="border-none">
+                            <SelectGroup class="w-44">
+                                <SelectItem
+                                    v-for="[key, label] in Object.entries(replacementRoleFilters)"
+                                    :key="key"
+                                    :value="key"
+                                >
+                                    {{ label }}
+                                </SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+
+                    <Select v-model="selectedFilters.status">
+                        <SelectTrigger
+                            class="h-9 w-36 shrink-0 rounded-md border border-input bg-background text-xs"
+                            position="right"
+                        >
+                            <CircleCheck class="size-4 shrink-0 text-muted-foreground" />
+                            <SelectValue :placeholder="replacementStatusFilters[selectedFilters.status]" />
+                        </SelectTrigger>
+                        <SelectContent class="border-none">
+                            <SelectGroup class="w-36">
+                                <SelectItem
+                                    v-for="[key, label] in Object.entries(replacementStatusFilters)"
+                                    :key="key"
+                                    :value="key"
+                                >
+                                    {{ label }}
+                                </SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+
+                    <div class="hidden sm:block w-px h-6 bg-input" />
+
+                    <Select v-model="selectedCountry">
+                        <SelectTrigger
+                            class="h-9 w-44 shrink-0 rounded-md border border-input bg-background text-xs"
+                            position="right"
+                        >
+                            <Globe class="size-4 shrink-0 text-muted-foreground" />
+                            <SelectValue
+                                :placeholder="countries[selectedCountry]"
+                                class="text-xs"
+                            />
+                        </SelectTrigger>
+                        <SelectContent class="border-none">
+                            <SelectGroup class="w-46">
+                                <SelectItem
+                                    v-for="[code, label] in Object.entries(countries)"
+                                    :key="code"
+                                    :value="code"
+                                >
+                                    <div class="flex gap-2 items-center">
+                                        <LayoutsAppImage
+                                            v-if="code === 'fr'"
+                                            :src="'/icons/fr.png'"
+                                            alt="France"
+                                            class="w-3"
+                                        />
+                                        <LayoutsAppImage
+                                            v-else-if="code === 'be'"
+                                            :src="'/icons/belgium.png'"
+                                            alt="Belgique"
+                                            class="w-3"
+                                        />
+                                        <span>{{ label }}</span>
+                                    </div>
+                                </SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+
+                    <Select>
+                        <SelectTrigger
+                            class="h-9 w-44 shrink-0 rounded-md border border-input bg-background text-xs"
+                            position="right"
+                        >
+                            <MapPin class="size-4 shrink-0 text-muted-foreground" />
+                            <SelectValue
+                                :placeholder="selectedProvincesPlaceholder"
+                                class="text-xs truncate"
+                            />
+                        </SelectTrigger>
+                        <SelectContent class="border-none">
+                            <SelectGroup class="w-46">
+                                <div class="flex items-center gap-2 mb-2 px-1">
+                                    <Checkbox
+                                        id="tous"
+                                        :checked="isAllSelected"
+                                        @update:checked="toggleAllRegions($event)"
+                                    />
+                                    <label
+                                        for="tous"
+                                        class="text-xs cursor-pointer"
+                                    >Tous</label>
+                                </div>
+                                <div
+                                    v-for="(region, index) in selectedCountry === 'fr' ? departments : regions"
+                                    :key="index"
+                                    class="flex items-center gap-2 mb-2 px-1"
+                                >
+                                    <Checkbox
+                                        :id="region"
+                                        :checked="selectedRegions.includes(region)"
+                                        :value="region"
+                                        @update:checked="updateRegionSelection(region, $event)"
+                                    />
+                                    <label
+                                        :for="region"
+                                        class="text-xs truncate cursor-pointer"
+                                    >{{ region }}</label>
+                                </div>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+
+                    <div class="ml-auto flex items-center gap-1.5">
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger as-child>
+                                    <button
+                                        type="button"
+                                        class="flex size-9 items-center justify-center rounded-md border transition-colors"
+                                        :class="groupByProvince
+                                            ? 'border-primary bg-primary/10 text-primary'
+                                            : 'border-input bg-background text-muted-foreground hover:border-primary hover:text-primary'"
+                                        @click="toggleGroupByProvince"
+                                    >
+                                        <Map class="size-4" />
+                                    </button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>{{ groupByProvince ? 'Désactiver la vue par province' : 'Vue par province' }}</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger as-child>
+                                    <button
+                                        type="button"
+                                        class="flex size-9 items-center justify-center rounded-md border border-input bg-background text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                                        @click="toggleDisplayMode"
+                                    >
+                                        <LayoutGrid
+                                            v-if="displayMode === 'table'"
+                                            class="size-4"
+                                        />
+                                        <Table
+                                            v-else
+                                            class="size-4"
+                                        />
+                                    </button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>{{ displayMode === 'cards' ? 'Passer en vue tableau' : 'Passer en vue cartes' }}</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                    </div>
+                </div>
+            </template>
+
+            <template #banner>
+                <div
+                    v-if="!user?.institution"
+                    class="mt-4 mb-2 rounded-md border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-slate-700"
+                    data-testid="own-replacements-hidden-banner"
+                >
+                    Vos propres annonces n’apparaissent pas ici.
+                    <NuxtLink
+                        to="/dashboard/replacements/me"
+                        class="ml-1 font-semibold text-primary underline underline-offset-2"
+                    >
+                        Voir mes remplacements
+                    </NuxtLink>
+                </div>
+            </template>
+        </Replacement>
 
         <ConfirmProfileCountryModal
             v-if="showCountryModal"
@@ -240,8 +267,9 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowLeft, Filter, LayoutGrid, Map, Table } from 'lucide-vue-next';
+import { ArrowLeft, CircleCheck, Globe, LayoutGrid, List, Map, MapPin, Table, Users } from 'lucide-vue-next';
 import { useCookie } from '#app';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { regions, departments, goBack } from '~/lib/utils';
 import Replacement from '~/components/Replacement.vue';
 import ConfirmProfileCountryModal from '~/components/replacements/ConfirmProfileCountryModal.vue';
@@ -253,6 +281,7 @@ import { resolveProfileCountryCode } from '~/utils/profileCountry';
 import { useConfirmProfileCountry } from '~/composables/useConfirmProfileCountry';
 
 const { t } = useI18n();
+const localePath = useLocalePath();
 
 const user = useState<User>('user');
 const {
@@ -334,13 +363,6 @@ const displayModeCookie = useCookie<'cards' | 'table'>('displayMode', {
 const displayMode = ref<'cards' | 'table'>(displayModeCookie.value);
 
 const groupByProvince = ref(true);
-
-const activeFiltersCount = computed(() => {
-    let count = 0;
-    if (selectedFilters.value.type !== 'all') count++;
-    if (selectedFilters.value.role !== 'all') count++;
-    return count;
-});
 
 const toggleDisplayMode = () => {
     displayMode.value = displayMode.value === 'cards' ? 'table' : 'cards';

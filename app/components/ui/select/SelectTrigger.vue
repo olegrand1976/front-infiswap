@@ -34,12 +34,12 @@ const forwardedProps = useForwardProps(delegatedProps);
         </template>
 
         <template v-else>
-            <div class="w-full flex items-center justify-between">
-                <slot />
+            <div class="w-full flex items-center justify-between gap-2">
+                <div class="flex min-w-0 flex-1 items-center gap-2">
+                    <slot />
+                </div>
                 <SelectIcon as-child>
-                    <div class="w-full flex justify-end">
-                        <ChevronDown class="w-5 h-5 text-primary font-bold opacity-50 shrink-0 ms-6" />
-                    </div>
+                    <ChevronDown class="w-5 h-5 text-primary font-bold opacity-50 shrink-0" />
                 </SelectIcon>
             </div>
         </template>

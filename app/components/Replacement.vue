@@ -1,144 +1,145 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <div class="min-w-0 w-full max-w-full overflow-x-hidden">
-        <div class="mt-8 min-w-0 w-full">
-            <Form class="grid w-full min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
-                <div class="min-w-0">
+        <div class="mt-8 min-w-0 w-full rounded-lg border bg-card shadow-sm p-5">
+            <Form class="grid w-full min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-[172px_1fr_1fr_auto] xl:items-end">
+                <div class="min-w-0 flex flex-col gap-1.5">
+                    <label class="text-xs font-medium text-muted-foreground">Jours</label>
                     <FormField name="days">
                         <FormItem>
                             <FormControl>
-                                <div class="flex min-w-0 items-center justify-between gap-3 rounded-full bg-primary ps-3 pe-1">
-                                    <h5 class="text-white text-xs">
-                                        Jours
-                                    </h5>
-                                    <Select>
-                                        <SelectTrigger
-                                            class="my-0.5 min-w-0 flex-1 rounded-full border-none bg-white text-xs"
-                                            position="right"
-                                        >
-                                            <SelectValue
-                                                :placeholder="selectedDaysPlaceholder"
-                                                class="text-xs truncate"
-                                            />
-                                        </SelectTrigger>
-                                        <SelectContent class="border-none">
-                                            <SelectGroup class="w-32">
-                                                <div
-                                                    v-for="(day, index) in days"
-                                                    :key="index"
-                                                    class="flex items-center mb-2"
-                                                >
-                                                    <Checkbox
-                                                        class="mr-2"
-                                                        :checked="formData.selectedDays.includes(day)"
-                                                        @update:checked="toggleDay(day)"
-                                                    />
-                                                    <label class="text-xs">{{ frenchDays[day] }}</label>
-                                                </div>
-                                            </SelectGroup>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
+                                <Select>
+                                    <SelectTrigger
+                                        class="h-10 w-full min-w-0 rounded-md border border-input bg-background text-xs"
+                                        position="right"
+                                    >
+                                        <CalendarDays class="size-4 shrink-0 text-primary" />
+                                        <SelectValue
+                                            :placeholder="selectedDaysPlaceholder"
+                                            class="text-xs truncate"
+                                        />
+                                    </SelectTrigger>
+                                    <SelectContent class="border-none">
+                                        <SelectGroup class="w-32">
+                                            <div
+                                                v-for="(day, index) in days"
+                                                :key="index"
+                                                class="flex items-center mb-2"
+                                            >
+                                                <Checkbox
+                                                    class="mr-2"
+                                                    :checked="formData.selectedDays.includes(day)"
+                                                    @update:checked="toggleDay(day)"
+                                                />
+                                                <label class="text-xs">{{ frenchDays[day] }}</label>
+                                            </div>
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
                             </FormControl>
                         </FormItem>
                     </FormField>
                 </div>
 
-                <div class="min-w-0 lg:col-span-2">
+                <div class="min-w-0 flex flex-col gap-1.5">
+                    <label class="text-xs font-medium text-muted-foreground">Codes postaux</label>
                     <FormField name="postalCode">
                         <FormItem>
                             <FormControl>
-                                <div
-                                    class="flex min-w-0 items-center justify-between gap-3 rounded-full bg-primary ps-3 pe-1"
+                                <TagsInput
+                                    v-model="formData.postalCodeTags"
+                                    class="min-h-10 min-w-0 flex-wrap rounded-md border border-input bg-background text-xs"
                                     title="Saisissez le code postal puis appuyer sur Entrée pour l'ajouter"
                                 >
-                                    <h5 class="text-white text-xs">
-                                        <span class="xl:hidden">CP</span>
-                                        <span class="hidden xl:inline-block">Codes postaux</span>
-                                    </h5>
-                                    <TagsInput
-                                        v-model="formData.postalCodeTags"
-                                        class="my-0.5 flex h-auto min-h-9 min-w-0 flex-1 flex-wrap items-center gap-1 rounded-full border-none py-1 text-xs"
+                                    <Mailbox class="size-4 shrink-0 text-primary" />
+                                    <TagsInputItem
+                                        v-for="item in formData.postalCodeTags"
+                                        :key="item"
+                                        :value="item"
+                                        class="shrink-0"
                                     >
-                                        <TagsInputItem
-                                            v-for="item in formData.postalCodeTags"
-                                            :key="item"
-                                            :value="item"
-                                            class="shrink-0"
-                                        >
-                                            <TagsInputItemText class="text-xs" />
-                                            <TagsInputItemDelete @click="removeTag(formData.postalCodeTags, item)" />
-                                        </TagsInputItem>
-                                        <TagsInputInput
-                                            v-model="postalCodeInput"
-                                            class="min-w-[4rem] flex-1 text-xs"
-                                            :placeholder="props.selectedCountry === 'fr' ? '75000' : '1000'"
-                                            @blur="handleBlur"
-                                            @keydown.enter="addTagFromInput(postalCodeInput, formData.postalCodeTags, v => { postalCodeInput = ''; return v; })"
-                                        />
-                                    </TagsInput>
-                                </div>
+                                        <TagsInputItemText class="text-xs" />
+                                        <TagsInputItemDelete @click="removeTag(formData.postalCodeTags, item)" />
+                                    </TagsInputItem>
+                                    <TagsInputInput
+                                        v-model="postalCodeInput"
+                                        class="min-w-[4rem] flex-1 text-xs"
+                                        :placeholder="props.selectedCountry === 'fr' ? '75000' : '1000'"
+                                        @blur="handleBlur"
+                                        @keydown.enter="addTagFromInput(postalCodeInput, formData.postalCodeTags, v => { postalCodeInput = ''; return v; })"
+                                    />
+                                </TagsInput>
                             </FormControl>
                         </FormItem>
                     </FormField>
                 </div>
 
-                <div class="min-w-0 lg:col-span-2">
+                <div class="min-w-0 flex flex-col gap-1.5">
+                    <label class="text-xs font-medium text-muted-foreground">Ville(s)</label>
                     <FormField name="city">
                         <FormItem>
                             <FormControl>
-                                <div
-                                    class="flex min-w-0 items-center justify-between gap-3 rounded-full bg-primary ps-3 pe-1"
+                                <TagsInput
+                                    v-model="formData.cityTags"
+                                    class="min-h-10 min-w-0 flex-wrap rounded-md border border-input bg-background text-xs"
                                     title="Saisissez la ville puis appuyer sur Entrée pour l'ajouter"
                                 >
-                                    <h5 class="text-white text-xs">
-                                        Ville(s)
-                                    </h5>
-                                    <TagsInput
-                                        v-model="formData.cityTags"
-                                        class="my-0.5 flex h-auto min-h-9 min-w-0 flex-1 flex-wrap items-center gap-1 rounded-full border-none py-1 text-xs"
+                                    <Building2 class="size-4 shrink-0 text-primary" />
+                                    <TagsInputItem
+                                        v-for="item in formData.cityTags"
+                                        :key="item"
+                                        :value="item"
+                                        class="shrink-0"
                                     >
-                                        <TagsInputItem
-                                            v-for="item in formData.cityTags"
-                                            :key="item"
-                                            :value="item"
-                                            class="shrink-0"
-                                        >
-                                            <TagsInputItemText class="text-xs" />
-                                            <TagsInputItemDelete @click="removeTag(formData.cityTags, item)" />
-                                        </TagsInputItem>
-                                        <TagsInputInput
-                                            v-model="cityInput"
-                                            class="min-w-[4rem] flex-1 text-xs"
-                                            :placeholder="props.selectedCountry === 'fr' ? 'Paris' : 'Bruxelles'"
-                                            @blur="handleBlur"
-                                            @keydown.enter="addTagFromInput(cityInput, formData.cityTags, v => { cityInput = ''; return v; })"
-                                        />
-                                    </TagsInput>
-                                </div>
+                                        <TagsInputItemText class="text-xs" />
+                                        <TagsInputItemDelete @click="removeTag(formData.cityTags, item)" />
+                                    </TagsInputItem>
+                                    <TagsInputInput
+                                        v-model="cityInput"
+                                        class="min-w-[4rem] flex-1 text-xs"
+                                        :placeholder="props.selectedCountry === 'fr' ? 'Paris' : 'Bruxelles'"
+                                        @blur="handleBlur"
+                                        @keydown.enter="addTagFromInput(cityInput, formData.cityTags, v => { cityInput = ''; return v; })"
+                                    />
+                                </TagsInput>
                             </FormControl>
                         </FormItem>
                     </FormField>
                 </div>
 
-                <div class="flex min-w-0 gap-3 sm:col-span-2 lg:col-span-2">
+                <div class="flex min-w-0 gap-2">
                     <Button
-                        class="bg-primary flex items-center justify-center text-sm h-11 px-4 w-full md:w-auto"
+                        type="button"
+                        variant="outline"
+                        class="flex flex-1 items-center justify-center gap-2 rounded-md text-sm h-10 px-4 xl:flex-none"
                         @click="reinitializeFilter"
                     >
-                        <RefreshCw class="w-6" />
-                        <span class="ml-2 block lg:hidden text-xs md:text-sm">Réinitialiser</span>
+                        <RefreshCw class="size-4" />
+                        <span class="text-xs md:text-sm">Réinitialiser</span>
                     </Button>
                     <Button
-                        class="text-sm bg-primary flex items-center justify-center h-11 px-4 w-full md:w-auto 2xl:px-10"
+                        type="button"
+                        class="flex flex-1 items-center justify-center gap-2 rounded-md text-sm h-10 px-4 xl:flex-none xl:px-6"
                         @click="submitSearch"
                     >
-                        <Search class="w-6" />
-                        <span class="ml-2 text-xs md:text-sm">Rechercher</span>
+                        <Search class="size-4" />
+                        <span class="text-xs md:text-sm">Rechercher</span>
                     </Button>
                 </div>
             </Form>
+
+            <div
+                v-if="$slots.filters"
+                class="mt-5 pt-5 border-t border-input"
+            >
+                <div class="mb-3 text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
+                    Filtres &amp; affichage
+                </div>
+                <slot name="filters" />
+            </div>
         </div>
+
+        <slot name="banner" />
 
         <div class="my-8 min-w-0 w-full max-w-full">
             <div
@@ -496,7 +497,7 @@
 </template>
 
 <script lang="ts" setup>
-import { RefreshCw, Search } from 'lucide-vue-next';
+import { Building2, CalendarDays, Mailbox, RefreshCw, Search } from 'lucide-vue-next';
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import ReplacementCard from '@/components/replacements/ReplacementCard.vue';
 import ReplacementCardSkeleton from '@/components/replacements/ReplacementCardSkeleton.vue';
