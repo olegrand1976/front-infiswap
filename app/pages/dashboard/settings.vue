@@ -4,13 +4,13 @@
             <button
                 type="button"
                 class="flex size-9 shrink-0 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:border-primary hover:text-primary"
-                :title="$t('common.back')"
+                :title="t('common.back')"
                 @click="goBack"
             >
                 <ArrowLeft class="size-4" />
             </button>
             <p class="text-xs font-semibold uppercase tracking-wide text-primary">
-                {{ $t('settings.title') }}
+                {{ t('settings.title') }}
             </p>
         </div>
 
@@ -21,7 +21,7 @@
                         class="relative group/avatar shrink-0 cursor-pointer rounded-full"
                         role="button"
                         tabindex="0"
-                        :aria-label="$t('settings.editPhoto')"
+                        :aria-label="t('settings.editPhoto')"
                         @click="profileDialog = !profileDialog"
                         @keydown.enter="profileDialog = !profileDialog"
                     >
@@ -53,7 +53,7 @@
                                 {{ user.email }}
                             </template>
                             <template v-else>
-                                {{ formattedCategory || $t('settings.title') }}
+                                {{ formattedCategory || t('settings.title') }}
                                 <template v-if="user.profile?.city">
                                     · {{ user.profile.city }}
                                 </template>
@@ -77,40 +77,40 @@
                             :loading="profileUpload.loading"
                             @click="submit"
                         >
-                            {{ $t('settings.save') }}
+                            {{ t('settings.save') }}
                         </Button>
                         <Button
                             v-if="user.profile?.profil_url"
                             @click="deleteAvatarDialog = true"
                         >
                             <Trash2 class="size-4" />
-                            {{ $t('settings.confirmDelete') }}
+                            {{ t('settings.confirmDelete') }}
                         </Button>
                         <Button
                             variant="ghost"
                             @click="profileDialog = false"
                         >
-                            {{ $t('common.cancel') }}
+                            {{ t('common.cancel') }}
                         </Button>
                     </div>
                     <div
                         v-if="deleteAvatarDialog"
                         class="flex items-center gap-2 text-sm text-destructive"
                     >
-                        <span>{{ $t('settings.deletePhotoConfirm') }}</span>
+                        <span>{{ t('settings.deletePhotoConfirm') }}</span>
                         <button
                             type="button"
                             class="font-medium underline"
                             @click="handleDeleteAvatar"
                         >
-                            {{ $t('common.confirm') }}
+                            {{ t('common.confirm') }}
                         </button>
                         <button
                             type="button"
                             class="underline"
                             @click="deleteAvatarDialog = false"
                         >
-                            {{ $t('common.cancel') }}
+                            {{ t('common.cancel') }}
                         </button>
                     </div>
                 </div>
@@ -124,7 +124,7 @@
                                 <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
                                     <IdCard class="size-5" />
                                 </span>
-                                <span class="text-lg font-secondary">{{ $t('settings.generalInfo') }}</span>
+                                <span class="text-lg font-secondary">{{ t('settings.generalInfo') }}</span>
                             </h3>
                             <Button
                                 v-if="!personalInfoDialog"
@@ -146,35 +146,35 @@
                             >
                                 <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <Building2 class="size-4" />
-                                    {{ $t('settings.institutionName') }}
+                                    {{ t('settings.institutionName') }}
                                 </span>
                                 <span class="min-w-0 truncate text-sm font-medium">{{ user.institution?.name || '-' }}</span>
                             </div>
                             <div class="flex items-center justify-between gap-3 py-2.5">
                                 <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <CircleUser class="size-4" />
-                                    {{ $t('settings.lastname') }}
+                                    {{ t('settings.lastname') }}
                                 </span>
                                 <span class="min-w-0 truncate text-sm font-medium">{{ user.lastname }}</span>
                             </div>
                             <div class="flex items-center justify-between gap-3 py-2.5">
                                 <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <UserPlus class="size-4" />
-                                    {{ $t('settings.firstname') }}
+                                    {{ t('settings.firstname') }}
                                 </span>
                                 <span class="min-w-0 truncate text-sm font-medium">{{ user.firstname }}</span>
                             </div>
                             <div class="flex items-center justify-between gap-3 py-2.5">
                                 <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <Calendar class="size-4" />
-                                    {{ $t('settings.birthDate') }}
+                                    {{ t('settings.birthDate') }}
                                 </span>
                                 <span class="min-w-0 truncate text-sm font-medium">{{ formatStringDate(user.date_of_birth) !== '01/01/1970' ? formatStringDate(user.date_of_birth) : 'jj/mm/aaaa' }}</span>
                             </div>
                             <div class="flex items-center justify-between gap-3 py-2.5">
                                 <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <Mail class="size-4" />
-                                    {{ $t('settings.email') }}
+                                    {{ t('settings.email') }}
                                 </span>
                                 <span class="min-w-0 truncate text-sm font-medium">{{ user.email }}</span>
                             </div>
@@ -193,7 +193,7 @@
                             <div class="flex items-center justify-between gap-3 py-2.5">
                                 <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <Phone class="size-4" />
-                                    {{ $t('settings.phone') }}
+                                    {{ t('settings.phone') }}
                                 </span>
                                 <span
                                     class="min-w-0 truncate text-sm font-medium"
@@ -205,14 +205,14 @@
                             <div class="flex items-center justify-between gap-3 py-2.5">
                                 <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <VenusAndMars class="size-4" />
-                                    {{ $t('settings.gender') }}
+                                    {{ t('settings.gender') }}
                                 </span>
                                 <span class="min-w-0 truncate text-sm font-medium">{{ formattedGender || ' - ' }}</span>
                             </div>
                             <div class="flex items-center justify-between gap-3 py-2.5">
                                 <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <Users class="size-4" />
-                                    {{ $t('settings.professionalCategory') }}
+                                    {{ t('settings.professionalCategory') }}
                                 </span>
                                 <span class="min-w-0 truncate text-sm font-medium">{{ formattedCategory || ' - ' }}</span>
                             </div>
@@ -222,7 +222,7 @@
                             >
                                 <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <GraduationCap class="size-4" />
-                                    {{ $t('settings.educationLevel') }}
+                                    {{ t('settings.educationLevel') }}
                                 </span>
                                 <span class="min-w-0 truncate text-sm font-medium">{{ formattedEducationLevel || ' - ' }}</span>
                             </div>
@@ -240,10 +240,10 @@
                                     class="flex flex-col gap-1.5 sm:col-span-2"
                                 >
                                     <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-                                        {{ $t('settings.institutionName') }}
+                                        {{ t('settings.institutionName') }}
                                         <SettingsFieldHint
-                                            :text="$t(SETTINGS_TOOLTIPS.institutionName)"
-                                            :label="$t('settings.institutionName')"
+                                            :text="t(SETTINGS_TOOLTIPS.institutionName)"
+                                            :label="t('settings.institutionName')"
                                         />
                                     </label>
                                     <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
@@ -258,10 +258,10 @@
 
                                 <div class="flex flex-col gap-1.5">
                                     <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-                                        {{ $t('settings.lastname') }}
+                                        {{ t('settings.lastname') }}
                                         <SettingsFieldHint
-                                            :text="$t(SETTINGS_TOOLTIPS.lastname)"
-                                            :label="$t('settings.lastname')"
+                                            :text="t(SETTINGS_TOOLTIPS.lastname)"
+                                            :label="t('settings.lastname')"
                                         />
                                     </label>
                                     <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
@@ -276,10 +276,10 @@
 
                                 <div class="flex flex-col gap-1.5">
                                     <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-                                        {{ $t('settings.firstname') }}
+                                        {{ t('settings.firstname') }}
                                         <SettingsFieldHint
-                                            :text="$t(SETTINGS_TOOLTIPS.firstname)"
-                                            :label="$t('settings.firstname')"
+                                            :text="t(SETTINGS_TOOLTIPS.firstname)"
+                                            :label="t('settings.firstname')"
                                         />
                                     </label>
                                     <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
@@ -294,10 +294,10 @@
 
                                 <div class="flex flex-col gap-1.5">
                                     <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-                                        {{ $t('settings.birthDate') }}
+                                        {{ t('settings.birthDate') }}
                                         <SettingsFieldHint
-                                            :text="$t(SETTINGS_TOOLTIPS.dateOfBirth)"
-                                            :label="$t('settings.birthDate')"
+                                            :text="t(SETTINGS_TOOLTIPS.dateOfBirth)"
+                                            :label="t('settings.birthDate')"
                                         />
                                     </label>
                                     <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
@@ -312,10 +312,10 @@
 
                                 <div class="flex flex-col gap-1.5">
                                     <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-                                        {{ $t('settings.email') }}
+                                        {{ t('settings.email') }}
                                         <SettingsFieldHint
-                                            :text="$t(SETTINGS_TOOLTIPS.email)"
-                                            :label="$t('settings.email')"
+                                            :text="t(SETTINGS_TOOLTIPS.email)"
+                                            :label="t('settings.email')"
                                         />
                                     </label>
                                     <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
@@ -330,10 +330,10 @@
 
                                 <div class="flex flex-col gap-1.5">
                                     <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-                                        {{ $t('settings.identifierNumber', { label: identifierLabel }) }}
+                                        {{ t('settings.identifierNumber', { label: identifierLabel }) }}
                                         <SettingsFieldHint
-                                            :text="$t(SETTINGS_TOOLTIPS.identifierNumber)"
-                                            :label="$t('settings.identifierNumber', { label: identifierLabel })"
+                                            :text="t(SETTINGS_TOOLTIPS.identifierNumber)"
+                                            :label="t('settings.identifierNumber', { label: identifierLabel })"
                                         />
                                     </label>
                                     <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
@@ -349,10 +349,10 @@
 
                                 <div class="flex flex-col gap-1.5">
                                     <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-                                        {{ $t('settings.phone') }}
+                                        {{ t('settings.phone') }}
                                         <SettingsFieldHint
-                                            :text="$t(SETTINGS_TOOLTIPS.phoneNumber)"
-                                            :label="$t('settings.phone')"
+                                            :text="t(SETTINGS_TOOLTIPS.phoneNumber)"
+                                            :label="t('settings.phone')"
                                         />
                                     </label>
                                     <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
@@ -368,10 +368,10 @@
 
                                 <div class="flex flex-col gap-1.5">
                                     <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-                                        {{ $t('settings.gender') }}
+                                        {{ t('settings.gender') }}
                                         <SettingsFieldHint
-                                            :text="$t(SETTINGS_TOOLTIPS.gender)"
-                                            :label="$t('settings.gender')"
+                                            :text="t(SETTINGS_TOOLTIPS.gender)"
+                                            :label="t('settings.gender')"
                                         />
                                     </label>
                                     <Select v-model="formPersonalInfo.gender">
@@ -394,10 +394,10 @@
 
                                 <div class="flex flex-col gap-1.5">
                                     <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-                                        {{ $t('settings.professionalCategory') }}
+                                        {{ t('settings.professionalCategory') }}
                                         <SettingsFieldHint
-                                            :text="$t(SETTINGS_TOOLTIPS.professionalCategory)"
-                                            :label="$t('settings.professionalCategory')"
+                                            :text="t(SETTINGS_TOOLTIPS.professionalCategory)"
+                                            :label="t('settings.professionalCategory')"
                                         />
                                     </label>
                                     <Select v-model="formPersonalInfo.professionalCategory">
@@ -423,10 +423,10 @@
                                     class="flex flex-col gap-1.5 sm:col-span-2"
                                 >
                                     <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-                                        {{ $t('settings.educationLevel') }}
+                                        {{ t('settings.educationLevel') }}
                                         <SettingsFieldHint
-                                            :text="$t(SETTINGS_TOOLTIPS.educationLevel)"
-                                            :label="$t('settings.educationLevel')"
+                                            :text="t(SETTINGS_TOOLTIPS.educationLevel)"
+                                            :label="t('settings.educationLevel')"
                                         />
                                     </label>
                                     <Select v-model="formPersonalInfo.educationLevel">
@@ -453,7 +453,7 @@
                                     variant="ghost"
                                     @click="personalInfoDialog = false"
                                 >
-                                    {{ $t('common.cancel') }}
+                                    {{ t('common.cancel') }}
                                 </Button>
                                 <Button type="submit">
                                     Enregistrer
@@ -471,7 +471,7 @@
                                 <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
                                     <MapPin class="size-5" />
                                 </span>
-                                <span class="text-lg font-secondary">{{ $t('settings.address') }}</span>
+                                <span class="text-lg font-secondary">{{ t('settings.address') }}</span>
                             </h3>
                             <Button
                                 v-if="!addressInfoDialog"
@@ -491,42 +491,42 @@
                             <div class="flex items-center justify-between gap-3 py-2.5">
                                 <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <Map class="size-4" />
-                                    {{ $t('settings.street') }}
+                                    {{ t('settings.street') }}
                                 </span>
                                 <span class="min-w-0 truncate text-sm font-medium">{{ user.profile?.street_address || ' - ' }}</span>
                             </div>
                             <div class="flex items-center justify-between gap-3 py-2.5">
                                 <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <Building2 class="size-4" />
-                                    {{ $t('settings.city') }}
+                                    {{ t('settings.city') }}
                                 </span>
                                 <span class="min-w-0 truncate text-sm font-medium">{{ user.profile?.city || ' - ' }}</span>
                             </div>
                             <div class="flex items-center justify-between gap-3 py-2.5">
                                 <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <Flag class="size-4" />
-                                    {{ $t('settings.country') }}
+                                    {{ t('settings.country') }}
                                 </span>
                                 <span class="min-w-0 truncate text-sm font-medium">{{ formattedCountry || ' - ' }}</span>
                             </div>
                             <div class="flex items-center justify-between gap-3 py-2.5">
                                 <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <Building2 class="size-4" />
-                                    {{ $t('settings.workCountry') }}
+                                    {{ t('settings.workCountry') }}
                                 </span>
                                 <span class="min-w-0 truncate text-sm font-medium">{{ user.profile?.working_at || ' - ' }}</span>
                             </div>
                             <div class="flex items-center justify-between gap-3 py-2.5">
                                 <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <Mailbox class="size-4" />
-                                    {{ $t('settings.zipCode') }}
+                                    {{ t('settings.zipCode') }}
                                 </span>
                                 <span class="min-w-0 truncate text-sm font-medium">{{ user.profile?.zip_code || ' - ' }}</span>
                             </div>
                             <div class="flex items-center justify-between gap-3 py-2.5">
                                 <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <CircleEllipsis class="size-4" />
-                                    {{ $t('settings.extra') }}
+                                    {{ t('settings.extra') }}
                                 </span>
                                 <span class="min-w-0 truncate text-sm font-medium">{{ user.additional_info || ' - ' }}</span>
                             </div>
@@ -541,10 +541,10 @@
                             <div class="grid gap-4 sm:grid-cols-2">
                                 <div class="flex flex-col gap-1.5 sm:col-span-2">
                                     <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-                                        {{ $t('settings.street') }}
+                                        {{ t('settings.street') }}
                                         <SettingsFieldHint
-                                            :text="$t(SETTINGS_TOOLTIPS.street)"
-                                            :label="$t('settings.street')"
+                                            :text="t(SETTINGS_TOOLTIPS.street)"
+                                            :label="t('settings.street')"
                                         />
                                     </label>
                                     <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
@@ -559,10 +559,10 @@
 
                                 <div class="flex flex-col gap-1.5">
                                     <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-                                        {{ $t('settings.zipCode') }}
+                                        {{ t('settings.zipCode') }}
                                         <SettingsFieldHint
-                                            :text="$t(SETTINGS_TOOLTIPS.zipCode)"
-                                            :label="$t('settings.zipCode')"
+                                            :text="t(SETTINGS_TOOLTIPS.zipCode)"
+                                            :label="t('settings.zipCode')"
                                         />
                                     </label>
                                     <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
@@ -577,10 +577,10 @@
 
                                 <div class="flex flex-col gap-1.5">
                                     <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-                                        {{ $t('settings.city') }}
+                                        {{ t('settings.city') }}
                                         <SettingsFieldHint
-                                            :text="$t(SETTINGS_TOOLTIPS.city)"
-                                            :label="$t('settings.city')"
+                                            :text="t(SETTINGS_TOOLTIPS.city)"
+                                            :label="t('settings.city')"
                                         />
                                     </label>
                                     <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
@@ -595,10 +595,10 @@
 
                                 <div class="flex flex-col gap-1.5">
                                     <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-                                        {{ $t('settings.country') }}
+                                        {{ t('settings.country') }}
                                         <SettingsFieldHint
-                                            :text="$t(SETTINGS_TOOLTIPS.country)"
-                                            :label="$t('settings.country')"
+                                            :text="t(SETTINGS_TOOLTIPS.country)"
+                                            :label="t('settings.country')"
                                         />
                                     </label>
                                     <Select v-model="formAddress.country">
@@ -621,10 +621,10 @@
 
                                 <div class="flex flex-col gap-1.5">
                                     <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-                                        {{ $t('settings.workCountry') }}
+                                        {{ t('settings.workCountry') }}
                                         <SettingsFieldHint
-                                            :text="$t(SETTINGS_TOOLTIPS.workingAt)"
-                                            :label="$t('settings.workCountry')"
+                                            :text="t(SETTINGS_TOOLTIPS.workingAt)"
+                                            :label="t('settings.workCountry')"
                                         />
                                     </label>
                                     <Select v-model="formAddress.workingAt">
@@ -647,10 +647,10 @@
 
                                 <div class="flex flex-col gap-1.5 sm:col-span-2">
                                     <label class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-                                        {{ $t('settings.extra') }}
+                                        {{ t('settings.extra') }}
                                         <SettingsFieldHint
-                                            :text="$t(SETTINGS_TOOLTIPS.additionalInfo)"
-                                            :label="$t('settings.extra')"
+                                            :text="t(SETTINGS_TOOLTIPS.additionalInfo)"
+                                            :label="t('settings.extra')"
                                         />
                                     </label>
                                     <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
@@ -670,7 +670,7 @@
                                     variant="ghost"
                                     @click="addressInfoDialog = false"
                                 >
-                                    {{ $t('common.cancel') }}
+                                    {{ t('common.cancel') }}
                                 </Button>
                                 <Button type="submit">
                                     Enregistrer
@@ -688,7 +688,7 @@
                         <div class="flex justify-between items-center">
                             <h3 class="flex items-center space-x-4">
                                 <MapPin class="w-6 text-gray-400" />
-                                <span class="text-lg font-secondary">{{ $t('settings.address') }}</span>
+                                <span class="text-lg font-secondary">{{ t('settings.address') }}</span>
                             </h3>
 
                             <SquarePen
@@ -700,21 +700,21 @@
                                 <DialogContent class="w-full max-w-sm sm:max-w-xl max-h-[90vh] overflow-y-auto">
                                     <DialogHeader>
                                         <DialogTitle class="text-center">
-                                            {{ $t('settings.updateTitle') }}
+                                            {{ t('settings.updateTitle') }}
                                         </DialogTitle>
                                     </DialogHeader>
                                     <DialogDescription>
-                                        {{ $t('settings.updateAddressDesc') }}
+                                        {{ t('settings.updateAddressDesc') }}
                                     </DialogDescription>
 
                                     <form class="mt-4 space-y-3">
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
                                             <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
-                                                {{ $t('settings.street') }}
+                                                {{ t('settings.street') }}
                                                 <SettingsFieldHint
                                                     variant="onPrimary"
-                                                    :text="$t(SETTINGS_TOOLTIPS.street)"
-                                                    :label="$t('settings.street')"
+                                                    :text="t(SETTINGS_TOOLTIPS.street)"
+                                                    :label="t('settings.street')"
                                                 />
                                             </p>
                                             <Input
@@ -726,11 +726,11 @@
 
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
                                             <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
-                                                {{ $t('settings.city') }}
+                                                {{ t('settings.city') }}
                                                 <SettingsFieldHint
                                                     variant="onPrimary"
-                                                    :text="$t(SETTINGS_TOOLTIPS.city)"
-                                                    :label="$t('settings.city')"
+                                                    :text="t(SETTINGS_TOOLTIPS.city)"
+                                                    :label="t('settings.city')"
                                                 />
                                             </p>
                                             <Input
@@ -742,11 +742,11 @@
 
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
                                             <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
-                                                {{ $t('settings.country') }}
+                                                {{ t('settings.country') }}
                                                 <SettingsFieldHint
                                                     variant="onPrimary"
-                                                    :text="$t(SETTINGS_TOOLTIPS.country)"
-                                                    :label="$t('settings.country')"
+                                                    :text="t(SETTINGS_TOOLTIPS.country)"
+                                                    :label="t('settings.country')"
                                                 />
                                             </p>
                                             <Select v-model="formAddress.country">
@@ -771,11 +771,11 @@
 
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
                                             <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
-                                                {{ $t('settings.workCountry') }}
+                                                {{ t('settings.workCountry') }}
                                                 <SettingsFieldHint
                                                     variant="onPrimary"
-                                                    :text="$t(SETTINGS_TOOLTIPS.workingAt)"
-                                                    :label="$t('settings.workCountry')"
+                                                    :text="t(SETTINGS_TOOLTIPS.workingAt)"
+                                                    :label="t('settings.workCountry')"
                                                 />
                                             </p>
                                             <Select v-model="formAddress.workingAt">
@@ -800,11 +800,11 @@
 
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
                                             <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
-                                                {{ $t('settings.zipCode') }}
+                                                {{ t('settings.zipCode') }}
                                                 <SettingsFieldHint
                                                     variant="onPrimary"
-                                                    :text="$t(SETTINGS_TOOLTIPS.zipCode)"
-                                                    :label="$t('settings.zipCode')"
+                                                    :text="t(SETTINGS_TOOLTIPS.zipCode)"
+                                                    :label="t('settings.zipCode')"
                                                 />
                                             </p>
                                             <Input
@@ -816,11 +816,11 @@
 
                                         <div class="grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
                                             <p class="text-primary sm:text-white sm:bg-primary flex items-center gap-1.5 h-full ps-4 rounded-s-full">
-                                                {{ $t('settings.extra') }}
+                                                {{ t('settings.extra') }}
                                                 <SettingsFieldHint
                                                     variant="onPrimary"
-                                                    :text="$t(SETTINGS_TOOLTIPS.additionalInfo)"
-                                                    :label="$t('settings.extra')"
+                                                    :text="t(SETTINGS_TOOLTIPS.additionalInfo)"
+                                                    :label="t('settings.extra')"
                                                 />
                                             </p>
                                             <Input
@@ -836,7 +836,7 @@
                                                 class="bg-gray-200 hover:bg-gray-300 w-full sm:w-auto"
                                                 @click="addressInfoDialog = false"
                                             >
-                                                {{ $t('common.cancel') }}
+                                                {{ t('common.cancel') }}
                                             </Button>
                                             <Button
                                                 class="w-full sm:w-auto"
@@ -860,11 +860,11 @@
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
                                     >
                                         <Map class="w-5" />
-                                        <span>{{ $t('settings.street') }}</span>
+                                        <span>{{ t('settings.street') }}</span>
                                         <SettingsFieldHint
                                             variant="onPrimary"
-                                            :text="$t(SETTINGS_TOOLTIPS.street)"
-                                            :label="$t('settings.street')"
+                                            :text="t(SETTINGS_TOOLTIPS.street)"
+                                            :label="t('settings.street')"
                                         />
                                     </label>
                                 </div>
@@ -882,11 +882,11 @@
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
                                     >
                                         <Building2 class="w-5" />
-                                        <span>{{ $t('settings.city') }}</span>
+                                        <span>{{ t('settings.city') }}</span>
                                         <SettingsFieldHint
                                             variant="onPrimary"
-                                            :text="$t(SETTINGS_TOOLTIPS.city)"
-                                            :label="$t('settings.city')"
+                                            :text="t(SETTINGS_TOOLTIPS.city)"
+                                            :label="t('settings.city')"
                                         />
                                     </label>
                                 </div>
@@ -904,11 +904,11 @@
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
                                     >
                                         <FlagIcon class="w-5" />
-                                        <span>{{ $t('settings.country') }}</span>
+                                        <span>{{ t('settings.country') }}</span>
                                         <SettingsFieldHint
                                             variant="onPrimary"
-                                            :text="$t(SETTINGS_TOOLTIPS.country)"
-                                            :label="$t('settings.country')"
+                                            :text="t(SETTINGS_TOOLTIPS.country)"
+                                            :label="t('settings.country')"
                                         />
                                     </label>
                                 </div>
@@ -926,11 +926,11 @@
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
                                     >
                                         <Building2 class="w-5" />
-                                        <span>{{ $t('settings.workCountry') }}</span>
+                                        <span>{{ t('settings.workCountry') }}</span>
                                         <SettingsFieldHint
                                             variant="onPrimary"
-                                            :text="$t(SETTINGS_TOOLTIPS.workingAt)"
-                                            :label="$t('settings.workCountry')"
+                                            :text="t(SETTINGS_TOOLTIPS.workingAt)"
+                                            :label="t('settings.workCountry')"
                                         />
                                     </label>
                                 </div>
@@ -948,11 +948,11 @@
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0"
                                     >
                                         <EnvelopeOpenIcon class="w-5" />
-                                        <span>{{ $t('settings.zipCode') }}</span>
+                                        <span>{{ t('settings.zipCode') }}</span>
                                         <SettingsFieldHint
                                             variant="onPrimary"
-                                            :text="$t(SETTINGS_TOOLTIPS.zipCode)"
-                                            :label="$t('settings.zipCode')"
+                                            :text="t(SETTINGS_TOOLTIPS.zipCode)"
+                                            :label="t('settings.zipCode')"
                                         />
                                     </label>
                                 </div>
@@ -970,11 +970,11 @@
                                         class="text-primary sm:text-white flex items-center space-x-3 mb-1 sm:mb-0  truncate text-nowrap"
                                     >
                                         <EllipsisHorizontalCircleIcon class="w-5" />
-                                        <span>{{ $t('settings.extra') }}</span>
+                                        <span>{{ t('settings.extra') }}</span>
                                         <SettingsFieldHint
                                             variant="onPrimary"
-                                            :text="$t(SETTINGS_TOOLTIPS.additionalInfo)"
-                                            :label="$t('settings.extra')"
+                                            :text="t(SETTINGS_TOOLTIPS.additionalInfo)"
+                                            :label="t('settings.extra')"
                                         />
                                     </label>
                                 </div>
@@ -991,7 +991,7 @@
                                 <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
                                     <ShieldCheck class="size-5" />
                                 </span>
-                                <span class="text-lg font-secondary">{{ $t('settings.security') }}</span>
+                                <span class="text-lg font-secondary">{{ t('settings.security') }}</span>
                             </h3>
                             <Button
                                 v-if="!changePasswordDialog"
@@ -1010,10 +1010,10 @@
                             >
                                 <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <KeyRound class="size-4" />
-                                    {{ $t('settings.password') }}
+                                    {{ t('settings.password') }}
                                     <SettingsFieldHint
-                                        :text="$t(SETTINGS_TOOLTIPS.password)"
-                                        :label="$t('settings.password')"
+                                        :text="t(SETTINGS_TOOLTIPS.password)"
+                                        :label="t('settings.password')"
                                     />
                                 </span>
                                 <span class="min-w-0 truncate text-sm font-medium text-muted-foreground">••••••••••</span>
@@ -1052,7 +1052,7 @@
                                         </div>
                                     </div>
                                     <div class="flex flex-col gap-1.5">
-                                        <label class="text-xs font-medium text-muted-foreground">{{ $t('common.confirm') }} mot de passe</label>
+                                        <label class="text-xs font-medium text-muted-foreground">{{ t('common.confirm') }} mot de passe</label>
                                         <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
                                             <KeyRound class="size-4 shrink-0 text-primary" />
                                             <Input
@@ -1069,7 +1069,7 @@
                                         variant="ghost"
                                         @click="changePasswordDialog = false"
                                     >
-                                        {{ $t('common.cancel') }}
+                                        {{ t('common.cancel') }}
                                     </Button>
                                     <Button type="submit">
                                         Enregistrer
@@ -1080,10 +1080,10 @@
                             <div class="flex items-center justify-between gap-3 py-2.5">
                                 <span class="flex shrink-0 items-center gap-2.5 text-sm text-muted-foreground">
                                     <Smartphone class="size-4" />
-                                    {{ $t('settings.twoFactor') }}
+                                    {{ t('settings.twoFactor') }}
                                     <SettingsFieldHint
-                                        :text="$t(SETTINGS_TOOLTIPS.twoFactor)"
-                                        :label="$t('settings.twoFactor')"
+                                        :text="t(SETTINGS_TOOLTIPS.twoFactor)"
+                                        :label="t('settings.twoFactor')"
                                     />
                                 </span>
                                 <Switch
@@ -1095,7 +1095,7 @@
                                 <Dialog v-model:open="twoFactorDialog">
                                     <DialogContent class="sm:max-w-160">
                                         <DialogHeader>
-                                            <DialogTitle>{{ $t('settings.twoFactor') }}</DialogTitle>
+                                            <DialogTitle>{{ t('settings.twoFactor') }}</DialogTitle>
                                         </DialogHeader>
                                         <div class="text-center mx-12 mt-8">
                                             Afin d'activer cette option, veuillez entrer les 6 chiffres envoyés à votre adresse e-mail
@@ -1126,7 +1126,7 @@
                                                 class="bg-gray-200 hover:bg-gray-300"
                                                 @click="twoFactorDialog = false"
                                             >
-                                                {{ $t('common.cancel') }}
+                                                {{ t('common.cancel') }}
                                             </Button>
                                             <Button
                                                 @click="handleVerifyCode"
@@ -1141,7 +1141,7 @@
                                     <DialogContent class="w-full max-w-sm sm:max-w-xl max-h-[90vh] overflow-y-auto">
                                         <DialogHeader>
                                             <DialogTitle class="text-center">
-                                                {{ $t('settings.twoFactor') }}
+                                                {{ t('settings.twoFactor') }}
                                             </DialogTitle>
                                         </DialogHeader>
                                         <div class="mt-8">
@@ -1166,7 +1166,7 @@
                                                     class="bg-gray-200 hover:bg-gray-300 w-full sm:w-auto"
                                                     @click="enterPasswordDialog = false"
                                                 >
-                                                    {{ $t('common.cancel') }}
+                                                    {{ t('common.cancel') }}
                                                 </Button>
                                                 <Button
                                                     class="w-full sm:w-auto"
@@ -1191,7 +1191,7 @@
                                 <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
                                     <Wrench class="size-5" />
                                 </span>
-                                <span class="text-lg font-secondary">{{ $t('settings.preferences') }}</span>
+                                <span class="text-lg font-secondary">{{ t('settings.preferences') }}</span>
                             </h3>
 
                             <Button
@@ -1199,7 +1199,7 @@
                                 @click="proposalDialog = true"
                             >
                                 <Sparkles class="size-4" />
-                                {{ $t('settings.aiBoost') }}
+                                {{ t('settings.aiBoost') }}
                             </Button>
                         </div>
 
@@ -1231,10 +1231,10 @@
                                     for="language"
                                     class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground"
                                 >
-                                    {{ $t('common.language') }}
+                                    {{ t('common.language') }}
                                     <SettingsFieldHint
-                                        :text="$t('settings.languageTooltip')"
-                                        :label="$t('common.language')"
+                                        :text="t('settings.languageTooltip')"
+                                        :label="t('common.language')"
                                     />
                                 </label>
                                 <Select
@@ -1269,16 +1269,16 @@
                             <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
                                 <BellRing class="size-5" />
                             </span>
-                            <span class="text-lg font-secondary">{{ $t('settings.notification') }}</span>
+                            <span class="text-lg font-secondary">{{ t('settings.notification') }}</span>
                         </h3>
 
                         <div class="mt-4 divide-y divide-border">
                             <div class="flex items-center justify-between gap-3 py-3">
                                 <div class="flex items-center gap-1.5 min-w-0">
-                                    <Label for="newReplacement">{{ $t('settings.newReplacementNotif') }}</Label>
+                                    <Label for="newReplacement">{{ t('settings.newReplacementNotif') }}</Label>
                                     <SettingsFieldHint
-                                        :text="$t(SETTINGS_TOOLTIPS.newReplacement)"
-                                        :label="$t('settings.newReplacementNotif')"
+                                        :text="t(SETTINGS_TOOLTIPS.newReplacement)"
+                                        :label="t('settings.newReplacementNotif')"
                                     />
                                 </div>
                                 <Switch
@@ -1289,10 +1289,10 @@
                             </div>
                             <div class="flex items-center justify-between gap-3 py-3">
                                 <div class="flex items-center gap-1.5 min-w-0">
-                                    <Label for="acceptReplacement">{{ $t('settings.acceptedReplacementNotif') }}</Label>
+                                    <Label for="acceptReplacement">{{ t('settings.acceptedReplacementNotif') }}</Label>
                                     <SettingsFieldHint
-                                        :text="$t(SETTINGS_TOOLTIPS.replacementAccepted)"
-                                        :label="$t('settings.acceptedReplacementNotif')"
+                                        :text="t(SETTINGS_TOOLTIPS.replacementAccepted)"
+                                        :label="t('settings.acceptedReplacementNotif')"
                                     />
                                 </div>
                                 <Switch
@@ -1303,10 +1303,10 @@
                             </div>
                             <div class="flex items-center justify-between gap-3 py-3">
                                 <div class="flex items-center gap-1.5 min-w-0">
-                                    <Label for="digestWeekly">{{ $t('settings.weeklyDigest') }}</Label>
+                                    <Label for="digestWeekly">{{ t('settings.weeklyDigest') }}</Label>
                                     <SettingsFieldHint
-                                        :text="$t(SETTINGS_TOOLTIPS.digestWeekly)"
-                                        :label="$t('settings.weeklyDigest')"
+                                        :text="t(SETTINGS_TOOLTIPS.digestWeekly)"
+                                        :label="t('settings.weeklyDigest')"
                                     />
                                 </div>
                                 <Switch
@@ -1317,10 +1317,10 @@
                             </div>
                             <div class="flex items-center justify-between gap-3 py-3">
                                 <div class="flex items-center gap-1.5 min-w-0">
-                                    <Label for="marketingEmails">{{ $t('settings.marketingEmails') }}</Label>
+                                    <Label for="marketingEmails">{{ t('settings.marketingEmails') }}</Label>
                                     <SettingsFieldHint
-                                        :text="$t(SETTINGS_TOOLTIPS.marketingEmails)"
-                                        :label="$t('settings.marketingEmails')"
+                                        :text="t(SETTINGS_TOOLTIPS.marketingEmails)"
+                                        :label="t('settings.marketingEmails')"
                                     />
                                 </div>
                                 <Switch
@@ -1331,10 +1331,10 @@
                             </div>
                             <div class="flex items-center justify-between gap-3 py-3">
                                 <div class="flex items-center gap-1.5 min-w-0">
-                                    <Label for="urgentOnly">{{ $t('settings.urgencyOnly') }}</Label>
+                                    <Label for="urgentOnly">{{ t('settings.urgencyOnly') }}</Label>
                                     <SettingsFieldHint
-                                        :text="$t(SETTINGS_TOOLTIPS.urgentOnly)"
-                                        :label="$t('settings.urgencyOnly')"
+                                        :text="t(SETTINGS_TOOLTIPS.urgentOnly)"
+                                        :label="t('settings.urgencyOnly')"
                                     />
                                 </div>
                                 <Switch
@@ -1345,10 +1345,10 @@
                             </div>
                             <div class="flex items-center justify-between gap-3 py-3">
                                 <div class="flex items-center gap-1.5 min-w-0">
-                                    <Label for="smsUrgent">{{ $t('settings.smsUrgency') }}</Label>
+                                    <Label for="smsUrgent">{{ t('settings.smsUrgency') }}</Label>
                                     <SettingsFieldHint
-                                        :text="$t(SETTINGS_TOOLTIPS.smsUrgent)"
-                                        :label="$t('settings.smsUrgency')"
+                                        :text="t(SETTINGS_TOOLTIPS.smsUrgent)"
+                                        :label="t('settings.smsUrgency')"
                                     />
                                 </div>
                                 <Switch
@@ -1360,128 +1360,15 @@
                         </div>
                     </section>
 
-                    <!-- <section class="mt-8 grid grid-cols-6 sm:grid-cols-5 gap-2 shadow rounded-lg p-6">
-                        <div class="mb-2 sm:mb-0 col-span-6 sm:col-span-2 flex space-x-1 h-9 justify-center items-center bg-success text-white rounded-full">
-                            <ChartPieIcon class="w-5" />
-                            <label>{{ $t('settings.accountStatus') }}</label>
-                        </div>
-                        <div
-                            :class="isActivated ? 'text-white bg-primary' : 'text-black border border-gray-300'"
-                            class="col-span-2 sm:col-span-1 flex h-9 items-center justify-center rounded-full cursor-pointer"
-                            @click="enterPasswordActivateDialog = true"
-                        >
-                            {{ $t('settings.enabled') }}
-                        </div>
-
-                        <Dialog v-model:open="enterPasswordActivateDialog">
-                            <DialogContent class="w-full max-w-sm sm:max-w-xl max-h-[90vh] overflow-y-auto">
-                                <DialogHeader>
-                                    <DialogTitle class="text-center">
-                                        {{ $t('settings.accountStatus') }}
-                                    </DialogTitle>
-                                </DialogHeader>
-                                <div class="mt-8">
-                                    Veuillez confirmer votre action en entrant votre mot de passe
-                                </div>
-
-                                <form class="mt-4 space-y-3">
-                                    <div class="mb-0 sm:mb-12 grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                        <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
-                                            {{ $t('settings.password') }}
-                                        </p>
-                                        <Input
-                                            v-model="currentPassword"
-                                            type="password"
-                                            class="mb-12 sm:mb-0 w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
-                                        />
-                                    </div>
-
-                                    <DialogFooter class="mt-12 flex flex-col sm:flex-row justify-end items-center space-y-2 sm:space-y-0 sm:space-x-8">
-                                        <Button
-                                            variant="secondary"
-                                            class="bg-gray-200 hover:bg-gray-300 w-full sm:w-auto"
-                                            @click="enterPasswordActivateDialog = false"
-                                        >
-                                            {{ $t('common.cancel') }}
-                                        </Button>
-                                        <Button
-                                            class="w-full sm:w-auto"
-                                            @click="handleActivateStatus"
-                                        >
-                                            Valider
-                                        </Button>
-                                    </DialogFooter>
-                                </form>
-                            </DialogContent>
-                        </Dialog>
-
-                        <div
-                            :class="isActivated ? 'text-black border border-gray-300 ' : 'text-white bg-primary'"
-                            class="col-span-2 sm:col-span-1 flex h-9 items-center justify-center rounded-full cursor-pointer"
-                            @click="enterPasswordDeactivateDialog = true"
-                        >
-                            {{ $t('settings.disabled') }}
-                        </div>
-
-                        <Dialog v-model:open="enterPasswordDeactivateDialog">
-                            <DialogContent class="w-full max-w-sm sm:max-w-xl max-h-[90vh] overflow-y-auto">
-                                <DialogHeader>
-                                    <DialogTitle class="text-center">
-                                        {{ $t('settings.accountStatus') }}
-                                    </DialogTitle>
-                                </DialogHeader>
-                                <div class="mt-8">
-                                    Veuillez confirmer votre action en entrant votre mot de passe
-                                </div>
-
-                                <form class="mt-4 space-y-3">
-                                    <div class="mb-0 sm:mb-12 grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
-                                        <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
-                                            {{ $t('settings.password') }}
-                                        </p>
-                                        <Input
-                                            v-model="currentPassword"
-                                            type="password"
-                                            class="mb-12 sm:mb-0 w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
-                                        />
-                                    </div>
-
-                                    <DialogFooter class="mt-12 flex flex-col sm:flex-row justify-end items-center space-y-2 sm:space-y-0 sm:space-x-8">
-                                        <Button
-                                            variant="secondary"
-                                            class="bg-gray-200 hover:bg-gray-300 w-full sm:w-auto"
-                                            @click="enterPasswordDeactivateDialog = false"
-                                        >
-                                            {{ $t('common.cancel') }}
-                                        </Button>
-                                        <Button
-                                            class="w-full sm:w-auto"
-                                            @click="handleDeactivateStatus"
-                                        >
-                                            Valider
-                                        </Button>
-                                    </DialogFooter>
-                                </form>
-                            </DialogContent>
-                        </Dialog>
-
-                        <div
-                            :class="user.account_type != 'manager' ? 'disabled cursor-not-allowed opacity-70' : ' cursor-pointer'"
-                            class="col-span-2 sm:col-span-1 flex h-9 items-center justify-center rounded-full border border-gray-300"
-                        >
-                            {{ $t('settings.suspended') }}
-                        </div>
-                    </section> -->
-
                     <section class="rounded-lg border border-border bg-card p-6 space-y-4">
                         <h3 class="flex items-center gap-3">
                             <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
                                 <ShieldCheck class="size-5" />
                             </span>
-                            <span class="text-lg font-secondary">{{ $t('settings.personalData') }}</span>
+                            <span class="text-lg font-secondary">{{ t('settings.personalData') }}</span>
                         </h3>
                         <p class="text-sm text-muted-foreground">
-                            {{ $t('settings.personalDataDesc') }}
+                            {{ t('settings.personalDataDesc') }}
                         </p>
                         <div class="flex flex-col sm:flex-row gap-3 sm:justify-end">
                             <Button
@@ -1490,7 +1377,7 @@
                                 @click="openCookiePreferences"
                             >
                                 <Cookie class="size-4" />
-                                {{ $t('settings.manageCookies') }}
+                                {{ t('settings.manageCookies') }}
                             </Button>
                             <Button
                                 type="button"
@@ -1499,7 +1386,7 @@
                                 @click="exportPersonalData"
                             >
                                 <Download class="size-4" />
-                                {{ $t('settings.exportData') }}
+                                {{ t('settings.exportData') }}
                             </Button>
                         </div>
                     </section>
@@ -1525,7 +1412,7 @@ import { useSubmit } from '~/composables/useSubmit';
 import FileUpload from '~/components/ui/form/FileUpload.vue';
 import type { User, UserSettings } from '~/lib/types';
 import { SETTINGS_TOOLTIPS } from '~/utils/settingsTooltips';
-import { EDUCATION_LEVEL_OPTIONS, educationLevelLabel, hasRealIdentifier, isBelgiumProfile } from '~/utils/educationLevel';
+import { EDUCATION_LEVEL_OPTIONS, educationLevelLabel, hasRealIdentifier, isBelgiumProfile, type EducationLevelValue } from '~/utils/educationLevel';
 import { INAMI_FORMAT_ERROR, isValidInamiFormat } from '~/utils/inamiNumber';
 
 const { t } = useI18n();
@@ -1539,7 +1426,6 @@ const {
     updateAvatarUser,
     activeTwoFactorAuth,
     verifyCode,
-    // updateStatusAccount,
     deleteAvatar,
 } = useAuth();
 const { createPreferences, createNotifPreferences } = useAuth();
@@ -1692,7 +1578,7 @@ const formPersonalInfo = reactive({
     phoneNumber: user.value.phone_number,
     gender: user.value.gender,
     professionalCategory: user.value.professional_category,
-    educationLevel: user.value.education_level ?? '',
+    educationLevel: (user.value.education_level ?? '') as EducationLevelValue | '',
 });
 
 const formAddress = reactive({
@@ -1955,8 +1841,6 @@ const verifyTwoFactorStatus = () => {
 const enableTwoFactor = ref(verifyTwoFactorStatus());
 const twoFactorDialog = ref(false);
 const enterPasswordDialog = ref(false);
-// const enterPasswordActivateDialog = ref(false);
-// const enterPasswordDeactivateDialog = ref(false);
 const currentPassword = ref('');
 
 const handleEnableAuth2Fa = async () => {
@@ -2059,62 +1943,6 @@ const handleVerifyCode = async () => {
         });
     }
 };
-
-// const verifyStatusAccount = () => {
-//     return user.value.status == 'active' ? true : false;
-// };
-
-// const isActivated = ref(verifyStatusAccount());
-
-// const handleActivateStatus = async () => {
-//     const formData = reactive({
-//         currentPassword: currentPassword.value,
-//         status: 'active',
-//     });
-
-//     try {
-//         await updateStatusAccount(formData);
-
-//         $toast({
-//             description: 'Statut du compte mis à jour',
-//         });
-
-//         enterPasswordActivateDialog.value = false;
-//         isActivated.value = true;
-//     }
-//     catch (error) {
-//         console.log(error);
-//         $toast({
-//             variant: 'destructive',
-//             description: 'Echec de la mise à jour',
-//         });
-//     }
-// };
-
-// const handleDeactivateStatus = async () => {
-//     const formData = reactive({
-//         currentPassword: currentPassword.value,
-//         status: 'inactive',
-//     });
-
-//     try {
-//         await updateStatusAccount(formData);
-
-//         $toast({
-//             description: 'Statut du compte mis à jour',
-//         });
-
-//         enterPasswordDeactivateDialog.value = false;
-//         isActivated.value = false;
-//     }
-//     catch (error) {
-//         console.log(error);
-//         $toast({
-//             variant: 'destructive',
-//             description: 'Echec de la mise à jour',
-//         });
-//     }
-// };
 
 const genders = {
     M: 'Homme',
