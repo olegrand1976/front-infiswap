@@ -130,11 +130,8 @@
 
             <div
                 v-if="$slots.filters"
-                class="mt-5 pt-5 border-t border-input"
+                class="pt-5 border-input"
             >
-                <div class="mb-3 text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
-                    Filtres &amp; affichage
-                </div>
                 <slot name="filters" />
             </div>
         </div>

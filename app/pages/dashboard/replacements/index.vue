@@ -44,153 +44,168 @@
             :available-missions="availableMissions"
         >
             <template #filters>
-                <div class="flex min-w-0 flex-wrap items-center gap-2">
-                    <Select v-model="selectedFilters.type">
-                        <SelectTrigger
-                            class="h-9 w-40 shrink-0 rounded-md border border-input bg-background text-xs"
-                            position="right"
-                        >
-                            <List class="size-4 shrink-0 text-muted-foreground" />
-                            <SelectValue :placeholder="replacementTypeFilters[selectedFilters.type]" />
-                        </SelectTrigger>
-                        <SelectContent class="border-none">
-                            <SelectGroup class="w-40">
-                                <SelectItem
-                                    v-for="[key, label] in Object.entries(replacementTypeFilters)"
-                                    :key="key"
-                                    :value="key"
-                                >
-                                    {{ label }}
-                                </SelectItem>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
+                <div class="flex min-w-0 flex-wrap items-end gap-2">
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-xs font-medium text-muted-foreground">Type</label>
+                        <Select v-model="selectedFilters.type">
+                            <SelectTrigger
+                                class="h-9 w-40 shrink-0 rounded-md border border-input bg-background text-xs"
+                                position="right"
+                            >
+                                <List class="size-4 shrink-0 text-muted-foreground" />
+                                <SelectValue :placeholder="replacementTypeFilters[selectedFilters.type]" />
+                            </SelectTrigger>
+                            <SelectContent class="border-none">
+                                <SelectGroup class="w-40">
+                                    <SelectItem
+                                        v-for="[key, label] in Object.entries(replacementTypeFilters)"
+                                        :key="key"
+                                        :value="key"
+                                    >
+                                        {{ label }}
+                                    </SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    </div>
 
-                    <Select v-model="selectedFilters.role">
-                        <SelectTrigger
-                            class="h-9 w-44 shrink-0 rounded-md border border-input bg-background text-xs"
-                            position="right"
-                        >
-                            <Users class="size-4 shrink-0 text-muted-foreground" />
-                            <SelectValue :placeholder="replacementRoleFilters[selectedFilters.role]" />
-                        </SelectTrigger>
-                        <SelectContent class="border-none">
-                            <SelectGroup class="w-44">
-                                <SelectItem
-                                    v-for="[key, label] in Object.entries(replacementRoleFilters)"
-                                    :key="key"
-                                    :value="key"
-                                >
-                                    {{ label }}
-                                </SelectItem>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-xs font-medium text-muted-foreground">Rôle</label>
+                        <Select v-model="selectedFilters.role">
+                            <SelectTrigger
+                                class="h-9 w-44 shrink-0 rounded-md border border-input bg-background text-xs"
+                                position="right"
+                            >
+                                <Users class="size-4 shrink-0 text-muted-foreground" />
+                                <SelectValue :placeholder="replacementRoleFilters[selectedFilters.role]" />
+                            </SelectTrigger>
+                            <SelectContent class="border-none">
+                                <SelectGroup class="w-44">
+                                    <SelectItem
+                                        v-for="[key, label] in Object.entries(replacementRoleFilters)"
+                                        :key="key"
+                                        :value="key"
+                                    >
+                                        {{ label }}
+                                    </SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    </div>
 
-                    <Select v-model="selectedFilters.status">
-                        <SelectTrigger
-                            class="h-9 w-36 shrink-0 rounded-md border border-input bg-background text-xs"
-                            position="right"
-                        >
-                            <CircleCheck class="size-4 shrink-0 text-muted-foreground" />
-                            <SelectValue :placeholder="replacementStatusFilters[selectedFilters.status]" />
-                        </SelectTrigger>
-                        <SelectContent class="border-none">
-                            <SelectGroup class="w-36">
-                                <SelectItem
-                                    v-for="[key, label] in Object.entries(replacementStatusFilters)"
-                                    :key="key"
-                                    :value="key"
-                                >
-                                    {{ label }}
-                                </SelectItem>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-xs font-medium text-muted-foreground">Statut</label>
+                        <Select v-model="selectedFilters.status">
+                            <SelectTrigger
+                                class="h-9 w-36 shrink-0 rounded-md border border-input bg-background text-xs"
+                                position="right"
+                            >
+                                <CircleCheck class="size-4 shrink-0 text-muted-foreground" />
+                                <SelectValue :placeholder="replacementStatusFilters[selectedFilters.status]" />
+                            </SelectTrigger>
+                            <SelectContent class="border-none">
+                                <SelectGroup class="w-36">
+                                    <SelectItem
+                                        v-for="[key, label] in Object.entries(replacementStatusFilters)"
+                                        :key="key"
+                                        :value="key"
+                                    >
+                                        {{ label }}
+                                    </SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    </div>
 
-                    <div class="hidden sm:block w-px h-6 bg-input" />
+                    <div class="hidden sm:block w-px h-9 bg-input" />
 
-                    <Select v-model="selectedCountry">
-                        <SelectTrigger
-                            class="h-9 w-44 shrink-0 rounded-md border border-input bg-background text-xs"
-                            position="right"
-                        >
-                            <Globe class="size-4 shrink-0 text-muted-foreground" />
-                            <SelectValue
-                                :placeholder="countries[selectedCountry]"
-                                class="text-xs"
-                            />
-                        </SelectTrigger>
-                        <SelectContent class="border-none">
-                            <SelectGroup class="w-46">
-                                <SelectItem
-                                    v-for="[code, label] in Object.entries(countries)"
-                                    :key="code"
-                                    :value="code"
-                                >
-                                    <div class="flex gap-2 items-center">
-                                        <LayoutsAppImage
-                                            v-if="code === 'fr'"
-                                            :src="'/icons/fr.png'"
-                                            alt="France"
-                                            class="w-3"
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-xs font-medium text-muted-foreground">Pays</label>
+                        <Select v-model="selectedCountry">
+                            <SelectTrigger
+                                class="h-9 w-44 shrink-0 rounded-md border border-input bg-background text-xs"
+                                position="right"
+                            >
+                                <Globe class="size-4 shrink-0 text-muted-foreground" />
+                                <SelectValue
+                                    :placeholder="countries[selectedCountry]"
+                                    class="text-xs"
+                                />
+                            </SelectTrigger>
+                            <SelectContent class="border-none">
+                                <SelectGroup class="w-46">
+                                    <SelectItem
+                                        v-for="[code, label] in Object.entries(countries)"
+                                        :key="code"
+                                        :value="code"
+                                    >
+                                        <div class="flex gap-2 items-center">
+                                            <LayoutsAppImage
+                                                v-if="code === 'fr'"
+                                                :src="'/icons/fr.png'"
+                                                alt="France"
+                                                class="w-3"
+                                            />
+                                            <LayoutsAppImage
+                                                v-else-if="code === 'be'"
+                                                :src="'/icons/belgium.png'"
+                                                alt="Belgique"
+                                                class="w-3"
+                                            />
+                                            <span>{{ label }}</span>
+                                        </div>
+                                    </SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-xs font-medium text-muted-foreground">Provinces</label>
+                        <Select>
+                            <SelectTrigger
+                                class="h-9 w-44 shrink-0 rounded-md border border-input bg-background text-xs"
+                                position="right"
+                            >
+                                <MapPin class="size-4 shrink-0 text-muted-foreground" />
+                                <SelectValue
+                                    :placeholder="selectedProvincesPlaceholder"
+                                    class="text-xs truncate"
+                                />
+                            </SelectTrigger>
+                            <SelectContent class="border-none">
+                                <SelectGroup class="w-46">
+                                    <div class="flex items-center gap-2 mb-2 px-1">
+                                        <Checkbox
+                                            id="tous"
+                                            :checked="isAllSelected"
+                                            @update:checked="toggleAllRegions($event)"
                                         />
-                                        <LayoutsAppImage
-                                            v-else-if="code === 'be'"
-                                            :src="'/icons/belgium.png'"
-                                            alt="Belgique"
-                                            class="w-3"
-                                        />
-                                        <span>{{ label }}</span>
+                                        <label
+                                            for="tous"
+                                            class="text-xs cursor-pointer"
+                                        >Tous</label>
                                     </div>
-                                </SelectItem>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-
-                    <Select>
-                        <SelectTrigger
-                            class="h-9 w-44 shrink-0 rounded-md border border-input bg-background text-xs"
-                            position="right"
-                        >
-                            <MapPin class="size-4 shrink-0 text-muted-foreground" />
-                            <SelectValue
-                                :placeholder="selectedProvincesPlaceholder"
-                                class="text-xs truncate"
-                            />
-                        </SelectTrigger>
-                        <SelectContent class="border-none">
-                            <SelectGroup class="w-46">
-                                <div class="flex items-center gap-2 mb-2 px-1">
-                                    <Checkbox
-                                        id="tous"
-                                        :checked="isAllSelected"
-                                        @update:checked="toggleAllRegions($event)"
-                                    />
-                                    <label
-                                        for="tous"
-                                        class="text-xs cursor-pointer"
-                                    >Tous</label>
-                                </div>
-                                <div
-                                    v-for="(region, index) in selectedCountry === 'fr' ? departments : regions"
-                                    :key="index"
-                                    class="flex items-center gap-2 mb-2 px-1"
-                                >
-                                    <Checkbox
-                                        :id="region"
-                                        :checked="selectedRegions.includes(region)"
-                                        :value="region"
-                                        @update:checked="updateRegionSelection(region, $event)"
-                                    />
-                                    <label
-                                        :for="region"
-                                        class="text-xs truncate cursor-pointer"
-                                    >{{ region }}</label>
-                                </div>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
+                                    <div
+                                        v-for="(region, index) in selectedCountry === 'fr' ? departments : regions"
+                                        :key="index"
+                                        class="flex items-center gap-2 mb-2 px-1"
+                                    >
+                                        <Checkbox
+                                            :id="region"
+                                            :checked="selectedRegions.includes(region)"
+                                            :value="region"
+                                            @update:checked="updateRegionSelection(region, $event)"
+                                        />
+                                        <label
+                                            :for="region"
+                                            class="text-xs truncate cursor-pointer"
+                                        >{{ region }}</label>
+                                    </div>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    </div>
 
                     <div class="ml-auto flex items-center gap-1.5">
                         <TooltipProvider>
