@@ -139,6 +139,7 @@
                                         <span class="text-xs text-muted-foreground">De</span>
                                         <InputTime
                                             v-model="formData.timeSlot.morning.startAt"
+                                            time-range="morning"
                                             container-class="min-w-0 w-full"
                                             input-container-class="w-full"
                                             input-class="w-full h-9! rounded-md! border! border-input! pr-10"
@@ -148,6 +149,7 @@
                                         <span class="text-xs text-muted-foreground">à</span>
                                         <InputTime
                                             v-model="formData.timeSlot.morning.endAt"
+                                            time-range="morning"
                                             container-class="min-w-0 w-full"
                                             input-container-class="w-full"
                                             input-class="w-full h-9! rounded-md! border! border-input! pr-10"
@@ -168,6 +170,7 @@
                                         <span class="text-xs text-muted-foreground">De</span>
                                         <InputTime
                                             v-model="formData.timeSlot.evening.startAt"
+                                            time-range="evening"
                                             container-class="min-w-0 w-full"
                                             input-container-class="w-full"
                                             input-class="w-full h-9! rounded-md! border! border-input! pr-10"
@@ -177,6 +180,7 @@
                                         <span class="text-xs text-muted-foreground">à</span>
                                         <InputTime
                                             v-model="formData.timeSlot.evening.endAt"
+                                            time-range="evening"
                                             container-class="min-w-0 w-full"
                                             input-container-class="w-full"
                                             input-class="w-full h-9! rounded-md! border! border-input! pr-10"

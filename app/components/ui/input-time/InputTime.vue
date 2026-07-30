@@ -65,11 +65,11 @@ const displayValue = computed(() => {
 const filteredHours = computed(() => {
     switch (props.timeRange) {
         case 'morning':
-            return Array.from({ length: 6 }, (_, i) => i + 6);
+            return Array.from({ length: 13 }, (_, i) => i);
         case 'afternoon':
             return Array.from({ length: 6 }, (_, i) => i + 12);
         case 'evening':
-            return Array.from({ length: 6 }, (_, i) => i + 18);
+            return Array.from({ length: 12 }, (_, i) => i + 12);
         default:
             return Array.from({ length: 24 }, (_, i) => i);
     }
@@ -86,7 +86,7 @@ watch(() => props.modelValue, (newValue) => {
 const selectHour = (hour) => {
     selectedHour.value = hour;
     updateValue();
-    showPicker.value = false; // Close picker after selecting hour
+    showPicker.value = false;
 };
 
 const selectMinute = (minute) => {
