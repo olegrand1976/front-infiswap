@@ -1,77 +1,108 @@
 <template>
-    <div class="lg:ml-20 xl:ml-0 space-y-6">
-        <div
-            class="mt-6 flex items-center gap-2 text-primary sm:bg-gray-100 sm:px-9 rounded-lg"
-        >
-            <ArrowLeft
-                class="size-5 cursor-pointer hover:text-primary"
-                :title="$t('common.back')"
+    <div class="w-full mx-auto">
+        <div class="mt-6 flex items-center gap-2">
+            <button
+                type="button"
+                class="flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                :title="t('common.back')"
                 @click="goBack"
-            />
-            <h1 class="py-3 text-primary font-medium">
-                {{ $t('replacements.immediateHeading') }} <strong>{{ $t('replacements.immediateHeadingStrong') }}</strong>
-            </h1>
+            >
+                <ArrowLeft class="size-4" />
+            </button>
+            <Breadcrumb>
+                <BreadcrumbList>
+                    <BreadcrumbItem>
+                        <BreadcrumbLink as-child>
+                            <NuxtLink
+                                :to="localePath('/dashboard')"
+                                class="flex items-center gap-1.5"
+                            >
+                                <LayoutGrid class="size-3.5" />
+                                {{ t('nav.dashboard') }}
+                            </NuxtLink>
+                        </BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                        <BreadcrumbPage>{{ t('replacements.immediateTitle') }}</BreadcrumbPage>
+                    </BreadcrumbItem>
+                </BreadcrumbList>
+            </Breadcrumb>
         </div>
 
-        <Form @submit="submit">
-            <div
-                class="bg-gray-100 rounded-xl px-6 sm:px-8 md:px-10 py-8 mx-auto max-w-5xl w-full"
-            >
-                <h3 class="text-center text-lg text-primary py-4 mb-2 font-bold">
-                    {{ $t('replacements.immediateHelp') }}
-                </h3>
-                <div class="space-y-4">
-                    <div class="flex flex-wrap gap-6 mt-4">
-                        <div
-                            class="flex-1 min-w-[250px] grid grid-cols-[40%_60%] items-center"
-                        >
-                            <h5 class="text-sm text-gray-700 font-medium">
-                                Heure début *
-                            </h5>
+        <Form
+            class="mt-4 mb-12"
+            @submit="submit"
+        >
+            <div class="rounded-lg shadow-md border bg-card px-6 sm:px-8 md:px-10 py-8">
+                <div class="text-center mb-8">
+                    <h1 class="font-secondary text-xl sm:text-2xl font-semibold">
+                        {{ t('replacements.immediateHelp') }}
+                    </h1>
+                    <p class="mt-2 text-sm text-muted-foreground max-w-md mx-auto">
+                        {{ t('replacements.immediateHelpDesc') }}
+                    </p>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="grid gap-4 sm:grid-cols-3">
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-xs font-medium text-muted-foreground">{{ t('replacements.startTime') }} *</label>
                             <InputTime
                                 v-model="formData.startTime"
-                                input-class="rounded-full"
+                                container-class="w-full"
+                                input-container-class="w-full"
+                                input-class="w-full h-11! rounded-md! border! border-input! pr-10 focus:ring-2 focus:ring-primary/20"
+                                icon-class="text-primary"
                             />
                         </div>
 
-                        <div
-                            class="flex-1 min-w-[250px] grid grid-cols-[40%_60%] items-center"
-                        >
-                            <h5 class="text-sm text-gray-700 font-medium">
-                                Heure fin *
-                            </h5>
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-xs font-medium text-muted-foreground">{{ t('replacements.endTime') }} *</label>
                             <InputTime
                                 v-model="formData.endTime"
-                                input-class="rounded-full"
+                                container-class="w-full"
+                                input-container-class="w-full"
+                                input-class="w-full h-11! rounded-md! border! border-input! pr-10 focus:ring-2 focus:ring-primary/20"
+                                icon-class="text-primary"
                             />
                         </div>
 
-                        <div
-                            class="flex-1 min-w-[250px] grid grid-cols-[40%_60%] items-center"
-                        >
-                            <h5 class="text-sm text-gray-700 font-medium">
-                                Nombre de patients *
-                            </h5>
-                            <Input
-                                v-model="formData.patientCount"
-                                placeholder="10"
-                                class="w-full text-sm text-gray-700 rounded-full border border-solid border-gray-400 focus:outline-none h-10 px-3"
-                            />
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-xs font-medium text-muted-foreground">{{ t('replacements.patientsPerDay') }} *</label>
+                            <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
+                                <Users class="size-4 shrink-0 text-primary" />
+                                <Input
+                                    v-model="formData.patientCount"
+                                    placeholder="10"
+                                    class="h-auto border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
+                                />
+                            </div>
                         </div>
                     </div>
+
                     <div class="block relative lg:hidden">
-                        <div>
-                            <h5 class="text-sm text-gray-700 font-medium leading-tight">
-                                Codes postaux *
-                            </h5>
+                        <Button
+                            size="sm"
+                            class="absolute -top-2 right-0 rounded-md"
+                            @click="openProposalDialog('')"
+                        >
+                            <Sparkles class="size-3.5" />
+                            {{ t('settings.aiBoost') }}
+                        </Button>
+
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-xs font-medium text-muted-foreground">{{ t('replacements.colZip') }} *</label>
                             <InputTagManager
                                 v-model="formData.zipCodes"
+                                :icon="Mailbox"
+                                rounded="md"
                                 :placeholder="
                                     user.profile.country == 'fr'
                                         ? '75000, 40990, 89550'
                                         : '6565,4561,1237'
                                 "
-                                class="w-[102%] pt-4"
+                                class="w-full"
                                 :is-mobile="true"
                                 :comma-validation="false"
                                 @keydown.enter.prevent
@@ -79,26 +110,18 @@
                             />
                         </div>
 
-                        <Button
-                            variant="none"
-                            class="absolute -top-2 -right-2 font-bold text-primary text-xs mt-2"
-                            @click="openProposalDialog('')"
-                        >
-                            Boost IA
-                        </Button>
-
-                        <div>
-                            <h5 class="text-sm text-gray-700 font-medium leading-tight mt-4">
-                                Villes *
-                            </h5>
+                        <div class="flex flex-col gap-1.5 mt-4">
+                            <label class="text-xs font-medium text-muted-foreground">{{ t('replacements.colCities') }} *</label>
                             <InputTagManager
                                 v-model="formData.cities"
+                                :icon="Building2"
+                                rounded="md"
                                 :placeholder="
                                     user.profile.country
                                         ? 'Paris, Landes, Yonne'
                                         : 'Anvers, Bruges, Gand'
                                 "
-                                class="w-[102%] pt-4"
+                                class="w-full"
                                 :is-mobile="true"
                                 :comma-validation="true"
                                 :no-space-validation="true"
@@ -107,61 +130,55 @@
                             />
                         </div>
                     </div>
+
                     <div class="hidden relative lg:grid lg:grid-cols-2 lg:gap-4">
-                        <div class="flex items-start gap-2 h-full">
-                            <h5
-                                class="text-sm text-gray-700 font-medium whitespace-nowrap leading-tight w-1/4 pt-10"
-                            >
-                                Codes postaux *
-                            </h5>
-                            <div class="w-3/4">
-                                <InputTagManager
-                                    v-model="formData.zipCodes"
-                                    placeholder="6565,4561,1237"
-                                    class="w-full pt-6"
-                                    :is-mobile="false"
-                                    :comma-validation="false"
-                                    @keydown.enter.prevent
-                                    @item-added="onZipCodeAdded"
-                                    @open-proposal="openProposalDialog"
-                                />
-                            </div>
-                        </div>
-
-                        <div class="flex items-start gap-2 h-full ml-4">
-                            <h5
-                                class="text-sm text-gray-700 font-medium whitespace-nowrap leading-tight w-1/4 pt-10"
-                            >
-                                Villes *
-                            </h5>
-                            <div class="w-3/4">
-                                <InputTagManager
-                                    v-model="formData.cities"
-                                    placeholder="Anvers, Bruges, Gand"
-                                    class="w-full pt-6"
-                                    :comma-validation="true"
-                                    :no-space-validation="true"
-                                    @keydown.enter.prevent
-                                    @item-added="onCityAdded"
-                                    @open-proposal="openProposalDialog"
-                                />
-                            </div>
-                        </div>
-
                         <Button
-                            variant="none"
-                            class="absolute -top-2 right-0 font-bold text-primary text-xs mt-2"
+                            size="sm"
+                            class="absolute -top-2 right-0 rounded-md inline-flex items-center gap-2"
                             @click="openProposalDialog('')"
                         >
-                            Boost IA
+                            <Sparkles class="size-3.5" />
+                            {{ t('settings.aiBoost') }}
                         </Button>
+
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-xs font-medium text-muted-foreground">{{ t('replacements.colZip') }} *</label>
+                            <InputTagManager
+                                v-model="formData.zipCodes"
+                                :icon="Mailbox"
+                                rounded="md"
+                                placeholder="6565,4561,1237"
+                                class="w-full"
+                                :is-mobile="false"
+                                :comma-validation="false"
+                                @keydown.enter.prevent
+                                @item-added="onZipCodeAdded"
+                                @open-proposal="openProposalDialog"
+                            />
+                        </div>
+
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-xs font-medium text-muted-foreground">{{ t('replacements.colCities') }} *</label>
+                            <InputTagManager
+                                v-model="formData.cities"
+                                :icon="Building2"
+                                rounded="md"
+                                placeholder="Anvers, Bruges, Gand"
+                                class="w-full"
+                                :comma-validation="true"
+                                :no-space-validation="true"
+                                @keydown.enter.prevent
+                                @item-added="onCityAdded"
+                                @open-proposal="openProposalDialog"
+                            />
+                        </div>
                     </div>
 
                     <ProposalLocationModal
                         v-model="proposalDialog"
                         v-model:newly-added-value="newlyAddedValue"
-                        title="Suggestions"
-                        description="Sélectionnez uniquement les codes postaux/villes que vous souhaitez conserver parmi ceux déjà cochés pour l'encodage de vos lieux cibles"
+                        :title="t('replacements.suggestions')"
+                        :description="t('replacements.suggestionsDesc')"
                         :initial-zip-codes="formData.zipCodes"
                         :initial-cities="formData.cities"
                         :is-preference-mode="false"
@@ -169,25 +186,24 @@
                         @update:initial-cities="updateCities"
                     />
 
-                    <div class="grid grid-cols-[30%_70%] items-center pt-4 lg:pt-8">
-                        <h5 class="text-sm text-gray-700 font-medium">
-                            Type de soin
-                        </h5>
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-xs font-medium text-muted-foreground">{{ t('replacements.careType') }}</label>
                         <Select
                             v-model="formData.careTypes"
                             multiple
                         >
                             <SelectTrigger
-                                class="w-full bg-white shadow rounded-full text-nowrap border border-none"
+                                class="h-11 w-full rounded-md border border-input text-nowrap"
                                 position="right"
                             >
+                                <Stethoscope class="size-4 shrink-0 text-primary" />
                                 <SelectValue class="truncate w-800">
                                     <template v-if="getSelectedCareTypesText(formData.careTypes)">
                                         {{ getSelectedCareTypesText(formData.careTypes) }}
                                     </template>
                                     <template v-else>
-                                        <span class="text-black/60">
-                                            Sélectionner un type de soin
+                                        <span class="text-muted-foreground">
+                                            {{ t('replacements.selectCareType') }}
                                         </span>
                                     </template>
                                 </SelectValue>
@@ -217,54 +233,65 @@
 
                 <div
                     v-if="hasMultipleValidRoles"
-                    class="mt-8 sm:mt-12 grid sm:grid-cols-[30%_70%] gap-4 sm:gap-0 items-center"
+                    class="mt-8 flex flex-col gap-1.5"
                 >
-                    <label class="text-sm text-gray-700 font-medium">
-                        Demander en tant que
-                    </label>
-                    <div
-                        class="flex gap-2 flex-col sm:flex-row sm:gap-8 2xl:gap-12 sm:items-center"
-                    >
-                        <div class="flex gap-2 items-center">
+                    <label class="text-xs font-medium text-muted-foreground">{{ t('replacements.askAs') }}</label>
+                    <div class="flex flex-wrap gap-2">
+                        <label
+                            class="flex flex-1 min-w-[150px] items-center gap-2 rounded-md border border-input px-4 py-2.5 cursor-pointer transition-colors hover:border-primary"
+                            :class="{ 'border-primary bg-primary/5': selectedRole === 'nurse' }"
+                        >
                             <input
                                 id="nurse"
                                 v-model="selectedRole"
                                 type="radio"
                                 name="roleType"
                                 value="nurse"
+                                class="accent-primary size-4 shrink-0"
                             >
-                            <label for="nurse"> Infirmier(ère) </label>
-                        </div>
-                        <div class="flex gap-2 items-center">
+                            <span class="text-sm font-medium">{{ t('replacements.roleNurse') }}</span>
+                        </label>
+                        <label
+                            class="flex flex-1 min-w-[150px] items-center gap-2 rounded-md border border-input px-4 py-2.5 cursor-pointer transition-colors hover:border-primary"
+                            :class="{ 'border-primary bg-primary/5': selectedRole === 'caregiver' }"
+                        >
                             <input
                                 id="caregiver"
                                 v-model="selectedRole"
                                 type="radio"
                                 name="roleType"
                                 value="caregiver"
+                                class="accent-primary size-4 shrink-0"
                             >
-                            <label for="caregiver"> Aide soignant(e) </label>
-                        </div>
-                        <div class="flex gap-2 items-center">
+                            <span class="text-sm font-medium">{{ t('replacements.roleAide') }}</span>
+                        </label>
+                        <label
+                            class="flex flex-1 min-w-[150px] items-center gap-2 rounded-md border border-input px-4 py-2.5 cursor-pointer transition-colors hover:border-primary"
+                            :class="{ 'border-primary bg-primary/5': selectedRole === 'midwife' }"
+                        >
                             <input
                                 id="midwife"
                                 v-model="selectedRole"
                                 type="radio"
                                 name="roleType"
                                 value="midwife"
+                                class="accent-primary size-4 shrink-0"
                             >
-                            <label for="midwife"> Sage-femme </label>
-                        </div>
+                            <span class="text-sm font-medium">{{ t('replacements.roleMidwife') }}</span>
+                        </label>
                     </div>
                 </div>
 
-                <Button
-                    class="my-12 mb-12 w-80 flex justify-center items-center mx-auto"
-                    type="submit"
-                    :in-progress="inProgress"
-                >
-                    Enregistrer
-                </Button>
+                <div class="flex justify-center mt-10">
+                    <Button
+                        type="submit"
+                        class="rounded-md! w-full max-w-sm inline-flex items-center justify-center gap-2"
+                        :in-progress="inProgress"
+                    >
+                        <Save class="size-4" />
+                        {{ t('nav.publishReplacement') }}
+                    </Button>
+                </div>
             </div>
         </Form>
 
@@ -278,11 +305,13 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowLeft } from 'lucide-vue-next';
+import { ArrowLeft, Building2, LayoutGrid, Mailbox, Save, Sparkles, Stethoscope, Users } from 'lucide-vue-next';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { InputTime } from '@/components/ui/input-time';
 import InputTagManager from '@/components/InputTagManager.vue';
 import ConfirmProfileCountryModal from '~/components/replacements/ConfirmProfileCountryModal.vue';
-import type { CountryCode, User } from '~/lib/types';
+import type { AccountType, CountryCode, User } from '~/lib/types';
+
 import { goBack } from '~/lib/utils';
 import { validateImmediateReplacementForm } from '~/utils/platformAccess';
 import { resolveProfileCountryCode } from '~/utils/profileCountry';
@@ -303,8 +332,9 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 
 const user = useState<User>('user');
+const localePath = useLocalePath();
 const validRoles = ['nurse', 'caregiver', 'midwife'];
-const selectedRole = ref(null);
+const selectedRole = ref<AccountType | null | undefined>(null);
 const {
     showModal: showCountryModal,
     pending: countryPending,
@@ -432,7 +462,7 @@ const { submit, inProgress } = useSubmit(async () => {
     if (!countryOk) {
         $toast({
             variant: 'destructive',
-            description: 'Confirmez votre pays pour publier.',
+            description: t('replacements.confirmCountryToPublish'),
         });
         return;
     }
@@ -441,7 +471,7 @@ const { submit, inProgress } = useSubmit(async () => {
         const result = await sendUrgentReplacement(formData);
         if (result === true) {
             $toast({
-                description: 'Création du remplacement rapide effectuée',
+                description: t('replacements.immediateCreated'),
             });
 
             clearReplacementListFilterCookies();

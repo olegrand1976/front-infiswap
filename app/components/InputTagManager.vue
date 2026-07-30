@@ -9,6 +9,7 @@
                 v-model="inputValue"
                 :icon="icon"
                 :placeholder="placeholder"
+                :rounded="rounded"
                 class="w-full"
                 :maxlength="maxLength"
                 @input="onInput"
@@ -17,12 +18,11 @@
             />
 
             <Button
-                variant="ghost"
-                class="absolute right-2 top-1/2 -translate-y-1/2 text-primary p-0 h-auto bg-transparent shadow-none hover:bg-transparent hover:text-primary focus:outline-none focus:ring-0 active:text-primary group"
+                class="absolute right-2 top-1/2 -translate-y-1/2 p-0 size-8 rounded-md"
                 title="Ajouter"
                 @click="addItem"
             >
-                <Plus class="h-12 w-12 transform transition-transform duration-200 group-hover:scale-125" />
+                <Plus/>
             </Button>
         </div>
         <div
@@ -32,7 +32,8 @@
             <div
                 v-for="(item, index) in items"
                 :key="index"
-                class="flex items-center bg-gray-100 rounded-full px-3 py-1 text-sm"
+                class="flex items-center bg-gray-100 px-3 py-1 text-sm"
+                :class="chipRoundedClass"
             >
                 {{ item }}
                 <button
@@ -74,7 +75,13 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    rounded: {
+        type: String,
+        default: 'full',
+    },
 });
+
+const chipRoundedClass = computed(() => (props.rounded === 'full' ? 'rounded-full' : `rounded-${props.rounded}`));
 
 const emit = defineEmits(['update:modelValue', 'item-added', 'item-removed', 'open-proposal']);
 

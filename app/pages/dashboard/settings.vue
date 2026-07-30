@@ -1,17 +1,33 @@
 <template>
-    <div class="lg:ml-20 xl:ml-0">
-        <div class="mt-4 flex items-center gap-3">
+    <div class="w-full mx-auto">
+        <div class="mt-4 flex items-center gap-2">
             <button
                 type="button"
-                class="flex size-9 shrink-0 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                class="flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                 :title="t('common.back')"
                 @click="goBack"
             >
                 <ArrowLeft class="size-4" />
             </button>
-            <p class="text-xs font-semibold uppercase tracking-wide text-primary">
-                {{ t('settings.title') }}
-            </p>
+            <Breadcrumb>
+                <BreadcrumbList>
+                    <BreadcrumbItem>
+                        <BreadcrumbLink as-child>
+                            <NuxtLink
+                                :to="localePath(dashboardRoute)"
+                                class="flex items-center gap-1.5"
+                            >
+                                <LayoutGrid class="size-3.5" />
+                                {{ t('nav.dashboard') }}
+                            </NuxtLink>
+                        </BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                        <BreadcrumbPage>{{ t('settings.title') }}</BreadcrumbPage>
+                    </BreadcrumbItem>
+                </BreadcrumbList>
+            </Breadcrumb>
         </div>
 
         <form class="mt-4 mb-12">
@@ -1215,8 +1231,8 @@
                         <ProposalLocationModal
                             v-model="proposalDialog"
                             v-model:newly-added-value="newlyAddedValue"
-                            :title="t('settings.preferences')"
-                            :description="t('settings.proposalLocationDesc')"
+                            title="Préférences"
+                            description="Sélectionnez uniquement les codes postaux/villes que vous souhaitez conserver parmi ceux déjà cochés pour l'encodage de vos préférences."
                             :initial-zip-codes="zipCodes"
                             :initial-cities="cities"
                             :is-preference-mode="true"
@@ -1400,7 +1416,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeft, BellRing, Building2, Calendar, Camera, CircleEllipsis, CircleUser, Cookie, Download, Flag, GraduationCap, IdCard, KeyRound, Languages, Mail, Mailbox, Map, MapPin, Phone, ShieldCheck, Smartphone, Sparkles, SquarePen, Trash2, UserPlus, Users, VenusAndMars, Wrench } from 'lucide-vue-next';
+import { ArrowLeft, BellRing, Building2, Calendar, Camera, CircleEllipsis, CircleUser, Cookie, Download, Flag, GraduationCap, IdCard, KeyRound, Languages, LayoutGrid, Mail, Mailbox, Map, MapPin, Phone, ShieldCheck, Smartphone, Sparkles, SquarePen, Trash2, UserPlus, Users, VenusAndMars, Wrench } from 'lucide-vue-next';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { getErrorMessage, goBack } from '~/lib/utils';
 import { useRuntimeConfig } from '#app';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -1462,6 +1479,8 @@ async function exportPersonalData() {
 }
 
 const user = useState<User>('user');
+const localePath = useLocalePath();
+const dashboardRoute = computed(() => (user.value.type === 'institution' ? '/dashboard/institution' : '/dashboard'));
 const setting = JSON.parse(user.value.settings);
 const proposalDialog = ref(false);
 const newlyAddedValue = ref<string>('');
