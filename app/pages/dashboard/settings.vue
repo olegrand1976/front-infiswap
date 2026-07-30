@@ -148,7 +148,7 @@
                                 @click="personalInfoDialog = true"
                             >
                                 <SquarePen class="size-4" />
-                                Modifier
+                                {{ t('common.edit') }}
                             </Button>
                         </div>
 
@@ -494,7 +494,7 @@
                                 @click="addressInfoDialog = true"
                             >
                                 <SquarePen class="size-4" />
-                                Modifier
+                                {{ t('common.edit') }}
                             </Button>
                         </div>
 
