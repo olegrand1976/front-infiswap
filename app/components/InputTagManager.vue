@@ -22,7 +22,7 @@
                 title="Ajouter"
                 @click="addItem"
             >
-                <Plus/>
+                <Plus />
             </Button>
         </div>
         <div

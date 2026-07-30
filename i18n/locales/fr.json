@@ -480,6 +480,8 @@
     "createTitle": "Créer un remplacement",
     "createHeading": "Créer un",
     "createHeadingStrong": "remplacement",
+    "createHelpDesc": "Précisez les dates, horaires et lieux souhaités pour publier votre demande auprès des professionnels disponibles.",
+    "createSuccess": "Création effectuée",
     "editTitle": "Modifier le remplacement",
     "contractsTitle": "Mes contrats de remplacement",
     "responsesTitle": "Mes réponses",

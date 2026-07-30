@@ -250,11 +250,12 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-const { t } = useI18n();
 import type { CareType, ReplacementPeriod } from '~/lib/types';
 import type { ReplacementCountryCode } from '~/lib/replacementCountry';
 import { toReplacementCountryCode } from '~/lib/replacementCountry';
 import { goBack } from '~/lib/utils';
+
+const { t } = useI18n();
 
 const route = useRoute();
 const router = useRouter();

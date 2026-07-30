@@ -244,7 +244,6 @@
                             </div>
                         </div>
 
-                        <!-- Édition en ligne (remplace le Dialog) -->
                         <form
                             v-else
                             class="mt-4 space-y-4"

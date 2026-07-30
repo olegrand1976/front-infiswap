@@ -480,6 +480,8 @@
     "createTitle": "Een vervanging aanmaken",
     "createHeading": "Maak een",
     "createHeadingStrong": "vervanging",
+    "createHelpDesc": "Geef de gewenste data, uren en locaties op om uw aanvraag te publiceren bij beschikbare professionals.",
+    "createSuccess": "Aanmaken voltooid",
     "editTitle": "Vervanging bewerken",
     "contractsTitle": "Mijn vervangingscontracten",
     "responsesTitle": "Mijn antwoorden",
