@@ -999,7 +999,7 @@
                                 @click="changePasswordDialog = true"
                             >
                                 <KeyRound class="size-4" />
-                                Changer le mot de passe
+                                {{ t('settings.changePassword') }}
                             </Button>
                         </div>
 
@@ -1026,11 +1026,11 @@
                                 @submit.prevent="handleChangePassword"
                             >
                                 <p class="text-sm text-muted-foreground">
-                                    Veuillez entrer votre mot de passe actuel et nouveau mot de passe ici
+                                    {{ t('settings.changePasswordDesc') }}
                                 </p>
                                 <div class="grid gap-4 sm:grid-cols-3">
                                     <div class="flex flex-col gap-1.5">
-                                        <label class="text-xs font-medium text-muted-foreground">Mot de passe actuel</label>
+                                        <label class="text-xs font-medium text-muted-foreground">{{ t('settings.currentPassword') }}</label>
                                         <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
                                             <KeyRound class="size-4 shrink-0 text-primary" />
                                             <Input
@@ -1041,7 +1041,7 @@
                                         </div>
                                     </div>
                                     <div class="flex flex-col gap-1.5">
-                                        <label class="text-xs font-medium text-muted-foreground">Nouveau mot de passe</label>
+                                        <label class="text-xs font-medium text-muted-foreground">{{ t('auth.newPasswordLabel') }}</label>
                                         <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
                                             <KeyRound class="size-4 shrink-0 text-primary" />
                                             <Input
@@ -1052,7 +1052,7 @@
                                         </div>
                                     </div>
                                     <div class="flex flex-col gap-1.5">
-                                        <label class="text-xs font-medium text-muted-foreground">{{ t('common.confirm') }} mot de passe</label>
+                                        <label class="text-xs font-medium text-muted-foreground">{{ t('auth.confirmNewPassword') }}</label>
                                         <div class="flex h-11 items-center gap-2 rounded-md border border-input px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15">
                                             <KeyRound class="size-4 shrink-0 text-primary" />
                                             <Input
@@ -1098,9 +1098,8 @@
                                             <DialogTitle>{{ t('settings.twoFactor') }}</DialogTitle>
                                         </DialogHeader>
                                         <div class="text-center mx-12 mt-8">
-                                            Afin d'activer cette option, veuillez entrer les 6 chiffres envoyés à votre adresse e-mail
-                                            <span class="font-semibold text-primary">{{ user.email }}</span>. Le code
-                                            envoyé est valide pour 5 min
+                                            {{ t('settings.twoFactorActivationDescBefore') }}
+                                            <span class="font-semibold text-primary">{{ user.email }}</span>{{ t('settings.twoFactorActivationDescAfter') }}
                                         </div>
 
                                         <div class="flex justify-center items-center mt-6 mx-auto">
@@ -1145,7 +1144,7 @@
                                             </DialogTitle>
                                         </DialogHeader>
                                         <div class="mt-8">
-                                            Veuillez confirmer votre action en entrant votre mot de passe
+                                            {{ t('settings.confirmActionPassword') }}
                                         </div>
 
                                         <form class="mt-4 space-y-3">
@@ -1216,8 +1215,8 @@
                         <ProposalLocationModal
                             v-model="proposalDialog"
                             v-model:newly-added-value="newlyAddedValue"
-                            title="Préférences"
-                            description="Sélectionnez uniquement les codes postaux/villes que vous souhaitez conserver parmi ceux déjà cochés pour l'encodage de vos préférences."
+                            :title="t('settings.preferences')"
+                            :description="t('settings.proposalLocationDesc')"
                             :initial-zip-codes="zipCodes"
                             :initial-cities="cities"
                             :is-preference-mode="true"
@@ -1449,7 +1448,7 @@ async function exportPersonalData() {
         link.download = `infiswap-data-export-${user.value.id}.json`;
         link.click();
         URL.revokeObjectURL(url);
-        $toast({ description: 'Export téléchargé.' });
+        $toast({ description: t('settings.exportDownloaded') });
     }
     catch (error) {
         $toast({
@@ -1490,9 +1489,9 @@ const deleteAvatarDialog = ref(false);
 const formattedGender = computed(() => {
     switch (user.value.gender) {
         case 'F':
-            return 'Femme';
+            return t('register.female');
         case 'M':
-            return 'Homme';
+            return t('register.male');
         case 'X':
             return 'X';
         default:
@@ -1503,9 +1502,9 @@ const formattedGender = computed(() => {
 const formattedCategory = computed(() => {
     switch (user.value.professional_category) {
         case 'salaried':
-            return 'Salarié(e)';
+            return t('register.employee');
         case 'independent':
-            return 'Indépendant(e)';
+            return t('register.independent');
         default:
             return '';
     }
@@ -1530,17 +1529,17 @@ const hasRealIdentifierDisplay = computed(() => hasRealIdentifier(user.value));
 
 const identifierDisplayLabel = computed(() => {
     if (user.value?.identifier_unavailable || !hasRealIdentifierDisplay.value) {
-        return 'Pas de numéro INAMI renseigné';
+        return t('settings.identifierNotProvided', { label: identifierLabel.value });
     }
-    return user.value?.identifier_number || 'Pas de numéro INAMI renseigné';
+    return user.value?.identifier_number || t('settings.identifierNotProvided', { label: identifierLabel.value });
 });
 
 const formattedCountry = computed(() => {
     if (user.value.profile && user.value.profile.country && user.value.profile?.country == 'be') {
-        return 'Belgique';
+        return t('home.map.countryBe');
     }
 
-    return 'France';
+    return t('home.map.countryFr');
 });
 
 const formatStringDate = (dateString) => {
@@ -1695,10 +1694,10 @@ const handleUpdateAddress = async () => {
     }
 };
 
-const languages = {
-    fr: 'Français',
-    nl: 'Nederlands',
-};
+const languages = computed(() => ({
+    fr: t('common.french'),
+    nl: t('common.dutch'),
+}));
 
 const handleChangeLanguage = async () => {
     const formData = reactive({
@@ -1775,7 +1774,7 @@ const { submit } = useSubmit(
     async () => {
         if (!profileFile.value) {
             $toast({
-                description: 'Veuillez sélectionner une image',
+                description: t('settings.selectImage'),
                 variant: 'destructive',
             });
             return;
@@ -1795,7 +1794,7 @@ const { submit } = useSubmit(
             }
 
             $toast({
-                description: 'Photo mise à jour',
+                description: t('settings.photoUpdated'),
             });
             profileDialog.value = false;
         }
@@ -1821,7 +1820,7 @@ const handleDeleteAvatar = async () => {
         }
 
         $toast({
-            description: 'Photo supprimée',
+            description: t('settings.photoDeleted'),
         });
         deleteAvatarDialog.value = false;
     }
@@ -1944,21 +1943,21 @@ const handleVerifyCode = async () => {
     }
 };
 
-const genders = {
-    M: 'Homme',
-    F: 'Femme',
+const genders = computed(() => ({
+    M: t('register.male'),
+    F: t('register.female'),
     X: 'X',
-};
+}));
 
-const countries = {
-    be: 'Belgique',
-    fr: 'France',
-};
+const countries = computed(() => ({
+    be: t('home.map.countryBe'),
+    fr: t('home.map.countryFr'),
+}));
 
-const professionalCategory = {
-    salaried: 'Salarié(e)',
-    independent: 'Indépendant(e)',
-};
+const professionalCategory = computed(() => ({
+    salaried: t('register.employee'),
+    independent: t('register.independent'),
+}));
 
 const profileFile = ref(null);
 const profileUpload = useFile();

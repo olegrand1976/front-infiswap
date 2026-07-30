@@ -4,12 +4,10 @@
             <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-destructive/15 text-destructive">
                 <TriangleAlert class="size-5" />
             </span>
-            <span class="text-lg font-secondary">Zone de danger</span>
+            <span class="text-lg font-secondary">{{ t('account.dangerZone') }}</span>
         </h3>
         <p class="mt-3 text-sm text-foreground">
-            Confirmez avec votre mot de passe. Votre compte sera désactivé, vos données personnelles
-            anonymisées (droit à l'effacement), et les administrateurs seront informés par e-mail.
-            Certaines données de facturation peuvent être conservées selon les obligations légales.
+            {{ t('account.deleteAccountDesc') }}
         </p>
 
         <div class="mt-4">
@@ -19,7 +17,7 @@
                 @click="deleteAccountDialog = true"
             >
                 <Trash2 class="size-4" />
-                Se désinscrire du site
+                {{ t('account.unsubscribe') }}
             </Button>
 
             <form
@@ -28,7 +26,7 @@
                 @submit.prevent="handleDeleteAccount"
             >
                 <div class="flex flex-col gap-1.5 sm:max-w-xs">
-                    <label class="text-xs font-medium text-muted-foreground">Mot de passe</label>
+                    <label class="text-xs font-medium text-muted-foreground">{{ t('settings.password') }}</label>
                     <div class="flex h-11 items-center gap-2 rounded-md border border-input bg-background px-3 focus-within:border-destructive focus-within:ring-2 focus-within:ring-destructive/15">
                         <KeyRound class="size-4 shrink-0 text-destructive" />
                         <Input
@@ -45,7 +43,7 @@
                         :disabled="isDeleting"
                         @click="deleteAccountDialog = false"
                     >
-                        Annuler
+                        {{ t('common.cancel') }}
                     </Button>
                     <Button
                         type="submit"
@@ -53,7 +51,7 @@
                         :in-progress="isDeleting"
                         :disabled="isDeleting || !password.trim()"
                     >
-                        Valider
+                        {{ t('common.confirm') }}
                     </Button>
                 </div>
             </form>
@@ -68,6 +66,7 @@ import { getErrorMessage } from '~/lib/utils';
 import { useAuth } from '~/composables/useAuth';
 import type { User } from '~/lib/types';
 
+const { t } = useI18n();
 const { $toast } = useNuxtApp();
 const router = useRouter();
 const { deleteAccount } = useAuth();
@@ -93,7 +92,7 @@ const handleDeleteAccount = async () => {
         deleteAccountDialog.value = false;
 
         $toast({
-            description: 'Votre désinscription a été enregistrée. Vos données personnelles ont été anonymisées.',
+            description: t('account.unsubscribeSuccess'),
         });
 
         await router.push('/');

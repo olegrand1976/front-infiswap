@@ -3,10 +3,10 @@
         <form class="w-full grid 2xl:grid-cols-2 gap-6">
             <div>
                 <label class="font-semibold text-primary flex items-center gap-1.5">
-                    Codes postaux
+                    {{ t('replacements.colZip') }}
                     <SettingsFieldHint
-                        :text="$t(SETTINGS_TOOLTIPS.zipCodesPreference)"
-                        label="Codes postaux"
+                        :text="t(SETTINGS_TOOLTIPS.zipCodesPreference)"
+                        :label="t('replacements.colZip')"
                     />
                 </label>
                 <div class="grid gap-3 mt-3">
@@ -19,7 +19,7 @@
                             v-if="showZipTooltip[i - 1]"
                             class="absolute -top-10 left-2 text-xs bg-white shadow rounded-md p-2"
                         >
-                            Cliquez sur “Ajouter” pour valider votre saisie.
+                            {{ t('settings.preferencesAddHint') }}
                         </div>
 
                         <InputIcon
@@ -34,7 +34,7 @@
                             class="bg-primary text-white rounded-md hover:bg-primary/90 h-10"
                             @click="isInitialZip(i - 1) ? removeZip(i - 1) : saveZip(i - 1)"
                         >
-                            {{ isInitialZip(i - 1) ? 'Retirer' : 'Ajouter' }}
+                            {{ isInitialZip(i - 1) ? t('settings.preferencesRemove') : t('settings.preferencesAdd') }}
                         </Button>
                     </div>
                 </div>
@@ -42,10 +42,10 @@
 
             <div>
                 <label class="font-semibold text-primary flex items-center gap-1.5">
-                    Villes
+                    {{ t('replacements.colCities') }}
                     <SettingsFieldHint
-                        :text="$t(SETTINGS_TOOLTIPS.citiesPreference)"
-                        label="Villes"
+                        :text="t(SETTINGS_TOOLTIPS.citiesPreference)"
+                        :label="t('replacements.colCities')"
                     />
                 </label>
                 <div class="grid gap-3 mt-3">
@@ -58,7 +58,7 @@
                             v-if="showCityTooltip[i - 1]"
                             class="absolute -top-10 left-2 text-xs bg-white shadow rounded-md p-2"
                         >
-                            Cliquez sur “Ajouter” pour valider votre saisie.
+                            {{ t('settings.preferencesAddHint') }}
                         </div>
 
                         <InputIcon
@@ -74,7 +74,7 @@
                             class="bg-primary text-white rounded-md hover:bg-primary/90 h-10"
                             @click="isInitialCity(i - 1) ? removeCity(i - 1) : saveCity(i - 1)"
                         >
-                            {{ isInitialCity(i - 1) ? 'Retirer' : 'Ajouter' }}
+                            {{ isInitialCity(i - 1) ? t('settings.preferencesRemove') : t('settings.preferencesAdd') }}
                         </Button>
                     </div>
                 </div>
@@ -88,6 +88,8 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '~/composables/useAuth';
 import type { User } from '~/lib/types';
 import { SETTINGS_TOOLTIPS } from '~/utils/settingsTooltips';
+
+const { t } = useI18n();
 
 const props = defineProps<{
     initialZipCodes: string[];
