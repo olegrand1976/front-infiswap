@@ -4,7 +4,7 @@
             <button
                 type="button"
                 class="flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                title="Retour"
+                :title="t('common.back')"
                 @click="goBack"
             >
                 <ArrowLeft class="size-4" />
@@ -46,7 +46,7 @@
             <template #filters>
                 <div class="flex min-w-0 flex-wrap items-end gap-2">
                     <div class="flex flex-col gap-1.5">
-                        <label class="text-xs font-medium text-muted-foreground">Type</label>
+                        <label class="text-xs font-medium text-muted-foreground">{{ t('replacements.filterType') }}</label>
                         <Select v-model="selectedFilters.type">
                             <SelectTrigger
                                 class="h-9 w-40 shrink-0 rounded-md border border-input bg-background text-xs"
@@ -70,7 +70,7 @@
                     </div>
 
                     <div class="flex flex-col gap-1.5">
-                        <label class="text-xs font-medium text-muted-foreground">Rôle</label>
+                        <label class="text-xs font-medium text-muted-foreground">{{ t('replacements.filterRole') }}</label>
                         <Select v-model="selectedFilters.role">
                             <SelectTrigger
                                 class="h-9 w-44 shrink-0 rounded-md border border-input bg-background text-xs"
@@ -94,7 +94,7 @@
                     </div>
 
                     <div class="flex flex-col gap-1.5">
-                        <label class="text-xs font-medium text-muted-foreground">Statut</label>
+                        <label class="text-xs font-medium text-muted-foreground">{{ t('replacements.filterStatus') }}</label>
                         <Select v-model="selectedFilters.status">
                             <SelectTrigger
                                 class="h-9 w-36 shrink-0 rounded-md border border-input bg-background text-xs"
@@ -120,7 +120,7 @@
                     <div class="hidden sm:block w-px h-9 bg-input" />
 
                     <div class="flex flex-col gap-1.5">
-                        <label class="text-xs font-medium text-muted-foreground">Pays</label>
+                        <label class="text-xs font-medium text-muted-foreground">{{ t('settings.country') }}</label>
                         <Select v-model="selectedCountry">
                             <SelectTrigger
                                 class="h-9 w-44 shrink-0 rounded-md border border-input bg-background text-xs"
@@ -161,7 +161,7 @@
                     </div>
 
                     <div class="flex flex-col gap-1.5">
-                        <label class="text-xs font-medium text-muted-foreground">Provinces</label>
+                        <label class="text-xs font-medium text-muted-foreground">{{ t('replacements.filterProvinces') }}</label>
                         <Select>
                             <SelectTrigger
                                 class="h-9 w-44 shrink-0 rounded-md border border-input bg-background text-xs"
@@ -184,7 +184,7 @@
                                         <label
                                             for="tous"
                                             class="text-xs cursor-pointer"
-                                        >Tous</label>
+                                        >{{ t('common.all') }}</label>
                                     </div>
                                     <div
                                         v-for="(region, index) in selectedCountry === 'fr' ? departments : regions"
@@ -223,7 +223,7 @@
                                     </button>
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                    <p>{{ groupByProvince ? 'Désactiver la vue par province' : 'Vue par province' }}</p>
+                                    <p>{{ groupByProvince ? t('replacements.disableProvinceView') : t('replacements.enableProvinceView') }}</p>
                                 </TooltipContent>
                             </Tooltip>
                         </TooltipProvider>
@@ -247,7 +247,7 @@
                                     </button>
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                    <p>{{ displayMode === 'cards' ? 'Passer en vue tableau' : 'Passer en vue cartes' }}</p>
+                                    <p>{{ displayMode === 'cards' ? t('replacements.switchToTableView') : t('replacements.switchToCardView') }}</p>
                                 </TooltipContent>
                             </Tooltip>
                         </TooltipProvider>
@@ -261,12 +261,12 @@
                     class="mt-4 mb-2 rounded-md border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-slate-700"
                     data-testid="own-replacements-hidden-banner"
                 >
-                    Vos propres annonces n’apparaissent pas ici.
+                    {{ t('replacements.ownReplacementsHidden') }}
                     <NuxtLink
                         to="/dashboard/replacements/me"
                         class="ml-1 font-semibold text-primary underline underline-offset-2"
                     >
-                        Voir mes remplacements
+                        {{ t('replacements.viewMyReplacements') }}
                     </NuxtLink>
                 </div>
             </template>
@@ -346,18 +346,18 @@ watch(
 
 const countries = availableCountries;
 
-const replacementTypeFilters = {
-    all: 'Tous',
-    classic: 'Classique',
-    immediate: 'Urgent',
-};
+const replacementTypeFilters = computed(() => ({
+    all: t('common.all'),
+    classic: t('replacements.typeClassic'),
+    immediate: t('replacements.typeUrgent'),
+}));
 
-const replacementRoleFilters = {
-    all: 'Tous',
-    nurse: 'Infirmier(ère)',
-    caregiver: 'Aide soignant(e)',
-    midwife: 'Sage-femme',
-};
+const replacementRoleFilters = computed(() => ({
+    all: t('common.all'),
+    nurse: t('replacements.roleNurse'),
+    caregiver: t('replacements.roleAide'),
+    midwife: t('replacements.roleMidwife'),
+}));
 
 const selectedRegions = ref<string[]>([]);
 const isAllSelected = computed(() => selectedRegions.value.length === 0);
@@ -404,7 +404,7 @@ const updateRegionSelection = (region: string, checked: boolean) => {
 };
 
 const selectedProvincesPlaceholder = computed(() => {
-    if (isAllSelected.value || selectedRegions.value.length === 0) return 'Tous';
+    if (isAllSelected.value || selectedRegions.value.length === 0) return t('common.all');
     return selectedRegions.value.join(', ');
 });
 
@@ -436,11 +436,11 @@ watch(selectedFilters, (newFilters) => {
 watch(selectedCountry, () => {
     selectedRegions.value = [];
 });
-const replacementStatusFilters = {
-    open: 'Ouvert',
-    closed: 'Fermé',
-    all: 'Tous',
-};
+const replacementStatusFilters = computed(() => ({
+    open: t('replacements.statusOpenFilter'),
+    closed: t('replacements.statusClosedFilter'),
+    all: t('common.all'),
+}));
 useHead({
     title: () => t('replacements.searchTitle'),
 });

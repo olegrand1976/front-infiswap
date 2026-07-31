@@ -4,7 +4,7 @@
         <div class="mt-8 min-w-0 w-full rounded-lg border bg-card shadow-sm p-5">
             <Form class="grid w-full min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-[172px_1fr_1fr_auto] xl:items-end">
                 <div class="min-w-0 flex flex-col gap-1.5">
-                    <label class="text-xs font-medium text-muted-foreground">Jours</label>
+                    <label class="text-xs font-medium text-muted-foreground">{{ t('replacements.daysLabel') }}</label>
                     <FormField name="days">
                         <FormItem>
                             <FormControl>
@@ -42,14 +42,14 @@
                 </div>
 
                 <div class="min-w-0 flex flex-col gap-1.5">
-                    <label class="text-xs font-medium text-muted-foreground">Codes postaux</label>
+                    <label class="text-xs font-medium text-muted-foreground">{{ t('replacements.colZip') }}</label>
                     <FormField name="postalCode">
                         <FormItem>
                             <FormControl>
                                 <TagsInput
                                     v-model="formData.postalCodeTags"
                                     class="min-h-10 min-w-0 flex-wrap rounded-md border border-input bg-background text-xs"
-                                    title="Saisissez le code postal puis appuyer sur Entrée pour l'ajouter"
+                                    :title="t('replacements.postalCodeHint')"
                                 >
                                     <Mailbox class="size-4 shrink-0 text-primary" />
                                     <TagsInputItem
@@ -75,14 +75,14 @@
                 </div>
 
                 <div class="min-w-0 flex flex-col gap-1.5">
-                    <label class="text-xs font-medium text-muted-foreground">Ville(s)</label>
+                    <label class="text-xs font-medium text-muted-foreground">{{ t('replacements.colCities') }}</label>
                     <FormField name="city">
                         <FormItem>
                             <FormControl>
                                 <TagsInput
                                     v-model="formData.cityTags"
                                     class="min-h-10 min-w-0 flex-wrap rounded-md border border-input bg-background text-xs"
-                                    title="Saisissez la ville puis appuyer sur Entrée pour l'ajouter"
+                                    :title="t('replacements.cityHint')"
                                 >
                                     <Building2 class="size-4 shrink-0 text-primary" />
                                     <TagsInputItem
@@ -115,7 +115,7 @@
                         @click="reinitializeFilter"
                     >
                         <RefreshCw class="size-4" />
-                        <span class="text-xs md:text-sm">Réinitialiser</span>
+                        <span class="text-xs md:text-sm">{{ t('replacements.resetFilters') }}</span>
                     </Button>
                     <Button
                         type="button"
@@ -123,7 +123,7 @@
                         @click="submitSearch"
                     >
                         <Search class="size-4" />
-                        <span class="text-xs md:text-sm">Rechercher</span>
+                        <span class="text-xs md:text-sm">{{ t('common.search') }}</span>
                     </Button>
                 </div>
             </Form>
@@ -527,6 +527,7 @@ import {
 } from '~/lib/replacementBoost';
 
 const { $toast } = useNuxtApp();
+const { t } = useI18n();
 
 interface ReplacementProps {
     selectedRegions?: string[];
@@ -866,13 +867,19 @@ const clearReplacementBoost = (replacement: { is_boosted?: boolean; boosted_unti
 };
 
 const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'all'];
-const frenchDays: Record<string, string> = {
-    monday: 'Lundi', tuesday: 'Mardi', wednesday: 'Mercredi', thursday: 'Jeudi',
-    friday: 'Vendredi', saturday: 'Samedi', sunday: 'Dimanche', all: 'Tous',
-};
+const frenchDays = computed<Record<string, string>>(() => ({
+    monday: t('replacements.dayMonday'),
+    tuesday: t('replacements.dayTuesday'),
+    wednesday: t('replacements.dayWednesday'),
+    thursday: t('replacements.dayThursday'),
+    friday: t('replacements.dayFriday'),
+    saturday: t('replacements.daySaturday'),
+    sunday: t('replacements.daySunday'),
+    all: t('common.all'),
+}));
 
 const selectedDaysPlaceholder = computed(() =>
-    !formData.selectedDays.length ? 'Sélectionner' : formData.selectedDays.map(d => frenchDays[d]).join(', '),
+    !formData.selectedDays.length ? t('replacements.select') : formData.selectedDays.map(d => frenchDays.value[d]).join(', '),
 );
 
 const _selectDays = (day: string, arr: string[]) => {
