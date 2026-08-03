@@ -158,7 +158,6 @@
                 <Button
                     v-if="isAnyFilterActive"
                     variant="outline"
-                    class="rounded-full px-8 hover:bg-primary hover:text-white transition-all duration-300"
                     @click="reinitializeFilter"
                 >
                     Réinitialiser les filtres
