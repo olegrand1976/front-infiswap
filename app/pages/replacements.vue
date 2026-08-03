@@ -85,12 +85,24 @@
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent class="rounded-md">
-                            <SelectItem value="Brabant wallon">Brabant wallon</SelectItem>
-                            <SelectItem value="Bruxelles-Capitale">Bruxelles-Capitale</SelectItem>
-                            <SelectItem value="Liège">Liège</SelectItem>
-                            <SelectItem value="Hainaut">Hainaut</SelectItem>
-                            <SelectItem value="Namur">Namur</SelectItem>
-                            <SelectItem value="Luxembourg">Luxembourg</SelectItem>
+                            <SelectItem value="Brabant wallon">
+                                Brabant wallon
+                            </SelectItem>
+                            <SelectItem value="Bruxelles-Capitale">
+                                Bruxelles-Capitale
+                            </SelectItem>
+                            <SelectItem value="Liège">
+                                Liège
+                            </SelectItem>
+                            <SelectItem value="Hainaut">
+                                Hainaut
+                            </SelectItem>
+                            <SelectItem value="Namur">
+                                Namur
+                            </SelectItem>
+                            <SelectItem value="Luxembourg">
+                                Luxembourg
+                            </SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -110,7 +122,18 @@
                                 class="w-3.5 h-3.5 rounded-full border flex items-center justify-center shrink-0 transition-all"
                                 :class="filters.type === 'replacement' ? 'border-primary bg-primary' : 'border-border'"
                             >
-                                <svg v-if="filters.type === 'replacement'" class="w-2 h-2 fill-white" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" /></svg>
+                                <svg
+                                    v-if="filters.type === 'replacement'"
+                                    class="w-2 h-2 fill-white"
+                                    viewBox="0 0 24 24"
+                                ><path
+                                    d="M20 6L9 17l-5-5"
+                                    stroke="white"
+                                    stroke-width="3"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    fill="none"
+                                /></svg>
                             </span>
                             Remplacement
                         </button>
@@ -124,7 +147,18 @@
                                 class="w-3.5 h-3.5 rounded-full border flex items-center justify-center shrink-0 transition-all"
                                 :class="filters.type === 'mission' ? 'border-success bg-success' : 'border-border'"
                             >
-                                <svg v-if="filters.type === 'mission'" class="w-2 h-2 fill-white" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" /></svg>
+                                <svg
+                                    v-if="filters.type === 'mission'"
+                                    class="w-2 h-2 fill-white"
+                                    viewBox="0 0 24 24"
+                                ><path
+                                    d="M20 6L9 17l-5-5"
+                                    stroke="white"
+                                    stroke-width="3"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    fill="none"
+                                /></svg>
                             </span>
                             Mission
                         </button>
@@ -186,7 +220,17 @@
                                         TOP
                                     </span>
                                     <span class="border border-primary/25 text-primary text-[10px] font-bold px-2.5 py-1 rounded-sm flex items-center gap-1 bg-primary/5">
-                                        <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                                        <svg
+                                            class="w-3 h-3"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2.5"
+                                        ><path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M13 10V3L4 14h7v7l9-11h-7z"
+                                        /></svg>
                                         Remplacement
                                     </span>
                                 </div>
@@ -241,12 +285,28 @@
 
                                 <div class="flex items-start gap-3">
                                     <div class="w-12 h-12 rounded-md bg-success/10 flex items-center justify-center shrink-0">
-                                        <svg class="w-5 h-5 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                                        <svg
+                                            class="w-5 h-5 text-success"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                        ><path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                                        /></svg>
                                     </div>
                                     <div class="space-y-0.5 text-muted-foreground">
-                                        <h4 class="text-sm font-bold text-foreground">CHU Liège</h4>
-                                        <p class="text-xs font-semibold text-primary">Contrat : CDI</p>
-                                        <p class="text-xs">Infirmier(e) en soins généraux</p>
+                                        <h4 class="text-sm font-bold text-foreground">
+                                            CHU Liège
+                                        </h4>
+                                        <p class="text-xs font-semibold text-primary">
+                                            Contrat : CDI
+                                        </p>
+                                        <p class="text-xs">
+                                            Infirmier(e) en soins généraux
+                                        </p>
                                     </div>
                                 </div>
 
@@ -288,8 +348,12 @@
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent class="rounded-md">
-                                    <SelectItem value="Plus récents">Plus récents</SelectItem>
-                                    <SelectItem value="Plus anciens">Plus anciens</SelectItem>
+                                    <SelectItem value="Plus récents">
+                                        Plus récents
+                                    </SelectItem>
+                                    <SelectItem value="Plus anciens">
+                                        Plus anciens
+                                    </SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
@@ -303,8 +367,14 @@
                         >
                             <div class="flex items-center gap-3 shrink-0 sm:w-1/4">
                                 <div :class="['w-9 h-9 rounded-md flex items-center justify-center shrink-0', item.type === 'replacement' ? 'bg-primary/10' : 'bg-success/10']">
-                                    <Calendar v-if="item.type === 'replacement'" class="w-4 h-4 text-primary" />
-                                    <Briefcase v-else class="w-4 h-4 text-success" />
+                                    <Calendar
+                                        v-if="item.type === 'replacement'"
+                                        class="w-4 h-4 text-primary"
+                                    />
+                                    <Briefcase
+                                        v-else
+                                        class="w-4 h-4 text-success"
+                                    />
                                 </div>
                                 <span :class="['text-[10px] font-black px-2.5 py-1 rounded-sm border uppercase tracking-wider', item.type === 'replacement' ? 'border-primary/20 text-primary bg-primary/5' : 'border-success/25 text-success bg-success/5']">
                                     {{ item.type === 'replacement' ? 'Remplacement' : 'Mission' }}
@@ -358,7 +428,7 @@
                                 'w-9 h-9 flex items-center justify-center rounded-md font-bold text-sm transition-colors border',
                                 p === currentPage
                                     ? 'bg-primary text-primary-foreground border-primary shadow-sm'
-                                    : 'bg-surface text-foreground border-border hover:bg-surface-subtle hover:border-border/70'
+                                    : 'bg-surface text-foreground border-border hover:bg-surface-subtle hover:border-border/70',
                             ]"
                             @click="currentPage = p"
                         >
@@ -373,7 +443,7 @@
                                 'w-9 h-9 flex items-center justify-center rounded-md font-bold text-sm transition-colors border',
                                 8 === currentPage
                                     ? 'bg-primary text-primary-foreground border-primary shadow-sm'
-                                    : 'bg-surface text-foreground border-border hover:bg-surface-subtle'
+                                    : 'bg-surface text-foreground border-border hover:bg-surface-subtle',
                             ]"
                             @click="currentPage = 8"
                         >

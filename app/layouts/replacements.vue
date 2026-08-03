@@ -96,10 +96,30 @@
                         Navigation
                     </h5>
                     <ul class="space-y-2 text-sm font-light">
-                        <li><NuxtLink to="/" class="hover:text-primary transition-colors text-on-canvas-dark">Accueil</NuxtLink></li>
-                        <li><NuxtLink to="/replacements" class="hover:text-primary transition-colors text-on-canvas-dark">Remplacements</NuxtLink></li>
-                        <li><NuxtLink to="/contact" class="hover:text-primary transition-colors text-on-canvas-dark">Contact</NuxtLink></li>
-                        <li><NuxtLink to="/offre-institution" class="hover:text-primary transition-colors text-on-canvas-dark">Offre Institution</NuxtLink></li>
+                        <li>
+                            <NuxtLink
+                                to="/"
+                                class="hover:text-primary transition-colors text-on-canvas-dark"
+                            >Accueil</NuxtLink>
+                        </li>
+                        <li>
+                            <NuxtLink
+                                to="/replacements"
+                                class="hover:text-primary transition-colors text-on-canvas-dark"
+                            >Remplacements</NuxtLink>
+                        </li>
+                        <li>
+                            <NuxtLink
+                                to="/contact"
+                                class="hover:text-primary transition-colors text-on-canvas-dark"
+                            >Contact</NuxtLink>
+                        </li>
+                        <li>
+                            <NuxtLink
+                                to="/offre-institution"
+                                class="hover:text-primary transition-colors text-on-canvas-dark"
+                            >Offre Institution</NuxtLink>
+                        </li>
                     </ul>
                 </div>
 
@@ -108,10 +128,30 @@
                         Découvrir
                     </h5>
                     <ul class="space-y-2 text-sm font-light">
-                        <li><NuxtLink to="/about" class="hover:text-primary transition-colors text-on-canvas-dark">A Propos</NuxtLink></li>
-                        <li><NuxtLink to="/services" class="hover:text-primary transition-colors text-on-canvas-dark">Nos Services</NuxtLink></li>
-                        <li><NuxtLink to="/carriere" class="hover:text-primary transition-colors text-on-canvas-dark">Carrière</NuxtLink></li>
-                        <li><NuxtLink to="/pricing" class="hover:text-primary transition-colors text-on-canvas-dark">Nos Tarifs</NuxtLink></li>
+                        <li>
+                            <NuxtLink
+                                to="/about"
+                                class="hover:text-primary transition-colors text-on-canvas-dark"
+                            >A Propos</NuxtLink>
+                        </li>
+                        <li>
+                            <NuxtLink
+                                to="/services"
+                                class="hover:text-primary transition-colors text-on-canvas-dark"
+                            >Nos Services</NuxtLink>
+                        </li>
+                        <li>
+                            <NuxtLink
+                                to="/carriere"
+                                class="hover:text-primary transition-colors text-on-canvas-dark"
+                            >Carrière</NuxtLink>
+                        </li>
+                        <li>
+                            <NuxtLink
+                                to="/pricing"
+                                class="hover:text-primary transition-colors text-on-canvas-dark"
+                            >Nos Tarifs</NuxtLink>
+                        </li>
                     </ul>
                 </div>
 
@@ -130,11 +170,18 @@
                         </li>
                         <li class="flex items-center gap-2.5">
                             <Mail class="w-3.5 h-3.5 text-primary shrink-0" />
-                            <a href="mailto:info@infiswap.be" class="hover:text-on-canvas-dark transition-colors">info@infiswap.be</a>
+                            <a
+                                href="mailto:info@infiswap.be"
+                                class="hover:text-on-canvas-dark transition-colors"
+                            >info@infiswap.be</a>
                         </li>
                         <li class="flex items-center gap-2.5">
                             <Globe class="w-3.5 h-3.5 text-primary shrink-0" />
-                            <a href="https://www.infiswap.be" target="_blank" class="hover:text-on-canvas-dark transition-colors">www.infiswap.be</a>
+                            <a
+                                href="https://www.infiswap.be"
+                                target="_blank"
+                                class="hover:text-on-canvas-dark transition-colors"
+                            >www.infiswap.be</a>
                         </li>
                     </ul>
                 </div>
@@ -173,11 +220,20 @@
 
             <div class="border-t border-border/10 pt-8 text-center text-xs text-on-canvas-muted">
                 <div class="flex flex-wrap justify-center gap-4 mb-3">
-                    <NuxtLink to="/legal-notice" class="hover:text-on-canvas-dark transition-colors">Mentions légales</NuxtLink>
+                    <NuxtLink
+                        to="/legal-notice"
+                        class="hover:text-on-canvas-dark transition-colors"
+                    >Mentions légales</NuxtLink>
                     <span>·</span>
-                    <NuxtLink to="/privacy-security" class="hover:text-on-canvas-dark transition-colors">Politique de Protection des données</NuxtLink>
+                    <NuxtLink
+                        to="/privacy-security"
+                        class="hover:text-on-canvas-dark transition-colors"
+                    >Politique de Protection des données</NuxtLink>
                     <span>·</span>
-                    <NuxtLink to="/terms" class="hover:text-on-canvas-dark transition-colors">CGU</NuxtLink>
+                    <NuxtLink
+                        to="/terms"
+                        class="hover:text-on-canvas-dark transition-colors"
+                    >CGU</NuxtLink>
                 </div>
                 <a
                     href="https://www.ll-it-sc.be"

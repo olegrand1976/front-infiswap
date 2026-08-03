@@ -1,211 +1,264 @@
 <template>
-    <div class="lg:ml-20 xl:ml-0">
-        <div class="mt-6 flex items-center gap-2 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
-            <ArrowLeft
-                class="size-5 cursor-pointer hover:text-primary"
-                :title="$t('common.back')"
+    <div class="min-w-0 w-full max-w-full overflow-x-hidden">
+        <div class="flex items-center gap-2">
+            <button
+                type="button"
+                class="flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                :title="t('common.back')"
                 @click="goBack"
-            />
-            <h1 class="py-3 text-primary font-bold">
-                {{ $t('replacements.responsesHeading') }} <strong>{{ $t('replacements.responsesHeadingStrong') }}</strong>
-            </h1>
+            >
+                <ArrowLeft class="size-4" />
+            </button>
+            <Breadcrumb>
+                <BreadcrumbList>
+                    <BreadcrumbItem>
+                        <BreadcrumbLink as-child>
+                            <NuxtLink
+                                :to="localePath('/dashboard')"
+                                class="flex items-center gap-1.5"
+                            >
+                                <LayoutGrid class="size-3.5" />
+                                {{ t('nav.dashboard') }}
+                            </NuxtLink>
+                        </BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                        <BreadcrumbPage>{{ t('replacements.responsesTitle') }}</BreadcrumbPage>
+                    </BreadcrumbItem>
+                </BreadcrumbList>
+            </Breadcrumb>
+        </div>
+
+        <div class="mt-5 flex flex-wrap items-end justify-between gap-4">
+            <div>
+                <h1 class="font-secondary text-2xl sm:text-3xl font-semibold tracking-tight">
+                    {{ t('replacements.responsesHeading') }} {{ t('replacements.responsesHeadingStrong') }}
+                </h1>
+                <p class="mt-2 text-sm text-muted-foreground">
+                    {{ t('replacements.responsesHelpDesc') }}
+                </p>
+            </div>
+            <Button
+                href="/dashboard/replacements/create"
+                class="rounded-md! inline-flex items-center gap-2"
+            >
+                <Plus class="size-4" />
+                {{ t('nav.requestReplacement') }}
+            </Button>
         </div>
 
         <template v-if="listResponse.length === 0">
-            <p class="text-black/50 mt-16 text-center">
-                {{ $t('replacements.empty') }}
-            </p>
+            <div class="mt-10 flex flex-col items-center rounded-lg border border-dashed border-input bg-card px-6 py-16 text-center">
+                <div class="mb-5 flex size-14 items-center justify-center rounded-md bg-primary/10 text-primary">
+                    <Inbox class="size-7" />
+                </div>
+                <h2 class="font-secondary text-xl font-semibold">
+                    {{ t('replacements.noResponsesTitle') }}
+                </h2>
+                <p class="mt-2 max-w-md text-sm text-muted-foreground">
+                    {{ t('replacements.noResponsesDesc') }}
+                </p>
+                <Button
+                    href="/dashboard/replacements/create"
+                    class="rounded-md! mt-6 inline-flex items-center gap-2"
+                >
+                    <Plus class="size-4" />
+                    {{ t('nav.requestReplacement') }}
+                </Button>
+            </div>
         </template>
         <template v-else>
-            <div class="grid gap-4 lg:gap-8 text-sm">
+            <div class="mt-8 flex flex-col gap-6">
                 <div
                     v-for="(response, index) in listResponse"
                     :key="index"
-                    class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8 bg-gray-100 p-2 lg:p-4 rounded"
+                    class="rounded-lg border bg-card shadow-sm p-5"
                 >
-                    <div
-                        class="rounded-md col-span-3 lg:col-span-1"
-                    >
-                        <div class="flex justify-between items-center">
-                            <h1 class="text-primary font-semibold">
-                                <template v-if="listResponse.length === 1">
-                                    Remplacement
-                                </template>
-                                <template v-else>
-                                    Remplacement {{ index + 1 }}
-                                </template>
-                            </h1>
-
-                            <Badge
-                                v-if="response.responses?.length != 0"
-                                class="w-24 text-center bg-success"
-                            >
-                                <template v-if="response.responses?.length == 1">
-                                    1 intéressé
-                                </template>
-                                <template v-else>
-                                    {{ response.responses?.length }} intéréssés
-                                </template>
-                            </Badge>
-                        </div>
-                        <div class="mt-4 grid grid-cols-[40%_60%]">
-                            <p class="font-medium">
-                                Période
-                            </p>
-                            <p>
-                                <template v-if="response?.parent?.start_date && response?.parent?.end_date">
-                                    <template v-if="response.parent.start_date === response.parent.end_date">
-                                        {{ new Date(response.parent.start_date).toLocaleDateString('fr-FR') }}
+                    <div class="grid gap-6 lg:grid-cols-[300px_1fr]">
+                        <div class="min-w-0">
+                            <div class="mb-4 flex items-center justify-between gap-3">
+                                <h3 class="font-secondary text-lg font-semibold">
+                                    <template v-if="listResponse.length === 1">
+                                        {{ t('replacements.period') }}
                                     </template>
                                     <template v-else>
-                                        {{ new Date(response.parent.start_date).toLocaleDateString('fr-FR') }} -
-                                        {{ new Date(response.parent.end_date).toLocaleDateString('fr-FR') }}
+                                        {{ t('replacements.period') }} {{ index + 1 }}
                                     </template>
-                                </template>
+                                </h3>
 
-                                <template v-else-if="response?.parent?.periods.length > 0 ">
-                                    <ul>
-                                        <li
-                                            v-for="(period) in response.parent.periods"
-                                            :key="period.id"
+                                <Badge
+                                    v-if="response.responses?.length != 0"
+                                    class="bg-success text-success-foreground whitespace-nowrap"
+                                >
+                                    {{ response.responses?.length }}
+                                    {{ response.responses?.length == 1 ? t('replacements.interested') : t('replacements.interestedPlural') }}
+                                </Badge>
+                            </div>
+
+                            <div class="flex flex-col gap-3">
+                                <div class="flex items-start gap-2.5">
+                                    <CalendarRange class="size-4 shrink-0 text-primary mt-0.5" />
+                                    <div class="min-w-0">
+                                        <div class="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                                            {{ t('replacements.period') }}
+                                        </div>
+                                        <div class="text-sm">
+                                            <template v-if="response?.parent?.start_date && response?.parent?.end_date">
+                                                <template v-if="response.parent.start_date === response.parent.end_date">
+                                                    {{ new Date(response.parent.start_date).toLocaleDateString('fr-FR') }}
+                                                </template>
+                                                <template v-else>
+                                                    {{ new Date(response.parent.start_date).toLocaleDateString('fr-FR') }} -
+                                                    {{ new Date(response.parent.end_date).toLocaleDateString('fr-FR') }}
+                                                </template>
+                                            </template>
+                                            <template v-else-if="response?.parent?.periods.length > 0 ">
+                                                <ul>
+                                                    <li
+                                                        v-for="(period) in response.parent.periods"
+                                                        :key="period.id"
+                                                    >
+                                                        <template v-if="period.start_date === period.end_date">
+                                                            {{ period.start_date }}   {{ new Date(period.start_date).toLocaleDateString('fr-FR') }}
+                                                        </template>
+                                                        <template v-else>
+                                                            {{ new Date(period.start_date).toLocaleDateString('fr-FR') }} -
+                                                            {{ new Date(period.end_date).toLocaleDateString('fr-FR') }}
+                                                        </template>
+                                                    </li>
+                                                </ul>
+                                            </template>
+                                            <template v-else>
+                                                {{ t('replacements.undefined') }}
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start gap-2.5">
+                                    <Clock class="size-4 shrink-0 text-primary mt-0.5" />
+                                    <div class="min-w-0">
+                                        <div class="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                                            {{ t('replacements.timeSlot') }}
+                                        </div>
+                                        <div class="text-sm">
+                                            {{ formatTimeSlot(response?.parent?.time_slot) }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start gap-2.5">
+                                    <Mailbox class="size-4 shrink-0 text-primary mt-0.5" />
+                                    <div class="min-w-0">
+                                        <div class="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                                            {{ t('replacements.colZip') }}
+                                        </div>
+                                        <div class="text-sm">
+                                            {{ formatArray(response?.parent?.zip_codes) }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start gap-2.5">
+                                    <Building2 class="size-4 shrink-0 text-primary mt-0.5" />
+                                    <div class="min-w-0">
+                                        <div class="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                                            {{ t('replacements.colCities') }}
+                                        </div>
+                                        <div class="text-sm">
+                                            {{ formatArray(response?.parent?.cities) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            v-if="visibleResponses(response.responses).length != 0"
+                            class="flex flex-col gap-2.5"
+                        >
+                            <div
+                                v-for="responseDetail in visibleResponses(response.responses)"
+                                :key="responseDetail.id"
+                                class="grid grid-cols-1 items-center gap-3 rounded-md border border-input px-3.5 py-2.5 sm:grid-cols-[1fr_auto_auto]"
+                            >
+                                <div class="flex min-w-0 items-center gap-2.5">
+                                    <span class="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-md bg-muted text-muted-foreground">
+                                        <img
+                                            v-if="getRespondent(responseDetail)?.profil_url"
+                                            class="size-8 object-cover object-center"
+                                            :src="useRuntimeConfig().public.API_URL + '/storage/' + getRespondent(responseDetail)?.profil_url"
                                         >
-                                            <template v-if="period.start_date === period.end_date">
-                                                {{ period.start_date }}   {{ new Date(period.start_date).toLocaleDateString('fr-FR') }}
-                                            </template>
-                                            <template v-else>
-                                                {{ new Date(period.start_date).toLocaleDateString('fr-FR') }} -
-                                                {{ new Date(period.end_date).toLocaleDateString('fr-FR') }}
-                                            </template>
-                                        </li>
-                                    </ul>
-                                </template>
+                                        <CircleUser
+                                            v-else
+                                            class="size-4"
+                                        />
+                                    </span>
+                                    <div class="min-w-0">
+                                        <div class="truncate text-sm font-medium">
+                                            {{ getRespondent(responseDetail)?.full_name }}
+                                        </div>
+                                        <div class="flex items-center gap-1 text-xs text-muted-foreground">
+                                            <Phone class="size-3 shrink-0" />
+                                            <span class="truncate">{{ getRespondent(responseDetail)?.phone_number }} · {{ getRespondent(responseDetail)?.zip_code ?? '—' }}</span>
+                                        </div>
+                                    </div>
+                                </div>
 
-                                <template v-else>
-                                    Non défini
-                                </template>
-                            </p>
-                        </div>
-                        <div class="mt-4 grid grid-cols-[40%_60%]">
-                            <p class="font-medium">
-                                Créneau horaire
-                            </p>
-                            <p>{{ formatTimeSlot(response?.parent?.time_slot) }}</p>
-                        </div>
-                        <div class="mt-4 grid grid-cols-[40%_60%]">
-                            <p class="font-medium">
-                                Codes postaux
-                            </p>
-                            <p>{{ formatArray(response?.parent?.zip_codes) }}</p>
-                        </div>
-                        <div class="mt-4 grid grid-cols-[40%_60%]">
-                            <p class="font-medium">
-                                Villes
-                            </p>
-                            <p>{{ formatArray(response?.parent?.cities) }}</p>
-                        </div>
-                    </div>
+                                <Badge
+                                    v-if="responseDetail.status === 'confirmed'"
+                                    class="bg-success text-success-foreground whitespace-nowrap"
+                                >
+                                    <BadgeCheck class="size-3" />
+                                    {{ t('replacements.accepted') }}
+                                </Badge>
+                                <span
+                                    v-else
+                                    class="whitespace-nowrap text-xs text-muted-foreground"
+                                >
+                                    {{ t('replacements.statusPending') }}
+                                </span>
 
-                    <div
-                        v-if="visibleResponses(response.responses).length != 0"
-                        class="col-span-3 lg:col-span-2"
-                    >
-                        <Table>
-                            <TableHeader class="w-full">
-                                <TableRow class="grid grid-cols-4 overflow-x-hidden border-none">
-                                    <TableHead class="bg-primary w-full flex justify-center items-center text-white text-sm">
-                                        Infirmier
-                                    </TableHead>
-                                    <TableHead class="bg-primary w-full flex justify-center items-center text-white text-sm">
-                                        Téléphone
-                                    </TableHead>
-                                    <TableHead class="bg-primary w-full flex justify-center items-center text-white text-sm">
-                                        Code Postal
-                                    </TableHead>
-                                    <TableHead class="bg-primary w-full flex justify-center items-center text-white text-sm">
-                                        Action
-                                    </TableHead>
-                                </TableRow>
-                            </TableHeader>
-
-                            <template v-if="visibleResponses(response.responses).length != 0">
-                                <TableBody class="rounded-b-lg">
-                                    <TableRow
-                                        v-for="responseDetail in visibleResponses(response.responses)"
-                                        :key="responseDetail.id"
-                                        class="grid grid-cols-4 w-full my-2 border border-none overflow-x-hidden relative"
+                                <div class="flex items-center justify-end gap-1.5">
+                                    <Button
+                                        v-if="responseDetail.status === 'confirmed'"
+                                        variant="outline"
+                                        size="icon"
+                                        class="size-8"
+                                        :title="t('common.cancel')"
+                                        @click="handleCancel(responseDetail)"
                                     >
-                                        <TableCell class="w-full truncate flex flex-nowrap flex-col sm:flex-row items-center justify-center sm:justify-start space-y-1.5 sm:space-y-0 sm:space-x-2 bg-[#F1F2F7] text-sm text-center">
-                                            <template v-if="getRespondent(responseDetail)?.profil_url == null">
-                                                <CircleUser class="size-8 text-black/60" />
-                                            </template>
-                                            <template v-else>
-                                                <img
-                                                    class="w-8 h-8 rounded-full object-cover object-center"
-                                                    :src="useRuntimeConfig().public.API_URL + '/storage/' + getRespondent(responseDetail)?.profil_url"
-                                                >
-                                            </template>
-                                            <p class="truncate">
-                                                {{ getRespondent(responseDetail)?.full_name }}
-                                            </p>
-                                        </TableCell>
-
-                                        <TableCell class="flex truncate justify-center items-center bg-[#F1F2F7] text-sm">
-                                            {{ getRespondent(responseDetail)?.phone_number }}
-                                        </TableCell>
-
-                                        <TableCell class="flex truncate justify-center items-center bg-[#F1F2F7] text-sm">
-                                            {{ getRespondent(responseDetail)?.zip_code ?? '—' }}
-                                        </TableCell>
-
-                                        <TableCell class="flex flex-col sm:flex-row sm:space-x-1.5 space-y-1.5 sm:space-y-0 justify-center items-center bg-[#F1F2F7] text-sm">
-                                            <template v-if="responseDetail.status === 'confirmed'">
-                                                <p class="flex items-center space-x-2 text-success font-medium">
-                                                    <BadgeCheck class="w-6" />
-                                                    <span class="hidden 2xl:block">Accepté</span>
-                                                </p>
-                                                <Button
-                                                    class="bg-gray-200 border-none rounded shadow-none text-black hover:text-black hover:bg-gray-300"
-                                                    title="Annuler"
-                                                    @click="handleCancel(responseDetail)"
-                                                >
-                                                    <X class="w-4" />
-                                                </Button>
-                                            </template>
-                                            <template v-else-if="responseDetail.status === 'canceled'">
-                                                <Button
-                                                    class="bg-gray-200 border-none rounded shadow-none text-black hover:text-black hover:bg-gray-300"
-                                                    title="Accepter"
-                                                    @click="handleAccept(responseDetail)"
-                                                >
-                                                    <Check class="w-4" />
-                                                </Button>
-                                            </template>
-                                            <template v-else>
-                                                <Button
-                                                    class="bg-gray-200 border-none rounded shadow-none text-black hover:text-black hover:bg-gray-300"
-                                                    title="Accepter"
-                                                    @click="handleAccept(responseDetail)"
-                                                >
-                                                    <Check class="w-4" />
-                                                </Button>
-                                            </template>
-                                            <Button
-                                                class="bg-gray-200 border-none rounded shadow-none text-black hover:text-black hover:bg-gray-300"
-                                                title="Détail"
-                                                @click="openNurseDialog(responseDetail)"
-                                            >
-                                                <Eye class="w-4" />
-                                            </Button>
-                                        </TableCell>
-                                    </TableRow>
-                                </TableBody>
-                            </template>
-                            <template v-else>
-                                <p class="mt-8 text-center text-black/70">
-                                    {{ $t('replacements.empty') }}
-                                </p>
-                            </template>
-                        </Table>
+                                        <X class="size-4" />
+                                    </Button>
+                                    <Button
+                                        v-else
+                                        variant="outline"
+                                        size="icon"
+                                        class="size-8"
+                                        :title="t('replacements.accepted')"
+                                        @click="handleAccept(responseDetail)"
+                                    >
+                                        <Check class="size-4" />
+                                    </Button>
+                                    <Button
+                                        variant="outline"
+                                        size="icon"
+                                        class="size-8"
+                                        :title="t('replacements.detail')"
+                                        @click="openNurseDialog(responseDetail)"
+                                    >
+                                        <Eye class="size-4" />
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
+                        <p
+                            v-else
+                            class="py-6 text-center text-sm text-muted-foreground"
+                        >
+                            {{ t('replacements.empty') }}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -245,9 +298,9 @@
 
                 <div
                     v-if="selectedUser"
-                    class="grid grid-cols-[40%_60%] border border-primary h-9 rounded-full items-center"
+                    class="grid grid-cols-[40%_60%] border border-primary h-9 rounded-md items-center"
                 >
-                    <h5 class="h-9 flex ps-4 items-center bg-primary rounded-s-full text-white font-semibold">
+                    <h5 class="h-9 flex ps-4 items-center bg-primary rounded-l-md text-primary-foreground font-semibold">
                         Numéro {{ identifierLabel }}
                     </h5>
                     <p class="ps-4">
@@ -259,9 +312,9 @@
 
                 <div
                     v-if="selectedUser"
-                    class="mt-1 grid grid-cols-[40%_60%] border border-primary h-9 rounded-full items-center"
+                    class="mt-1 grid grid-cols-[40%_60%] border border-primary h-9 rounded-md items-center"
                 >
-                    <h5 class="h-9 flex ps-4 items-center bg-primary rounded-s-full text-white font-semibold">
+                    <h5 class="h-9 flex ps-4 items-center bg-primary rounded-l-md text-primary-foreground font-semibold">
                         <span class="hidden md:inline">Adresse e-mail</span>
                         <span class="md:hidden">Email</span>
                     </h5>
@@ -272,9 +325,9 @@
 
                 <div
                     v-if="selectedUser"
-                    class="mt-1 grid grid-cols-[40%_60%] border border-primary h-9 rounded-full items-center"
+                    class="mt-1 grid grid-cols-[40%_60%] border border-primary h-9 rounded-md items-center"
                 >
-                    <h5 class="h-9 flex ps-4 items-center bg-primary rounded-s-full text-white font-semibold">
+                    <h5 class="h-9 flex ps-4 items-center bg-primary rounded-l-md text-primary-foreground font-semibold">
                         N° téléphone
                     </h5>
                     <p class="ps-4">
@@ -284,9 +337,9 @@
 
                 <div
                     v-if="selectedUser"
-                    class="mt-1 grid grid-cols-[40%_60%] border border-primary h-9 rounded-full items-center"
+                    class="mt-1 grid grid-cols-[40%_60%] border border-primary h-9 rounded-md items-center"
                 >
-                    <h5 class="h-9 flex ps-4 items-center bg-primary rounded-s-full text-white font-semibold">
+                    <h5 class="h-9 flex ps-4 items-center bg-primary rounded-l-md text-primary-foreground font-semibold">
                         Code postal
                     </h5>
                     <p class="ps-4">
@@ -296,9 +349,9 @@
 
                 <div
                     v-if="selectedUser"
-                    class="mt-1 grid grid-cols-[40%_60%] border border-primary h-9 rounded-full items-center"
+                    class="mt-1 grid grid-cols-[40%_60%] border border-primary h-9 rounded-md items-center"
                 >
-                    <h5 class="h-9 flex ps-4 items-center bg-primary rounded-s-full text-white font-semibold">
+                    <h5 class="h-9 flex ps-4 items-center bg-primary rounded-l-md text-primary-foreground font-semibold">
                         Ville
                     </h5>
                     <p class="ps-4">
@@ -311,13 +364,15 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeft, BadgeCheck, Check, CircleUser, Eye, X } from 'lucide-vue-next';
+import { ArrowLeft, BadgeCheck, Building2, CalendarRange, Check, CircleUser, Clock, Eye, Inbox, LayoutGrid, Mailbox, Phone, Plus, X } from 'lucide-vue-next';
 import { useRuntimeConfig } from '#app';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { getErrorMessage, goBack } from '~/lib/utils';
 import { useListResponse, changeStatusReplacement } from '~/composables/useReplacements';
 import type { ReplacementResponse, User } from '~/lib/types';
 
 const { t } = useI18n();
+const localePath = useLocalePath();
 
 const user = useState<User>('user');
 const { $toast } = useNuxtApp();
