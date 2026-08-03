@@ -30,9 +30,14 @@
             </Breadcrumb>
         </div>
 
-        <h1 class="mt-4 font-secondary text-xl sm:text-2xl font-semibold">
-            {{ t('replacements.searchHeading') }} <strong class="text-primary">{{ t('replacements.searchHeadingStrong') }}</strong>
-        </h1>
+        <div class="mt-5">
+            <h1 class="font-secondary text-2xl sm:text-3xl font-semibold tracking-tight">
+                {{ t('replacements.searchHeading') }} {{ t('replacements.searchHeadingStrong') }}
+            </h1>
+            <p class="mt-2 text-sm text-muted-foreground">
+                {{ t('replacements.searchHelpDesc') }}
+            </p>
+        </div>
 
         <Replacement
             v-model:selected-regions="selectedRegions"
