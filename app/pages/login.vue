@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="hidden sm:flex flex-row justify-center md:h-auto xl:pt-0 sm:pt-48">
+        <div class="hidden sm:flex flex-row justify-center md:max-h-screen xl:pt-0 sm:pt-48">
             <div class="bg-tertiary/30 xl:h-screen lg:h-auto lg:block w-[115vw] hidden relative container">
                 <div class="xl:absolute z-20 bottom-0 left-1/3">
                     <LayoutsAppImage
@@ -37,7 +37,7 @@
                 </div>
             </div>
 
-            <div class="bg-white overflow-hidden container sm:w-full md:w-[80%] lg:w-full flex flex-col space-y-12 justify-center items-center relative">
+            <div class="bg-white overflow-hidden container sm:w-full md:w-[80%] lg:w-full flex flex-col justify-center items-center relative">
                 <BackButton to="/"/>
                 <div>
                     <LayoutsLogo class="lg:w-80 sm:w-72" />
@@ -129,8 +129,8 @@
                     </form>
                 </div>
 
-                <div>
-                    <p class="text-xs">
+                <div class="text-xs text-center mt-4 mb-8">
+                    <p>
                         {{ $t('auth.noAccountYet') }}
                         <NuxtLink
                             :to="localePath('/register')"
@@ -143,7 +143,7 @@
             </div>
         </div>
 
-        <div class="sm:hidden min-h-screen w-screen flex flex-col justify-between relative overflow-hidden">
+        <div class="md:hidden min-h-screen w-screen flex flex-col justify-between relative overflow-hidden">
             <LayoutsHeaderMobile />
 
             <BackButton to="/" />

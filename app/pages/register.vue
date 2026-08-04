@@ -84,14 +84,19 @@
                             v-if="referrerDisplay"
                             class="rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-gray-700"
                         >
-                            Vous avez été invité par
+                            {{ $t('register.referredBy') }}
                             <span class="font-semibold text-primary">{{ referrerDisplay }}</span>
                         </div>
-                        <div>
-                            <h2 class="mt-1 sm:mt-2 lg:mt-3 text-lg text-center max-w-xl mx-auto text-gray-500 mb-3 sm:mb-4">
-                                Quel type de compte souhaitez-vous choisir ?
-                            </h2>
-                            <div class="px-8 mb- lg:mb-5 xl:mb-6">
+
+                        <div class="relative space-y-4">
+                            <span class="pointer-events-none absolute left-[18px] top-9 bottom-0 w-0.5 bg-primary/25" />
+
+                            <RegisterStepHeading
+                                :number="1"
+                                :title="$t('register.step1Title')"
+                                :subtitle="$t('register.step1Subtitle')"
+                            />
+                            <div class="pl-12">
                                 <div class="grid grid-cols-2 gap-6">
                                     <div
                                         v-for="account in accountOptions"
@@ -103,15 +108,15 @@
                                         @click="formData.accountType = account.value"
                                     >
                                         <div
-                                            class="border-2 rounded-xl p-6 h-full flex flex-col items-center justify-center transition-all duration-300 relative"
+                                            class="border-2 rounded-lg p-6 h-full flex flex-col items-center justify-center transition-all duration-300 relative"
                                             :class="formData.accountType === account.value
                                                 ? 'border-primary bg-primary/5 shadow-lg'
                                                 : 'border-gray-300 hover:border-gray-400'"
                                         >
-                                            <div class="relative w-full h-16">
+                                            <div class="relative w-full h-8">
                                                 <component
                                                     :is="account.value === 'standard' ? CircleUser : Building2"
-                                                    :class="cn('size-12 mx-auto mb-3 transition-colors', formData.accountType === account.value ? 'text-primary' : 'text-gray-400')"
+                                                    :class="cn('size-6 mx-auto mb-3 transition-colors', formData.accountType === account.value ? 'text-primary' : 'text-gray-400')"
                                                 />
                                                 <div
                                                     v-if="formData.accountType === account.value"
@@ -128,11 +133,17 @@
                                             >
                                                 {{ account.label }}
                                             </span>
+                                            <span
+                                                v-if="account.description"
+                                                class="mt-1 text-xs text-center text-gray-500"
+                                            >
+                                                {{ account.description }}
+                                            </span>
                                             <div
                                                 v-if="account.value === 'institution'"
-                                                class="absolute top-0 right-0 translate-x-1/3 -translate-y-1/2 px-3 py-1 rounded-full text-[10px] font-black shadow-xl border bg-primary text-white border-primary/20 z-30"
+                                                class="absolute top-0 right-0 translate-x-1/3 -translate-y-1/2 px-3 py-1 rounded-md text-[10px] font-black shadow-xl border bg-primary text-white border-primary/20 z-30"
                                             >
-                                                150€ / Mois
+                                                {{ $t('register.institutionPrice') }}
                                             </div>
                                         </div>
                                     </div>
@@ -142,56 +153,64 @@
                                     class="mt-3 sm:mt-4 lg:mt-5 relative w-full items-center"
                                 >
                                     <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                        Nom de l'institution <span class="text-red-500">*</span>
+                                        {{ $t('register.institutionNameLabel') }} <span class="text-primary">*</span>
                                     </label>
                                     <InputIcon
                                         v-model="formData.institutionName"
                                         :icon="Building2"
                                         size="md"
+                                        rounded="md"
                                         :placeholder="$t('register.institutionName')"
                                     />
                                 </div>
                             </div>
                         </div>
 
-                        <div>
-                            <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
-                                {{ $t('register.personalInfo') }}
-                            </label>
-                            <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
+                        <div class="relative space-y-4">
+                            <span class="pointer-events-none absolute left-[18px] top-9 bottom-0 w-0.5 bg-primary/25" />
+
+                            <RegisterStepHeading
+                                :number="2"
+                                :title="$t('register.step2Title')"
+                                :subtitle="$t('register.step2Subtitle')"
+                            />
+                            <div class="ml-12 bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
                                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                                     <div class="col-span-2 relative w-full items-center">
                                         <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                            Nom <span class="text-red-500">*</span>
+                                            {{ $t('register.lastnameLabel') }} <span class="text-primary">*</span>
                                         </label>
                                         <InputIcon
                                             v-model="formData.lastname"
                                             :icon="CircleUser"
                                             size="md"
+                                            rounded="md"
                                             :placeholder="$t('register.lastname')"
                                         />
                                     </div>
 
                                     <div class="col-span-2 relative w-full items-center">
                                         <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                            Prénom <span class="text-red-500">*</span>
+                                            {{ $t('register.firstnameLabel') }} <span class="text-primary">*</span>
                                         </label>
                                         <InputIcon
                                             v-model="formData.firstname"
                                             :icon="CircleUser"
                                             size="md"
+                                            rounded="md"
                                             :placeholder="$t('register.firstname')"
                                         />
                                     </div>
 
                                     <div class="col-span-2 relative w-full items-center">
                                         <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                            Email <span class="text-red-500">*</span>
+                                            {{ $t('register.emailLabel') }} <span class="text-primary">*</span>
                                         </label>
                                         <InputIcon
                                             v-model="formData.email"
                                             :icon="Mail"
                                             size="md"
+                                            rounded="md"
                                             :placeholder="$t('register.email')"
                                             autocomplete="off"
                                         />
@@ -199,23 +218,24 @@
 
                                     <div class="col-span-2">
                                         <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                            N° de téléphone <span class="text-red-500">*</span>
+                                            {{ $t('register.phoneLabel') }} <span class="text-primary">*</span>
                                         </label>
                                         <InputIcon
                                             v-model="formData.phoneNumber"
                                             :icon="Phone"
                                             size="md"
+                                            rounded="md"
                                             :placeholder="$t('register.phone')"
                                         />
                                     </div>
 
                                     <div class="col-span-2">
                                         <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                            {{ $t('register.gender') }}
+                                            {{ $t('register.gender') }} <span class="text-xs font-normal text-muted-foreground">({{ $t('pricing.optional') }})</span>
                                         </label>
                                         <Select v-model="formData.gender">
                                             <SelectTrigger
-                                                class="flex xl:h-auto sm:h-8 items-center rounded-full border-2 border-gray-300"
+                                                class="flex items-center rounded-md h-11 border-2 border-gray-300 transition-colors duration-150 hover:border-gray-400 focus:border-primary data-[state=open]:border-primary"
                                                 position="right"
                                             >
                                                 <LayoutsAppImage
@@ -246,20 +266,25 @@
                             </div>
                         </div>
 
-                        <div>
-                            <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
-                                {{ $t('register.loginInfo') }}
-                            </label>
-                            <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
+                        <div class="relative space-y-4">
+                            <span class="pointer-events-none absolute left-[18px] top-9 bottom-0 w-0.5 bg-primary/25" />
+
+                            <RegisterStepHeading
+                                :number="3"
+                                :title="$t('register.step3Title')"
+                                :subtitle="$t('register.step3Subtitle')"
+                            />
+                            <div class="ml-12 bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
                                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                                     <div class="col-span-2">
                                         <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                            Mot de passe <span class="text-red-500">*</span>
+                                            {{ $t('register.passwordLabel') }} <span class="text-primary">*</span>
                                         </label>
                                         <InputIcon
                                             v-model="formData.password"
                                             :icon="Lock"
                                             size="md"
+                                            rounded="md"
                                             type="password"
                                             :placeholder="$t('register.password')"
                                         />
@@ -267,12 +292,13 @@
 
                                     <div class="col-span-2">
                                         <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                            Confirmation mot de passe <span class="text-red-500">*</span>
+                                            {{ $t('register.passwordConfirmLabel') }} <span class="text-primary">*</span>
                                         </label>
                                         <InputIcon
                                             v-model="formData.passwordConfirmation"
                                             :icon="Lock"
                                             size="md"
+                                            rounded="md"
                                             type="password"
                                             :placeholder="$t('register.passwordConfirm')"
                                         />
@@ -281,55 +307,62 @@
                             </div>
                         </div>
 
-                        <div>
-                            <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
-                                {{ $t('register.addresses') }}
-                            </label>
-                            <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
+                        <div class="relative space-y-4">
+                            <span class="pointer-events-none absolute left-[18px] top-9 bottom-0 w-0.5 bg-primary/25" />
+
+                            <RegisterStepHeading
+                                :number="4"
+                                :title="$t('register.step4Title')"
+                                :subtitle="$t('register.step4Subtitle')"
+                            />
+                            <div class="ml-12 bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
                                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                                     <div class="col-span-2">
                                         <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                            Rue <span class="text-red-500">*</span>
+                                            {{ $t('register.streetLabel') }} <span class="text-primary">*</span>
                                         </label>
                                         <InputIcon
                                             v-model="formData.address.street"
                                             :icon="MapPin"
                                             size="md"
+                                            rounded="md"
                                             :placeholder="$t('register.street')"
                                         />
                                     </div>
 
                                     <div class="col-span-2">
                                         <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                            Code postal <span class="text-red-500">*</span>
+                                            {{ $t('register.zipCodeLabel') }} <span class="text-primary">*</span>
                                         </label>
                                         <InputIcon
                                             v-model="formData.address.zipCode"
                                             :icon="Inbox"
                                             size="md"
+                                            rounded="md"
                                             :placeholder="$t('register.zipCode')"
                                         />
                                     </div>
 
                                     <div class="col-span-2">
                                         <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                            Ville <span class="text-red-500">*</span>
+                                            {{ $t('register.cityLabel') }} <span class="text-primary">*</span>
                                         </label>
                                         <InputIcon
                                             v-model="formData.address.city"
                                             :icon="Building2"
                                             size="md"
+                                            rounded="md"
                                             :placeholder="$t('register.city')"
                                         />
                                     </div>
 
                                     <div class="col-span-2">
                                         <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                            Pays <span class="text-red-500">*</span>
+                                            {{ $t('register.country') }} <span class="text-primary">*</span>
                                         </label>
                                         <Select v-model="formData.address.country">
                                             <SelectTrigger
-                                                class="flex justify-between items-center rounded-full border-2 border-gray-300"
+                                                class="flex justify-between items-center rounded-md h-11 border-2 border-gray-300 transition-colors duration-150 hover:border-gray-400 focus:border-primary data-[state=open]:border-primary"
                                                 position="right"
                                             >
                                                 <LayoutsAppImage
@@ -337,7 +370,7 @@
                                                     class="h-4 ml-2"
                                                 />
                                                 <SelectValue
-                                                    placeholder="Pays"
+                                                    :placeholder="$t('register.country')"
                                                     class="ml-3 block w-full"
                                                 />
                                             </SelectTrigger>
@@ -369,39 +402,45 @@
 
                                     <div class="col-span-2">
                                         <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                            Complément d'adresse
+                                            {{ $t('register.addressExtra') }} <span class="text-xs font-normal text-muted-foreground">({{ $t('pricing.optional') }})</span>
                                         </label>
                                         <InputIcon
                                             v-model="formData.address.additionalInformation"
                                             :icon="EllipsisHorizontalCircleIcon"
                                             size="md"
-                                            placeholder="Complément d'adresse"
+                                            rounded="md"
+                                            :placeholder="$t('register.addressExtra')"
                                         />
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div>
-                            <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
-                                {{ $t('register.professionalInfo') }}
-                            </label>
-                            <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
+
+                        <div class="relative space-y-4">
+                            <span class="pointer-events-none absolute left-[18px] top-9 bottom-0 w-0.5 bg-primary/25" />
+
+                            <RegisterStepHeading
+                                :number="5"
+                                :title="$t('register.step5Title')"
+                                :subtitle="$t('register.step5Subtitle')"
+                            />
+                            <div class="ml-12 bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
                                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                                     <div
                                         v-if="formData.accountType != 'institution'"
                                         class="col-span-2"
                                     >
                                         <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                            Compte
+                                            {{ $t('register.account') }} <span class="text-xs font-normal text-muted-foreground">({{ $t('pricing.optional') }})</span>
                                         </label>
                                         <Select v-model="formData.role">
                                             <SelectTrigger
-                                                class="flex w-full space-x-4 text-sm justify-start items-center rounded-3xl border-2 border-gray-300 disabled:opacity-100 disabled:cursor-default"
+                                                class="flex w-full space-x-4 text-sm justify-start items-center rounded-md h-11 border-2 border-gray-300 transition-colors duration-150 hover:border-gray-400 focus:border-primary data-[state=open]:border-primary disabled:opacity-100 disabled:cursor-default"
                                                 position="right"
                                             >
                                                 <Users class="text-primary w-9 h-9 sm:w-7 sm:h-7" />
                                                 <SelectValue
-                                                    placeholder="Compte"
+                                                    :placeholder="$t('register.account')"
                                                     class="text-nowrap w-full text-sm ml-3 my-auto"
                                                 />
                                             </SelectTrigger>
@@ -433,7 +472,7 @@
                                             @update:model-value="onRegisterLanguageChange"
                                         >
                                             <SelectTrigger
-                                                class="flex w-full space-x-4 xl:text-sm sm:text-xs xl:h-auto sm:h-8 justify-start items-center rounded-3xl border-2 border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90"
+                                                class="flex w-full space-x-4 text-sm justify-start items-center rounded-md h-11 border-2 border-gray-300 transition-colors duration-150 hover:border-gray-400 focus:border-primary data-[state=open]:border-primary"
                                                 position="right"
                                             >
                                                 <LanguageIcon class="text-primary w-6 h-6" />
@@ -460,12 +499,12 @@
 
                                     <div class="col-span-4">
                                         <div class="text-sm font-medium text-gray-700 mb-4 block">
-                                            {{ $t('register.searchCountries') }}
+                                            {{ $t('register.searchCountries') }} <span class="text-primary">*</span>
                                             <span
                                                 v-if="formData.address.workingAt.length === 0"
                                                 class="text-gray-400 text-sm ml-2 font-light"
                                             >
-                                                (Sélectionnez un ou plusieurs pays)
+                                                ({{ $t('register.workingAtHint') }})
                                             </span>
                                         </div>
 
@@ -507,12 +546,13 @@
                                     >
                                         <label class="text-sm font-medium text-gray-700 mb-1 block">
                                             {{ identifierLabel }}
-                                            <span class="text-xs font-normal text-muted-foreground">(optionnel)</span>
+                                            <span class="text-xs font-normal text-muted-foreground">({{ $t('pricing.optional') }})</span>
                                         </label>
                                         <InputIcon
                                             v-model="formData.identifierNumber"
                                             :icon="IdCard"
                                             size="md"
+                                            rounded="md"
                                             :placeholder="identifierLabel"
                                         />
                                         <p
@@ -536,179 +576,185 @@
                                             v-model="formData.companyNumber"
                                             :icon="IdCard"
                                             size="md"
+                                            rounded="md"
                                             :placeholder="$t('register.companyNumber')"
                                         />
                                     </div>
+
+                                    <div
+                                        v-if="formData.accountType != 'institution'"
+                                        class="col-span-2"
+                                    >
+                                        <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                            {{ $t('register.professionalCategoryLabel') }} <span class="text-primary">*</span>
+                                        </label>
+                                        <Select v-model="formData.professionalCategory">
+                                            <SelectTrigger
+                                                class="flex justify-between items-center rounded-md h-11 border-2 border-gray-300 transition-colors duration-150 hover:border-gray-400 focus:border-primary data-[state=open]:border-primary"
+                                                position="right"
+                                            >
+                                                <Users class="text-primary w-5 h-5" />
+                                                <SelectValue
+                                                    :placeholder="$t('register.professionalCategory')"
+                                                    class="ml-3 block w-full"
+                                                />
+                                            </SelectTrigger>
+                                            <SelectContent class="border border-none w-full">
+                                                <SelectGroup>
+                                                    <div
+                                                        v-for="category in professionalCategory"
+                                                        :key="category.value"
+                                                        class="flex justify-center items-center -ms-3 w-full"
+                                                    >
+                                                        <SelectItem :value="category.value">
+                                                            <div class="flex w-full">
+                                                                <div class="sm:text-xs xl:text-sm">
+                                                                    {{ category.label }}
+                                                                </div>
+                                                            </div>
+                                                        </SelectItem>
+                                                    </div>
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+
+                                    <div
+                                        v-if="showEducationLevel"
+                                        class="col-span-2"
+                                    >
+                                        <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                            {{ $t('register.educationLevelLabel') }} <span class="text-primary">*</span>
+                                        </label>
+                                        <Select v-model="formData.educationLevel">
+                                            <SelectTrigger
+                                                class="flex justify-between items-center rounded-md h-11 border-2 border-gray-300 transition-colors duration-150 hover:border-gray-400 focus:border-primary data-[state=open]:border-primary"
+                                                position="right"
+                                            >
+                                                <GraduationCap class="text-primary w-5 h-5" />
+                                                <SelectValue
+                                                    :placeholder="$t('register.educationLevel')"
+                                                    class="ml-3 block w-full"
+                                                />
+                                            </SelectTrigger>
+                                            <SelectContent class="border border-none w-full">
+                                                <SelectGroup>
+                                                    <div
+                                                        v-for="level in educationLevelOptions"
+                                                        :key="level.value"
+                                                        class="flex justify-center items-center -ms-3 w-full"
+                                                    >
+                                                        <SelectItem :value="level.value">
+                                                            <div class="flex w-full">
+                                                                <div class="sm:text-xs xl:text-sm">
+                                                                    {{ level.label }}
+                                                                </div>
+                                                            </div>
+                                                        </SelectItem>
+                                                    </div>
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+
+                                <div
+                                    v-if="formData.accountType != 'institution'"
+                                    class="mt-6 pt-5 border-t border-dashed border-gray-200"
+                                >
+                                    <span class="mb-3 block text-xs font-bold uppercase tracking-wide text-gray-400">
+                                        {{ $t('register.groupCheckbox') }}
+                                    </span>
+                                    <label class="flex items-start cursor-pointer">
+                                        <Checkbox
+                                            :checked="representGroup"
+                                            class="mt-1"
+                                            @update:checked="representGroup = $event"
+                                        />
+                                        <span class="text-sm ml-2 font-medium">
+                                            {{ $t('register.groupCheckbox') }}
+                                        </span>
+                                    </label>
+
+                                    <transition name="fade">
+                                        <div
+                                            v-if="representGroup"
+                                            class="relative mt-3"
+                                        >
+                                            <InputIcon
+                                                v-model="formData.groupName"
+                                                :icon="Users"
+                                                rounded="md"
+                                                :placeholder="$t('register.groupName')"
+                                            />
+                                        </div>
+                                    </transition>
                                 </div>
                             </div>
                         </div>
 
-                        <div
-                            v-if="formData.accountType != 'institution'"
-                            class="mt-3 sm:mt-4 lg:mt-5 xl:mt-6"
-                        >
-                            <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
-                                Catégorie professionnelle <span class="text-red-500">*</span>
-                            </label>
-                            <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
-                                <Select v-model="formData.professionalCategory">
-                                    <SelectTrigger
-                                        class="flex justify-between items-center rounded-full border-2 border-gray-300"
-                                        position="right"
-                                    >
-                                        <Users class="text-primary w-10 h-10" />
-                                        <SelectValue
-                                            :placeholder="$t('register.professionalCategory')"
-                                            class="ml-3 block w-full"
-                                        />
-                                    </SelectTrigger>
-                                    <SelectContent class="border border-none w-full">
-                                        <SelectGroup>
-                                            <div
-                                                v-for="category in professionalCategory"
-                                                :key="category.value"
-                                                class="flex justify-center items-center -ms-3 w-full"
-                                            >
-                                                <SelectItem :value="category.value">
-                                                    <div class="flex w-full">
-                                                        <div class="sm:text-xs xl:text-sm">
-                                                            {{ category.label }}
-                                                        </div>
-                                                    </div>
-                                                </SelectItem>
-                                            </div>
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                        </div>
-
-                        <div
-                            v-if="showEducationLevel"
-                            class="mt-3 sm:mt-4 lg:mt-5 xl:mt-6"
-                        >
-                            <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
-                                Niveau d'études <span class="text-red-500">*</span>
-                            </label>
-                            <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
-                                <Select v-model="formData.educationLevel">
-                                    <SelectTrigger
-                                        class="flex justify-between items-center rounded-full border-2 border-gray-300"
-                                        position="right"
-                                    >
-                                        <GraduationCap class="text-primary w-10 h-10" />
-                                        <SelectValue
-                                            :placeholder="$t('register.educationLevel')"
-                                            class="ml-3 block w-full"
-                                        />
-                                    </SelectTrigger>
-                                    <SelectContent class="border border-none w-full">
-                                        <SelectGroup>
-                                            <div
-                                                v-for="level in educationLevelOptions"
-                                                :key="level.value"
-                                                class="flex justify-center items-center -ms-3 w-full"
-                                            >
-                                                <SelectItem :value="level.value">
-                                                    <div class="flex w-full">
-                                                        <div class="sm:text-xs xl:text-sm">
-                                                            {{ level.label }}
-                                                        </div>
-                                                    </div>
-                                                </SelectItem>
-                                            </div>
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                        </div>
-
-                        <div
-                            v-if="formData.accountType != 'institution'"
-                            class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm"
-                        >
-                            <div class="space-y-4">
+                        <div class="space-y-4">
+                            <RegisterStepHeading
+                                :number="6"
+                                :title="$t('register.step6Title')"
+                                :subtitle="$t('register.step6Subtitle')"
+                            />
+                            <div class="ml-12 bg-white border border-gray-200 rounded-lg p-6 shadow-sm space-y-3">
                                 <label class="flex items-start cursor-pointer">
                                     <Checkbox
-                                        :checked="representGroup"
-                                        class="mt-1 accent-red-600"
-                                        @update:checked="representGroup = $event"
+                                        :checked="termsAccepted"
+                                        class="mt-1"
+                                        @update:checked="termsAccepted = $event"
                                     />
                                     <span class="text-sm ml-2 font-medium">
-                                        Je représente un groupement de plusieurs infirmières et je souhaite gérer les plannings et remplacements de mes infirmières
+                                        {{ $t('register.acceptTermsPrefix') }}
+                                        <NuxtLink
+                                            :to="localePath('/terms')"
+                                            target="_blank"
+                                            class="text-primary underline font-semibold hover:text-primary/80"
+                                        >
+                                            {{ $t('register.termsLinkLabel') }}
+                                        </NuxtLink>
+                                        <span class="text-primary">*</span>
                                     </span>
                                 </label>
-
-                                <transition name="fade">
-                                    <div
-                                        v-if="representGroup"
-                                        class="relative"
-                                    >
-                                        <InputIcon
-                                            v-model="formData.groupName"
-                                            :icon="Users"
-                                            placeholder="Nom du groupement"
-                                        />
-                                    </div>
-                                </transition>
+                                <label class="flex items-start cursor-pointer">
+                                    <Checkbox
+                                        :checked="privacyAccepted"
+                                        class="mt-1"
+                                        @update:checked="privacyAccepted = $event"
+                                    />
+                                    <span class="text-sm ml-2 font-medium">
+                                        {{ $t('register.acceptPrivacyPrefix') }}
+                                        <NuxtLink
+                                            :to="localePath('/privacy-security')"
+                                            target="_blank"
+                                            class="text-primary underline font-semibold hover:text-primary/80"
+                                        >
+                                            {{ $t('register.privacyLinkLabel') }}
+                                        </NuxtLink>
+                                        <span class="text-primary">*</span>
+                                    </span>
+                                </label>
+                                <label class="flex items-start cursor-pointer">
+                                    <Checkbox
+                                        :checked="charteAccepted"
+                                        class="mt-1"
+                                        @update:checked="charteAccepted = $event"
+                                    />
+                                    <span class="text-sm ml-2 font-medium">
+                                        {{ $t('register.acceptChartePrefix') }}
+                                        <NuxtLink
+                                            to="/legal-chart"
+                                            target="_blank"
+                                            class="text-primary underline font-semibold hover:text-primary/80"
+                                        >
+                                            {{ $t('register.charteLinkLabel') }}
+                                        </NuxtLink>
+                                        <span class="text-primary">*</span>
+                                    </span>
+                                </label>
                             </div>
-                        </div>
-
-                        <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm space-y-3">
-                            <label class="flex items-start cursor-pointer">
-                                <Checkbox
-                                    :checked="termsAccepted"
-                                    class="mt-1"
-                                    @update:checked="termsAccepted = $event"
-                                />
-                                <span class="text-sm ml-2 font-medium">
-                                    J'accepte les
-                                    <NuxtLink
-                                        :to="localePath('/terms')"
-                                        target="_blank"
-                                        class="text-primary underline font-semibold hover:text-primary/80"
-                                    >
-                                        Conditions Générales d'Utilisation
-                                    </NuxtLink>
-                                    <span class="text-red-500">*</span>
-                                </span>
-                            </label>
-                            <label class="flex items-start cursor-pointer">
-                                <Checkbox
-                                    :checked="privacyAccepted"
-                                    class="mt-1"
-                                    @update:checked="privacyAccepted = $event"
-                                />
-                                <span class="text-sm ml-2 font-medium">
-                                    J'accepte la
-                                    <NuxtLink
-                                        :to="localePath('/privacy-security')"
-                                        target="_blank"
-                                        class="text-primary underline font-semibold hover:text-primary/80"
-                                    >
-                                        Politique de protection des données
-                                    </NuxtLink>
-                                    <span class="text-red-500">*</span>
-                                </span>
-                            </label>
-                            <label class="flex items-start cursor-pointer">
-                                <Checkbox
-                                    :checked="charteAccepted"
-                                    class="mt-1"
-                                    @update:checked="charteAccepted = $event"
-                                />
-                                <span class="text-sm ml-2 font-medium">
-                                    J'accepte la
-                                    <NuxtLink
-                                        to="/legal-chart"
-                                        target="_blank"
-                                        class="text-primary underline font-semibold hover:text-primary/80"
-                                    >
-                                        charte de bonne conduite
-                                    </NuxtLink>
-                                    <span class="text-red-500">*</span>
-                                </span>
-                            </label>
                         </div>
 
                         <div class="flex justify-center items-center">
@@ -779,19 +825,20 @@
                         v-if="referrerDisplay"
                         class="rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-gray-700"
                     >
-                        Vous avez été invité par
+                        {{ $t('register.referredBy') }}
                         <span class="font-semibold text-primary">{{ referrerDisplay }}</span>
                     </div>
-                    <div class="space-y-6">
-                        <div>
-                            <h2
-                                :class="cn(
-                                    'mt-1 sm:mt-2 lg:mt-3 text-lg text-center max-w-xl mx-auto mb-3 sm:mb-4 transition-colors',
-                                    formData.accountType === 'institution' ? 'text-white' : 'text-gray-500',
-                                )"
-                            >
-                                Quel type de compte souhaitez-vous choisir ?
-                            </h2>
+
+                    <div class="relative space-y-4">
+                        <span class="pointer-events-none absolute left-[18px] top-9 bottom-0 w-0.5 bg-primary/25" />
+
+                        <RegisterStepHeading
+                            :number="1"
+                            :title="$t('register.step1Title')"
+                            :subtitle="$t('register.step1Subtitle')"
+                            :light="formData.accountType === 'institution'"
+                        />
+                        <div class="pl-12">
                             <div class="grid grid-cols-2 gap-4">
                                 <div
                                     v-for="account in accountOptions"
@@ -804,7 +851,7 @@
                                 >
                                     <div
                                         :class="cn(
-                                            'border-2 rounded-xl p-4 h-full flex flex-col items-center justify-center transition-all duration-300 backdrop-blur-sm relative',
+                                            'border-2 rounded-lg p-4 h-full flex flex-col items-center justify-center transition-all duration-300 backdrop-blur-sm relative',
                                             formData.accountType === account.value
                                                 ? (formData.accountType === 'institution' ? 'border-white bg-white/20 shadow-xl scale-105' : 'border-primary bg-primary/5 shadow-lg')
                                                 : (formData.accountType === 'institution' ? 'border-white/30 bg-white/5 hover:border-white/50' : 'border-gray-300 hover:border-gray-400'),
@@ -814,7 +861,7 @@
                                             <component
                                                 :is="account.value === 'standard' ? CircleUser : Building2"
                                                 :class="cn(
-                                                    'w-10 h-10 mx-auto mb-2 transition-colors duration-300',
+                                                    'w-5 h-5 mx-auto mb-2 transition-colors duration-300',
                                                     formData.accountType === account.value
                                                         ? (formData.accountType === 'institution' ? 'text-white' : 'text-primary')
                                                         : (formData.accountType === 'institution' ? 'text-white/60' : 'text-gray-400'),
@@ -852,70 +899,79 @@
                                         <div
                                             v-if="account.value === 'institution'"
                                             :class="cn(
-                                                'absolute top-0 right-3 translate-x-1/4 -translate-y-1/2 px-3 py-1 rounded-full text-[10px] font-black shadow-xl border transition-all duration-300 transform z-30',
+                                                'absolute top-0 right-3 translate-x-1/4 -translate-y-1/2 px-3 py-1 rounded-md text-[10px] font-black shadow-xl border transition-all duration-300 transform z-30',
                                                 formData.accountType === 'institution' ? 'bg-white text-primary border-white animate-pulse scale-110' : 'bg-primary text-white border-primary/20',
                                             )"
                                         >
-                                            150€ / Mois
+                                            {{ $t('register.institutionPrice') }}
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div
-                            v-if="formData.accountType == 'institution'"
-                            class="col-span-2 relative w-full items-center"
-                        >
-                            <label :class="cn('text-sm font-medium', formData.accountType === 'institution' ? 'text-white' : 'text-gray-700')">
-                                Nom de l'institution
-                            </label>
-                            <InputIcon
-                                v-model="formData.institutionName"
-                                :icon="Building2"
-                                size="md"
-                                :placeholder="$t('register.institutionName')"
-                            />
+                            <div
+                                v-if="formData.accountType == 'institution'"
+                                class="col-span-2 relative w-full items-center mt-4"
+                            >
+                                <label :class="cn('text-sm font-medium', formData.accountType === 'institution' ? 'text-white' : 'text-gray-700')">
+                                    {{ $t('register.institutionNameLabel') }} <span :class="formData.accountType === 'institution' ? 'text-white' : 'text-primary'">*</span>
+                                </label>
+                                <InputIcon
+                                    v-model="formData.institutionName"
+                                    :icon="Building2"
+                                    size="md"
+                                    rounded="md"
+                                    :placeholder="$t('register.institutionName')"
+                                />
+                            </div>
                         </div>
                     </div>
 
-                    <div>
-                        <label :class="cn('text-md font-medium mb-1 sm:mb-2 lg:mb-3 block', formData.accountType === 'institution' ? 'text-white' : 'text-gray-700')">
-                            {{ $t('register.personalInfo') }}
-                        </label>
-                        <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
+                    <div class="relative space-y-4">
+                        <span class="pointer-events-none absolute left-[18px] top-9 bottom-0 w-0.5 bg-primary/25" />
+
+                        <RegisterStepHeading
+                            :number="2"
+                            :title="$t('register.step2Title')"
+                            :subtitle="$t('register.step2Subtitle')"
+                            :light="formData.accountType === 'institution'"
+                        />
+                        <div class="ml-12 bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                                 <div class="col-span-2 relative w-full items-center">
                                     <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                        Nom <span class="text-red-500">*</span>
+                                        {{ $t('register.lastnameLabel') }} <span class="text-primary">*</span>
                                     </label>
                                     <InputIcon
                                         v-model="formData.lastname"
                                         :icon="CircleUser"
                                         size="md"
+                                        rounded="md"
                                         :placeholder="$t('register.lastname')"
                                     />
                                 </div>
 
                                 <div class="col-span-2 relative w-full items-center">
                                     <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                        Prénom <span class="text-red-500">*</span>
+                                        {{ $t('register.firstnameLabel') }} <span class="text-primary">*</span>
                                     </label>
                                     <InputIcon
                                         v-model="formData.firstname"
                                         :icon="CircleUser"
                                         size="md"
+                                        rounded="md"
                                         :placeholder="$t('register.firstname')"
                                     />
                                 </div>
 
                                 <div class="col-span-2 relative w-full items-center">
                                     <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                        Email <span class="text-red-500">*</span>
+                                        {{ $t('register.emailLabel') }} <span class="text-primary">*</span>
                                     </label>
                                     <InputIcon
                                         v-model="formData.email"
                                         :icon="Mail"
                                         size="md"
+                                        rounded="md"
                                         :placeholder="$t('register.email')"
                                         autocomplete="off"
                                     />
@@ -923,23 +979,24 @@
 
                                 <div class="col-span-2">
                                     <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                        N° de téléphone <span class="text-red-500">*</span>
+                                        {{ $t('register.phoneLabel') }} <span class="text-primary">*</span>
                                     </label>
                                     <InputIcon
                                         v-model="formData.phoneNumber"
                                         :icon="Phone"
                                         size="md"
+                                        rounded="md"
                                         :placeholder="$t('register.phone')"
                                     />
                                 </div>
 
                                 <div class="col-span-2">
                                     <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                        {{ $t('register.gender') }}
+                                        {{ $t('register.gender') }} <span class="text-xs font-normal text-muted-foreground">({{ $t('pricing.optional') }})</span>
                                     </label>
                                     <Select v-model="formData.gender">
                                         <SelectTrigger
-                                            class="flex xl:h-auto sm:h-8 items-center rounded-full border-2 border-gray-300"
+                                            class="flex items-center rounded-md h-11 border-2 border-gray-300 transition-colors duration-150 hover:border-gray-400 focus:border-primary data-[state=open]:border-primary"
                                             position="right"
                                         >
                                             <LayoutsAppImage
@@ -970,20 +1027,26 @@
                         </div>
                     </div>
 
-                    <div>
-                        <label :class="cn('text-md font-medium mb-1 sm:mb-2 lg:mb-3 block', formData.accountType === 'institution' ? 'text-white' : 'text-gray-700')">
-                            {{ $t('register.loginInfo') }}
-                        </label>
-                        <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
+                    <div class="relative space-y-4">
+                        <span class="pointer-events-none absolute left-[18px] top-9 bottom-0 w-0.5 bg-primary/25" />
+
+                        <RegisterStepHeading
+                            :number="3"
+                            :title="$t('register.step3Title')"
+                            :subtitle="$t('register.step3Subtitle')"
+                            :light="formData.accountType === 'institution'"
+                        />
+                        <div class="ml-12 bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                                 <div class="col-span-2">
                                     <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                        Mot de passe <span class="text-red-500">*</span>
+                                        {{ $t('register.passwordLabel') }} <span class="text-primary">*</span>
                                     </label>
                                     <InputIcon
                                         v-model="formData.password"
                                         :icon="Lock"
                                         size="md"
+                                        rounded="md"
                                         type="password"
                                         :placeholder="$t('register.password')"
                                     />
@@ -991,12 +1054,13 @@
 
                                 <div class="col-span-2">
                                     <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                        Confirmation mot de passe <span class="text-red-500">*</span>
+                                        {{ $t('register.passwordConfirmLabel') }} <span class="text-primary">*</span>
                                     </label>
                                     <InputIcon
                                         v-model="formData.passwordConfirmation"
                                         :icon="Lock"
                                         size="md"
+                                        rounded="md"
                                         type="password"
                                         :placeholder="$t('register.passwordConfirm')"
                                     />
@@ -1005,55 +1069,63 @@
                         </div>
                     </div>
 
-                    <div>
-                        <label :class="cn('text-md font-medium mb-1 sm:mb-2 lg:mb-3 block', formData.accountType === 'institution' ? 'text-white' : 'text-gray-700')">
-                            {{ $t('register.addresses') }}
-                        </label>
-                        <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
+                    <div class="relative space-y-4">
+                        <span class="pointer-events-none absolute left-[18px] top-9 bottom-0 w-0.5 bg-primary/25" />
+
+                        <RegisterStepHeading
+                            :number="4"
+                            :title="$t('register.step4Title')"
+                            :subtitle="$t('register.step4Subtitle')"
+                            :light="formData.accountType === 'institution'"
+                        />
+                        <div class="ml-12 bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                                 <div class="col-span-2">
                                     <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                        Rue <span class="text-red-500">*</span>
+                                        {{ $t('register.streetLabel') }} <span class="text-primary">*</span>
                                     </label>
                                     <InputIcon
                                         v-model="formData.address.street"
                                         :icon="MapPin"
                                         size="md"
+                                        rounded="md"
                                         :placeholder="$t('register.street')"
                                     />
                                 </div>
 
                                 <div class="col-span-2">
                                     <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                        Code postal <span class="text-red-500">*</span>
+                                        {{ $t('register.zipCodeLabel') }} <span class="text-primary">*</span>
                                     </label>
                                     <InputIcon
                                         v-model="formData.address.zipCode"
                                         :icon="Inbox"
                                         size="md"
+                                        rounded="md"
                                         :placeholder="$t('register.zipCode')"
                                     />
                                 </div>
 
                                 <div class="col-span-2">
                                     <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                        Ville <span class="text-red-500">*</span>
+                                        {{ $t('register.cityLabel') }} <span class="text-primary">*</span>
                                     </label>
                                     <InputIcon
                                         v-model="formData.address.city"
                                         :icon="Building2"
                                         size="md"
+                                        rounded="md"
                                         :placeholder="$t('register.city')"
                                     />
                                 </div>
 
                                 <div class="col-span-2">
                                     <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                        Pays <span class="text-red-500">*</span>
+                                        {{ $t('register.country') }} <span class="text-primary">*</span>
                                     </label>
                                     <Select v-model="formData.address.country">
                                         <SelectTrigger
-                                            class="flex justify-between items-center rounded-full border-2 border-gray-300"
+                                            class="flex justify-between items-center rounded-md h-11 border-2 border-gray-300 transition-colors duration-150 hover:border-gray-400 focus:border-primary data-[state=open]:border-primary"
                                             position="right"
                                         >
                                             <LayoutsAppImage
@@ -1061,7 +1133,7 @@
                                                 class="h-4 ml-2"
                                             />
                                             <SelectValue
-                                                placeholder="Pays"
+                                                :placeholder="$t('register.country')"
                                                 class="ml-3 block w-full"
                                             />
                                         </SelectTrigger>
@@ -1093,39 +1165,46 @@
 
                                 <div class="col-span-2">
                                     <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                        Complément d'adresse
+                                        {{ $t('register.addressExtra') }} <span class="text-xs font-normal text-muted-foreground">({{ $t('pricing.optional') }})</span>
                                     </label>
                                     <InputIcon
                                         v-model="formData.address.additionalInformation"
                                         :icon="EllipsisHorizontalCircleIcon"
                                         size="md"
-                                        placeholder="Complément d'adresse"
+                                        rounded="md"
+                                        :placeholder="$t('register.addressExtra')"
                                     />
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <label :class="cn('text-md font-medium mb-1 sm:mb-2 lg:mb-3 block', formData.accountType === 'institution' ? 'text-white' : 'text-gray-700')">
-                            {{ $t('register.professionalInfo') }}
-                        </label>
-                        <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
+
+                    <div class="relative space-y-4">
+                        <span class="pointer-events-none absolute left-[18px] top-9 bottom-0 w-0.5 bg-primary/25" />
+
+                        <RegisterStepHeading
+                            :number="5"
+                            :title="$t('register.step5Title')"
+                            :subtitle="$t('register.step5Subtitle')"
+                            :light="formData.accountType === 'institution'"
+                        />
+                        <div class="ml-12 bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                                 <div
                                     v-if="formData.accountType != 'institution'"
                                     class="col-span-2"
                                 >
                                     <label class="text-sm font-medium text-gray-700 mb-1 block">
-                                        Compte
+                                        {{ $t('register.account') }} <span class="text-xs font-normal text-muted-foreground">({{ $t('pricing.optional') }})</span>
                                     </label>
                                     <Select v-model="formData.role">
                                         <SelectTrigger
-                                            class="flex w-full space-x-4 text-sm justify-start items-center rounded-3xl border-2 border-gray-300 disabled:opacity-100 disabled:cursor-default"
+                                            class="flex w-full space-x-4 text-sm justify-start items-center rounded-md h-11 border-2 border-gray-300 transition-colors duration-150 hover:border-gray-400 focus:border-primary data-[state=open]:border-primary disabled:opacity-100 disabled:cursor-default"
                                             position="right"
                                         >
                                             <Users class="text-primary w-9 h-9 sm:w-7 sm:h-7" />
                                             <SelectValue
-                                                placeholder="Compte"
+                                                :placeholder="$t('register.account')"
                                                 class="text-nowrap w-full text-sm ml-3 my-auto"
                                             />
                                         </SelectTrigger>
@@ -1147,7 +1226,7 @@
 
                                 <div
                                     v-if="formData.accountType != 'institution'"
-                                    class="col-span-4"
+                                    class="col-span-2"
                                 >
                                     <label class="text-sm font-medium text-gray-700 mb-1 block">
                                         {{ $t('register.language') }}
@@ -1157,7 +1236,7 @@
                                         @update:model-value="onRegisterLanguageChange"
                                     >
                                         <SelectTrigger
-                                            class="flex w-full space-x-4 xl:text-sm sm:text-xs xl:h-auto sm:h-8 justify-start items-center rounded-3xl border-2 border-gray-300 focus-within:border-primary/90 focus-within:ring-1 focus-within:ring-primary/90"
+                                            class="flex w-full space-x-4 text-sm justify-start items-center rounded-md h-11 border-2 border-gray-300 transition-colors duration-150 hover:border-gray-400 focus:border-primary data-[state=open]:border-primary"
                                             position="right"
                                         >
                                             <LanguageIcon class="text-primary w-6 h-6" />
@@ -1182,14 +1261,14 @@
                                     </Select>
                                 </div>
 
-                                <div class="col-span-4">
+                                <div class="col-span-2">
                                     <div class="text-sm font-medium text-gray-700 mb-4 block">
-                                        {{ $t('register.searchCountries') }}
+                                        {{ $t('register.searchCountries') }} <span class="text-primary">*</span>
                                         <span
                                             v-if="formData.address.workingAt.length === 0"
                                             class="text-gray-400 text-sm ml-2 font-light"
                                         >
-                                            (Sélectionnez un ou plusieurs pays)
+                                            ({{ $t('register.workingAtHint') }})
                                         </span>
                                     </div>
 
@@ -1227,16 +1306,17 @@
 
                                 <div
                                     v-if="formData.accountType !== 'institution'"
-                                    class="col-span-4"
+                                    class="col-span-2"
                                 >
                                     <label class="text-sm font-medium text-gray-700 mb-1 block">
                                         {{ identifierLabel }}
-                                        <span class="text-xs font-normal text-muted-foreground">(optionnel)</span>
+                                        <span class="text-xs font-normal text-muted-foreground">({{ $t('pricing.optional') }})</span>
                                     </label>
                                     <InputIcon
                                         v-model="formData.identifierNumber"
                                         :icon="IdCard"
                                         size="md"
+                                        rounded="md"
                                         :placeholder="identifierLabel"
                                     />
                                     <p
@@ -1250,7 +1330,7 @@
                                 </div>
                                 <div
                                     v-else
-                                    class="col-span-4"
+                                    class="col-span-2"
                                 >
                                     <label class="text-sm font-medium text-gray-700 mb-1 block">
                                         {{ $t('register.companyNumber') }}
@@ -1259,177 +1339,183 @@
                                         v-model="formData.companyNumber"
                                         :icon="IdCard"
                                         size="md"
+                                        rounded="md"
                                         :placeholder="$t('register.companyNumber')"
                                     />
                                 </div>
-                            </div>
-                        </div>
 
-                        <div
-                            v-if="formData.accountType != 'institution'"
-                            class="mt-3 sm:mt-4 lg:mt-5 xl:mt-6"
-                        >
-                            <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
-                                Catégorie professionnelle <span class="text-red-500">*</span>
-                            </label>
-                            <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
-                                <Select v-model="formData.professionalCategory">
-                                    <SelectTrigger
-                                        class="flex justify-between items-center rounded-full border-2 border-gray-300"
-                                        position="right"
-                                    >
-                                        <Users class="text-primary w-10 h-10" />
-                                        <SelectValue
-                                            :placeholder="$t('register.professionalCategory')"
-                                            class="ml-3 block w-full"
-                                        />
-                                    </SelectTrigger>
-                                    <SelectContent class="border border-none w-full">
-                                        <SelectGroup>
-                                            <div
-                                                v-for="category in professionalCategory"
-                                                :key="category.value"
-                                                class="flex justify-center items-center -ms-3 w-full"
-                                            >
-                                                <SelectItem :value="category.value">
-                                                    <div class="flex w-full">
-                                                        <div class="sm:text-xs xl:text-sm">
-                                                            {{ category.label }}
+                                <div
+                                    v-if="formData.accountType != 'institution'"
+                                    class="col-span-2"
+                                >
+                                    <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                        {{ $t('register.professionalCategoryLabel') }} <span class="text-primary">*</span>
+                                    </label>
+                                    <Select v-model="formData.professionalCategory">
+                                        <SelectTrigger
+                                            class="flex justify-between items-center rounded-md h-11 border-2 border-gray-300 transition-colors duration-150 hover:border-gray-400 focus:border-primary data-[state=open]:border-primary"
+                                            position="right"
+                                        >
+                                            <Users class="text-primary w-5 h-5" />
+                                            <SelectValue
+                                                :placeholder="$t('register.professionalCategory')"
+                                                class="ml-3 block w-full"
+                                            />
+                                        </SelectTrigger>
+                                        <SelectContent class="border border-none w-full">
+                                            <SelectGroup>
+                                                <div
+                                                    v-for="category in professionalCategory"
+                                                    :key="category.value"
+                                                    class="flex justify-center items-center -ms-3 w-full"
+                                                >
+                                                    <SelectItem :value="category.value">
+                                                        <div class="flex w-full">
+                                                            <div class="sm:text-xs xl:text-sm">
+                                                                {{ category.label }}
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </SelectItem>
-                                            </div>
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                        </div>
+                                                    </SelectItem>
+                                                </div>
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
 
-                        <div
-                            v-if="showEducationLevel"
-                            class="mt-3 sm:mt-4 lg:mt-5 xl:mt-6"
-                        >
-                            <label class="text-md font-medium text-gray-500 mb-1 sm:mb-2 lg:mb-3 block">
-                                Niveau d'études <span class="text-red-500">*</span>
-                            </label>
-                            <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm">
-                                <Select v-model="formData.educationLevel">
-                                    <SelectTrigger
-                                        class="flex justify-between items-center rounded-full border-2 border-gray-300"
-                                        position="right"
-                                    >
-                                        <GraduationCap class="text-primary w-10 h-10" />
-                                        <SelectValue
-                                            :placeholder="$t('register.educationLevel')"
-                                            class="ml-3 block w-full"
-                                        />
-                                    </SelectTrigger>
-                                    <SelectContent class="border border-none w-full">
-                                        <SelectGroup>
-                                            <div
-                                                v-for="level in educationLevelOptions"
-                                                :key="level.value"
-                                                class="flex justify-center items-center -ms-3 w-full"
-                                            >
-                                                <SelectItem :value="level.value">
-                                                    <div class="flex w-full">
-                                                        <div class="sm:text-xs xl:text-sm">
-                                                            {{ level.label }}
+                                <div
+                                    v-if="showEducationLevel"
+                                    class="col-span-2"
+                                >
+                                    <label class="text-sm font-medium text-gray-700 mb-1 block">
+                                        {{ $t('register.educationLevelLabel') }} <span class="text-primary">*</span>
+                                    </label>
+                                    <Select v-model="formData.educationLevel">
+                                        <SelectTrigger
+                                            class="flex justify-between items-center rounded-md h-11 border-2 border-gray-300 transition-colors duration-150 hover:border-gray-400 focus:border-primary data-[state=open]:border-primary"
+                                            position="right"
+                                        >
+                                            <GraduationCap class="text-primary w-5 h-5" />
+                                            <SelectValue
+                                                :placeholder="$t('register.educationLevel')"
+                                                class="ml-3 block w-full"
+                                            />
+                                        </SelectTrigger>
+                                        <SelectContent class="border border-none w-full">
+                                            <SelectGroup>
+                                                <div
+                                                    v-for="level in educationLevelOptions"
+                                                    :key="level.value"
+                                                    class="flex justify-center items-center -ms-3 w-full"
+                                                >
+                                                    <SelectItem :value="level.value">
+                                                        <div class="flex w-full">
+                                                            <div class="sm:text-xs xl:text-sm">
+                                                                {{ level.label }}
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </SelectItem>
-                                            </div>
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
+                                                    </SelectItem>
+                                                </div>
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            </div>
+
+                            <div
+                                v-if="formData.accountType != 'institution'"
+                                class="mt-6 pt-5 border-t border-dashed border-gray-200"
+                            >
+                                <label class="flex items-start cursor-pointer">
+                                    <Checkbox
+                                        :checked="representGroup"
+                                        class="mt-1"
+                                        @update:checked="representGroup = $event"
+                                    />
+                                    <span class="text-sm ml-2 font-medium">
+                                        {{ $t('register.groupCheckbox') }}
+                                    </span>
+                                </label>
+
+                                <transition name="fade">
+                                    <div
+                                        v-if="representGroup"
+                                        class="relative mt-3"
+                                    >
+                                        <InputIcon
+                                            v-model="formData.groupName"
+                                            :icon="Users"
+                                            rounded="md"
+                                            :placeholder="$t('register.groupName')"
+                                        />
+                                    </div>
+                                </transition>
                             </div>
                         </div>
                     </div>
-                    <div
-                        v-if="formData.accountType != 'institution'"
-                        class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm"
-                    >
-                        <div class="space-y-4">
+
+                    <div class="space-y-4">
+                        <RegisterStepHeading
+                            :number="6"
+                            :title="$t('register.step6Title')"
+                            :subtitle="$t('register.step6Subtitle')"
+                            :light="formData.accountType === 'institution'"
+                        />
+                        <div class="ml-12 bg-white border border-gray-200 rounded-lg p-6 shadow-sm space-y-3">
                             <label class="flex items-start cursor-pointer">
                                 <Checkbox
-                                    :checked="representGroup"
-                                    class="mt-1 accent-red-600"
-                                    @update:checked="representGroup = $event"
+                                    :checked="termsAccepted"
+                                    class="mt-1"
+                                    @update:checked="termsAccepted = $event"
                                 />
                                 <span class="text-sm ml-2 font-medium">
-                                    Je représente un groupement de plusieurs infirmières et je souhaite gérer les plannings et remplacements de mes infirmières
+                                    {{ $t('register.acceptTermsPrefix') }}
+                                    <NuxtLink
+                                        :to="localePath('/terms')"
+                                        target="_blank"
+                                        class="text-primary underline font-semibold hover:text-primary/80"
+                                    >
+                                        {{ $t('register.termsLinkLabel') }}
+                                    </NuxtLink>
+                                    <span class="text-primary">*</span>
                                 </span>
                             </label>
-
-                            <transition name="fade">
-                                <div
-                                    v-if="representGroup"
-                                    class="relative"
-                                >
-                                    <InputIcon
-                                        v-model="formData.groupName"
-                                        :icon="Users"
-                                        placeholder="Nom du groupement"
-                                    />
-                                </div>
-                            </transition>
+                            <label class="flex items-start cursor-pointer">
+                                <Checkbox
+                                    :checked="privacyAccepted"
+                                    class="mt-1"
+                                    @update:checked="privacyAccepted = $event"
+                                />
+                                <span class="text-sm ml-2 font-medium">
+                                    {{ $t('register.acceptPrivacyPrefix') }}
+                                    <NuxtLink
+                                        :to="localePath('/privacy-security')"
+                                        target="_blank"
+                                        class="text-primary underline font-semibold hover:text-primary/80"
+                                    >
+                                        {{ $t('register.privacyLinkLabel') }}
+                                    </NuxtLink>
+                                    <span class="text-primary">*</span>
+                                </span>
+                            </label>
+                            <label class="flex items-start cursor-pointer">
+                                <Checkbox
+                                    :checked="charteAccepted"
+                                    class="mt-1"
+                                    @update:checked="charteAccepted = $event"
+                                />
+                                <span class="text-sm ml-2 font-medium">
+                                    {{ $t('register.acceptChartePrefix') }}
+                                    <NuxtLink
+                                        to="/legal-chart"
+                                        target="_blank"
+                                        class="text-primary underline font-semibold hover:text-primary/80"
+                                    >
+                                        {{ $t('register.charteLinkLabel') }}
+                                    </NuxtLink>
+                                    <span class="text-primary">*</span>
+                                </span>
+                            </label>
                         </div>
-                    </div>
-                    <div class="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm space-y-3">
-                        <label class="flex items-start cursor-pointer">
-                            <Checkbox
-                                :checked="termsAccepted"
-                                class="mt-1"
-                                @update:checked="termsAccepted = $event"
-                            />
-                            <span class="text-sm ml-2 font-medium">
-                                J'accepte les
-                                <NuxtLink
-                                    :to="localePath('/terms')"
-                                    target="_blank"
-                                    class="text-primary underline font-semibold hover:text-primary/80"
-                                >
-                                    Conditions Générales d'Utilisation
-                                </NuxtLink>
-                                <span class="text-red-500">*</span>
-                            </span>
-                        </label>
-                        <label class="flex items-start cursor-pointer">
-                            <Checkbox
-                                :checked="privacyAccepted"
-                                class="mt-1"
-                                @update:checked="privacyAccepted = $event"
-                            />
-                            <span class="text-sm ml-2 font-medium">
-                                J'accepte la
-                                <NuxtLink
-                                    :to="localePath('/privacy-security')"
-                                    target="_blank"
-                                    class="text-primary underline font-semibold hover:text-primary/80"
-                                >
-                                    Politique de protection des données
-                                </NuxtLink>
-                                <span class="text-red-500">*</span>
-                            </span>
-                        </label>
-                        <label class="flex items-start cursor-pointer">
-                            <Checkbox
-                                :checked="charteAccepted"
-                                class="mt-1"
-                                @update:checked="charteAccepted = $event"
-                            />
-                            <span class="text-sm ml-2 font-medium">
-                                J'accepte la
-                                <NuxtLink
-                                    to="/legal-chart"
-                                    target="_blank"
-                                    class="text-primary underline font-semibold hover:text-primary/80"
-                                >
-                                    charte de bonne conduite
-                                </NuxtLink>
-                                <span class="text-red-500">*</span>
-                            </span>
-                        </label>
                     </div>
 
                     <div class="flex justify-center items-center">
@@ -1463,6 +1549,7 @@ import { ArrowRight, Building2, Check, CircleChevronDown, CircleUser, Graduation
 import { EDUCATION_LEVEL_OPTIONS, isBelgiumCountryCode } from '~/utils/educationLevel';
 import { INAMI_FORMAT_ERROR, isValidInamiFormat } from '~/utils/inamiNumber';
 import InstitutionPricing from '~/components/register/InstitutionPricing.vue';
+import RegisterStepHeading from '~/components/register/StepHeading.vue';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
 import BackButton from '~/components/ui/back-button/BackButton.vue';
 
@@ -1513,12 +1600,12 @@ const accountOptions = [
     {
         value: 'standard',
         label: t('register.nurse'),
-        description: 'Professionnel de santé',
+        description: t('register.nurseDesc'),
     },
     {
         value: 'institution',
         label: t('register.institution'),
-        description: 'MR/MRS, hôpital, bureau de tarification, groupe infirmier, centre d\'intérim',
+        description: t('register.institutionDesc'),
     },
 ];
 
