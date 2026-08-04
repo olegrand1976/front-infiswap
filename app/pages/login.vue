@@ -40,7 +40,7 @@
             <div class="bg-white h-full container sm:w-full md:w-[80%] lg:w-full flex flex-col justify-center items-center relative">
                 <BackButton to="/"/>
                 <div class="shrink-0">
-                    <LayoutsLogo class="w-64" />
+                    <LayoutsLogo class="w-64 mb-2" />
                 </div>
 
                 <div class="w-full max-w-md container">

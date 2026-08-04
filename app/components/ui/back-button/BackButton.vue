@@ -16,6 +16,12 @@ const props = withDefaults(defineProps<Props>(), {
     size: 'md',
 });
 
+const sizeClasses = {
+    sm: { icon: 'w-3.5 h-3.5', text: 'text-xs', gap: 'gap-1', mobileIcon: 'w-4 h-4', mobilePad: 'p-1.5' },
+    md: { icon: 'w-4 h-4', text: 'text-sm', gap: 'gap-1.5', mobileIcon: 'w-5 h-5', mobilePad: 'p-2' },
+    lg: { icon: 'w-5 h-5', text: 'text-base', gap: 'gap-2', mobileIcon: 'w-6 h-6', mobilePad: 'p-2' },
+}[props.size];
+
 const handleBack = () => {
     navigateTo(props.to);
 };
@@ -23,22 +29,22 @@ const handleBack = () => {
 
 <template>
     <div>
-        <div class="hidden sm:block absolute top-8 left-8">
+        <div class="hidden sm:block absolute top-6 left-6">
             <button
-                :class="cn('flex items-center space-x-2 text-primary hover:underline group', $props.class)"
+                :class="cn('flex items-center text-primary hover:underline group', sizeClasses.gap, $props.class)"
                 @click="handleBack"
             >
-                <ArrowLeft class="w-5 h-5 transition-transform group-hover:-translate-x-1" />
-                <span class="font-medium">{{ text }}</span>
+                <ArrowLeft :class="cn(sizeClasses.icon, 'transition-transform group-hover:-translate-x-1')" />
+                <span :class="cn('font-medium', sizeClasses.text)">{{ text }}</span>
             </button>
         </div>
 
         <div class="sm:hidden absolute top-4 left-4 z-30">
             <button
-                class="bg-white/80 backdrop-blur-sm p-2 rounded-full shadow-sm text-primary active:scale-95 transition-transform"
+                :class="cn(sizeClasses.mobilePad, 'bg-white/80 backdrop-blur-sm rounded-full shadow-sm text-primary active:scale-95 transition-transform')"
                 @click="handleBack"
             >
-                <ArrowLeft class="w-6 h-6" />
+                <ArrowLeft :class="sizeClasses.mobileIcon" />
             </button>
         </div>
     </div>
