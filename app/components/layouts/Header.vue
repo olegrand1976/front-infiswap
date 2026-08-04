@@ -39,7 +39,7 @@
                 <nav
                     v-if="!isLoggedIn"
                     :ref="(el) => { authNav.state.containerEl = (el as HTMLElement) ?? null; }"
-                    class="relative flex gap-4 pb-2"
+                    class="relative flex gap-4"
                     @mouseleave="authNav.resetTo(null)"
                 >
                     <NuxtLink
