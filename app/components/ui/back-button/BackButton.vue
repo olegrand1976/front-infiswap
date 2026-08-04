@@ -12,9 +12,13 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
     to: '/login',
-    text: 'Retour',
+    text: undefined,
     size: 'md',
 });
+
+const { t } = useI18n();
+
+const label = computed(() => props.text ?? t('common.back'));
 
 const sizeClasses = {
     sm: { icon: 'w-3.5 h-3.5', text: 'text-xs', gap: 'gap-1', mobileIcon: 'w-4 h-4', mobilePad: 'p-1.5' },
@@ -35,7 +39,7 @@ const handleBack = () => {
                 @click="handleBack"
             >
                 <ArrowLeft :class="cn(sizeClasses.icon, 'transition-transform group-hover:-translate-x-1')" />
-                <span :class="cn('font-medium', sizeClasses.text)">{{ text }}</span>
+                <span :class="cn('font-medium', sizeClasses.text)">{{ label }}</span>
             </button>
         </div>
 
