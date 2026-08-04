@@ -196,7 +196,7 @@
                             <Checkbox
                                 id="remember-mobile"
                                 v-model:checked="credentials.remember"
-                                class="rounded-md! transition-transform group-active:scale-90"
+                                class="transition-transform group-active:scale-90"
                             />
                             <span class="font-light text-primary leading-none">{{ $t('auth.rememberMe') }}</span>
                         </label>
