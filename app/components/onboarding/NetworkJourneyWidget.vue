@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ChevronDown, ChevronLeft, ChevronRight, Lightbulb, Sparkles, X } from 'lucide-vue-next';
+import { Check, ChevronDown, ChevronLeft, ChevronRight, Lightbulb, Sparkles, X } from 'lucide-vue-next';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -153,6 +153,10 @@ function previousTip() {
     if (hasPreviousTip.value) {
         currentTipIndex.value -= 1;
     }
+}
+
+function finishTips() {
+    showTipsModal.value = false;
 }
 
 function nextTip() {
@@ -470,14 +474,22 @@ async function confirmDisable() {
                             Précédent
                         </Button>
                         <Button
-                            variant="outline"
+                            v-if="hasNextTip"
                             size="sm"
-                            class="flex-1 sm:flex-none"
-                            :disabled="!hasNextTip"
+                            class="rounded-md! flex-1 sm:flex-none"
                             @click="nextTip"
                         >
                             Suivant
                             <ChevronRight class="size-4" />
+                        </Button>
+                        <Button
+                            v-else
+                            size="sm"
+                            class="rounded-md! flex-1 sm:flex-none"
+                            @click="finishTips"
+                        >
+                            Terminé
+                            <Check class="size-4" />
                         </Button>
                     </div>
                 </DialogFooter>
