@@ -1,11 +1,11 @@
 <template>
     <div>
-        <div class="hidden sm:flex flex-row justify-center md:max-h-screen xl:pt-0 sm:pt-48">
-            <div class="bg-tertiary/30 xl:h-screen lg:h-auto lg:block w-[115vw] hidden relative container">
-                <div class="xl:absolute z-20 bottom-0 left-1/3">
+        <div class="hidden md:flex flex-row justify-center h-screen w-full overflow-hidden">
+            <div class="bg-tertiary/30 h-full lg:block w-[115vw] hidden relative overflow-hidden container">
+                <div class="absolute z-20 bottom-0 left-1/3">
                     <LayoutsAppImage
                         src="/auth/Group_1164.png"
-                        class="xl:w-[20rem] z-20 lg:w-64 mt-24 relative flex justify-center mx-auto"
+                        class="xl:w-[20rem] z-20 lg:w-64 flex justify-center mx-auto"
                     />
                 </div>
                 <div class="absolute top-36 left-20">
@@ -37,14 +37,14 @@
                 </div>
             </div>
 
-            <div class="bg-white overflow-hidden container sm:w-full md:w-[80%] lg:w-full flex flex-col justify-center items-center relative">
+            <div class="bg-white h-full container sm:w-full md:w-[80%] lg:w-full flex flex-col justify-center items-center relative">
                 <BackButton to="/"/>
-                <div>
-                    <LayoutsLogo class="lg:w-80 sm:w-72" />
+                <div class="shrink-0">
+                    <LayoutsLogo class="w-64" />
                 </div>
 
                 <div class="w-full max-w-md container">
-                    <div class="mb-8 text-center">
+                    <div class="mb-5 text-center">
                         <h1 class="font-secondary text-2xl font-semibold text-dark">
                             {{ $t('auth.signInHeading') }}
                         </h1>
@@ -103,7 +103,7 @@
                             </NuxtLink>
                         </div>
 
-                        <div class="flex flex-col justify-center items-center mx-auto mt-12 space-y-7">
+                        <div class="flex flex-col justify-center items-center mx-auto mt-6 space-y-4">
                             <!-- <Button
                                 variant="secondary"
                                 class="md:w-80 sm:w-64 shadow flex justify-center space-x-2 items-center md:text-base sm:text-xs"
@@ -129,7 +129,7 @@
                     </form>
                 </div>
 
-                <div class="text-xs text-center mt-4 mb-8">
+                <div class="shrink-0 text-xs text-center mt-4">
                     <p>
                         {{ $t('auth.noAccountYet') }}
                         <NuxtLink

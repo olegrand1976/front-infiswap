@@ -7,11 +7,13 @@ interface Props {
     to?: string;
     text?: string;
     class?: HTMLAttributes['class'];
+    size?: 'sm' | 'md' | 'lg';
 }
 
 const props = withDefaults(defineProps<Props>(), {
     to: '/login',
     text: 'Retour',
+    size: 'md',
 });
 
 const handleBack = () => {
