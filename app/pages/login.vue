@@ -38,12 +38,21 @@
             </div>
 
             <div class="bg-white overflow-hidden container sm:w-full md:w-[80%] lg:w-full flex flex-col space-y-12 justify-center items-center relative">
-                <BackButton to="/" />
+                <BackButton to="/"/>
                 <div>
                     <LayoutsLogo class="lg:w-80 sm:w-72" />
                 </div>
 
                 <div class="w-full max-w-md container">
+                    <div class="mb-8 text-center">
+                        <h1 class="font-secondary text-2xl font-semibold text-dark">
+                            {{ $t('auth.signInHeading') }}
+                        </h1>
+                        <p class="mt-2 text-sm text-gray-500">
+                            {{ $t('auth.signInSubtitle') }}
+                        </p>
+                    </div>
+
                     <form @submit.prevent="submit">
                         <div class="flex flex-col space-y-4">
                             <div class="flex w-full items-center space-x-1">
@@ -51,6 +60,8 @@
                                     v-model="credentials.identifier"
                                     :icon="User"
                                     type="text"
+                                    rounded="md"
+                                    label="Email"
                                     placeholder="Email"
                                     class="text-sm w-full"
                                 />
@@ -61,6 +72,8 @@
                                     v-model="credentials.password"
                                     :icon="Lock"
                                     type="password"
+                                    rounded="md"
+                                    :label="$t('auth.password')"
                                     :placeholder="$t('auth.password')"
                                     class="text-sm w-full"
                                 />
@@ -68,19 +81,23 @@
                         </div>
 
                         <div class="flex justify-between lg:text-sm text-xs items-center md:mt-6 sm:mt-4">
-                            <div class="flex items-center space-x-2">
-                                <Checkbox id="remember" />
-                                <label
-                                    for="remember"
-                                    class="font-sans font-light text-primary leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                >
+                            <label
+                                for="remember"
+                                class="group flex cursor-pointer items-center gap-2 select-none"
+                            >
+                                <Checkbox
+                                    id="remember"
+                                    v-model:checked="credentials.remember"
+                                    class="rounded-md! transition-transform group-active:scale-90"
+                                />
+                                <span class="font-sans font-light text-primary leading-none">
                                     {{ $t('auth.rememberMe') }}
-                                </label>
-                            </div>
+                                </span>
+                            </label>
 
                             <NuxtLink
                                 :to="localePath('/password/reset-password')"
-                                class="text-primary"
+                                class="relative w-fit text-primary after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-right after:scale-x-0 after:bg-primary after:transition-transform after:duration-300 after:ease-out hover:after:origin-left hover:after:scale-x-100"
                             >
                                 *{{ $t('auth.forgotPassword') }}
                             </NuxtLink>
@@ -132,6 +149,15 @@
             <BackButton to="/" />
 
             <div class="flex flex-col justify-center items-center px-6 grow">
+                <div class="mb-6 text-center">
+                    <h1 class="font-secondary text-xl font-semibold text-dark">
+                        {{ $t('auth.signInHeading') }}
+                    </h1>
+                    <p class="mt-1.5 text-xs text-gray-500">
+                        {{ $t('auth.signInSubtitle') }}
+                    </p>
+                </div>
+
                 <form
                     class="w-full max-w-sm"
                     @submit.prevent="submit"
@@ -142,6 +168,8 @@
                                 v-model="credentials.identifier"
                                 :icon="User"
                                 type="text"
+                                rounded="md"
+                                label="Email"
                                 placeholder="Email"
                                 class="text-sm w-full"
                             />
@@ -152,6 +180,8 @@
                                 v-model="credentials.password"
                                 :icon="Lock"
                                 type="password"
+                                rounded="md"
+                                :label="$t('auth.password')"
                                 :placeholder="$t('auth.password')"
                                 class="text-sm w-full"
                             />
@@ -159,17 +189,21 @@
                     </div>
 
                     <div class="flex justify-between text-xs mt-4">
-                        <div class="flex items-center space-x-2">
-                            <Checkbox id="remember" />
-                            <label
-                                for="remember"
-                                class="font-light text-primary leading-none"
-                            >{{ $t('auth.rememberMe') }}</label>
-                        </div>
+                        <label
+                            for="remember-mobile"
+                            class="group flex cursor-pointer items-center gap-2 select-none"
+                        >
+                            <Checkbox
+                                id="remember-mobile"
+                                v-model:checked="credentials.remember"
+                                class="rounded-md! transition-transform group-active:scale-90"
+                            />
+                            <span class="font-light text-primary leading-none">{{ $t('auth.rememberMe') }}</span>
+                        </label>
 
                         <NuxtLink
                             :to="localePath('/password/reset-password')"
-                            class="text-primary"
+                            class="relative w-fit text-primary after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-right after:scale-x-0 after:bg-primary after:transition-transform after:duration-300 after:ease-out hover:after:origin-left hover:after:scale-x-100"
                         >*{{ $t('auth.forgotPassword') }}</NuxtLink>
                     </div>
 
@@ -229,6 +263,7 @@ const { t } = useI18n();
 const credentials = reactive({
     identifier: '',
     password: '',
+    remember: false,
 });
 
 const { submit, inProgress } = useSubmit(

@@ -116,7 +116,6 @@
                 <div class="w-screen px-10">
                     <Button
                         v-if="isLoggedIn"
-                        variant="light"
                         class="font-semibold cursor-pointer w-full h-10 shadow-lg rounded-full relative z-30"
                         :href="localePath('/login')"
                     >
@@ -131,6 +130,7 @@
 <script lang="ts" setup>
 import { useRoute } from 'vue-router';
 import { LayoutGrid, LogIn, UserPlus } from 'lucide-vue-next';
+import { useRuntimeConfig } from '#app';
 
 const { isLoggedIn, user } = useAuth();
 const { t } = useI18n();
