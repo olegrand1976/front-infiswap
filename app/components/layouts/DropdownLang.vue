@@ -18,10 +18,10 @@
 </template>
 
 <script lang="ts" setup>
+import type { HTMLAttributes } from 'vue';
 import { LANGUAGES } from '~/lib/constants';
 import { cn } from '~/lib/utils';
 import { isAppLocale, type AppLocale } from '~/utils/appLocale';
-import { type HTMLAttributes } from 'vue';
 
 const props = defineProps<{ class?: HTMLAttributes['class'] }>();
 

@@ -35,7 +35,7 @@
             </nav>
 
             <div class="flex gap-4 mb-2.5 items-center">
-                <LayoutsDropdownLang/>
+                <LayoutsDropdownLang />
                 <nav
                     v-if="!isLoggedIn"
                     :ref="(el) => { authNav.state.containerEl = (el as HTMLElement) ?? null; }"
