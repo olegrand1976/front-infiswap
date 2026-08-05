@@ -146,7 +146,8 @@ import { ref } from 'vue';
 import { getErrorMessage } from '~/lib/utils';
 import BackButton from '~/components/ui/back-button/BackButton.vue';
 
-const { t, localePath } = useI18n();
+const { t } = useI18n();
+const localePath = useLocalePath();
 const { $toast } = useNuxtApp();
 
 definePageMeta({
