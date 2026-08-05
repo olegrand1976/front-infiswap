@@ -1,9 +1,11 @@
 <template>
-    <div class="bg-white z-0">
-        <section class="relative z-5 overflow-hidden bg-gradient-to-b from-muted to-white px-6 py-16 text-center lg:py-20">
+    <div class="bg-white">
+        <section class="relative overflow-hidden bg-gradient-to-b from-muted to-white px-6 py-10 text-center lg:py-20">
             <div class="absolute -left-16 -top-20 size-56 rounded-full bg-primary/10" />
             <div class="absolute -right-10 bottom-[-60px] size-40 rounded-full bg-primary/10" />
-
+            <div class="mb-5 md:hidden">
+                <LayoutsLogo class="w-48 mx-auto" />
+            </div>
             <div class="relative mx-auto max-w-xl">
                 <span class="mb-5 inline-flex items-center gap-1.5 rounded-full border border-input bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-primary shadow-sm">
                     <MessageCircle class="size-3.5" />
@@ -25,160 +27,160 @@
                     </span>
                 </div>
             </div>
+        </section>
 
-            <div class="container z-10 mt-12 lg:mt-14 pb-10">
-                <div class="mx-auto grid max-w-5xl overflow-hidden rounded-[20px] border border-input bg-white shadow-xl lg:grid-cols-[1.3fr_1fr]">
-                    <div class="p-8 lg:p-11">
-                        <h2 class="font-secondary text-xl font-semibold text-dark">
-                            {{ $t('contact.formTitle') }}
-                        </h2>
-                        <p class="mt-1 mb-6 text-sm text-gray-500">
-                            {{ $t('contact.formSubtitle') }}
-                        </p>
+        <div class="container pb-10 pt-10 lg:pt-12">
+            <div class="mx-auto grid max-w-5xl overflow-hidden rounded-lg border border-input bg-white shadow-xl lg:grid-cols-[1.3fr_1fr]">
+                <div class="p-8 lg:p-11">
+                    <h2 class="font-secondary text-xl font-semibold text-dark">
+                        {{ $t('contact.formTitle') }}
+                    </h2>
+                    <p class="mt-1 mb-6 text-sm text-gray-500">
+                        {{ $t('contact.formSubtitle') }}
+                    </p>
 
-                        <form
-                            class="flex flex-col"
-                            @submit.prevent="submit"
-                        >
-                            <div class="grid gap-4 sm:grid-cols-2">
-                                <div class="flex flex-col gap-1.5">
-                                    <label class="text-sm font-medium text-gray-700">
-                                        {{ $t('contact.namePlaceholder') }}
-                                    </label>
-                                    <InputIcon
-                                        v-model="formData.name"
-                                        :icon="CircleUser"
-                                        rounded="md"
-                                        :placeholder="$t('contact.namePlaceholder')"
-                                        :errors="validationErrors.name"
-                                        @blur="validateField('name')"
-                                        @input="validateField('name')"
-                                    />
-                                </div>
-
-                                <div class="flex flex-col gap-1.5">
-                                    <label class="text-sm font-medium text-gray-700">
-                                        {{ $t('auth.email') }}
-                                    </label>
-                                    <InputIcon
-                                        v-model="formData.email"
-                                        :icon="Mail"
-                                        rounded="md"
-                                        :placeholder="$t('auth.email')"
-                                        :errors="validationErrors.email"
-                                        @blur="validateField('email')"
-                                        @input="validateField('email')"
-                                    />
-                                </div>
-                            </div>
-
-                            <div class="mt-4 flex flex-col gap-1.5">
+                    <form
+                        class="flex flex-col"
+                        @submit.prevent="submit"
+                    >
+                        <div class="grid gap-4 sm:grid-cols-2">
+                            <div class="flex flex-col gap-1.5">
                                 <label class="text-sm font-medium text-gray-700">
-                                    {{ $t('contact.phonePlaceholder') }}
-                                    <span class="text-xs font-normal text-muted-foreground">({{ $t('pricing.optional') }})</span>
+                                    {{ $t('contact.namePlaceholder') }}
                                 </label>
                                 <InputIcon
-                                    v-model="formData.phoneNumber"
-                                    :icon="Phone"
+                                    v-model="formData.name"
+                                    :icon="CircleUser"
                                     rounded="md"
-                                    :placeholder="$t('contact.phonePlaceholder')"
-                                    :errors="validationErrors.phoneNumber"
-                                    @blur="validateField('phoneNumber')"
-                                    @input="validateField('phoneNumber')"
+                                    :placeholder="$t('contact.namePlaceholder')"
+                                    :errors="validationErrors.name"
+                                    @blur="validateField('name')"
+                                    @input="validateField('name')"
                                 />
                             </div>
 
-                            <div class="mt-4 flex flex-col gap-1.5">
+                            <div class="flex flex-col gap-1.5">
                                 <label class="text-sm font-medium text-gray-700">
-                                    {{ $t('contact.message') }}
+                                    {{ $t('auth.email') }}
                                 </label>
-                                <Textarea
-                                    v-model="formData.message"
-                                    :placeholder="$t('contact.messagePlaceholder')"
-                                    class="min-h-24 rounded-md border-input"
+                                <InputIcon
+                                    v-model="formData.email"
+                                    :icon="Mail"
+                                    rounded="md"
+                                    :placeholder="$t('auth.email')"
+                                    :errors="validationErrors.email"
+                                    @blur="validateField('email')"
+                                    @input="validateField('email')"
                                 />
                             </div>
+                        </div>
 
-                            <Button
-                                type="submit"
-                                class="mt-6 w-full font-bold"
-                                :in-progress="inProgress"
-                            >
-                                {{ $t('contact.send') }}
-                                <Send class="size-4" />
-                            </Button>
-                        </form>
+                        <div class="mt-4 flex flex-col gap-1.5">
+                            <label class="text-sm font-medium text-gray-700">
+                                {{ $t('contact.phonePlaceholder') }}
+                                <span class="text-xs font-normal text-muted-foreground">({{ $t('pricing.optional') }})</span>
+                            </label>
+                            <InputIcon
+                                v-model="formData.phoneNumber"
+                                :icon="Phone"
+                                rounded="md"
+                                :placeholder="$t('contact.phonePlaceholder')"
+                                :errors="validationErrors.phoneNumber"
+                                @blur="validateField('phoneNumber')"
+                                @input="validateField('phoneNumber')"
+                            />
+                        </div>
+
+                        <div class="mt-4 flex flex-col gap-1.5">
+                            <label class="text-sm font-medium text-gray-700">
+                                {{ $t('contact.message') }}
+                            </label>
+                            <Textarea
+                                v-model="formData.message"
+                                :placeholder="$t('contact.messagePlaceholder')"
+                                class="min-h-24 rounded-md border-input"
+                            />
+                        </div>
+
+                        <Button
+                            type="submit"
+                            class="mt-6 w-full font-bold"
+                            :in-progress="inProgress"
+                        >
+                            {{ $t('contact.send') }}
+                            <Send class="size-4" />
+                        </Button>
+                    </form>
+                </div>
+
+                <div class="flex flex-col bg-muted p-8 lg:p-10">
+                    <h3 class="font-secondary text-lg font-semibold text-dark">
+                        {{ $t('contact.infoTitle') }}
+                    </h3>
+                    <p class="mt-1 mb-5 text-xs text-gray-500">
+                        {{ $t('contact.infoSubtitle') }}
+                    </p>
+
+                    <div class="flex flex-col">
+                        <a
+                            href="tel:0478023377"
+                            class="flex items-center gap-3 border-b border-primary/10 py-3.5 last:border-0"
+                        >
+                            <span class="flex size-9.5 shrink-0 items-center justify-center rounded-[10px] bg-white text-primary shadow-sm">
+                                <Phone class="size-4" />
+                            </span>
+                            <span>
+                                <span class="block text-[11px] font-bold uppercase tracking-wide text-gray-400">{{ $t('contact.phone') }}</span>
+                                <span class="text-sm font-semibold text-dark">0478 02 33 77</span>
+                            </span>
+                        </a>
+
+                        <a
+                            href="mailto:info@infiswap.be"
+                            class="flex items-center gap-3 border-b border-primary/10 py-3.5 last:border-0"
+                        >
+                            <span class="flex size-9.5 shrink-0 items-center justify-center rounded-[10px] bg-white text-primary shadow-sm">
+                                <Mail class="size-4" />
+                            </span>
+                            <span>
+                                <span class="block text-[11px] font-bold uppercase tracking-wide text-gray-400">Email</span>
+                                <span class="text-sm font-semibold text-dark">info@infiswap.be</span>
+                            </span>
+                        </a>
+
+                        <div class="flex items-center gap-3 border-b border-primary/10 py-3.5 last:border-0">
+                            <span class="flex size-9.5 shrink-0 items-center justify-center rounded-[10px] bg-white text-primary shadow-sm">
+                                <MapPin class="size-4" />
+                            </span>
+                            <span>
+                                <span class="block text-[11px] font-bold uppercase tracking-wide text-gray-400">{{ $t('contact.address') }}</span>
+                                <span class="text-sm font-medium text-dark">Rue de la Résistance 92/A, 7131 Waudrez</span>
+                            </span>
+                        </div>
+
+                        <a
+                            href="https://www.ll-it-sc.be"
+                            target="_blank"
+                            rel="noopener"
+                            class="flex items-center gap-3 py-3.5"
+                        >
+                            <span class="flex size-9.5 shrink-0 items-center justify-center rounded-[10px] bg-white text-primary shadow-sm">
+                                <Globe class="size-4" />
+                            </span>
+                            <span>
+                                <span class="block text-[11px] font-bold uppercase tracking-wide text-gray-400">{{ $t('contact.site') }}</span>
+                                <span class="text-sm font-semibold text-dark">ll-it-sc.be</span>
+                            </span>
+                        </a>
                     </div>
 
-                    <div class="flex flex-col bg-muted p-8 lg:p-10">
-                        <h3 class="font-secondary text-lg font-semibold text-dark">
-                            {{ $t('contact.infoTitle') }}
-                        </h3>
-                        <p class="mt-1 mb-5 text-xs text-gray-500">
-                            {{ $t('contact.infoSubtitle') }}
-                        </p>
-
-                        <div class="flex flex-col">
-                            <a
-                                href="tel:0478023377"
-                                class="flex items-center gap-3 border-b border-primary/10 py-3.5 last:border-0"
-                            >
-                                <span class="flex size-9.5 shrink-0 items-center justify-center rounded-[10px] bg-white text-primary shadow-sm">
-                                    <Phone class="size-4" />
-                                </span>
-                                <span>
-                                    <span class="block text-[11px] font-bold uppercase tracking-wide text-gray-400">{{ $t('contact.phone') }}</span>
-                                    <span class="text-sm font-semibold text-dark">0478 02 33 77</span>
-                                </span>
-                            </a>
-
-                            <a
-                                href="mailto:info@infiswap.be"
-                                class="flex items-center gap-3 border-b border-primary/10 py-3.5 last:border-0"
-                            >
-                                <span class="flex size-9.5 shrink-0 items-center justify-center rounded-[10px] bg-white text-primary shadow-sm">
-                                    <Mail class="size-4" />
-                                </span>
-                                <span>
-                                    <span class="block text-[11px] font-bold uppercase tracking-wide text-gray-400">Email</span>
-                                    <span class="text-sm font-semibold text-dark">info@infiswap.be</span>
-                                </span>
-                            </a>
-
-                            <div class="flex items-center gap-3 border-b border-primary/10 py-3.5 last:border-0">
-                                <span class="flex size-9.5 shrink-0 items-center justify-center rounded-[10px] bg-white text-primary shadow-sm">
-                                    <MapPin class="size-4" />
-                                </span>
-                                <span>
-                                    <span class="block text-[11px] font-bold uppercase tracking-wide text-gray-400">{{ $t('contact.address') }}</span>
-                                    <span class="text-sm font-medium text-dark">Rue de la Résistance 92/A, 7131 Waudrez</span>
-                                </span>
-                            </div>
-
-                            <a
-                                href="https://www.ll-it-sc.be"
-                                target="_blank"
-                                rel="noopener"
-                                class="flex items-center gap-3 py-3.5"
-                            >
-                                <span class="flex size-9.5 shrink-0 items-center justify-center rounded-[10px] bg-white text-primary shadow-sm">
-                                    <Globe class="size-4" />
-                                </span>
-                                <span>
-                                    <span class="block text-[11px] font-bold uppercase tracking-wide text-gray-400">{{ $t('contact.site') }}</span>
-                                    <span class="text-sm font-semibold text-dark">ll-it-sc.be</span>
-                                </span>
-                            </a>
-                        </div>
-
-                        <div class="mt-auto flex items-center gap-2 pt-5 text-xs text-gray-500">
-                            <span class="size-1.5 shrink-0 rounded-full bg-success" />
-                            {{ $t('contact.trustResponseTime') }}
-                        </div>
+                    <div class="mt-auto flex items-center gap-2 pt-5 text-xs text-gray-500">
+                        <span class="size-1.5 shrink-0 rounded-full bg-success" />
+                        {{ $t('contact.trustResponseTime') }}
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
     </div>
 </template>
 

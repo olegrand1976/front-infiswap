@@ -1,5 +1,9 @@
 <template>
     <div class="mt-4 lg:mt-10">
+        <div class="md:hidden flex justify-center py-6">
+            <LayoutsLogo class="w-40" />
+        </div>
+
         <Pricing />
     </div>
 </template>

@@ -1,12 +1,14 @@
 <template>
     <NuxtLayout name="guest">
         <div class="relative font-light">
-            <div
-                class="hidden lg:block absolute inset-x-0 bg-tertiary/30 md:h-[300px] lg:h-full w-full z-10"
-            />
+            <div class="my-5">
+                <LayoutsLogo class="w-48 mx-auto" />
+            </div>
+            <div class="absolute inset-0 bg-tertiary/30 h-[350px] lg:h-full w-full" />
+
             <div class="lg:container">
                 <div
-                    class="relative md:my-8 lg:my-16 md:z-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24 items-center py-8 lg:py-20 md:mt-20"
+                    class="relative md:my-8 lg:my-16 md:z-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24 items-center lg:py-20 md:mt-20"
                 >
                     <div class="lg:space-y-6 space-y-8 order-2 lg:order-1 relative z-30">
                         <h3

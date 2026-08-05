@@ -1,5 +1,9 @@
 <template>
-    <div class="container py-10 lg:py-16 space-y-12">
+    <div class="container lg:py-16 space-y-12">
+        <div class="md:hidden flex justify-center pt-8">
+            <LayoutsLogo class="w-40" />
+        </div>
+
         <section class="max-w-3xl space-y-4">
             <p class="text-sm font-semibold uppercase tracking-wide text-primary">
                 Rejoignez InfiSwap
