@@ -152,12 +152,22 @@
     "contactUsAt": "Neem contact op via",
     "ctaRegister": "Registreren",
     "heroTagline": "InfiSwap is het 100 % geautomatiseerde platform voor de matching van verpleegkundigen in België en Frankrijk.",
+    "hero": {
+      "titlePrefix": "Continuïteit van zorg,",
+      "titleHighlight": "zonder onderbreking",
+      "lead": "InfiSwap verbindt zelfstandige verpleegkundigen in België en Frankrijk voor vervangingen gevonden in enkele minuten, niet in dagen.",
+      "ctaSearch": "Een vervanging vinden",
+      "ctaPublish": "Een aankondiging plaatsen",
+      "trustText": "verpleegkundigen al ingeschreven",
+      "callLabel": "Neem contact op",
+      "activeMembersLabel": "Actieve leden"
+    },
     "stats": {
       "sectionTitle": "InfiSwap in cijfers",
       "sectionSubtitle": "Het aantal zorgprofessionals ingeschreven op InfiSwap, in België en Frankrijk.",
       "badge": "Referentieplatform",
       "badgeHint": "België & Frankrijk",
-      "communityTitle": "Het referentieplatform voor verpleegkundige vervangingen",
+      "communityTitle": "Het referentieplatform voor verpleegkundige vervangingen, in België & Frankrijk",
       "communityLead": "InfiSwap behoort tot de meest actieve platforms voor de matching van verpleegkundigen, in België én Frankrijk.",
       "communityBody": "Elke dag sluiten nieuwe verpleegkundigen, vroedvrouwen en zorgkundigen zich aan bij een community die de continuïteit van zorg, de planning van afwezigheden en de matching tussen veldprofessionals vereenvoudigt.",
       "communityCta": "Word lid van de community",
@@ -168,7 +178,9 @@
       "featureVerifiedBody": "Een platform ontworpen voor zorgcontinuïteit, met betrouwbare uitwisselingen tussen veldprofessionals.",
       "featureCommunityTitle": "Een community die elke dag groeit",
       "featureCommunityBody": "Verpleegkundigen, vroedvrouwen en zorgkundigen kiezen InfiSwap om hun vervangingen eenvoudiger te organiseren.",
-      "membersBadgeFoot": "Leden ingeschreven in België & Frankrijk"
+      "membersBadgeFoot": "Leden ingeschreven in België & Frankrijk",
+      "countriesLabel": "Landen gedekt",
+      "delayLabel": "Gemiddelde termijn"
     },
     "kpi": {
       "membersLabel": "Ingeschreven leden",

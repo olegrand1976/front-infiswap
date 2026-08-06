@@ -1,162 +1,72 @@
 <template>
-    <div class="relative w-full pb-6 lg:py-12 lg:px-16 bg-white overflow-hidden">
-        <div class="hidden lg:block absolute top-4 right-8 select-none">
-            <LayoutsAppImage
-                src="/icons/Unin.png"
-                alt=""
-                class="w-12 h-12"
-            />
-        </div>
-        <div class="hidden lg:block absolute top-10 right-20 select-none">
-            <LayoutsAppImage
-                src="/icons/Unin.png"
-                alt=""
-                class="w-24 h-24"
-            />
-        </div>
+    <div class="bg-background py-14 sm:py-20">
+        <div class="container">
+            <h2 class="mx-auto mb-8 max-w-lg text-center font-secondary text-xl font-semibold text-foreground sm:mb-11 sm:text-[26px]">
+                {{ $t('home.platform.title') }}
+            </h2>
 
-        <h2 class="text-center text-2xl lg:text-4xl font-light text-primary mb-10 leading-snug whitespace-pre-line">
-            {{ $t('home.platform.title') }}
-        </h2>
-
-        <div class="flex flex-col gap-4 lg:hidden">
-            <div
-                class="relative rounded-2xl overflow-hidden shadow-md border border-gray-100"
-                style="height: 180px;"
-            >
-                <div class="absolute inset-0 bg-primary" />
-                <LayoutsAppImage
-                    src="/home/nurse_with_phone3.png"
-                    :alt="$t('home.platform.altField')"
-                    class="absolute right-0 bottom-0 h-full w-auto object-contain"
-                />
-                <div class="absolute inset-0 flex flex-col justify-between p-5">
-                    <p class="text-white font-semibold text-lg leading-snug max-w-[55%] whitespace-pre-line">
-                        {{ $t('home.platform.cardField') }}
-                    </p>
-                    <Button
-                        class="bg-white text-primary font-semibold rounded-xl px-5 py-2.5 self-start text-sm hover:bg-white hover:scale-105 transition-transform duration-300"
-                        :href="localePath('/about')"
+            <div class="mx-auto grid max-w-5xl grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-3">
+                <article
+                    v-for="card in cards"
+                    :key="card.key"
+                    class="overflow-hidden rounded-[18px] border border-input bg-card shadow-[0_2px_6px_rgba(0,0,0,.08),0_8px_20px_rgba(0,0,0,.06)] transition-transform hover:-translate-y-0.5"
+                >
+                    <div
+                        class="relative flex h-52 items-end justify-center overflow-hidden sm:h-64"
+                        :class="card.artClass"
                     >
-                        {{ $t('home.stats.learnMore') }}
-                    </Button>
-                </div>
-            </div>
-
-            <div
-                class="relative rounded-2xl overflow-hidden shadow-xl"
-                style="height: 200px;"
-            >
-                <div class="absolute inset-0 bg-primary" />
-                <LayoutsAppImage
-                    src="/home/nurse_with_phone2.png"
-                    :alt="$t('home.platform.altReplace')"
-                    class="absolute right-0 bottom-0 h-full w-auto object-contain"
-                />
-                <div class="absolute inset-0 flex flex-col justify-between p-5">
-                    <p class="text-white font-bold text-xl leading-snug max-w-[55%] whitespace-pre-line">
-                        {{ $t('home.platform.cardReplace') }}
-                    </p>
-                    <Button
-                        class="bg-white text-primary font-bold rounded-xl px-5 py-2.5 self-start text-sm hover:bg-white hover:scale-105 transition-transform duration-300"
-                        :href="localePath('/about')"
-                    >
-                        {{ $t('home.stats.learnMore') }}
-                    </Button>
-                </div>
-            </div>
-
-            <div
-                class="relative rounded-2xl overflow-hidden shadow-md border border-gray-100"
-                style="height: 180px;"
-            >
-                <div class="absolute inset-0 bg-primary" />
-                <LayoutsAppImage
-                    src="/home/three_nurses.png"
-                    :alt="$t('home.platform.altFind')"
-                    class="absolute right-0 bottom-0 h-full w-auto object-contain"
-                />
-                <div class="absolute inset-0 flex flex-col justify-between p-5">
-                    <p class="text-white font-semibold text-lg leading-snug max-w-[55%] whitespace-pre-line">
-                        {{ $t('home.platform.cardFind') }}
-                    </p>
-                    <Button
-                        class="bg-white text-primary font-semibold rounded-xl px-5 py-2.5 self-start text-sm hover:bg-white hover:scale-105 transition-transform duration-300"
-                        :href="localePath('/about')"
-                    >
-                        {{ $t('home.stats.learnMore') }}
-                    </Button>
-                </div>
-            </div>
-        </div>
-
-        <div class="hidden lg:flex items-center justify-center gap-6 lg:gap-8">
-            <div class="border border-gray-200 bg-white rounded-2xl shadow-md flex flex-col items-center overflow-hidden pb-6 p-3 w-90 min-w-90 max-w-90 transition-all duration-300">
-                <div
-                    class="hidden lg:flex w-full bg-primary rounded-xl overflow-hidden mb-4 relative transition-all duration-300 h-80"
-                >
-                    <LayoutsAppImage
-                        src="/home/nurse_with_phone3.png"
-                        :alt="$t('home.platform.altField')"
-                        class="absolute bottom-0 left-1/2 transform -translate-x-1/2 h-full w-auto object-contain object-bottom"
-                    />
-                </div>
-                <p class="text-center text-primary px-2 mb-4 leading-snug whitespace-pre-line">
-                    {{ $t('home.platform.cardFieldDesktop') }}
-                </p>
-                <Button
-                    class="bg-primary text-white rounded-lg px-5 py-1.5 hover:bg-primary w-75 hover:scale-105 transition-transform duration-300"
-                    :href="localePath('/about')"
-                >
-                    {{ $t('home.stats.learnMore') }}
-                </Button>
-            </div>
-
-            <div class="bg-primary rounded-2xl shadow-xl flex flex-col items-center overflow-hidden pb-6 p-4 w-95 min-w-95 max-w-95">
-                <div
-                    class="w-full bg-white rounded-xl overflow-hidden mb-5 p-4 h-86"
-                >
-                    <LayoutsAppImage
-                        src="/home/nurse_with_phone2.png"
-                        :alt="$t('home.platform.altReplace')"
-                        class="w-full h-auto block"
-                    />
-                </div>
-                <p class="text-center text-white text-base font-semibold px-4 mb-5 leading-snug whitespace-pre-line">
-                    {{ $t('home.platform.cardReplace') }}
-                </p>
-                <Button
-                    class="bg-white text-primary font-medium rounded-lg px-6 py-2 hover:bg-white lg:mt-10 w-75 hover:scale-105 transition-transform duration-300"
-                    :href="localePath('/about')"
-                >
-                    {{ $t('home.stats.learnMore') }}
-                </Button>
-            </div>
-
-            <div class="bg-white rounded-2xl shadow-md border border-gray-200 flex flex-col items-center overflow-hidden pb-6 p-3 w-90 min-w-90 max-w-90 transition-all duration-300">
-                <div
-                    class="hidden lg:flex w-full bg-primary rounded-xl overflow-hidden mb-4 relative transition-all duration-300 h-80"
-                >
-                    <LayoutsAppImage
-                        src="/home/three_nurses.png"
-                        :alt="$t('home.platform.altFind')"
-                        class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 h-full w-auto object-contain object-bottom"
-                    />
-                </div>
-                <p class="text-center text-primary px-2 mb-4 leading-snug whitespace-pre-line">
-                    {{ $t('home.platform.cardFindDesktop') }}
-                </p>
-                <Button
-                    class="bg-primary text-white rounded-lg px-5 py-1.5 hover:bg-primary w-75 hover:scale-105 transition-transform duration-300"
-                    :href="localePath('/about')"
-                >
-                    {{ $t('home.stats.learnMore') }}
-                </Button>
+                        <LayoutsAppImage
+                            :src="card.image"
+                            :alt="card.alt"
+                            class="h-[94%] w-auto object-contain object-bottom"
+                        />
+                    </div>
+                    <div class="p-4 sm:p-5">
+                        <h3 class="mb-2 whitespace-pre-line text-sm font-semibold leading-snug text-foreground sm:text-[15px]">
+                            {{ card.title }}
+                        </h3>
+                        <Button
+                            :href="localePath('/about')"
+                            variant="link"
+                            class="h-auto gap-1.5 p-0 text-xs font-bold text-primary sm:text-[12.5px]"
+                        >
+                            {{ $t('home.stats.learnMore') }}
+                            <ArrowRight class="!size-3.5" />
+                        </Button>
+                    </div>
+                </article>
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import { ArrowRight } from 'lucide-vue-next';
+
+const { t } = useI18n();
 const localePath = useLocalePath();
+
+const cards = computed(() => [
+    {
+        key: 'field',
+        image: '/home/nurse_with_phone3.png',
+        alt: t('home.platform.altField'),
+        title: t('home.platform.cardFieldDesktop'),
+        artClass: 'bg-primary',
+    },
+    {
+        key: 'replace',
+        image: '/home/nurse_with_phone2.png',
+        alt: t('home.platform.altReplace'),
+        title: t('home.platform.cardReplace'),
+        artClass: 'bg-success',
+    },
+    {
+        key: 'find',
+        image: '/home/three_nurses.png',
+        alt: t('home.platform.altFind'),
+        title: t('home.platform.cardFindDesktop'),
+        artClass: 'bg-foreground',
+    },
+]);
 </script>

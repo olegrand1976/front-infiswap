@@ -5,17 +5,12 @@
             <HomePlatformStats />
             <HomeNursesMapSection />
             <HomeCommunityStory />
-            <div class="container mt-12">
-                <HomePlatform />
-            </div>
+            <HomePlatform />
             <HomePartnerServices v-if="!isLoggedIn" />
             <HomeInstitutionBanner />
         </div>
-        <div>
-            <HomeJoinBanner />
-        </div>
 
-        <div
+        <!-- <div
             class="hidden lg:block lg:fixed lg:right-0 lg:z-30 lg:top-32 lg:w-64"
         >
             <a
@@ -32,7 +27,7 @@
                     <Phone class="w-4 text-white" />
                 </div>
             </a>
-        </div>
+        </div> -->
 
         <NuxtLink
             v-if="!isLoggedIn"

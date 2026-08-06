@@ -1,12 +1,21 @@
 <script setup lang="ts">
-import { Users } from 'lucide-vue-next';
+import { MapPin, Search, Users } from 'lucide-vue-next';
 
 const { locale } = useI18n();
-const { stats, loading, copy, kpiDefinitions, fetchStats, getKpiValue } = usePlatformStats();
+const { stats, loading, copy, fetchStats, getKpiValue } = usePlatformStats();
 
 await fetchStats();
 
 const dateLocale = computed(() => (locale.value === 'nl' ? 'nl-BE' : 'fr-BE'));
+
+const growthLabel = computed(() => {
+    const percent = stats.value.growth?.percent_vs_previous_30d;
+    if (percent === undefined || percent === null) {
+        return '';
+    }
+
+    return `${percent >= 0 ? '+' : ''}${percent}%`;
+});
 
 const formattedAsOf = computed(() => {
     if (!stats.value.as_of) {
@@ -28,85 +37,68 @@ const formattedAsOf = computed(() => {
 
 <template>
     <section
-        class="relative overflow-hidden bg-muted/40 py-14 sm:py-16"
+        class="bg-background py-14 text-center sm:py-16"
         aria-labelledby="platform-stats-title"
     >
-        <div
-            class="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full bg-primary/10 blur-3xl"
-            aria-hidden="true"
-        />
-        <div
-            class="pointer-events-none absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-success/10 blur-3xl"
-            aria-hidden="true"
-        />
-
         <div class="container relative mx-auto px-4 sm:px-6">
-            <div class="mx-auto mb-10 max-w-3xl text-center">
-                <Badge
-                    variant="secondary"
-                    class="mb-4 rounded-full px-4 py-1 text-xs font-semibold uppercase tracking-wide"
-                >
-                    {{ copy.badge }}
-                </Badge>
+            <div class="mx-auto mb-9 max-w-md">
                 <h2
                     id="platform-stats-title"
-                    class="text-2xl font-bold tracking-tight text-foreground sm:text-3xl lg:text-4xl"
+                    class="font-secondary text-[26px] font-semibold text-foreground"
                 >
                     {{ copy.sectionTitle }}
                 </h2>
-                <p class="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                <p class="mt-2.5 text-sm text-muted-foreground">
                     {{ copy.sectionSubtitle }}
                 </p>
             </div>
 
-            <div class="mx-auto max-w-md">
-                <Card
-                    v-for="kpi in kpiDefinitions"
-                    :key="kpi.key"
-                    variant="none"
-                    class="border-none bg-white/90 shadow-md backdrop-blur-sm"
-                >
-                    <div class="flex flex-col gap-4 p-6">
-                        <div class="flex items-center justify-between">
-                            <div class="rounded-2xl bg-primary/10 p-3 text-primary">
-                                <Users
-                                    class="h-6 w-6"
-                                    aria-hidden="true"
-                                />
-                            </div>
-                            <Skeleton
-                                v-if="loading"
-                                class="h-8 w-20"
-                            />
-                            <p
-                                v-else
-                                class="text-3xl font-extrabold text-primary sm:text-4xl"
-                            >
-                                <HomeStatCounter
-                                    :value="getKpiValue(kpi.key)"
-                                    :suffix="kpi.suffix"
-                                    :aria-label="`${kpi.label}: ${getKpiValue(kpi.key)}${kpi.suffix ?? ''}`"
-                                />
-                            </p>
-                        </div>
-                        <div>
-                            <p class="text-base font-semibold text-foreground">
-                                {{ kpi.label }}
-                            </p>
-                            <p class="mt-1 text-sm text-muted-foreground">
-                                {{ kpi.description }}
-                            </p>
-                        </div>
+            <div class="mx-auto grid max-w-3xl grid-cols-1 overflow-hidden rounded-[20px] bg-[#14110f] shadow-[0_24px_60px_rgba(0,0,0,.35)] sm:grid-cols-3">
+                <div class="border-b border-white/10 px-6 py-8 sm:border-b-0 sm:border-r">
+                    <Users class="mx-auto mb-3.5 size-6.5 text-success" />
+                    <div class="flex items-baseline justify-center gap-2">
+                        <Skeleton
+                            v-if="loading"
+                            class="h-8 w-16 bg-white/10"
+                        />
+                        <span
+                            v-else
+                            class="font-secondary text-[30px] font-semibold text-white"
+                        >
+                            <HomeStatCounter :value="getKpiValue('members_total')" />
+                        </span>
+                        <span
+                            v-if="!loading && growthLabel"
+                            class="text-[11px] font-bold text-success"
+                        >{{ growthLabel }}</span>
                     </div>
-                </Card>
+                    <p class="mt-1.5 text-[12.5px] text-white/65">
+                        {{ $t('home.kpi.membersLabel') }}
+                    </p>
+                </div>
+
+                <div class="border-b border-white/10 px-6 py-8 sm:border-b-0 sm:border-r">
+                    <MapPin class="mx-auto mb-3.5 size-6.5 text-success" />
+                    <span class="font-secondary text-[30px] font-semibold text-white">2</span>
+                    <p class="mt-1.5 text-[12.5px] text-white/65">
+                        {{ $t('home.stats.countriesLabel') }}
+                    </p>
+                </div>
+
+                <div class="px-6 py-8">
+                    <Search class="mx-auto mb-3.5 size-6.5 text-success" />
+                    <span class="font-secondary text-[30px] font-semibold text-white">&lt;24h</span>
+                    <p class="mt-1.5 text-[12.5px] text-white/65">
+                        {{ $t('home.stats.delayLabel') }}
+                    </p>
+                </div>
             </div>
 
             <p
                 v-if="!loading && formattedAsOf"
-                class="mt-8 text-center text-xs text-muted-foreground/80"
+                class="mt-6 text-xs text-muted-foreground/80"
             >
-                {{ copy.updatedLabel }}
-                {{ formattedAsOf }}
+                {{ copy.updatedLabel }} {{ formattedAsOf }}
             </p>
         </div>
     </section>

@@ -152,12 +152,22 @@
     "contactUsAt": "Contactez-nous au",
     "ctaRegister": "Inscription",
     "heroTagline": "InfiSwap est la plateforme 100 % automatisée dédiée à la mise en relation des infirmiers en Belgique et en France.",
+    "hero": {
+      "titlePrefix": "La continuité des soins,",
+      "titleHighlight": "sans interruption",
+      "lead": "InfiSwap connecte les infirmiers indépendants en Belgique et en France pour des remplacements trouvés en quelques minutes, pas en plusieurs jours.",
+      "ctaSearch": "Trouver un remplacement",
+      "ctaPublish": "Publier une annonce",
+      "trustText": "infirmiers déjà inscrits",
+      "callLabel": "Contactez-nous",
+      "activeMembersLabel": "Membres actifs"
+    },
     "stats": {
       "sectionTitle": "InfiSwap en chiffres",
       "sectionSubtitle": "Le nombre de professionnels de santé inscrits sur InfiSwap, en Belgique et en France.",
       "badge": "Plateforme de référence",
       "badgeHint": "Belgique & France",
-      "communityTitle": "La plateforme de référence du remplacement infirmier",
+      "communityTitle": "La plateforme de référence du remplacement infirmier, en Belgique & en France",
       "communityLead": "InfiSwap compte parmi les plateformes les plus actives pour la mise en relation des infirmiers, en Belgique comme en France.",
       "communityBody": "Chaque jour, de nouveaux infirmiers, sages-femmes et aides-soignants rejoignent une communauté qui simplifie la continuité des soins, la planification des absences et la mise en relation entre professionnels de terrain.",
       "communityCta": "Rejoindre la communauté",
@@ -168,7 +178,9 @@
       "featureVerifiedBody": "Une plateforme pensée pour la continuité des soins, avec des échanges fiables entre professionnels de terrain.",
       "featureCommunityTitle": "Une communauté qui grandit chaque jour",
       "featureCommunityBody": "Infirmiers, sages-femmes et aides-soignants rejoignent InfiSwap pour organiser leurs remplacements plus simplement.",
-      "membersBadgeFoot": "Membres inscrits en Belgique & France"
+      "membersBadgeFoot": "Membres inscrits en Belgique & France",
+      "countriesLabel": "Pays couverts",
+      "delayLabel": "Délai moyen"
     },
     "kpi": {
       "membersLabel": "Membres inscrits",
