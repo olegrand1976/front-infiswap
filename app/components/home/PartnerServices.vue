@@ -1,9 +1,9 @@
 <template>
-    <section class="container my-12">
-        <h2 class="text-2xl font-bold text-primary text-center mb-6">
+    <section class="container py-14">
+        <h2 class="text-2xl font-bold font-secondary text-center mb-10">
             {{ $t('home.partners.title') }}
         </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 max-w-5xl mx-auto md:grid-cols-2 gap-4 lg:gap-6">
             <div class="rounded-xl border border-blue-200 bg-white p-6 shadow-sm flex flex-col gap-4">
                 <LayoutsNursTech class="w-36 mx-auto" />
                 <p class="text-sm text-gray-600 text-center">
@@ -18,8 +18,8 @@
                 </NuxtLink>
             </div>
             <div class="rounded-xl border border-indigo-200 bg-white p-6 shadow-sm flex flex-col gap-4">
-                <LayoutsNursAssur class="w-36 mx-auto" />
-                <p class="text-sm text-gray-600 text-center">
+                <LayoutsNursAssur class="mt-2 w-36 mx-auto" />
+                <p class="text-sm mt-3 text-gray-600 text-center">
                     {{ $t('home.partners.nursassurDesc') }}
                 </p>
                 <NuxtLink

@@ -1,5 +1,5 @@
 <template>
-    <section class="institution-banner relative overflow-hidden">
+    <section class="institution-banner relative overflow-hidden mt-5">
         <div class="institution-banner__mesh absolute inset-0" />
         <div class="institution-banner__orb institution-banner__orb--a absolute rounded-full" />
         <div class="institution-banner__orb institution-banner__orb--b absolute rounded-full" />
@@ -9,21 +9,21 @@
                 <span class="mx-auto mb-6 flex size-14.5 items-center justify-center rounded-2xl border border-white/20 bg-white/14 backdrop-blur-md lg:mx-0">
                     <Building2 class="size-6.5 text-white" />
                 </span>
-                <h2 class="mx-auto max-w-[20ch] whitespace-pre-line font-secondary text-[32px] font-semibold leading-tight text-white [text-shadow:0_2px_12px_rgba(0,0,0,.25)] lg:mx-0">
+                <h2 class="mx-auto max-w-96 whitespace-pre-line font-secondary text-[32px] font-semibold leading-tight text-white [text-shadow:0_2px_12px_rgba(0,0,0,.25)] lg:mx-0">
                     {{ $t('home.institution.titleDesktop') }}
                 </h2>
 
-                <div class="flex flex-col items-center gap-3.5 lg:items-start">
+                <div class="w-full mt-4 max-w-96 flex flex-col items-center gap-3.5 lg:items-start">
                     <Button
                         :href="localePath('/offre-institution')"
-                        class="h-auto max-w-75 gap-2.5 whitespace-pre-line rounded-[11px] bg-white px-6 py-[15px] text-left text-[13.5px] font-bold leading-[1.32] text-primary shadow-[0_14px_32px_rgba(0,0,0,.3)] hover:bg-white/90"
+                        class="h-auto text-left w-[90%] gap-2.5 whitespace-pre-line rounded-lg bg-white p-4 text-left text-[13.5px] font-bold leading-[1.32] text-primary shadow-[0_14px_32px_rgba(0,0,0,.3)] hover:bg-white/90"
                     >
                         <UserPlus class="!size-4.5 shrink-0" />
                         {{ $t('home.institution.ctaStaff') }}
                     </Button>
                     <Button
                         :href="localePath('/offre-institution')"
-                        class="h-auto max-w-75 gap-2.5 whitespace-pre-line rounded-[11px] border-[1.5px] border-white/55 bg-white/16 px-6 py-[15px] text-left text-[13.5px] font-bold leading-[1.32] text-white shadow-[0_10px_26px_rgba(0,0,0,.2)] backdrop-blur-md hover:bg-white/25"
+                        class="h-auto w-[90%] gap-2.5 whitespace-pre-line rounded-lg border-[1.5px] border-white/55 bg-white/16 px-6 py-[15px] text-left text-[13.5px] font-bold leading-[1.32] text-white shadow-[0_10px_26px_rgba(0,0,0,.2)] backdrop-blur-md hover:bg-white/25"
                     >
                         <HeartHandshake class="!size-4.5 shrink-0" />
                         {{ $t('home.institution.ctaContinuity') }}
