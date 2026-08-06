@@ -13,7 +13,7 @@
             <div class="relative aspect-[9/16] overflow-hidden rounded-[1.35rem] bg-white">
                 <div class="relative flex h-[48%] flex-col items-center justify-end bg-[linear-gradient(160deg,#e8304a_0%,#c9223c_100%)] px-[0.85rem] pt-3 pb-4 text-center text-white">
                     <div
-                        class="pointer-events-none absolute top-[0.65rem] left-1/2 h-20 w-18 -translate-x-1/2"
+                        class="pointer-events-none absolute top-[0.65rem] left-1/2 h-18 w-16 -translate-x-1/2"
                         aria-hidden="true"
                     >
                         <span class="home-phone-mockup__clip-board" />
@@ -22,13 +22,13 @@
                         <span class="absolute top-[1.4rem] -right-[0.75rem] text-[1.1rem] leading-none font-bold text-white/35 before:content-['+']" />
                     </div>
 
-                    <p class="relative z-[1] mb-[0.15rem] text-[0.7rem] leading-[1.2] font-normal lg:text-[0.78rem]">
+                    <p class="relative z-[1] mb-1 text-xs leading-[1.2] font-normal">
                         {{ $t('home.mockup.lookingFor') }}
                     </p>
-                    <p class="relative z-[1] mb-[0.55rem] text-[1.05rem] leading-[1.15] font-bold lg:text-[1.2rem]">
+                    <p class="relative font-secondary z-[1] mb-2 text-xl leading-[1.15] font-bold">
                         {{ $t('home.mockup.lookingForNurse') }}
                     </p>
-                    <span class="relative z-[1] inline-flex min-w-[5.5rem] items-center justify-center rounded-full bg-white px-[0.9rem] py-[0.28rem] text-[0.72rem] font-bold text-[#e8304a] lg:text-[0.78rem]">
+                    <span class="relative z-[1] inline-flex min-w-[5.5rem] items-center justify-center rounded-full bg-white text-primary text-xs p-1 font-semibold">
                         {{ $t('home.mockup.consult') }}
                     </span>
                 </div>
