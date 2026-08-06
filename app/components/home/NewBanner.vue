@@ -4,14 +4,8 @@
         <div class="home-hero__orb home-hero__orb--a absolute rounded-full" />
         <div class="home-hero__orb home-hero__orb--b absolute rounded-full" />
 
-        <div class="relative z-10 mx-auto grid max-w-6xl grid-cols-1 items-center gap-8 px-6 py-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:px-8 lg:py-16">
+        <div class="relative z-10 mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-6 py-11 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:px-8 lg:py-16">
             <div>
-                <LayoutsAppImage
-                    src="/logo_white.png"
-                    alt="Logo InfiSwap"
-                    class="mb-7 h-8 w-auto object-contain"
-                />
-
                 <h1 class="font-secondary text-[32px] font-semibold leading-[1.1] text-white lg:text-[42px]">
                     {{ $t('home.hero.titlePrefix') }} <em class="not-italic text-success">{{ $t('home.hero.titleHighlight') }}</em>
                 </h1>
@@ -51,15 +45,15 @@
             </div>
 
             <div class="relative flex justify-center">
-                <div class="home-hero__phone relative w-48 sm:w-60 lg:w-72">
+                <div class="home-hero__phone relative w-48 xs:w-52 sm:w-60">
                     <HomePhoneMockup />
 
                     <a
                         href="tel:+32478023377"
-                        class="absolute -bottom-3 -left-3 flex items-center gap-1.5 rounded-lg bg-white px-2.5 py-1.5 shadow-[0_16px_36px_rgba(0,0,0,.35)] sm:-bottom-4 sm:-left-4 sm:gap-2.5 sm:rounded-xl sm:px-4 sm:py-2.5"
+                        class="absolute -right-28 top-[6%] flex items-center gap-1.5 rounded-lg bg-white p-2 shadow-[0_16px_36px_rgba(0,0,0,.35)] gap-2"
                     >
                         <span class="flex size-6 shrink-0 items-center justify-center rounded-lg bg-success text-white sm:size-8.5 sm:rounded-[9px]">
-                            <Phone class="size-3 sm:size-4" />
+                            <Phone class="size-4" />
                         </span>
                         <span>
                             <span class="block text-[8px] font-semibold text-gray-400 sm:text-[10px]">{{ $t('home.hero.callLabel') }}</span>
@@ -67,7 +61,7 @@
                         </span>
                     </a>
 
-                    <div class="absolute right-[-4%] top-[6%] flex items-center gap-1.5 rounded-lg bg-white px-2.5 py-1.5 shadow-[0_16px_36px_rgba(0,0,0,.35)] sm:gap-2.5 sm:rounded-xl sm:px-4 sm:py-2.5">
+                    <div class="absolute top-39 -left-28 w-40 flex items-center gap-2 rounded-lg bg-white shadow-[0_16px_36px_rgba(0,0,0,.35)] gap-2 p-2">
                         <span class="flex size-6 shrink-0 items-center justify-center rounded-lg bg-primary text-white sm:size-8.5 sm:rounded-[9px]">
                             <UserPlus class="size-3 sm:size-4" />
                         </span>
@@ -131,6 +125,6 @@ const formattedMembers = computed(() => new Intl.NumberFormat('fr-BE').format(ge
 }
 
 .home-hero__phone {
-    transform: rotate(3deg);
+    transform: rotate(6deg);
 }
 </style>
