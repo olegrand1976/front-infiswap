@@ -241,7 +241,15 @@
                 </p>
             </div>
 
-            <div class="bg-primary text-primary h-10 w-full mt-auto" />
+            <div class="bg-primary text-white h-10 w-full text-center flex items-center justify-center mt-auto">
+                <NuxtLink
+                    to="https://www.ll-it-sc.be"
+                    target="_blank"
+                    class="block text-xs"
+                >
+                    © {{ currentYear }} InfiSwap — Site par LL-IT Software & Computer
+                </NuxtLink>
+            </div>
         </div>
     </div>
 </template>
