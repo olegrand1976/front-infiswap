@@ -1,9 +1,12 @@
 <template>
     <div>
-        <div class="hidden sm:flex flex-row h-screen overflow-hidden">
+        <div class="hidden lg:flex flex-row h-screen overflow-hidden">
             <BackButton
                 :to="localePath('/login')"
             />
+            <div class="hidden sm:block absolute top-6 right-6 z-30">
+                <LayoutsDropdownLang />
+            </div>
             <div
                 :class="cn(
                     'w-1/2 flex flex-col relative h-screen overflow-hidden',
@@ -19,10 +22,25 @@
                         class="pt-8 sm:pt-10 lg:pt-12 xl:pt-14 flex flex-col h-full bg-white"
                     >
                         <div class="flex-1 lg:hidden" />
-                        <h1 class="mb-6 sm:mb-8 lg:mb-12 text-xl lg:text-2xl xl:text-3xl max-w-xl mx-auto mt-4 sm:mt-0 lg:mt-10 xl:mt-12 text-center px-6 lg:px-0 leading-tight">
-                            <span class="block mb-2 font-medium text-gray-600">{{ $t('register.welcome') }}</span>
-                            <span class="block text-gray-900 font-extrabold">{{ $t('register.tagline') }}</span>
-                            <span class="block mt-5 text-sm font-medium text-gray-400">{{ $t('register.scrollHint') }}</span>
+                        <h1 class="mb-6 sm:mb-8 lg:mb-12 max-w-xl mx-auto mt-4 sm:mt-0 lg:mt-10 xl:mt-12 text-center px-6 lg:px-0">
+                            <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-primary">
+                                <span class="h-px w-3.5 bg-primary/35" />
+                                {{ $t('register.welcome') }}
+                                <span class="h-px w-3.5 bg-primary/35" />
+                            </span>
+                            <span class="mt-3 block font-secondary text-2xl font-bold leading-tight text-gray-900 lg:text-3xl xl:text-4xl">
+                                {{ $t('register.tagline') }}
+                            </span>
+                            <svg
+                                class="mx-auto mt-2 h-3 w-24 text-primary/80"
+                                viewBox="0 0 96 12"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2.4"
+                                stroke-linecap="round"
+                            >
+                                <path d="M2 8c8-9 14 3 22-6s14 9 22 0 14-9 22 0 14 6 22-2" />
+                            </svg>
                         </h1>
                         <div class="flex-1" />
                         <div class="rounded-2xl max-w-md mx-auto">
@@ -49,7 +67,6 @@
                         <InstitutionPricing />
                     </div>
                 </transition>
-                <!-- Scroll Indicator Arrow (Fixed overlay) -->
                 <transition name="fade">
                     <div
                         v-if="formData.accountType === 'institution' && !hasScrolledToBottom"
@@ -62,17 +79,23 @@
                 </transition>
             </div>
 
-            <div class="w-1/2 bg-white overflow-y-auto overflow-x-hidden flex flex-col items-center relative py-8 sm:py-10 lg:py-12 xl:py-14">
-                <div class="hidden lg:block mb-2 lg:mb-4 xl:mb-6">
+            <div class="w-1/2 bg-white overflow-y-auto overflow-x-hidden flex flex-col items-center relative py-8 sm:py-10">
+                <div class="relative hidden lg:flex lg:justify-center mb-2 lg:mb-4 xl:mb-6">
+                    <span class="pointer-events-none absolute -inset-x-12 -inset-y-6 rounded-full bg-primary/10 blur-2xl" />
                     <LayoutsAppImage
                         src="logo.png"
-                        class="h-14 lg:h-20"
+                        class="relative h-14 lg:h-20"
                     />
                 </div>
 
-                <p class="text-center text-3xl 2xl:text-4xl text-primary font-bold -mt-2 sm:-mt-1 lg:mt-0 xl:-mt-4">
-                    Inscription
-                </p>
+                <div class="text-center -mt-2 sm:-mt-1 lg:mt-2 xl:mt-4">
+                    <h2 class="font-secondary text-2xl font-semibold text-dark lg:text-3xl 2xl:text-4xl">
+                        {{ $t('register.title') }}
+                    </h2>
+                    <p class="mt-2 text-sm text-gray-500">
+                        {{ $t('register.subtitle') }}
+                    </p>
+                </div>
 
                 <div class="w-full max-w-5xl px-8 font-light mt-4 sm:mt-6 lg:mt-8 xl:mt-10">
                     <form
@@ -467,15 +490,11 @@
                                         <label class="text-sm font-medium text-gray-700 mb-1 block">
                                             {{ $t('register.language') }}
                                         </label>
-                                        <Select
-                                            v-model="formData.language"
-                                            @update:model-value="onRegisterLanguageChange"
-                                        >
+                                        <Select v-model="formData.language">
                                             <SelectTrigger
                                                 class="flex w-full space-x-4 text-sm justify-start items-center rounded-md h-11 border-2 border-gray-300 transition-colors duration-150 hover:border-gray-400 focus:border-primary data-[state=open]:border-primary"
                                                 position="right"
                                             >
-                                                <LanguageIcon class="text-primary w-6 h-6" />
                                                 <SelectValue
                                                     :placeholder="$t('register.language')"
                                                     class="text-sm ml-3 my-auto"
@@ -489,7 +508,15 @@
                                                         class="flex justify-center items-center -ms-3"
                                                     >
                                                         <SelectItem :value="language.value">
-                                                            <span class="xl:text-sm sm:text-xs">{{ language.label }}</span>
+                                                            <div class="flex items-center">
+                                                                <LayoutsAppImage
+                                                                    :src="language.icon"
+                                                                    :alt="language.name"
+                                                                    class="xl:w-4 xl:h-3 sm:w-3 sm:h-2 my-auto mr-2"
+                                                                    format="png"
+                                                                />
+                                                                <span class="xl:text-sm sm:text-xs">{{ language.name }}</span>
+                                                            </div>
                                                         </SelectItem>
                                                     </div>
                                                 </SelectGroup>
@@ -784,18 +811,34 @@
 
         <div
             :class="cn(
-                'sm:hidden min-h-screen w-screen flex flex-col relative overflow-x-hidden transition-colors duration-500',
+                'lg:hidden min-h-screen w-screen flex flex-col relative overflow-x-hidden transition-colors duration-500',
                 formData.accountType === 'institution' ? 'bg-primary institution-mode-mobile' : 'bg-white',
             )"
         >
             <LayoutsHeaderMobile />
             <BackButton :to="localePath('/login')" />
 
-            <div class="grow flex flex-col items-center px-6 py-10 pb-20 overflow-y-auto">
+            <div class="grow flex flex-col items-center px-6 pb-8 overflow-y-auto">
                 <div v-if="formData.accountType === 'standard'">
-                    <h1 class="mt-8 mb-8 text-sm text-center">
-                        <span>{{ $t('register.welcome') }} {{ $t('register.tagline') }}</span>
-                        <span> {{ $t('register.scrollHint') }}</span>
+                    <h1 class="mt-2 mb-8 text-center">
+                        <span class="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
+                            <span class="h-px w-3 bg-primary/35" />
+                            {{ $t('register.welcome') }}
+                            <span class="h-px w-3 bg-primary/35" />
+                        </span>
+                        <span class="mt-2 block font-secondary text-xl font-bold leading-tight text-gray-900">
+                            {{ $t('register.tagline') }}
+                        </span>
+                        <svg
+                            class="mx-auto mt-1.5 h-2.5 w-16 text-primary/80"
+                            viewBox="0 0 96 12"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round"
+                        >
+                            <path d="M2 8c8-9 14 3 22-6s14 9 22 0 14-9 22 0 14 6 22-2" />
+                        </svg>
                     </h1>
                 </div>
                 <NuxtLink
@@ -1231,15 +1274,11 @@
                                     <label class="text-sm font-medium text-gray-700 mb-1 block">
                                         {{ $t('register.language') }}
                                     </label>
-                                    <Select
-                                        v-model="formData.language"
-                                        @update:model-value="onRegisterLanguageChange"
-                                    >
+                                    <Select v-model="formData.language">
                                         <SelectTrigger
                                             class="flex w-full space-x-4 text-sm justify-start items-center rounded-md h-11 border-2 border-gray-300 transition-colors duration-150 hover:border-gray-400 focus:border-primary data-[state=open]:border-primary"
                                             position="right"
                                         >
-                                            <LanguageIcon class="text-primary w-6 h-6" />
                                             <SelectValue
                                                 :placeholder="$t('register.language')"
                                                 class="text-sm ml-3 my-auto"
@@ -1253,7 +1292,15 @@
                                                     class="flex justify-center items-center -ms-3"
                                                 >
                                                     <SelectItem :value="language.value">
-                                                        <span class="xl:text-sm sm:text-xs">{{ language.label }}</span>
+                                                        <div class="flex items-center">
+                                                            <LayoutsAppImage
+                                                                :src="language.icon"
+                                                                :alt="language.name"
+                                                                class="xl:w-4 xl:h-3 sm:w-3 sm:h-2 my-auto mr-2"
+                                                                format="png"
+                                                            />
+                                                            <span class="xl:text-sm sm:text-xs">{{ language.name }}</span>
+                                                        </div>
                                                     </SelectItem>
                                                 </div>
                                             </SelectGroup>
@@ -1518,7 +1565,7 @@
                         </div>
                     </div>
 
-                    <div class="flex justify-center items-center">
+                    <div class="flex justify-center mt-2 items-center">
                         <Button
                             :class="cn('w-full', formData.accountType === 'institution' ? 'bg-white text-primary hover:bg-white/80' : 'bg-primary text-white hover:bg-primary/80')"
                             type="submit"
@@ -1530,7 +1577,7 @@
                     </div>
                 </form>
 
-                <div class="text-sm text-center mt-10">
+                <div class="text-sm text-center mt-8">
                     <span>{{ $t('register.hasAccount') }}</span>
                     <NuxtLink
                         :to="localePath('/login')"
@@ -1564,23 +1611,12 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { LANGUAGES } from '~/lib/constants';
 import { cn } from '~/lib/utils';
-import { isAppLocale, type AppLocale } from '~/utils/appLocale';
+import { isAppLocale } from '~/utils/appLocale';
 
 const leftPanelScroll = ref<HTMLElement | null>(null);
 const hasScrolledToBottom = ref(false);
-const { applyLocale } = useAppLocale();
-const switchLocalePath = useSwitchLocalePath();
 const localePath = useLocalePath();
 const { locale, t } = useI18n();
-
-async function onRegisterLanguageChange(value: unknown) {
-    if (!isAppLocale(value)) {
-        return;
-    }
-
-    await applyLocale(value as AppLocale, { persistSettings: false });
-    await navigateTo(switchLocalePath(value as AppLocale));
-}
 
 const handleLeftPanelScroll = (e: Event) => {
     const target = e.target as HTMLElement;
@@ -1640,12 +1676,12 @@ const countries = [
         name: 'france',
         icon: '/icons/fr.png',
     },
-    {
-        value: 'nl',
-        label: 'Pays-Bas',
-        name: 'paysBas',
-        icon: '/icons/pays-bas.png',
-    },
+    // {
+    //     value: 'nl',
+    //     label: 'Pays-Bas',
+    //     name: 'paysBas',
+    //     icon: '/icons/pays-bas.png',
+    // },
 ];
 
 type CountryOfWork = {
