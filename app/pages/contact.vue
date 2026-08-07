@@ -1,6 +1,6 @@
 <template>
     <div class="bg-white">
-        <section class="relative overflow-hidden bg-gradient-to-b from-muted to-white px-6 py-10 text-center lg:py-20">
+        <section class="relative overflow-hidden bg-gradient-to-b from-muted to-white px-6 py-10 text-center">
             <div class="absolute -left-16 -top-20 size-56 rounded-full bg-primary/10" />
             <div class="absolute -right-10 bottom-[-60px] size-40 rounded-full bg-primary/10" />
             <div class="mb-5 md:hidden">
@@ -29,7 +29,7 @@
             </div>
         </section>
 
-        <div class="container pb-10 pt-10 lg:pt-12">
+        <div class="container pb-10 lg:pb-15">
             <div class="mx-auto grid max-w-5xl overflow-hidden rounded-lg border border-input bg-white shadow-xl lg:grid-cols-[1.3fr_1fr]">
                 <div class="p-8 lg:p-11">
                     <h2 class="font-secondary text-xl font-semibold text-dark">
@@ -113,11 +113,11 @@
                     </form>
                 </div>
 
-                <div class="flex flex-col bg-muted p-8 lg:p-10">
-                    <h3 class="font-secondary text-lg font-semibold text-dark">
+                <div class="flex flex-col bg-primary p-8 lg:p-10">
+                    <h3 class="font-secondary text-lg font-semibold text-white">
                         {{ $t('contact.infoTitle') }}
                     </h3>
-                    <p class="mt-1 mb-5 text-xs text-gray-500">
+                    <p class="mt-1 mb-5 text-xs text-gray-400">
                         {{ $t('contact.infoSubtitle') }}
                     </p>
 
@@ -131,7 +131,7 @@
                             </span>
                             <span>
                                 <span class="block text-[11px] font-bold uppercase tracking-wide text-gray-400">{{ $t('contact.phone') }}</span>
-                                <span class="text-sm font-semibold text-dark">0478 02 33 77</span>
+                                <span class="text-sm font-semibold text-white">0478 02 33 77</span>
                             </span>
                         </a>
 
@@ -144,7 +144,7 @@
                             </span>
                             <span>
                                 <span class="block text-[11px] font-bold uppercase tracking-wide text-gray-400">Email</span>
-                                <span class="text-sm font-semibold text-dark">info@infiswap.be</span>
+                                <span class="text-sm font-semibold text-white">info@infiswap.be</span>
                             </span>
                         </a>
 
@@ -154,7 +154,7 @@
                             </span>
                             <span>
                                 <span class="block text-[11px] font-bold uppercase tracking-wide text-gray-400">{{ $t('contact.address') }}</span>
-                                <span class="text-sm font-medium text-dark">Rue de la Résistance 92/A, 7131 Waudrez</span>
+                                <span class="text-sm font-medium text-white">Rue de la Résistance 92/A, 7131 Waudrez</span>
                             </span>
                         </div>
 
@@ -169,12 +169,12 @@
                             </span>
                             <span>
                                 <span class="block text-[11px] font-bold uppercase tracking-wide text-gray-400">{{ $t('contact.site') }}</span>
-                                <span class="text-sm font-semibold text-dark">ll-it-sc.be</span>
+                                <span class="text-sm font-semibold text-white">ll-it-sc.be</span>
                             </span>
                         </a>
                     </div>
 
-                    <div class="mt-auto flex items-center gap-2 pt-5 text-xs text-gray-500">
+                    <div class="mt-auto flex items-center gap-2 pt-5 text-xs text-white">
                         <span class="size-1.5 shrink-0 rounded-full bg-success" />
                         {{ $t('contact.trustResponseTime') }}
                     </div>
