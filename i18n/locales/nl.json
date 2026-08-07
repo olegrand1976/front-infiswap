@@ -130,7 +130,10 @@
     "cookies": "Cookies",
     "contactUs": "Neem contact op",
     "newsletterDesc": "Schrijf u in op onze nieuwsbrief om onze toekomstige communicatie te ontvangen.",
-    "contact": "CONTACT"
+    "contact": "CONTACT",
+    "navigation": "Navigatie",
+    "legal": "Juridisch",
+    "partners": "Partners"
   },
   "cookies": {
     "title": "Cookies en privacy",

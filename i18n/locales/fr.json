@@ -130,7 +130,10 @@
     "cookies": "Cookies",
     "contactUs": "Contactez-nous",
     "newsletterDesc": "Inscrivez-vous à notre newsletter pour recevoir nos futures communications.",
-    "contact": "CONTACT"
+    "contact": "CONTACT",
+    "navigation": "Navigation",
+    "legal": "Légal",
+    "partners": "Partenaires"
   },
   "cookies": {
     "title": "Cookies et confidentialité",
