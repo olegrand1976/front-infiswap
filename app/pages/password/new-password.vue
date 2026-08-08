@@ -1,152 +1,250 @@
 <template>
     <div>
-        <div class="hidden sm:flex flex-row justify-center h-auto sm:pt-[25vh] xl:pt-0">
-            <div class="bg-tertiary/30 hidden lg:flex flex-col items-center lg:w-[115vw] sm:w-[85vw] relative container">
-                <div class="flex justify-center items-center mb-auto mt-[30%]">
-                    <LayoutsAppImage
-                        src="/icons/unlock.png"
-                        class="lg:w-52"
-                    />
-                </div>
-                <div class="absolute top-[10%] left-[4%]">
-                    <LayoutsAppImage
-                        src="/icons/plus.png"
-                        class="lg:w-24"
-                    />
-                </div>
-                <div class="absolute bottom-[18%] right-[6%]">
-                    <LayoutsAppImage
-                        src="/icons/Unin.png"
-                        class="lg:w-16"
-                    />
-                </div>
+        <div class="hidden lg:flex flex-row justify-center h-auto min-h-screen">
+            <div class="bg-muted hidden lg:flex flex-col items-center lg:w-[115vw] relative overflow-hidden container">
+                <div class="absolute right-[14%] top-[16%] size-16 rounded-lg bg-primary/20" />
+                <div class="absolute bottom-[26%] left-[12%] size-9 rounded-full bg-primary/20" />
 
                 <div class="absolute right-6 top-6">
                     <LayoutsDropdownLang />
                 </div>
 
-                <div class="absolute bottom-[20%] left-[15%]">
-                    <LayoutsAppImage
-                        src="/icons/cog_2.png"
-                        class="lg:w-52"
-                    />
+                <div class="absolute left-1/2 top-1/2 flex size-23 -translate-x-1/2 -translate-y-[60%] items-center justify-center rounded-xl bg-white shadow-lg">
+                    <KeyRound class="size-10 text-primary" />
                 </div>
 
-                <div class="absolute z-10 w-full text-primary h-16 bg-primary bottom-0 left-0">
-                    .
-                </div>
+                <div class="absolute z-10 h-14 w-full bg-primary bottom-0 left-0" />
             </div>
 
-            <div class="bg-white container w-full xl:h-screen lg:h-[55vh] flex flex-col space-y-12 justify-center items-center relative">
+            <div class="bg-white container w-full flex flex-col justify-center items-center relative">
                 <BackButton :to="localePath('/login')" />
-                <div>
-                    <LayoutsLogo class="sm:w-64 lg:w-72" />
+                <div class="shrink-0 mb-4">
+                    <LayoutsLogo class="w-64" />
                 </div>
-                <div class="flex flex-col items-center space-y-2">
-                    <h1 class="md:text-2xl sm:text-xl text-center text-primary">
-                        {{ $t('auth.newPasswordTitle') }} <span class="font-bold">{{ $t('auth.newPasswordTitleStrong') }}</span>
-                    </h1>
-                    <p class="text-gray-400 text-sm text-center">
-                        {{ $t('auth.newPasswordHint') }}
-                    </p>
-                </div>
-                <div class="w-full container">
-                    <form
-                        class="flex flex-col space-y-6 max-w-[500px] mx-auto"
-                        @submit.prevent="resetPassword"
-                    >
-                        <InputIcon
-                            v-model="formData.password"
-                            :icon="Lock"
-                            type="password"
-                            :placeholder="$t('auth.password')"
-                            class="text-sm w-full"
-                        />
 
-                        <InputIcon
-                            v-model="formData.passwordConfirm"
-                            :icon="Lock"
-                            type="password"
-                            :placeholder="$t('auth.passwordConfirmPlaceholder')"
-                            class="text-sm w-full"
-                        />
+                <div class="w-full max-w-md container">
+                    <template v-if="!showSuccess">
+                        <div class="mb-5 text-center">
+                            <div class="mx-auto mb-4 flex size-11 items-center justify-center rounded-md border border-primary/25 bg-primary/10 text-primary">
+                                <KeyRound class="size-5" />
+                            </div>
+                            <h1 class="font-secondary text-2xl font-semibold text-dark">
+                                {{ $t('auth.newPasswordTitle') }}
+                            </h1>
+                            <p class="mt-2 text-sm text-gray-500">
+                                {{ $t('auth.newPasswordHint') }}
+                            </p>
+                        </div>
 
-                        <div class="flex justify-center items-center mx-auto pt-8">
+                        <form
+                            class="flex flex-col gap-4"
+                            @submit.prevent="resetPassword"
+                        >
+                            <div class="flex flex-col gap-1.5">
+                                <label class="text-sm font-medium text-gray-700">
+                                    {{ $t('auth.newPasswordLabel') }}
+                                </label>
+                                <InputIcon
+                                    v-model="formData.password"
+                                    :icon="Lock"
+                                    type="password"
+                                    rounded="md"
+                                    :placeholder="$t('auth.password')"
+                                    class="text-sm w-full"
+                                />
+                            </div>
+
+                            <div class="flex flex-col gap-1.5">
+                                <label class="text-sm font-medium text-gray-700">
+                                    {{ $t('auth.confirmNewPassword') }}
+                                </label>
+                                <InputIcon
+                                    v-model="formData.passwordConfirm"
+                                    :icon="Lock"
+                                    type="password"
+                                    rounded="md"
+                                    :placeholder="$t('auth.passwordConfirmPlaceholder')"
+                                    class="text-sm w-full"
+                                />
+                            </div>
+
+                            <div class="flex flex-wrap gap-x-3.5 gap-y-1.5 -mt-1">
+                                <span
+                                    v-for="req in passwordRequirements"
+                                    :key="req.key"
+                                    class="flex items-center gap-1 text-[11.5px]"
+                                    :class="req.met ? 'text-success' : 'text-gray-400'"
+                                >
+                                    <Check
+                                        v-if="req.met"
+                                        class="size-3"
+                                    />
+                                    <span
+                                        v-else
+                                        class="size-3 rounded-full border border-gray-300"
+                                    />
+                                    {{ req.label }}
+                                </span>
+                            </div>
+
                             <Button
                                 type="submit"
-                                class="font-bold px-12 md:text-sm sm:text-xs"
+                                class="mt-2 w-full font-bold"
+                                :in-progress="isSubmitting"
                             >
                                 {{ $t('common.save') }}
                             </Button>
+                        </form>
+                    </template>
+
+                    <div
+                        v-else
+                        class="text-center py-2"
+                    >
+                        <div class="mx-auto mb-4 flex size-15 items-center justify-center rounded-xl bg-success/10">
+                            <ShieldCheck class="size-7 text-success" />
                         </div>
-                    </form>
+                        <h1 class="font-secondary text-xl font-semibold text-dark mb-2">
+                            {{ $t('auth.passwordSaved') }}
+                        </h1>
+                        <p class="text-sm text-gray-500 mb-6">
+                            {{ $t('auth.newPasswordSuccessHint') }}
+                        </p>
+                        <Button
+                            class="w-full max-w-64 mx-auto font-bold"
+                            @click="navigateTo(localePath('/login'))"
+                        >
+                            {{ $t('auth.backToLogin') }}
+                            <ArrowRight class="size-4" />
+                        </Button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="sm:hidden w-screen flex flex-col justify-between relative overflow-hidden">
+        <div class="lg:hidden min-h-screen w-screen flex flex-col justify-between relative overflow-hidden">
             <LayoutsHeaderMobile />
 
             <BackButton :to="localePath('/login')" />
 
-            <div class="flex flex-col items-center space-y-2 px-6 mt-32 text-center">
-                <h1 class="text-lg text-primary">
-                    {{ $t('auth.newPasswordTitle') }} <span class="font-bold">{{ $t('auth.newPasswordTitleStrong') }}</span>
-                </h1>
-                <p class="text-gray-400 text-xs">
-                    {{ $t('auth.newPasswordHint') }}
-                </p>
-            </div>
-
-            <div class="w-full container mt-12">
-                <form
-                    class="flex flex-col space-y-6"
-                    @submit.prevent="resetPassword"
-                >
-                    <div class="space-y-4">
-                        <InputIcon
-                            v-model="formData.password"
-                            :icon="Lock"
-                            type="password"
-                            :label="$t('auth.newPasswordLabel')"
-                            label-class="text-xs text-primary font-bold mb-2 uppercase"
-                            :placeholder="$t('auth.password')"
-                            class="text-sm w-full"
-                        />
-
-                        <InputIcon
-                            v-model="formData.passwordConfirm"
-                            :icon="Lock"
-                            type="password"
-                            :label="$t('auth.confirmNewPassword')"
-                            label-class="text-xs text-primary font-bold mb-2 uppercase"
-                            :placeholder="$t('auth.passwordConfirmPlaceholder')"
-                            class="text-sm w-full"
-                        />
+            <div class="flex flex-col justify-center items-center px-6 grow py-12">
+                <template v-if="!showSuccess">
+                    <div class="mb-6 text-center">
+                        <div class="mx-auto mb-3 flex size-10 items-center justify-center rounded-md border border-primary/25 bg-primary/10 text-primary">
+                            <KeyRound class="size-4.5" />
+                        </div>
+                        <h1 class="font-secondary text-xl font-semibold text-dark">
+                            {{ $t('auth.newPasswordTitle') }}
+                        </h1>
+                        <p class="mt-1.5 text-xs text-gray-500 px-4">
+                            {{ $t('auth.newPasswordHint') }}
+                        </p>
                     </div>
 
-                    <div class="flex justify-center items-center mx-auto pt-8">
+                    <form
+                        class="flex flex-col gap-4 w-full max-w-sm"
+                        @submit.prevent="resetPassword"
+                    >
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-sm font-medium text-gray-700">
+                                {{ $t('auth.newPasswordLabel') }}
+                            </label>
+                            <InputIcon
+                                v-model="formData.password"
+                                :icon="Lock"
+                                type="password"
+                                rounded="md"
+                                :placeholder="$t('auth.password')"
+                                class="text-sm w-full"
+                            />
+                        </div>
+
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-sm font-medium text-gray-700">
+                                {{ $t('auth.confirmNewPassword') }}
+                            </label>
+                            <InputIcon
+                                v-model="formData.passwordConfirm"
+                                :icon="Lock"
+                                type="password"
+                                rounded="md"
+                                :placeholder="$t('auth.passwordConfirmPlaceholder')"
+                                class="text-sm w-full"
+                            />
+                        </div>
+
+                        <div class="flex flex-wrap gap-x-3.5 gap-y-1.5 -mt-1">
+                            <span
+                                v-for="req in passwordRequirements"
+                                :key="req.key"
+                                class="flex items-center gap-1 text-[11.5px]"
+                                :class="req.met ? 'text-success' : 'text-gray-400'"
+                            >
+                                <Check
+                                    v-if="req.met"
+                                    class="size-3"
+                                />
+                                <span
+                                    v-else
+                                    class="size-3 rounded-full border border-gray-300"
+                                />
+                                {{ req.label }}
+                            </span>
+                        </div>
+
                         <Button
                             type="submit"
-                            class="font-bold px-12 md:text-sm sm:text-xs"
+                            class="mt-2 w-full font-bold"
+                            :in-progress="isSubmitting"
                         >
                             {{ $t('common.save') }}
                         </Button>
+                    </form>
+                </template>
+
+                <div
+                    v-else
+                    class="text-center w-full max-w-sm"
+                >
+                    <div class="mx-auto mb-4 flex size-15 items-center justify-center rounded-xl bg-success/10">
+                        <ShieldCheck class="size-7 text-success" />
                     </div>
-                </form>
+                    <h1 class="font-secondary text-xl font-semibold text-dark mb-2">
+                        {{ $t('auth.passwordSaved') }}
+                    </h1>
+                    <p class="text-sm text-gray-500 mb-6">
+                        {{ $t('auth.newPasswordSuccessHint') }}
+                    </p>
+                    <Button
+                        class="w-full font-bold"
+                        @click="navigateTo(localePath('/login'))"
+                    >
+                        {{ $t('auth.backToLogin') }}
+                        <ArrowRight class="size-4" />
+                    </Button>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { Lock } from 'lucide-vue-next';
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { ref } from 'vue';
+import { ArrowRight, Check, KeyRound, Lock, ShieldCheck } from 'lucide-vue-next';
+import { computed, ref } from 'vue';
 import { getErrorMessage } from '~/lib/utils';
+import {
+    buildResetPasswordPayload,
+    evaluatePasswordRequirements,
+    firstUnmetPasswordRequirement,
+    parseResetPasswordQuery,
+    shouldShowPasswordResetSuccess,
+    type PasswordRequirementKey,
+} from '~/utils/passwordReset';
 import BackButton from '~/components/ui/back-button/BackButton.vue';
 
-const { t, localePath } = useI18n();
+const { t } = useI18n();
+const localePath = useLocalePath();
+const route = useRoute();
 const { $toast } = useNuxtApp();
 
 definePageMeta({
@@ -164,63 +262,91 @@ const formData = ref({
     token: '',
 });
 
-// Méthode pour récupérer les paramètres de l'URL
-const getUrlParams = () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    formData.value.email = urlParams.get('email');
-    formData.value.token = urlParams.get('token');
+const showSuccess = ref(false);
+const isSubmitting = ref(false);
+
+const passwordRequirementLabel = (key: PasswordRequirementKey): string => {
+    switch (key) {
+        case 'length':
+            return t('auth.requirementLength');
+        case 'uppercase':
+            return t('auth.requirementUppercase');
+        case 'digit':
+            return t('auth.requirementDigit');
+        case 'match':
+            return t('auth.requirementMatch');
+        default: {
+            const _exhaustive: never = key;
+            return _exhaustive;
+        }
+    }
 };
 
-const { $apifetch } = useNuxtApp();
+const passwordRequirements = computed(() =>
+    evaluatePasswordRequirements(formData.value.password, formData.value.passwordConfirm).map(req => ({
+        ...req,
+        label: passwordRequirementLabel(req.key),
+    })),
+);
+
+const { resetPassword: submitResetPassword } = useAuth();
 
 const resetPassword = async () => {
-    getUrlParams();
-    if (formData.value.password !== formData.value.passwordConfirm) {
+    if (isSubmitting.value) {
+        return;
+    }
+
+    const params = parseResetPasswordQuery(route.query as Record<string, unknown>);
+    if (!params) {
         $toast({
             title: t('auth.oopsError'),
-            description: t('auth.passwordMismatch'),
+            description: t('auth.resetPasswordHint'),
             variant: 'destructive',
         });
+        await navigateTo(localePath('/password/reset-password'));
+        return;
     }
 
-    const data = {
-        email: formData.value.email,
-        password: formData.value.password,
-        password_confirmation: formData.value.passwordConfirm,
-        token: formData.value.token,
-    };
+    formData.value.email = params.email;
+    formData.value.token = params.token;
 
-    try {
-        const response = await $apifetch('api/reset-password', {
-            method: 'POST',
-            body: JSON.stringify(data),
+    const unmetRequirement = firstUnmetPasswordRequirement(
+        formData.value.password,
+        formData.value.passwordConfirm,
+    );
+    if (unmetRequirement) {
+        $toast({
+            title: t('auth.oopsError'),
+            description: unmetRequirement.key === 'match'
+                ? t('auth.passwordMismatch')
+                : passwordRequirementLabel(unmetRequirement.key),
+            variant: 'destructive',
         });
-
-        if (response && response.data && response.data.success) {
-            $toast({
-                title: t('common.success'),
-            });
-            setTimeout(() => {
-                navigateTo(localePath('/login'));
-            }, 2000);
-        }
-        else {
-            $toast({
-                title: t('common.success'),
-                description: t('auth.passwordSaved'),
-            });
-            setTimeout(() => {
-                navigateTo(localePath('/login'));
-            }, 2000);
-        }
+        return;
     }
-    catch (error: any) {
-        console.error('Erreur lors de l\'envoi des données :', error);
+
+    isSubmitting.value = true;
+    try {
+        const result = await submitResetPassword(buildResetPasswordPayload(
+            formData.value.email,
+            formData.value.password,
+            formData.value.passwordConfirm,
+            formData.value.token,
+        ));
+        if (!shouldShowPasswordResetSuccess(result)) {
+            throw new Error(t('auth.oopsError'));
+        }
+        showSuccess.value = true;
+    }
+    catch (error) {
         $toast({
             title: t('auth.oopsError'),
             description: getErrorMessage(error),
             variant: 'destructive',
         });
+    }
+    finally {
+        isSubmitting.value = false;
     }
 };
 </script>
