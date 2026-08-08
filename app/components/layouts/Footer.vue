@@ -1,121 +1,153 @@
 <template>
-    <footer class="bg-muted">
-        <div class="flex flex-col items-center justify-center pt-8 lg:container md:flex-row md:justify-between md:space-x-4 md:items-start md:py-12 md:px-8">
-            <div class="flex justify-center">
-                <LayoutsLogo class="h-16 lg:h-20" />
+    <footer class="bg-canvas-dark">
+        <div class="container flex flex-col items-center gap-10 py-10 text-center md:flex-row md:items-start md:justify-between md:gap-8 md:py-14 md:text-start">
+            <div class="flex flex-col items-center gap-4 md:items-start">
+                <LayoutsLogo class="w-64" />
+                <div class="flex flex-row gap-4 mt-2 ml-4 lg:ml-7">
+                    <NuxtLink to="https://web.facebook.com/profile.php?viewas=100000686899395&id=61572833867576">
+                        <LayoutsAppImage
+                            src="icons/facebook.png"
+                            title="Facebook"
+                            class="w-5"
+                        />
+                    </NuxtLink>
+                    <NuxtLink to="https://www.instagram.com/infiswapsoins/">
+                        <LayoutsAppImage
+                            src="icons/instagram.png"
+                            title="Instagram"
+                            class="w-5"
+                        />
+                    </NuxtLink>
+                    <NuxtLink to="https://www.linkedin.com/company/infiswap-vos-soins-sans-interruption/?viewAsMember=true">
+                        <LayoutsAppImage
+                            src="icons/linkedin.png"
+                            title="Linkedin"
+                            class="w-5"
+                        />
+                    </NuxtLink>
+                </div>
             </div>
 
-            <div class="flex flex-col items-center justify-center w-full md:w-auto lg:w-auto md:mt-0 md:items-center md:flex-row md:space-x-8 lg:space-x-20 md:shadow-none">
-                <div class="hidden md:block md:-mt-6">
-                    <h3 class="font-semibold md:text-sm">
-                        CONTACT
+            <div class="lg:ml-25 grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-4 sm:gap-x-6">
+                <div>
+                    <h3 class="text-xs font-semibold uppercase tracking-wide text-white">
+                        {{ t('footer.navigation') }}
                     </h3>
-                    <div class="flex flex-col mt-4 space-y-4">
-                        <p class="flex flex-row items-center space-x-2 text-sm">
-                            <Phone class="w-4 h-4 text-primary" />
-                            <span class="md:text-xs lg:text-sm">0478.02.33.77</span>
-                        </p>
-                        <p class="flex flex-row items-center space-x-2 text-sm">
-                            <MapPin class="w-4 h-4 text-primary" />
-                            <span class="md:text-xs lg:text-sm">Rue de la Résistance, 92/A 7131 WAUDREZ</span>
-                        </p>
-                        <p class="flex flex-row items-center space-x-2 text-sm">
-                            <Mail class="w-4 h-4 text-primary" />
-                            <span class="md:text-xs lg:text-sm">info@infiswap.be</span>
-                        </p>
-                        <p class="flex flex-row items-center space-x-2 text-sm">
-                            <Globe class="w-4 h-4 text-primary" />
-                            <span class="md:text-xs lg:text-sm">www.infiswap.be</span>
-                        </p>
-                    </div>
-                </div>
-
-                <div class="flex flex-col py-8 space-y-4 w-96 md:py-0">
-                    <h3 class="font-semibold text-center md:text-start lg:text-base md:text-sm text-primary">
-                        {{ $t('footer.newsletter') }}
-                    </h3>
-                    <p class="hidden text-sm md:block md:text-xs lg:text-sm">
-                        {{ $t('footer.newsletterDesc') }}
-                    </p>
-                    <p class="mx-auto text-sm text-center md:hidden w-80 md:text-xs lg:text-sm">
-                        {{ $t('footer.newsletterDesc') }}
-                    </p>
-
-                    <form
-                        class="flex flex-row items-center justify-between mx-auto rounded-full md:mx-0 bg-primary h-9"
-                        @submit.prevent="subscribeNewsletter"
-                    >
-                        <div class="flex flex-row items-center justify-start">
-                            <Mail class="w-4 h-4 text-white ms-3" />
-                            <Input
-                                v-model="email"
-                                variant="transparent"
-                                placeholder="Email"
-                                class="text-sm text-white w-44 md:w-52 lg:w-full border-0 placeholder:text-white/70"
-                            />
-                        </div>
-                        <Button
-                            :disabled="isLoading"
-                            variant="secondary"
-                            class="h-8 text-primary"
-                            type="submit"
+                    <ul class="mt-4 flex flex-col gap-3">
+                        <li
+                            v-for="item in navigationLinks"
+                            :key="item.route"
                         >
-                            {{ isLoading ? "Envoi..." : "Enregistrer" }}
-                        </Button>
-                    </form>
-                    <div class="flex flex-row justify-center pt-4 space-x-4 md:justify-start md:pt-0">
-                        <NuxtLink to="https://web.facebook.com/profile.php?viewas=100000686899395&id=61572833867576">
-                            <LayoutsAppImage
-                                src="icons/facebook.png"
-                                title="Facebook"
-                                class="w-5"
-                            />
-                        </NuxtLink>
-                        <NuxtLink to="https://www.instagram.com/infiswapsoins/">
-                            <LayoutsAppImage
-                                src="icons/instagram.png"
-                                title="Instagram"
-                                class="w-5"
-                            />
-                        </NuxtLink>
-                        <NuxtLink to="https://www.linkedin.com/company/infiswap-vos-soins-sans-interruption/?viewAsMember=true">
-                            <LayoutsAppImage
-                                src="icons/linkedin.png"
-                                title="Linkedin"
-                                class="w-5"
-                            />
-                        </NuxtLink>
+                            <NuxtLink
+                                :to="localePath(item.route)"
+                                class="text-sm text-on-canvas-dark hover:text-primary"
+                            >
+                                {{ item.label }}
+                            </NuxtLink>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-xs font-semibold uppercase tracking-wide text-white">
+                        {{ t('footer.legal') }}
+                    </h3>
+                    <ul class="mt-4 flex flex-col gap-3">
+                        <li
+                            v-for="item in legalLinks"
+                            :key="item.label"
+                        >
+                            <NuxtLink
+                                v-if="item.route"
+                                :to="localePath(item.route)"
+                                class="text-sm text-on-canvas-dark hover:text-primary"
+                            >
+                                {{ item.label }}
+                            </NuxtLink>
+                            <button
+                                v-else
+                                type="button"
+                                class="text-sm text-on-canvas-dark hover:text-primary"
+                                @click="openCookiePreferences"
+                            >
+                                {{ item.label }}
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-xs font-semibold uppercase tracking-wide text-white">
+                        {{ t('footer.partners') }}
+                    </h3>
+                    <div class="mt-4 flex flex-col items-center gap-3 md:items-start">
+                        <div
+                            class="cursor-pointer rounded-md p-2 transition hover:opacity-90"
+                            @click="onPartnerClick('nurstech')"
+                        >
+                            <LayoutsNursTech class="w-20" />
+                        </div>
+                        <div
+                            class="cursor-pointer rounded-md p-2 transition hover:opacity-90"
+                            @click="onPartnerClick('nursassur')"
+                        >
+                            <LayoutsNursAssur class="w-20" />
+                        </div>
                     </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xs font-semibold uppercase tracking-wide text-white">
+                        {{ t('footer.contact') }}
+                    </h3>
+                    <ul class="mt-4 flex flex-col gap-3">
+                        <li>
+                            <a
+                                href="tel:0478023377"
+                                class="flex items-center justify-center gap-2 text-sm text-on-canvas-dark hover:text-primary md:justify-start"
+                            >
+                                <Phone class="size-4 shrink-0 text-primary" />
+                                0478.02.33.77
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="mailto:info@infiswap.be"
+                                class="flex items-center justify-center gap-2 text-sm text-on-canvas-dark hover:text-primary md:justify-start"
+                            >
+                                <Mail class="size-4 shrink-0 text-primary" />
+                                info@infiswap.be
+                            </a>
+                        </li>
+                        <li>
+                            <span class="flex items-center justify-center gap-2 text-sm text-on-canvas-muted md:justify-start">
+                                <MapPin class="size-4 shrink-0 text-primary" />
+                                Rue de la Résistance, 92/A 7131 WAUDREZ
+                            </span>
+                        </li>
+                        <li>
+                            <a
+                                href="https://www.ll-it-sc.be"
+                                target="_blank"
+                                rel="noopener"
+                                class="flex items-center justify-center gap-2 text-sm text-on-canvas-dark hover:text-primary md:justify-start"
+                            >
+                                <Globe class="size-4 shrink-0 text-primary" />
+                                {{ t('contact.site') }}: ll-it-sc.be
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
 
-        <div class="px-8 py-4 text-white bg-primary md:px-0">
-            <p
-                class="text-center text-[0.6em] md:text-xs"
-            >
-                <NuxtLink
-                    :to="localePath('/legal-notice')"
-                >{{ $t('footer.legalNotice') }}</NuxtLink> -
-                <NuxtLink :to="localePath('/privacy-security')">{{ $t('footer.privacy') }}</NuxtLink> -
-                <NuxtLink :to="localePath('/terms')">{{ $t('footer.terms') }}</NuxtLink> -
-                <button
-                    type="button"
-                    class="underline"
-                    @click="openCookiePreferences"
-                >
-                    {{ $t('footer.cookies') }}
-                </button>
-            </p>
-        </div>
-
-        <div class="container w-full py-4 text-center">
+        <div class="border-t border-on-canvas-dark/10 bg-primary text-center text-white p-4 hover">
             <NuxtLink
                 to="https://www.ll-it-sc.be"
                 target="_blank"
-                class="text-center text-[0.6em] md:text-xs"
+                class="block md:text-xs"
             >
-                @2025 LL-IT Software & Computer - Tous droits réservés
+                © {{ currentYear }} InfiSwap — Site par LL-IT Software & Computer - Tous droits réservés
             </NuxtLink>
         </div>
     </footer>
@@ -123,21 +155,33 @@
 
 <script lang="ts" setup>
 import { Globe, Mail, MapPin, Phone } from 'lucide-vue-next';
-import { useNewsletter } from '@/composables/useNewsletter';
+import type { PartnerProduct } from '~/utils/partnerServices';
 
-const { email, isLoading, subscribeNewsletter } = useNewsletter();
+const { t } = useI18n();
 const { openPreferences: openCookiePreferences } = useCookieConsent();
 const localePath = useLocalePath();
-</script>
+const { trackPartnerCtaClick, registerPartnerClickFromProduct } = usePartnerServices();
 
-<style scoped>
-.shadow-upper {
-    box-shadow: -2px -3px -3px rgba(0, 0, 0, 0.25);
+const currentYear = new Date().getFullYear();
+
+function onPartnerClick(product: PartnerProduct) {
+    trackPartnerCtaClick(product, 'footer', 'discover', 'footer');
+    registerPartnerClickFromProduct(product, 'footer', 'footer');
 }
-.fade-enter-active, .fade-leave-active {
-    transition: opacity 0.3s ease-in-out;
-}
-.fade-enter-from, .fade-leave-to {
-    opacity: 0;
-}
-</style>
+
+const navigationLinks = computed(() => [
+    { label: t('nav.aboutNav'), route: '/about' },
+    { label: t('nav.services'), route: '/services' },
+    { label: t('nav.institutionOffer'), route: '/offre-institution' },
+    { label: t('nav.career'), route: '/carriere' },
+    { label: t('nav.pricingNav'), route: '/pricing' },
+    { label: t('nav.contactNav'), route: '/contact' },
+]);
+
+const legalLinks = computed(() => [
+    { label: t('footer.legalNotice'), route: '/legal-notice' },
+    { label: t('footer.privacy'), route: '/privacy-security' },
+    { label: t('footer.terms'), route: '/terms' },
+    { label: t('footer.cookies'), route: null },
+]);
+</script>

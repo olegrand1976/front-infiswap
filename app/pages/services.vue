@@ -460,16 +460,9 @@
                 >
                     <Button
                         :href="localePath('/register')"
-                        class="w-44 mx-auto lg:mx-0 flex justify-center items-center font-bold"
+                        class="w-44 h-12 rounded-full mx-auto lg:mx-0 flex justify-center items-center font-bold"
                     >
                         {{ $t('services.ctaRegister') }}
-                    </Button>
-                    <Button
-                        variant="outline"
-                        class="w-44 mx-auto inline-flex rounded-3xl"
-                        :href="localePath('/login')"
-                    >
-                        {{ $t('services.ctaLogin') }}
                     </Button>
                 </div>
             </div>

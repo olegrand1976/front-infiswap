@@ -130,7 +130,10 @@
     "cookies": "Cookies",
     "contactUs": "Neem contact op",
     "newsletterDesc": "Schrijf u in op onze nieuwsbrief om onze toekomstige communicatie te ontvangen.",
-    "contact": "CONTACT"
+    "contact": "CONTACT",
+    "navigation": "Navigatie",
+    "legal": "Juridisch",
+    "partners": "Partners"
   },
   "cookies": {
     "title": "Cookies en privacy",
@@ -349,6 +352,8 @@
     "tagline": "het platform voor uw vervangingen!",
     "scrollHint": "Scroll naar beneden om u te registreren",
     "discoverBenefits": "Ontdek onze voordelen",
+    "title": "Maak uw account aan",
+    "subtitle": "Word lid van het InfiSwap-netwerk in enkele minuten",
     "personalInfo": "Persoonlijke gegevens",
     "loginInfo": "Inloggegevens",
     "addresses": "Adressen",
