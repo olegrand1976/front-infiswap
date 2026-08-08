@@ -90,6 +90,7 @@
                             <Button
                                 type="submit"
                                 class="mt-2 w-full font-bold"
+                                :in-progress="isSubmitting"
                             >
                                 {{ $t('common.save') }}
                             </Button>
@@ -194,6 +195,7 @@
                         <Button
                             type="submit"
                             class="mt-2 w-full font-bold"
+                            :in-progress="isSubmitting"
                         >
                             {{ $t('common.save') }}
                         </Button>
@@ -228,13 +230,21 @@
 
 <script lang="ts" setup>
 import { ArrowRight, Check, KeyRound, Lock, ShieldCheck } from 'lucide-vue-next';
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { computed, ref } from 'vue';
 import { getErrorMessage } from '~/lib/utils';
+import {
+    buildResetPasswordPayload,
+    evaluatePasswordRequirements,
+    firstUnmetPasswordRequirement,
+    parseResetPasswordQuery,
+    shouldShowPasswordResetSuccess,
+    type PasswordRequirementKey,
+} from '~/utils/passwordReset';
 import BackButton from '~/components/ui/back-button/BackButton.vue';
 
 const { t } = useI18n();
 const localePath = useLocalePath();
+const route = useRoute();
 const { $toast } = useNuxtApp();
 
 definePageMeta({
@@ -253,64 +263,90 @@ const formData = ref({
 });
 
 const showSuccess = ref(false);
+const isSubmitting = ref(false);
 
-const passwordRequirements = computed(() => [
-    { key: 'length', label: t('auth.requirementLength'), met: formData.value.password.length >= 8 },
-    { key: 'uppercase', label: t('auth.requirementUppercase'), met: /[A-Z]/.test(formData.value.password) },
-    { key: 'digit', label: t('auth.requirementDigit'), met: /\d/.test(formData.value.password) },
-    {
-        key: 'match',
-        label: t('auth.requirementMatch'),
-        met: formData.value.password.length > 0 && formData.value.password === formData.value.passwordConfirm,
-    },
-]);
-
-// Méthode pour récupérer les paramètres de l'URL
-const getUrlParams = () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    formData.value.email = urlParams.get('email');
-    formData.value.token = urlParams.get('token');
+const passwordRequirementLabel = (key: PasswordRequirementKey): string => {
+    switch (key) {
+        case 'length':
+            return t('auth.requirementLength');
+        case 'uppercase':
+            return t('auth.requirementUppercase');
+        case 'digit':
+            return t('auth.requirementDigit');
+        case 'match':
+            return t('auth.requirementMatch');
+        default: {
+            const _exhaustive: never = key;
+            return _exhaustive;
+        }
+    }
 };
 
-const { $apifetch } = useNuxtApp();
+const passwordRequirements = computed(() =>
+    evaluatePasswordRequirements(formData.value.password, formData.value.passwordConfirm).map(req => ({
+        ...req,
+        label: passwordRequirementLabel(req.key),
+    })),
+);
+
+const { resetPassword: submitResetPassword } = useAuth();
 
 const resetPassword = async () => {
-    getUrlParams();
-    if (formData.value.password !== formData.value.passwordConfirm) {
+    if (isSubmitting.value) {
+        return;
+    }
+
+    const params = parseResetPasswordQuery(route.query as Record<string, unknown>);
+    if (!params) {
         $toast({
             title: t('auth.oopsError'),
-            description: t('auth.passwordMismatch'),
+            description: t('auth.resetPasswordHint'),
             variant: 'destructive',
         });
+        await navigateTo(localePath('/password/reset-password'));
+        return;
     }
 
-    const data = {
-        email: formData.value.email,
-        password: formData.value.password,
-        password_confirmation: formData.value.passwordConfirm,
-        token: formData.value.token,
-    };
+    formData.value.email = params.email;
+    formData.value.token = params.token;
 
-    try {
-        const response = await $apifetch('api/reset-password', {
-            method: 'POST',
-            body: JSON.stringify(data),
+    const unmetRequirement = firstUnmetPasswordRequirement(
+        formData.value.password,
+        formData.value.passwordConfirm,
+    );
+    if (unmetRequirement) {
+        $toast({
+            title: t('auth.oopsError'),
+            description: unmetRequirement.key === 'match'
+                ? t('auth.passwordMismatch')
+                : passwordRequirementLabel(unmetRequirement.key),
+            variant: 'destructive',
         });
-
-        if (response && response.data && response.data.success) {
-            showSuccess.value = true;
-        }
-        else {
-            showSuccess.value = true;
-        }
+        return;
     }
-    catch (error: any) {
-        console.error('Erreur lors de l\'envoi des données :', error);
+
+    isSubmitting.value = true;
+    try {
+        const result = await submitResetPassword(buildResetPasswordPayload(
+            formData.value.email,
+            formData.value.password,
+            formData.value.passwordConfirm,
+            formData.value.token,
+        ));
+        if (!shouldShowPasswordResetSuccess(result)) {
+            throw new Error(t('auth.oopsError'));
+        }
+        showSuccess.value = true;
+    }
+    catch (error) {
         $toast({
             title: t('auth.oopsError'),
             description: getErrorMessage(error),
             variant: 'destructive',
         });
+    }
+    finally {
+        isSubmitting.value = false;
     }
 };
 </script>

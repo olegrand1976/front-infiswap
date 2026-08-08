@@ -55,6 +55,7 @@
                         <Button
                             type="submit"
                             class="mt-6 w-full font-bold"
+                            :in-progress="isSubmitting"
                         >
                             {{ $t('auth.resetSubmit') }}
                         </Button>
@@ -136,6 +137,7 @@
                             <Button
                                 type="submit"
                                 class="mt-6 w-full font-bold"
+                                :in-progress="isSubmitting"
                             >
                                 {{ $t('auth.resetSubmit') }}
                             </Button>
@@ -183,6 +185,7 @@
 import { Info, Mail, MailCheck, ShieldCheck } from 'lucide-vue-next';
 import { ref } from 'vue';
 import { getErrorMessage } from '~/lib/utils';
+import { shouldShowPasswordResetSuccess } from '~/utils/passwordReset';
 import BackButton from '~/components/ui/back-button/BackButton.vue';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
 import { Form, FormField, FormItem, FormLabel, FormControl } from '@/components/ui/form';
@@ -201,11 +204,16 @@ useHead({
 
 const email = ref('');
 const showSuccess = ref(false);
+const isSubmitting = ref(false);
 
-const { $apifetch } = useNuxtApp();
+const { forgotPassword } = useAuth();
 
 const submitForm = async (event: Event) => {
     event.preventDefault();
+
+    if (isSubmitting.value) {
+        return;
+    }
 
     if (!email.value) {
         $toast({
@@ -215,28 +223,23 @@ const submitForm = async (event: Event) => {
         return;
     }
 
+    isSubmitting.value = true;
     try {
-        const response = await $apifetch('/api/forgot-password', {
-            method: 'POST',
-            body: JSON.stringify({ email: email.value }),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-
-        if (response.status !== 200) {
+        const result = await forgotPassword(email.value);
+        if (!shouldShowPasswordResetSuccess(result)) {
             throw new Error(t('auth.oopsError'));
         }
-
         showSuccess.value = true;
     }
     catch (error) {
-        console.error('Erreur API:', error);
         $toast({
             title: t('auth.oopsError'),
             description: getErrorMessage(error),
             variant: 'destructive',
         });
+    }
+    finally {
+        isSubmitting.value = false;
     }
 };
 </script>
