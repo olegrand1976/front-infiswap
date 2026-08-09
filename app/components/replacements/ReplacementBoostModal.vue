@@ -124,6 +124,42 @@
                 </section>
 
                 <section
+                    v-if="isProSubscriber"
+                    class="rounded-xl border-2 border-primary/40 bg-primary/5 p-4 space-y-3"
+                >
+                    <div class="flex items-start gap-3">
+                        <Crown class="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                        <div>
+                            <p class="font-semibold text-sm text-gray-800">
+                                Boost offert par Infiswap Pro
+                            </p>
+                            <p class="text-xs text-gray-600 mt-0.5">
+                                <template v-if="freeBoostAvailable">
+                                    {{ freeBoostDurationDays }} jours en tête de liste, sans payer, une fois par mois.
+                                </template>
+                                <template v-else>
+                                    Déjà utilisé ce mois-ci. Prochain crédit le {{ nextFreeBoostLabel }}.
+                                </template>
+                            </p>
+                        </div>
+                    </div>
+                    <Button
+                        v-if="freeBoostAvailable"
+                        class="w-full rounded-xl"
+                        :in-progress="claimingFreeBoost"
+                        @click="useFreeBoost"
+                    >
+                        Utiliser mon boost offert
+                    </Button>
+                </section>
+
+                <SubscriptionProUpsellCallout
+                    v-else
+                    title="Inclus dans Infiswap Pro — 1 boost offert chaque mois"
+                    description="Avec les alertes instantanées et les contrats inclus, dès 9,90 €/mois."
+                />
+
+                <section
                     v-if="sortedBoostPlans.length > 0"
                     class="space-y-3"
                 >
@@ -217,7 +253,7 @@
 </template>
 
 <script setup lang="ts">
-import { Calendar, Eye, Hash, MapPin, MessageCircle, Rocket, TrendingUp } from 'lucide-vue-next';
+import { Calendar, Crown, Eye, Hash, MapPin, MessageCircle, Rocket, TrendingUp } from 'lucide-vue-next';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import ReplacementBoostStars from '@/components/replacements/ReplacementBoostStars.vue';
@@ -233,14 +269,58 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     cancelled: [];
+    boosted: [];
 }>();
 
 const { $toast } = useNuxtApp();
 const { boostReplacement, cancelBoost } = useSubscription();
 const { boostPlans, fetchBoostPlans } = useReplacementBoost();
 const { trackEvent } = useProductAnalytics();
+const {
+    isPremium: isProSubscriber,
+    boostCredit,
+    fetchStatus: fetchProStatus,
+    claimFreeBoost,
+} = useProSubscription();
 
 const paying = ref(false);
+const claimingFreeBoost = ref(false);
+
+const freeBoostAvailable = computed(() => boostCredit.value?.available === true);
+const freeBoostDurationDays = computed(() => boostCredit.value?.duration_days ?? 7);
+const nextFreeBoostLabel = computed(() => {
+    const next = boostCredit.value?.next_credit_at;
+
+    return next
+        ? new Date(next).toLocaleDateString('fr-BE', { day: 'numeric', month: 'long' })
+        : '—';
+});
+
+async function useFreeBoost() {
+    const replacement = props.replacement;
+
+    if (!replacement?.id || claimingFreeBoost.value) {
+        return;
+    }
+
+    claimingFreeBoost.value = true;
+    try {
+        const boostedUntil = await claimFreeBoost(Number(replacement.id));
+
+        if (!boostedUntil) {
+            return;
+        }
+
+        trackEvent('boost_free_claimed', { replacement_id: String(replacement.id) });
+        replacement.is_boosted = true;
+        replacement.boosted_until = boostedUntil;
+        emit('boosted');
+        open.value = false;
+    }
+    finally {
+        claimingFreeBoost.value = false;
+    }
+}
 const canceling = ref(false);
 const planLoading = ref(false);
 const selectedPlanId = ref<number | null>(null);
@@ -263,7 +343,7 @@ watch(open, async (isOpen) => {
     if (!isOpen) return;
     planLoading.value = true;
     try {
-        const plans = await fetchBoostPlans(true);
+        const [plans] = await Promise.all([fetchBoostPlans(true), fetchProStatus()]);
         const sorted = [...plans].sort((a, b) => (b.duration_days ?? 0) - (a.duration_days ?? 0));
         selectedPlanId.value = sorted[0]?.id ?? null;
         trackEvent('boost_impression', {

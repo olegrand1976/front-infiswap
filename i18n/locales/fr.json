@@ -79,6 +79,7 @@
     "hasAccount": "Déjà un compte ?",
     "resetPassword": "Réinitialiser le mot de passe",
     "resetPasswordTitle": "Récupération de compte",
+    "resetPasswordTitleStrong": "mot de passe",
     "resetPasswordHint": "Cette étape est sécurisée. Renseignez l'adresse associée à votre compte InfiSwap.",
     "yourEmail": "Adresse e-mail",
     "yourEmailPlaceholder": "vous{'@'}exemple.be",
@@ -120,7 +121,17 @@
     "twoFactorPageTitle": "Vérification 2FA",
     "passwordMismatch": "Les mots de passe ne correspondent pas.",
     "passwordSaved": "Votre nouveau mot de passe a été enregistré",
-    "confirmNewPassword": "Confirmer le nouveau mot de passe"
+    "confirmNewPassword": "Confirmer le nouveau mot de passe",
+    "backToLogin": "Retour à la connexion",
+    "newPasswordSuccessHint": "Vous pouvez désormais vous connecter avec votre nouveau mot de passe.",
+    "rememberPassword": "Vous vous souvenez ?",
+    "requirementDigit": "Un chiffre",
+    "requirementLength": "8 caractères min.",
+    "requirementMatch": "Les deux correspondent",
+    "requirementUppercase": "Une majuscule",
+    "resetHelper": "Vous ne recevez rien après quelques minutes ? Vérifiez le dossier spam ou contactez le support.",
+    "resetSuccessDetail": "Vérifiez votre boîte de réception (et les spams) — le code arrive en général en moins d'une minute.",
+    "resetSuccessTitle": "Code envoyé"
   },
   "footer": {
     "newsletter": "S'inscrire à la newsletter",
@@ -474,6 +485,23 @@
       "b3": "Annonce en tête des résultats de recherche",
       "b4": "Activation en un clic sur vos annonces",
       "b5": "Contrat de remplacement optionnel — 3 €"
+    },
+    "pro": {
+      "eyebrow": "Abonnement",
+      "name": "Infiswap Pro",
+      "monthlyPrice": "9,90",
+      "period": "par mois",
+      "yearly": "ou 99 € par an — 2 mois offerts",
+      "desc": "Pour celles qui ne veulent rater aucune opportunité : alertée en premier, une annonce mise en avant chaque mois, contrats inclus.",
+      "features": {
+        "p1": "Alerte instantanée dès la publication d'un remplacement",
+        "p2": "Un boost de 7 jours offert chaque mois",
+        "p3": "Contrats de remplacement illimités inclus",
+        "p4": "Signature et archivage des contrats compris",
+        "p5": "Annulable en un clic, sans engagement au mois"
+      },
+      "cta": "Découvrir Infiswap Pro",
+      "note": "Le réseau reste gratuit : Pro n'ajoute que de la vitesse et du confort."
     },
     "tips": {
       "freeTitle": "Gratuit",

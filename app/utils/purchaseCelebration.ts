@@ -1,7 +1,7 @@
 export const PURCHASE_CELEBRATION_SEEN_PREFIX = 'infiswap:celebration_seen:';
 export const PURCHASE_ANALYTICS_SEEN_PREFIX = 'infiswap:analytics_seen:';
 
-export type PurchaseCelebrationVariant = 'boost' | 'contract';
+export type PurchaseCelebrationVariant = 'boost' | 'contract' | 'pro';
 
 export interface PurchaseCelebrationPayload {
     variant: PurchaseCelebrationVariant;
@@ -43,4 +43,8 @@ export function buildContractCelebrationDedupeKey(replacementId: number, session
     }
 
     return `contract:${replacementId}`;
+}
+
+export function buildProCelebrationDedupeKey(sessionId: string): string {
+    return `pro:${sessionId}`;
 }

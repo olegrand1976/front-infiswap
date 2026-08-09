@@ -79,6 +79,7 @@
     "hasAccount": "Al een account?",
     "resetPassword": "Wachtwoord resetten",
     "resetPasswordTitle": "Account herstellen",
+    "resetPasswordTitleStrong": "wachtwoord",
     "resetPasswordHint": "Deze stap is beveiligd. Vul het e-mailadres van uw InfiSwap-account in.",
     "yourEmail": "E-mailadres",
     "yourEmailPlaceholder": "u{'@'}voorbeeld.be",
@@ -120,7 +121,17 @@
     "twoFactorPageTitle": "2FA-verificatie",
     "passwordMismatch": "De wachtwoorden komen niet overeen.",
     "passwordSaved": "Uw nieuwe wachtwoord is opgeslagen",
-    "confirmNewPassword": "Bevestig het nieuwe wachtwoord"
+    "confirmNewPassword": "Bevestig het nieuwe wachtwoord",
+    "backToLogin": "Terug naar inloggen",
+    "newPasswordSuccessHint": "U kunt nu inloggen met uw nieuwe wachtwoord.",
+    "rememberPassword": "Weet u het weer?",
+    "requirementDigit": "Een cijfer",
+    "requirementLength": "Min. 8 tekens",
+    "requirementMatch": "Komt overeen",
+    "requirementUppercase": "Een hoofdletter",
+    "resetHelper": "Niets ontvangen na een paar minuten? Controleer uw spammap of neem contact op met support.",
+    "resetSuccessDetail": "Controleer uw inbox (en spam) — de code komt meestal binnen een minuut aan.",
+    "resetSuccessTitle": "Code verzonden"
   },
   "footer": {
     "newsletter": "Inschrijven op de nieuwsbrief",
@@ -474,6 +485,23 @@
       "b3": "Aankondiging bovenaan de zoekresultaten",
       "b4": "Activering met één klik op uw aankondigingen",
       "b5": "Optioneel vervangingscontract — 3 €"
+    },
+    "pro": {
+      "eyebrow": "Abonnement",
+      "name": "Infiswap Pro",
+      "monthlyPrice": "9,90",
+      "period": "per maand",
+      "yearly": "of 99 € per jaar — 2 maanden gratis",
+      "desc": "Voor wie geen enkele kans wil missen: als eerste verwittigd, elke maand een vooruitgeschoven advertentie, contracten inbegrepen.",
+      "features": {
+        "p1": "Onmiddellijke melding zodra een vervanging verschijnt",
+        "p2": "Elke maand een boost van 7 dagen cadeau",
+        "p3": "Onbeperkt vervangingscontracten inbegrepen",
+        "p4": "Ondertekening en archivering van contracten inbegrepen",
+        "p5": "Maandelijks opzegbaar met één klik"
+      },
+      "cta": "Ontdek Infiswap Pro",
+      "note": "Het netwerk blijft gratis: Pro voegt alleen snelheid en comfort toe."
     },
     "tips": {
       "freeTitle": "Gratis",

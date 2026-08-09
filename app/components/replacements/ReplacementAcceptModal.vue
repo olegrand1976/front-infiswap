@@ -8,6 +8,7 @@ import type { ReplacementResponse } from '~/lib/types';
 import type { ReplacementContractSignatureMode } from '~/composables/useReplacementContract';
 import { getErrorMessage } from '~/lib/utils';
 import { assertAllowedExternalRedirectUrl } from '~/utils/accessReturn';
+import { buildContractCelebrationDedupeKey } from '~/utils/purchaseCelebration';
 
 const props = defineProps<{
     open: boolean;
@@ -25,6 +26,8 @@ const { $toast } = useNuxtApp();
 const { changeStatus } = changeStatusReplacement();
 const { checkoutContract, loading: contractLoading } = useReplacementContract();
 const { trackEvent } = useProductAnalytics();
+const { triggerCelebration } = usePurchaseCelebration();
+const { isPremium: isProSubscriber, fetchStatus: fetchProStatus } = useProSubscription();
 
 const signatureMode = ref<ReplacementContractSignatureMode>('pdf_download');
 const includesPatientAccess = ref(false);
@@ -37,7 +40,11 @@ const respondentName = computed(() => {
     return [r.firstname, r.lastname].filter(Boolean).join(' ') || 'cette collègue';
 });
 
-watch(() => props.open, (isOpen) => {
+watch(() => props.open, async (isOpen) => {
+    if (isOpen) {
+        await fetchProStatus();
+    }
+
     if (isOpen && props.response?.id) {
         trackEvent('contract_offer_shown', {
             replacement_id: String(props.replacementId),
@@ -83,12 +90,24 @@ async function acceptWithContract() {
 
     accepting.value = true;
     try {
-        const url = await checkoutContract(Number(props.replacementId), props.response.id, {
+        const result = await checkoutContract(Number(props.replacementId), props.response.id, {
             signatureMode: signatureMode.value,
             includesPatientAccess: includesPatientAccess.value,
         });
 
-        const checkoutUrl = assertAllowedExternalRedirectUrl(url);
+        if (result.kind === 'granted') {
+            emit('accepted');
+            emit('update:open', false);
+            triggerCelebration({
+                variant: 'contract',
+                replacementId: Number(props.replacementId),
+                dedupeKey: buildContractCelebrationDedupeKey(Number(props.replacementId)),
+            });
+
+            return;
+        }
+
+        const checkoutUrl = assertAllowedExternalRedirectUrl(result.url);
         if (checkoutUrl) {
             window.location.assign(checkoutUrl);
             return;
@@ -123,7 +142,12 @@ async function acceptWithContract() {
                     Confirmer {{ respondentName }}
                 </DialogTitle>
                 <DialogDescription>
-                    Validez ce remplacement avec ou sans contrat légal (3 €).
+                    <template v-if="isProSubscriber">
+                        Validez ce remplacement avec ou sans contrat légal — inclus dans votre abonnement.
+                    </template>
+                    <template v-else>
+                        Validez ce remplacement avec ou sans contrat légal (3 €).
+                    </template>
                 </DialogDescription>
             </DialogHeader>
 
@@ -141,7 +165,7 @@ async function acceptWithContract() {
                 <div class="rounded-lg border border-primary/15 bg-primary/5 p-3 text-sm space-y-2">
                     <p class="font-medium text-primary flex items-center gap-2">
                         <FileText class="size-4" />
-                        Contrat de remplacement — 3 €
+                        Contrat de remplacement — {{ isProSubscriber ? 'inclus dans Infiswap Pro' : '3 €' }}
                     </p>
                     <ul class="list-disc pl-5 text-muted-foreground space-y-1">
                         <li>Consolide l'accord entre vous et {{ respondentName }}</li>
@@ -149,6 +173,13 @@ async function acceptWithContract() {
                         <li>Option délégation patientèle si vous le souhaitez</li>
                     </ul>
                 </div>
+
+                <SubscriptionProUpsellCallout
+                    v-if="!isProSubscriber"
+                    tone="amber"
+                    title="Ne repayez plus jamais vos contrats"
+                    description="Contrats illimités inclus dans Infiswap Pro, dès 9,90 €/mois."
+                />
 
                 <div class="space-y-3">
                     <p class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
@@ -194,7 +225,7 @@ async function acceptWithContract() {
                     :in-progress="accepting || contractLoading"
                     @click="acceptWithContract"
                 >
-                    Accepter avec contrat — 3 €
+                    Accepter avec contrat — {{ isProSubscriber ? 'inclus' : '3 €' }}
                 </Button>
                 <Button
                     variant="outline"

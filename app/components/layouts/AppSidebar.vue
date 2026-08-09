@@ -207,7 +207,7 @@
 </template>
 
 <script lang="ts" setup>
-import { BarChart3, Briefcase, ChevronRight, CircleHelp, CirclePlay, CircleUser, ClipboardList, Cog, CreditCard, Euro, FileSearch, FileText, Inbox, LayoutGrid, Link, List, Mail, MapPin, MessageSquare, Plus, Power, RefreshCw, Search, ShieldAlert, ShieldCheck, ShoppingBag, Sparkles, Star, UserCheck, Users, UserSearch, Wrench, IdCard } from 'lucide-vue-next';
+import { BarChart3, Briefcase, ChevronRight, CircleHelp, CirclePlay, CircleUser, ClipboardList, Cog, CreditCard, Crown, Euro, FileSearch, FileText, Inbox, LayoutGrid, Link, List, Mail, MapPin, MessageSquare, Plus, Power, RefreshCw, Search, ShieldAlert, ShieldCheck, ShoppingBag, Sparkles, Star, UserCheck, Users, UserSearch, Wrench, IdCard } from 'lucide-vue-next';
 import type { FunctionalComponent } from 'vue';
 import QuickReplacementIcon from '../icons/QuickReplacementIcon.vue';
 import { useSidebar } from '../ui/sidebar';
@@ -492,6 +492,11 @@ const nurseNavigationItems = computed<NavigationItem[]>(() => {
             icon: Users,
         },
         {
+            label: 'Infiswap Pro',
+            route: '/dashboard/subscriptions',
+            icon: Crown,
+        },
+        {
             label: t('nav.settings'),
             route: '/dashboard/settings',
             icon: Cog,
@@ -606,6 +611,18 @@ const adminNavigationSections = computed<NavigationSection[]>(() => [
                 route: '/dashboard/admin/contracts/nurstech',
                 icon: Euro,
                 visible: isSuperAdmin.value || isSaleRepresentative.value,
+            },
+            {
+                label: 'Canal téléphonique Pro',
+                route: '/dashboard/admin/sales',
+                icon: Crown,
+                roles: ['super_admin', 'admin', 'sale_representative'],
+            },
+            {
+                label: 'Mes commissions Pro',
+                route: '/dashboard/admin/commissions',
+                icon: Euro,
+                roles: ['super_admin', 'admin', 'sale_representative'],
             },
             {
                 label: 'Produits',
