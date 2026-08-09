@@ -46,6 +46,7 @@ useHead({
 
 const route = useRoute();
 const authToken = useAuthTokenCookie();
+const { $apifetch } = useNuxtApp();
 const { refresh } = useAuth();
 const user = useUser();
 const failed = ref(false);
@@ -61,6 +62,32 @@ onMounted(async () => {
 
     authToken.value = token;
     await refresh(token);
+
+    if (!user.value) {
+        authToken.value = null;
+        failed.value = true;
+
+        return;
+    }
+
+    // Échange le bearer court (query) contre un jeton de session ; les
+    // proOfferLogin sont révoqués côté API dès que l'échange réussit.
+    try {
+        const response = await $apifetch<{ token?: string }>('api/subscription/pro/offer/finalize-login', {
+            method: 'POST',
+        });
+
+        if (response?.token) {
+            authToken.value = response.token;
+            await refresh(response.token);
+        }
+    }
+    catch {
+        authToken.value = null;
+        failed.value = true;
+
+        return;
+    }
 
     if (!user.value) {
         authToken.value = null;
