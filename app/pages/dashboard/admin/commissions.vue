@@ -4,7 +4,7 @@
             <header class="flex flex-wrap items-start justify-between gap-3">
                 <div class="space-y-1">
                     <h1 class="text-2xl font-semibold">
-                        Mes commissions
+                        {{ isAdminView ? 'Commissions Infiswap Pro' : 'Mes commissions' }}
                     </h1>
                     <p class="text-sm text-muted-foreground">
                         Assiette : le montant hors taxes de la facture Stripe. Versement 30 jours
@@ -21,6 +21,35 @@
                     Export du mois (CSV)
                 </Button>
             </header>
+
+            <div
+                v-if="isAdminView"
+                class="flex flex-col gap-2 sm:flex-row sm:items-center"
+            >
+                <label
+                    class="text-sm font-medium"
+                    for="sales-rep-filter"
+                >
+                    Commercial
+                </label>
+                <select
+                    id="sales-rep-filter"
+                    v-model="selectedSalesUserId"
+                    class="min-h-11 rounded-md border bg-background px-3 text-sm dark:border-gray-700"
+                    @change="reload"
+                >
+                    <option :value="null">
+                        Tous les commerciaux
+                    </option>
+                    <option
+                        v-for="rep in salesReps"
+                        :key="rep.id"
+                        :value="rep.id"
+                    >
+                        {{ rep.name || rep.email }}
+                    </option>
+                </select>
+            </div>
 
             <dl class="grid gap-3 sm:grid-cols-4">
                 <div
@@ -44,6 +73,12 @@
                 <table class="min-w-full text-sm">
                     <thead class="bg-muted/50 text-left text-xs uppercase tracking-wide text-muted-foreground">
                         <tr>
+                            <th
+                                v-if="isAdminView"
+                                class="px-4 py-3"
+                            >
+                                Commercial
+                            </th>
                             <th class="px-4 py-3">
                                 Abonnée
                             </th>
@@ -73,6 +108,13 @@
                             :key="line.id"
                             class="border-t dark:border-gray-700"
                         >
+                            <td
+                                v-if="isAdminView"
+                                class="px-4 py-3"
+                            >
+                                <span class="block">{{ line.sales_user?.name || '—' }}</span>
+                                <span class="text-xs text-muted-foreground">{{ line.sales_user?.email }}</span>
+                            </td>
                             <td class="px-4 py-3">
                                 <span class="block">{{ line.subscriber.name || '—' }}</span>
                                 <span class="text-xs text-muted-foreground">{{ line.subscriber.email }}</span>
@@ -109,7 +151,7 @@
                         </tr>
                         <tr v-if="lines.length === 0">
                             <td
-                                colspan="7"
+                                :colspan="isAdminView ? 8 : 7"
                                 class="px-4 py-8 text-center text-muted-foreground"
                             >
                                 Aucune commission enregistrée pour le moment.
@@ -132,7 +174,7 @@ definePageMeta({
 });
 
 useHead({
-    title: 'Mes commissions',
+    title: 'Commissions Infiswap Pro',
 });
 
 const STATUS_LABEL: Record<SalesCommissionStatus, string> = {
@@ -151,6 +193,11 @@ const STATUS_CLASS: Record<SalesCommissionStatus, string> = {
 
 const { summary, fetchCommissions } = useSalesChannel();
 
+const selectedSalesUserId = ref<number | null>(null);
+
+/** Présent uniquement dans la réponse admin (`sales_reps`). */
+const isAdminView = computed(() => Array.isArray(summary.value?.sales_reps));
+const salesReps = computed(() => summary.value?.sales_reps ?? []);
 const lines = computed(() => summary.value?.commissions ?? []);
 
 const totalCards = computed(() =>
@@ -170,7 +217,11 @@ function formatDate(value: string | null): string {
     return value ? new Date(value).toLocaleDateString('fr-BE') : '—';
 }
 
-/** Export du mois en cours, destiné à la facturation de l'indépendant. */
+async function reload() {
+    await fetchCommissions(selectedSalesUserId.value);
+}
+
+/** Export du mois en cours, destiné à la facturation / au contrôle admin. */
 function exportCsv() {
     const now = new Date();
     const rows = lines.value.filter((line) => {
@@ -181,17 +232,32 @@ function exportCsv() {
             && reference.getFullYear() === now.getFullYear();
     });
 
-    const header = ['abonnee', 'email', 'base_ht', 'taux', 'commission', 'statut', 'encaisse_le', 'payable_le'];
-    const body = rows.map(line => [
-        line.subscriber.name ?? '',
-        line.subscriber.email ?? '',
-        line.base_amount_ht.toFixed(2),
-        line.rate.toString(),
-        line.amount.toFixed(2),
-        line.status,
-        line.invoice_paid_at ?? '',
-        line.payable_at ?? '',
-    ]);
+    const header = isAdminView.value
+        ? ['commercial', 'commercial_email', 'abonnee', 'email', 'base_ht', 'taux', 'commission', 'statut', 'encaisse_le', 'payable_le']
+        : ['abonnee', 'email', 'base_ht', 'taux', 'commission', 'statut', 'encaisse_le', 'payable_le'];
+
+    const body = rows.map((line) => {
+        const base = [
+            line.subscriber.name ?? '',
+            line.subscriber.email ?? '',
+            line.base_amount_ht.toFixed(2),
+            line.rate.toString(),
+            line.amount.toFixed(2),
+            line.status,
+            line.invoice_paid_at ?? '',
+            line.payable_at ?? '',
+        ];
+
+        if (!isAdminView.value) {
+            return base;
+        }
+
+        return [
+            line.sales_user?.name ?? '',
+            line.sales_user?.email ?? '',
+            ...base,
+        ];
+    });
 
     const csv = [header, ...body]
         .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(';'))
@@ -206,5 +272,5 @@ function exportCsv() {
     URL.revokeObjectURL(url);
 }
 
-onMounted(fetchCommissions);
+onMounted(reload);
 </script>
