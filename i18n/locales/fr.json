@@ -588,6 +588,12 @@
     "searchHeading": "Chercher",
     "searchHeadingStrong": "un remplacement",
     "searchHelpDesc": "Parcourez les missions disponibles près de chez vous.",
+    "proSearchUpsellTitle": "Infiswap Pro : soyez prévenue avant les autres",
+    "proSearchUpsellDesc": "Les comptes gratuits reçoivent un récap le soir. Avec Pro, l'alerte part dès la publication — vous pouvez candidater en premier.",
+    "proSearchBenefitAlert": "Alerte instantanée à chaque nouvelle mission de votre zone",
+    "proSearchBenefitBoost": "1 boost offert par mois pour mettre votre annonce en tête",
+    "proSearchBenefitContract": "Contrats de remplacement inclus, illimités",
+
     "myTitle": "Mes remplacements",
     "myGroup": "Mon groupe",
     "createTitle": "Créer un remplacement",
