@@ -20,6 +20,7 @@ export type SalesCommissionStatus = 'pending' | 'payable' | 'paid' | 'clawed_bac
 export interface SalesCommissionLine {
     id: number;
     subscriber: { id: number; name: string | null; email: string | null };
+    sales_user?: { id: number; name: string | null; email: string | null };
     base_amount_ht: number;
     rate: number;
     amount: number;
@@ -31,9 +32,16 @@ export interface SalesCommissionLine {
     clawback_reason: string | null;
 }
 
+export interface SalesRepOption {
+    id: number;
+    name: string | null;
+    email: string | null;
+}
+
 export interface SalesCommissionSummary {
     totals: Record<SalesCommissionStatus, { lines: number; amount: number }>;
     commissions: SalesCommissionLine[];
+    sales_reps?: SalesRepOption[];
 }
 
 export function useSalesChannel() {
@@ -92,10 +100,12 @@ export function useSalesChannel() {
         }
     }
 
-    async function fetchCommissions(): Promise<void> {
+    async function fetchCommissions(salesUserId?: number | null): Promise<void> {
         loading.value = true;
         try {
-            summary.value = await $apifetch<SalesCommissionSummary>('api/subscription/sales/commissions');
+            summary.value = await $apifetch<SalesCommissionSummary>('api/subscription/sales/commissions', {
+                params: salesUserId ? { sales_user_id: salesUserId } : undefined,
+            });
         }
         catch (error: unknown) {
             $toast({ variant: 'destructive', description: salesErrorMessage(error, 'Chargement des commissions impossible.') });
