@@ -38,13 +38,13 @@
                     class="min-h-11 rounded-md border bg-background px-3 text-sm dark:border-gray-700"
                     @change="reload"
                 >
-                    <option :value="null">
+                    <option value="">
                         Tous les commerciaux
                     </option>
                     <option
                         v-for="rep in salesReps"
                         :key="rep.id"
-                        :value="rep.id"
+                        :value="String(rep.id)"
                     >
                         {{ rep.name || rep.email }}
                     </option>
@@ -193,7 +193,8 @@ const STATUS_CLASS: Record<SalesCommissionStatus, string> = {
 
 const { summary, fetchCommissions } = useSalesChannel();
 
-const selectedSalesUserId = ref<number | null>(null);
+/** String pour éviter la coercition HTML `null` → `"null"`. */
+const selectedSalesUserId = ref('');
 
 /** Présent uniquement dans la réponse admin (`sales_reps`). */
 const isAdminView = computed(() => Array.isArray(summary.value?.sales_reps));
@@ -218,7 +219,9 @@ function formatDate(value: string | null): string {
 }
 
 async function reload() {
-    await fetchCommissions(selectedSalesUserId.value);
+    const raw = selectedSalesUserId.value.trim();
+    const parsed = raw === '' ? null : Number(raw);
+    await fetchCommissions(parsed !== null && Number.isFinite(parsed) ? parsed : null);
 }
 
 /** Export du mois en cours, destiné à la facturation / au contrôle admin. */

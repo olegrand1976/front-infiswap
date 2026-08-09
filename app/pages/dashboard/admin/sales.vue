@@ -99,7 +99,7 @@
                 </p>
 
                 <div
-                    v-if="!prospect.is_premium"
+                    v-if="!prospect.is_premium && canDeposit"
                     class="flex flex-col gap-2 sm:flex-row sm:items-center"
                 >
                     <select
@@ -126,6 +126,12 @@
                         Déposer l'offre
                     </Button>
                 </div>
+                <p
+                    v-else-if="!prospect.is_premium && !canDeposit"
+                    class="text-sm text-muted-foreground"
+                >
+                    Seul un commercial peut déposer une offre nominative.
+                </p>
             </article>
         </div>
     </div>
@@ -145,8 +151,10 @@ useHead({
     title: 'Canal téléphonique',
 });
 
+const { isSaleRepresentative } = useAuth();
 const { plans, prospects, loading, fetchPlans, searchProspects, depositOffer } = useSalesChannel();
 
+const canDeposit = computed(() => isSaleRepresentative.value);
 const term = ref('');
 const searched = ref(false);
 const selectedPlan = reactive<Record<number, string>>({});
