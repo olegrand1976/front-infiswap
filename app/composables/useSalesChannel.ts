@@ -103,8 +103,12 @@ export function useSalesChannel() {
     async function fetchCommissions(salesUserId?: number | null): Promise<void> {
         loading.value = true;
         try {
+            const id = typeof salesUserId === 'number' && Number.isFinite(salesUserId) && salesUserId > 0
+                ? salesUserId
+                : null;
+
             summary.value = await $apifetch<SalesCommissionSummary>('api/subscription/sales/commissions', {
-                params: salesUserId ? { sales_user_id: salesUserId } : undefined,
+                params: id ? { sales_user_id: id } : undefined,
             });
         }
         catch (error: unknown) {
