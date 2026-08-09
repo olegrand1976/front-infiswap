@@ -12,11 +12,12 @@
         </div>
 
         <SubscriptionProUpsellCallout
-            v-if="!isProSubscriber"
+            v-if="showProSearchUpsell"
             class="mx-4 sm:mx-9"
             tone="amber"
-            title="Alerte instantanée : soyez prévenue avant les autres"
-            description="Les comptes gratuits reçoivent un récap le soir. Avec Infiswap Pro, l'email part dès la publication."
+            :title="t('replacements.proSearchUpsellTitle')"
+            :description="t('replacements.proSearchUpsellDesc')"
+            :benefits="proSearchBenefits"
         />
 
         <div class="overflow-x-auto p-4">
@@ -139,11 +140,13 @@ const handleInterest = async (replacementId, nurseId) => {
     }
 };
 
-const { isPremium: isProSubscriber, fetchStatus: fetchProStatus } = useProSubscription();
-
-onMounted(fetchProStatus);
-
 const { t } = useI18n();
+const { showProSearchUpsell, proSearchBenefits, ensureProStatus } = useProSearchUpsell();
+
+onMounted(() => {
+    void ensureProStatus();
+});
+
 useHead({
     title: () => t('replacements.urgentPageTitle'),
 });
