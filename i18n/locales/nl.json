@@ -395,6 +395,23 @@
       "b4": "Activering met één klik op uw aankondigingen",
       "b5": "Optioneel vervangingscontract — 3 €"
     },
+    "pro": {
+      "eyebrow": "Abonnement",
+      "name": "Infiswap Pro",
+      "monthlyPrice": "9,90",
+      "period": "per maand",
+      "yearly": "of 99 € per jaar — 2 maanden gratis",
+      "desc": "Voor wie geen enkele kans wil missen: als eerste verwittigd, elke maand een vooruitgeschoven advertentie, contracten inbegrepen.",
+      "features": {
+        "p1": "Onmiddellijke melding zodra een vervanging verschijnt",
+        "p2": "Elke maand een boost van 7 dagen cadeau",
+        "p3": "Onbeperkt vervangingscontracten inbegrepen",
+        "p4": "Ondertekening en archivering van contracten inbegrepen",
+        "p5": "Maandelijks opzegbaar met één klik"
+      },
+      "cta": "Ontdek Infiswap Pro",
+      "note": "Het netwerk blijft gratis: Pro voegt alleen snelheid en comfort toe."
+    },
     "tips": {
       "freeTitle": "Gratis",
       "freeText": "Ideaal om de markt te volgen, te publiceren en te solliciteren, zonder abonnement.",

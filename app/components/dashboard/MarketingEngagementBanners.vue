@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ArrowRight, MessageSquare } from 'lucide-vue-next';
 import type { User } from '~/lib/types';
+import type { ProOffer } from '~/composables/useProSubscription';
 
 type NurseResponseItem = {
     responses?: Array<{ status?: string }>;
@@ -16,8 +17,12 @@ const {
     registerPartnerClickFromProduct,
 } = usePartnerServices();
 
+const { fetchOffer, checkout, loading: proLoading } = useProSubscription();
+const { trackEvent } = useProductAnalytics();
+
 const partnerBannerImpressionSent = ref(false);
 const pendingResponseCount = ref(0);
+const proOffer = ref<ProOffer | null>(null);
 
 const isNursAssurEligible = computed(() => {
     const country = user.value?.profile?.country;
@@ -31,10 +36,10 @@ const isNursAssurEligible = computed(() => {
     return normalized === 'be' || normalized === 'belgique';
 });
 
-const showCandidateBanner = computed(() => pendingResponseCount.value > 0);
+const showCandidateBanner = computed(() => proOffer.value === null && pendingResponseCount.value > 0);
 
 const showPartnerBanner = computed(() => {
-    if (!activeCampaign.value || showCandidateBanner.value) {
+    if (!activeCampaign.value || showCandidateBanner.value || proOffer.value) {
         return false;
     }
 
@@ -86,9 +91,33 @@ async function loadPendingResponseCount() {
 }
 
 onMounted(async () => {
+    proOffer.value = await fetchOffer();
+
+    if (proOffer.value) {
+        trackEvent('pro_offer_banner_impression', { lookup_key: proOffer.value.price_lookup_key });
+
+        return;
+    }
+
     await loadPendingResponseCount();
     await fetchActiveCampaign();
 });
+
+async function onProOfferClick() {
+    const offer = proOffer.value;
+
+    if (!offer) {
+        return;
+    }
+
+    trackEvent('pro_offer_banner_click', { lookup_key: offer.price_lookup_key });
+
+    const url = await checkout(offer.price_lookup_key, { offerToken: offer.token });
+
+    if (url) {
+        window.location.href = url;
+    }
+}
 
 watch(showPartnerBanner, (visible) => {
     if (visible && !partnerBannerImpressionSent.value) {
@@ -112,11 +141,19 @@ function onPartnerBannerClick() {
 
 <template>
     <div
-        v-if="showCandidateBanner || showPartnerBanner"
-        class="mx-6 mt-4 space-y-2"
+        v-if="proOffer || showCandidateBanner || showPartnerBanner"
+        class="mx-4 mt-4 space-y-2 sm:mx-6"
     >
+        <SubscriptionProOfferBanner
+            v-if="proOffer"
+            :offer="proOffer"
+            :loading="proLoading"
+            compact
+            @subscribe="onProOfferClick"
+        />
+
         <div
-            v-if="showCandidateBanner"
+            v-else-if="showCandidateBanner"
             class="flex flex-col gap-2 rounded-lg border border-emerald-300 bg-emerald-50 px-4 py-3 text-sm text-emerald-900 sm:flex-row sm:items-center sm:justify-between"
         >
             <div class="flex items-start gap-2">

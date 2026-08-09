@@ -16,7 +16,7 @@
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 max-w-4xl mx-auto items-stretch">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto items-stretch">
                 <article class="relative flex flex-col rounded-xl border border-success/20 bg-white shadow-lg shadow-success/5 overflow-hidden transition-transform duration-300 hover:-translate-y-1">
                     <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-success/80 via-success to-emerald-400" />
                     <div class="p-7 lg:p-8 flex flex-col flex-1">
@@ -154,6 +154,63 @@
                         </p>
                     </div>
                 </article>
+
+                <article class="relative flex flex-col rounded-xl border border-primary/30 bg-white shadow-xl shadow-primary/10 overflow-hidden transition-transform duration-300 hover:-translate-y-1">
+                    <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-primary/80 via-primary to-primary/60" />
+                    <div class="p-7 lg:p-8 flex flex-col flex-1">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-11 h-11 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
+                                <Crown class="w-5 h-5 text-primary" />
+                            </div>
+                            <div>
+                                <p class="text-xs font-semibold uppercase tracking-wide text-primary">
+                                    {{ $t('pricing.pro.eyebrow') }}
+                                </p>
+                                <h2 class="text-xl font-bold text-gray-900">
+                                    {{ $t('pricing.pro.name') }}
+                                </h2>
+                            </div>
+                        </div>
+
+                        <div class="lg:min-h-[5.25rem] mb-4">
+                            <div class="flex items-end gap-1">
+                                <span class="text-5xl font-bold text-gray-900 tracking-tight leading-none">
+                                    {{ $t('pricing.pro.monthlyPrice') }}
+                                </span>
+                                <span class="text-2xl font-semibold text-gray-700 mb-1">€</span>
+                                <span class="text-sm text-gray-500 mb-2 ml-1">{{ $t('pricing.pro.period') }}</span>
+                            </div>
+                            <p class="mt-2 text-sm text-gray-500">
+                                {{ $t('pricing.pro.yearly') }}
+                            </p>
+                        </div>
+
+                        <p class="text-gray-600 text-sm leading-relaxed mb-6 lg:min-h-[4.5rem]">
+                            {{ $t('pricing.pro.desc') }}
+                        </p>
+
+                        <ul class="space-y-3 mb-8 flex-1">
+                            <li
+                                v-for="item in proFeatures"
+                                :key="item"
+                                class="flex items-start gap-2.5 text-sm text-gray-700"
+                            >
+                                <CircleCheck class="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                                <span>{{ item }}</span>
+                            </li>
+                        </ul>
+
+                        <Button
+                            class="w-full font-semibold h-11"
+                            @click="handleProCta"
+                        >
+                            {{ $t('pricing.pro.cta') }}
+                        </Button>
+                        <p class="text-center text-xs text-gray-400 mt-3">
+                            {{ $t('pricing.pro.note') }}
+                        </p>
+                    </div>
+                </article>
             </div>
 
             <div class="mt-12 lg:hidden max-w-xl mx-auto">
@@ -217,6 +274,7 @@
 import {
     CircleCheck,
     CircleX,
+    Crown,
     Gift,
     HeartHandshake,
     Rocket,
@@ -295,6 +353,14 @@ const boostFeatures = computed(() => [
     t('pricing.boostFeatures.b5'),
 ]);
 
+const proFeatures = computed(() => [
+    t('pricing.pro.features.p1'),
+    t('pricing.pro.features.p2'),
+    t('pricing.pro.features.p3'),
+    t('pricing.pro.features.p4'),
+    t('pricing.pro.features.p5'),
+]);
+
 const tips = computed(() => [
     {
         icon: Gift,
@@ -319,6 +385,14 @@ const formatAmount = (amount?: string | number | null, fallback = '—') => {
     if (Number.isNaN(num)) return String(amount);
     const numberLocale = locale.value === 'nl' ? 'nl-BE' : 'fr-BE';
     return num.toLocaleString(numberLocale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+};
+
+const handleProCta = () => {
+    if (!user.value) {
+        return navigateTo(localePath('/register'));
+    }
+
+    return navigateTo(localePath('/dashboard/subscriptions'));
 };
 
 const handleBoostCta = () => {

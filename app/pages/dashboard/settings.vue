@@ -1690,6 +1690,41 @@
 
                     <section class="mt-4 shadow rounded-lg p-6 space-y-4">
                         <h3 class="flex items-center space-x-4">
+                            <Crown class="w-6 text-amber-500" />
+                            <span class="text-lg">Abonnement Infiswap Pro</span>
+                        </h3>
+                        <p class="text-sm text-gray-600">
+                            <template v-if="isProSubscriber">
+                                Votre abonnement est actif. Factures, moyen de paiement et résiliation
+                                se gèrent depuis le portail sécurisé Stripe.
+                            </template>
+                            <template v-else>
+                                Alertes instantanées, un boost offert par mois et contrats inclus.
+                                Le reste du réseau demeure gratuit.
+                            </template>
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-3 sm:justify-end">
+                            <Button
+                                v-if="isProSubscriber"
+                                type="button"
+                                :disabled="proLoading"
+                                @click="openBillingPortal"
+                            >
+                                Gérer mon abonnement
+                            </Button>
+                            <Button
+                                v-else
+                                type="button"
+                                variant="outline"
+                                @click="navigateTo('/dashboard/subscriptions')"
+                            >
+                                Découvrir Infiswap Pro
+                            </Button>
+                        </div>
+                    </section>
+
+                    <section class="mt-4 shadow rounded-lg p-6 space-y-4">
+                        <h3 class="flex items-center space-x-4">
                             <ShieldCheck class="w-6 text-gray-400" />
                             <span class="text-lg">{{ $t('settings.personalData') }}</span>
                         </h3>
@@ -1728,7 +1763,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeft, BellRing, Building2, Calendar, CircleUser, GraduationCap, IdCard, Mail, Map, MapPin, Phone, ShieldCheck, Smartphone, SquarePen, Trash2, UserPlus, Users, Wrench } from 'lucide-vue-next';
+import { ArrowLeft, BellRing, Building2, Calendar, CircleUser, Crown, GraduationCap, IdCard, Mail, Map, MapPin, Phone, ShieldCheck, Smartphone, SquarePen, Trash2, UserPlus, Users, Wrench } from 'lucide-vue-next';
 import { getErrorMessage, goBack } from '~/lib/utils';
 import { useRuntimeConfig } from '#app';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -1757,6 +1792,12 @@ const {
     deleteAvatar,
 } = useAuth();
 const { createPreferences, createNotifPreferences } = useAuth();
+
+const {
+    isPremium: isProSubscriber,
+    loading: proLoading,
+    openBillingPortal,
+} = useProSubscription();
 
 const isExportingData = ref(false);
 

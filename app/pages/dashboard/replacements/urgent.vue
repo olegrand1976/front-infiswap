@@ -11,6 +11,14 @@
             </h1>
         </div>
 
+        <SubscriptionProUpsellCallout
+            v-if="!isProSubscriber"
+            class="mx-4 sm:mx-9"
+            tone="amber"
+            title="Alerte instantanée : soyez prévenue avant les autres"
+            description="Les comptes gratuits reçoivent un récap le soir. Avec Infiswap Pro, l'email part dès la publication."
+        />
+
         <div class="overflow-x-auto p-4">
             <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
                 <thead class="bg-gray-100">
@@ -130,6 +138,10 @@ const handleInterest = async (replacementId, nurseId) => {
         toast.error(getErrorMessage(error));
     }
 };
+
+const { isPremium: isProSubscriber, fetchStatus: fetchProStatus } = useProSubscription();
+
+onMounted(fetchProStatus);
 
 const { t } = useI18n();
 useHead({

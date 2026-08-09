@@ -395,6 +395,23 @@
       "b4": "Activation en un clic sur vos annonces",
       "b5": "Contrat de remplacement optionnel — 3 €"
     },
+    "pro": {
+      "eyebrow": "Abonnement",
+      "name": "Infiswap Pro",
+      "monthlyPrice": "9,90",
+      "period": "par mois",
+      "yearly": "ou 99 € par an — 2 mois offerts",
+      "desc": "Pour celles qui ne veulent rater aucune opportunité : alertée en premier, une annonce mise en avant chaque mois, contrats inclus.",
+      "features": {
+        "p1": "Alerte instantanée dès la publication d'un remplacement",
+        "p2": "Un boost de 7 jours offert chaque mois",
+        "p3": "Contrats de remplacement illimités inclus",
+        "p4": "Signature et archivage des contrats compris",
+        "p5": "Annulable en un clic, sans engagement au mois"
+      },
+      "cta": "Découvrir Infiswap Pro",
+      "note": "Le réseau reste gratuit : Pro n'ajoute que de la vitesse et du confort."
+    },
     "tips": {
       "freeTitle": "Gratuit",
       "freeText": "Parfait pour surveiller le marché, publier et postuler, sans abonnement.",
