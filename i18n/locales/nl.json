@@ -79,6 +79,7 @@
     "hasAccount": "Al een account?",
     "resetPassword": "Wachtwoord resetten",
     "resetPasswordTitle": "Account herstellen",
+    "resetPasswordTitleStrong": "wachtwoord",
     "resetPasswordHint": "Deze stap is beveiligd. Vul het e-mailadres van uw InfiSwap-account in.",
     "yourEmail": "E-mailadres",
     "yourEmailPlaceholder": "u{'@'}voorbeeld.be",
@@ -120,7 +121,17 @@
     "twoFactorPageTitle": "2FA-verificatie",
     "passwordMismatch": "De wachtwoorden komen niet overeen.",
     "passwordSaved": "Uw nieuwe wachtwoord is opgeslagen",
-    "confirmNewPassword": "Bevestig het nieuwe wachtwoord"
+    "confirmNewPassword": "Bevestig het nieuwe wachtwoord",
+    "backToLogin": "Terug naar inloggen",
+    "newPasswordSuccessHint": "U kunt nu inloggen met uw nieuwe wachtwoord.",
+    "rememberPassword": "Weet u het weer?",
+    "requirementDigit": "Een cijfer",
+    "requirementLength": "Min. 8 tekens",
+    "requirementMatch": "Komt overeen",
+    "requirementUppercase": "Een hoofdletter",
+    "resetHelper": "Niets ontvangen na een paar minuten? Controleer uw spammap of neem contact op met support.",
+    "resetSuccessDetail": "Controleer uw inbox (en spam) — de code komt meestal binnen een minuut aan.",
+    "resetSuccessTitle": "Code verzonden"
   },
   "footer": {
     "newsletter": "Inschrijven op de nieuwsbrief",

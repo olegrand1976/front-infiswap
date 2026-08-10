@@ -79,6 +79,7 @@
     "hasAccount": "Déjà un compte ?",
     "resetPassword": "Réinitialiser le mot de passe",
     "resetPasswordTitle": "Récupération de compte",
+    "resetPasswordTitleStrong": "mot de passe",
     "resetPasswordHint": "Cette étape est sécurisée. Renseignez l'adresse associée à votre compte InfiSwap.",
     "yourEmail": "Adresse e-mail",
     "yourEmailPlaceholder": "vous{'@'}exemple.be",
@@ -120,7 +121,17 @@
     "twoFactorPageTitle": "Vérification 2FA",
     "passwordMismatch": "Les mots de passe ne correspondent pas.",
     "passwordSaved": "Votre nouveau mot de passe a été enregistré",
-    "confirmNewPassword": "Confirmer le nouveau mot de passe"
+    "confirmNewPassword": "Confirmer le nouveau mot de passe",
+    "backToLogin": "Retour à la connexion",
+    "newPasswordSuccessHint": "Vous pouvez désormais vous connecter avec votre nouveau mot de passe.",
+    "rememberPassword": "Vous vous souvenez ?",
+    "requirementDigit": "Un chiffre",
+    "requirementLength": "8 caractères min.",
+    "requirementMatch": "Les deux correspondent",
+    "requirementUppercase": "Une majuscule",
+    "resetHelper": "Vous ne recevez rien après quelques minutes ? Vérifiez le dossier spam ou contactez le support.",
+    "resetSuccessDetail": "Vérifiez votre boîte de réception (et les spams) — le code arrive en général en moins d'une minute.",
+    "resetSuccessTitle": "Code envoyé"
   },
   "footer": {
     "newsletter": "S'inscrire à la newsletter",
