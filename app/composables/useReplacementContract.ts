@@ -28,7 +28,7 @@ export function useReplacementContract() {
 
     /**
      * Renvoie une URL Stripe, ou `granted` quand le contrat est inclus dans
-     * l'abonnement Infiswap Pro : dans ce cas aucun paiement n'a lieu.
+     * l'abonnement Infiswap Premium : dans ce cas aucun paiement n'a lieu.
      */
     async function checkoutContract(
         replacementId: number,

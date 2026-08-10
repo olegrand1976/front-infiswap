@@ -488,7 +488,7 @@
     },
     "pro": {
       "eyebrow": "Abonnement",
-      "name": "Infiswap Pro",
+      "name": "Infiswap Premium",
       "monthlyPrice": "9,90",
       "period": "par mois",
       "yearly": "ou 99 € par an — 2 mois offerts",
@@ -500,8 +500,8 @@
         "p4": "Signature et archivage des contrats compris",
         "p5": "Annulable en un clic, sans engagement au mois"
       },
-      "cta": "Découvrir Infiswap Pro",
-      "note": "Le réseau reste gratuit : Pro n'ajoute que de la vitesse et du confort."
+      "cta": "Découvrir Infiswap Premium",
+      "note": "Le réseau reste gratuit : Premium n'ajoute que de la vitesse et du confort."
     },
     "tips": {
       "freeTitle": "Gratuit",
@@ -588,8 +588,8 @@
     "searchHeading": "Chercher",
     "searchHeadingStrong": "un remplacement",
     "searchHelpDesc": "Parcourez les missions disponibles près de chez vous.",
-    "proSearchUpsellTitle": "Infiswap Pro : soyez prévenue avant les autres",
-    "proSearchUpsellDesc": "Les comptes gratuits reçoivent un récap le soir. Avec Pro, l'alerte part dès la publication — vous pouvez candidater en premier.",
+    "proSearchUpsellTitle": "Infiswap Premium : soyez prévenue avant les autres",
+    "proSearchUpsellDesc": "Les comptes gratuits reçoivent un récap le soir. Avec Premium, l'alerte part dès la publication — vous pouvez candidater en premier.",
     "proSearchBenefitAlert": "Alerte instantanée à chaque nouvelle mission de votre zone",
     "proSearchBenefitBoost": "1 boost offert par mois pour mettre votre annonce en tête",
     "proSearchBenefitContract": "Contrats de remplacement inclus, illimités",

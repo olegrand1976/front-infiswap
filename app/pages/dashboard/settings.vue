@@ -1275,6 +1275,44 @@
                         </div>
                     </section>
 
+                    <section class="rounded-lg border border-amber-300/60 bg-amber-50/40 p-6 space-y-4 dark:border-amber-500/30 dark:bg-amber-500/5">
+                        <h3 class="flex items-center gap-3">
+                            <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-amber-400/15 text-amber-600">
+                                <Crown class="size-5" />
+                            </span>
+                            <span class="text-lg font-secondary">Abonnement Infiswap Premium</span>
+                        </h3>
+                        <p class="text-sm text-muted-foreground">
+                            <template v-if="isProSubscriber">
+                                Votre abonnement est actif. Factures, moyen de paiement et résiliation
+                                se gèrent depuis le portail sécurisé Stripe.
+                            </template>
+                            <template v-else>
+                                Alertes instantanées, un boost offert par mois et contrats inclus.
+                                Le reste du réseau demeure gratuit.
+                            </template>
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <Button
+                                v-if="isProSubscriber"
+                                type="button"
+                                class="min-h-11"
+                                :disabled="proLoading"
+                                @click="openBillingPortal"
+                            >
+                                Gérer mon abonnement
+                            </Button>
+                            <Button
+                                v-else
+                                type="button"
+                                class="min-h-11"
+                                @click="navigateTo('/dashboard/subscriptions')"
+                            >
+                                Découvrir Infiswap Premium
+                            </Button>
+                        </div>
+                    </section>
+
                     <section
                         v-if="user.type != 'institution'"
                         class="rounded-lg border border-border bg-card p-6"
@@ -1371,43 +1409,6 @@
                                     @update:checked="handleChangeNotif"
                                 />
                             </div>
-                        </div>
-                    </section>
-
-                    <section class="rounded-lg border border-border bg-card p-6 space-y-4">
-                        <h3 class="flex items-center gap-3">
-                            <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-amber-400/15 text-amber-600">
-                                <Crown class="size-5" />
-                            </span>
-                            <span class="text-lg font-secondary">Abonnement Infiswap Pro</span>
-                        </h3>
-                        <p class="text-sm text-muted-foreground">
-                            <template v-if="isProSubscriber">
-                                Votre abonnement est actif. Factures, moyen de paiement et résiliation
-                                se gèrent depuis le portail sécurisé Stripe.
-                            </template>
-                            <template v-else>
-                                Alertes instantanées, un boost offert par mois et contrats inclus.
-                                Le reste du réseau demeure gratuit.
-                            </template>
-                        </p>
-                        <div class="flex flex-col sm:flex-row gap-3 sm:justify-end">
-                            <Button
-                                v-if="isProSubscriber"
-                                type="button"
-                                :disabled="proLoading"
-                                @click="openBillingPortal"
-                            >
-                                Gérer mon abonnement
-                            </Button>
-                            <Button
-                                v-else
-                                type="button"
-                                variant="outline"
-                                @click="navigateTo('/dashboard/subscriptions')"
-                            >
-                                Découvrir Infiswap Pro
-                            </Button>
                         </div>
                     </section>
 

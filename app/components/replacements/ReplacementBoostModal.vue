@@ -131,7 +131,7 @@
                         <Crown class="w-5 h-5 text-primary shrink-0 mt-0.5" />
                         <div>
                             <p class="font-semibold text-sm text-gray-800">
-                                Boost offert par Infiswap Pro
+                                Boost offert par Infiswap Premium
                             </p>
                             <p class="text-xs text-gray-600 mt-0.5">
                                 <template v-if="freeBoostAvailable">
@@ -155,7 +155,7 @@
 
                 <SubscriptionProUpsellCallout
                     v-else
-                    title="Inclus dans Infiswap Pro — 1 boost offert chaque mois"
+                    title="Inclus dans Infiswap Premium — 1 boost offert chaque mois"
                     description="Avec les alertes instantanées et les contrats inclus, dès 9,90 €/mois."
                 />
 

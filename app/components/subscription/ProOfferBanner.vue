@@ -56,7 +56,7 @@ const expiryLabel = computed(() =>
             id="pro-offer-title"
             class="mt-3 text-xl font-semibold sm:text-2xl"
         >
-            Infiswap Pro {{ durationLabel }} à {{ priceLabel }}
+            Infiswap Premium {{ durationLabel }} à {{ priceLabel }}
         </h2>
 
         <p class="mt-1 text-sm text-muted-foreground">
