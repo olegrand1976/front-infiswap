@@ -26,14 +26,14 @@
                         v-if="isProSubscriber"
                         to="/dashboard/subscriptions"
                         class="flex shrink-0 items-center gap-1.5 rounded-full border border-primary/40 bg-primary/10 px-2.5 py-1 shadow-sm sm:px-3 sm:py-1.5"
-                        title="Abonnement Infiswap Pro actif"
+                        title="Abonnement Infiswap Premium actif"
                     >
                         <Crown
                             class="size-4 shrink-0 text-primary"
                             aria-hidden="true"
                         />
                         <span class="hidden text-xs font-semibold text-primary sm:inline">
-                            Pro
+                            Premium
                         </span>
                     </NuxtLink>
                     <div

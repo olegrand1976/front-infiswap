@@ -4,7 +4,7 @@
             <header class="flex flex-wrap items-start justify-between gap-3">
                 <div class="space-y-1">
                     <h1 class="text-2xl font-semibold">
-                        {{ isAdminView ? 'Commissions Infiswap Pro' : 'Mes commissions' }}
+                        {{ isAdminView ? 'Commissions Infiswap Premium' : 'Mes commissions' }}
                     </h1>
                     <p class="text-sm text-muted-foreground">
                         Assiette : le montant hors taxes de la facture Stripe. Versement 30 jours
@@ -174,7 +174,7 @@ definePageMeta({
 });
 
 useHead({
-    title: 'Commissions Infiswap Pro',
+    title: 'Commissions Infiswap Premium',
 });
 
 const STATUS_LABEL: Record<SalesCommissionStatus, string> = {

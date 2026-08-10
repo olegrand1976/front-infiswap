@@ -24,7 +24,7 @@
                     Connexion en cours…
                 </h1>
                 <p class="text-sm text-muted-foreground">
-                    Nous ouvrons votre offre Infiswap Pro.
+                    Nous ouvrons votre offre Infiswap Premium.
                 </p>
             </template>
         </div>
@@ -41,7 +41,7 @@ definePageMeta({
 });
 
 useHead({
-    title: 'Votre offre Infiswap Pro',
+    title: 'Votre offre Infiswap Premium',
 });
 
 const route = useRoute();

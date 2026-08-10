@@ -40,7 +40,7 @@ const GOOGLE_REVIEW_COPY: Record<GoogleReviewSource, GoogleReviewCopy> = {
         subtitle: 'Recommandez InfiSwap à vos collègues avec un avis Google.',
     },
     pro: {
-        title: 'Bienvenue dans Infiswap Pro',
+        title: 'Bienvenue dans Infiswap Premium',
         subtitle: 'Votre avis Google aide le réseau à attirer plus de remplaçantes.',
     },
     replacement_accepted: {

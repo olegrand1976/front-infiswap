@@ -492,7 +492,7 @@ const nurseNavigationItems = computed<NavigationItem[]>(() => {
             icon: Users,
         },
         {
-            label: 'Infiswap Pro',
+            label: 'Infiswap Premium',
             route: '/dashboard/subscriptions',
             icon: Crown,
         },
@@ -613,13 +613,13 @@ const adminNavigationSections = computed<NavigationSection[]>(() => [
                 visible: isSuperAdmin.value || isSaleRepresentative.value,
             },
             {
-                label: 'Canal téléphonique Pro',
+                label: 'Canal téléphonique Premium',
                 route: '/dashboard/admin/sales',
                 icon: Crown,
                 roles: ['super_admin', 'admin', 'sale_representative'],
             },
             {
-                label: 'Mes commissions Pro',
+                label: 'Mes commissions Premium',
                 route: '/dashboard/admin/commissions',
                 icon: Euro,
                 roles: ['super_admin', 'admin', 'sale_representative'],

@@ -61,7 +61,7 @@ const variantConfig = computed(() => {
             };
         case 'pro':
             return {
-                chip: 'Infiswap Pro activé',
+                chip: 'Infiswap Premium activé',
                 title: 'Vous ne raterez plus une opportunité',
                 subtitle: 'Alertes instantanées, un boost offert chaque mois, contrats inclus.',
                 tips: [

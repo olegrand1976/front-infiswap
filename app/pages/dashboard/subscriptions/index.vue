@@ -17,7 +17,7 @@
                         <div class="space-y-1">
                             <div class="inline-flex items-center gap-2 rounded-full bg-amber-400/20 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-300">
                                 <Crown class="size-3.5" />
-                                Infiswap Pro
+                                Infiswap Premium
                             </div>
                             <h1 class="text-2xl font-semibold">
                                 {{ currentPlan?.name ?? 'Abonnement actif' }}
@@ -100,7 +100,7 @@
                     </h1>
                     <p class="mx-auto max-w-xl text-muted-foreground">
                         Publier, postuler et échanger ne coûte rien, et ne coûtera jamais rien.
-                        Infiswap Pro ajoute trois avantages à celles qui veulent aller plus vite.
+                        Infiswap Premium ajoute trois avantages à celles qui veulent aller plus vite.
                     </p>
                 </div>
 
@@ -156,7 +156,7 @@ definePageMeta({
 });
 
 useHead({
-    title: 'Infiswap Pro',
+    title: 'Infiswap Premium',
 });
 
 const PRO_BENEFITS = [

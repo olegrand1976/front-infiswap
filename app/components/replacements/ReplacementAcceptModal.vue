@@ -165,7 +165,7 @@ async function acceptWithContract() {
                 <div class="rounded-lg border border-primary/15 bg-primary/5 p-3 text-sm space-y-2">
                     <p class="font-medium text-primary flex items-center gap-2">
                         <FileText class="size-4" />
-                        Contrat de remplacement — {{ isProSubscriber ? 'inclus dans Infiswap Pro' : '3 €' }}
+                        Contrat de remplacement — {{ isProSubscriber ? 'inclus dans Infiswap Premium' : '3 €' }}
                     </p>
                     <ul class="list-disc pl-5 text-muted-foreground space-y-1">
                         <li>Consolide l'accord entre vous et {{ respondentName }}</li>
@@ -178,7 +178,7 @@ async function acceptWithContract() {
                     v-if="!isProSubscriber"
                     tone="amber"
                     title="Ne repayez plus jamais vos contrats"
-                    description="Contrats illimités inclus dans Infiswap Pro, dès 9,90 €/mois."
+                    description="Contrats illimités inclus dans Infiswap Premium, dès 9,90 €/mois."
                 />
 
                 <div class="space-y-3">

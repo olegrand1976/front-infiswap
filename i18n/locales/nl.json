@@ -397,7 +397,7 @@
     },
     "pro": {
       "eyebrow": "Abonnement",
-      "name": "Infiswap Pro",
+      "name": "Infiswap Premium",
       "monthlyPrice": "9,90",
       "period": "per maand",
       "yearly": "of 99 € per jaar — 2 maanden gratis",
@@ -409,8 +409,8 @@
         "p4": "Ondertekening en archivering van contracten inbegrepen",
         "p5": "Maandelijks opzegbaar met één klik"
       },
-      "cta": "Ontdek Infiswap Pro",
-      "note": "Het netwerk blijft gratis: Pro voegt alleen snelheid en comfort toe."
+      "cta": "Ontdek Infiswap Premium",
+      "note": "Het netwerk blijft gratis: Premium voegt alleen snelheid en comfort toe."
     },
     "tips": {
       "freeTitle": "Gratis",
@@ -483,8 +483,8 @@
     "searchHeading": "Zoek",
     "searchHeadingStrong": "een vervanging",
     "searchHelpDesc": "Blader door de beschikbare missies in uw buurt.",
-    "proSearchUpsellTitle": "Infiswap Pro: word eerder gewaarschuwd dan anderen",
-    "proSearchUpsellDesc": "Gratis accounts krijgen 's avonds een samenvatting. Met Pro vertrekt de melding bij publicatie — u kunt als eerste solliciteren.",
+    "proSearchUpsellTitle": "Infiswap Premium: word eerder gewaarschuwd dan anderen",
+    "proSearchUpsellDesc": "Gratis accounts krijgen 's avonds een samenvatting. Met Premium vertrekt de melding bij publicatie — u kunt als eerste solliciteren.",
     "proSearchBenefitAlert": "Directe melding bij elke nieuwe missie in uw zone",
     "proSearchBenefitBoost": "1 gratis boost per maand om uw aankondiging bovenaan te zetten",
     "proSearchBenefitContract": "Onbeperkte vervangingscontracten inbegrepen",
