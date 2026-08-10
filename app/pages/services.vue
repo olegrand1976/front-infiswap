@@ -460,7 +460,7 @@
                 >
                     <Button
                         :href="localePath('/register')"
-                        class="w-44 h-12 rounded-full mx-auto lg:mx-0 flex justify-center items-center font-bold"
+                        class="w-44 h-12 rounded-md mx-auto lg:mx-0 flex justify-center items-center font-bold"
                     >
                         {{ $t('services.ctaRegister') }}
                     </Button>
