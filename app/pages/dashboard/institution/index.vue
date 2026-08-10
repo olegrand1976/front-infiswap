@@ -2,80 +2,107 @@
     <div class="mb-4">
         <div
             v-if="pending || loading"
-            class="grid gap-4 md:grid-cols-2"
+            class="space-y-6"
         >
-            <Skeleton class="h-40 rounded-lg" />
-            <Skeleton class="h-40 rounded-lg" />
-            <Skeleton class="col-span-full h-64 rounded-lg" />
+            <Skeleton class="h-32 rounded-3xl" />
+            <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <Skeleton
+                    v-for="n in 4"
+                    :key="n"
+                    class="h-28 rounded-2xl"
+                />
+            </div>
+            <Skeleton class="h-64 rounded-2xl" />
         </div>
 
         <template v-else>
-            <div class="grid md:grid-cols-2 gap-8">
-                <div class="md:col-span-1 bg-white shadow rounded-lg p-8 flex gap-8 items-center">
-                    <LayoutsAppImage
-                        :src="'/icons/plus.png'"
-                        alt="Medical plus icon"
-                        class="w-16 sm:w-20 opacity-90"
-                    />
-                    <div class="space-y-8">
-                        <p class="text-gray-700">
-                            <span class="text-gray-900 text-lg font-bold">Besoin d’un infirmier rapidement ?</span> <br>
+            <!-- Hero CTA -->
+            <div class="relative flex flex-wrap items-center justify-between gap-6 overflow-hidden rounded-3xl bg-gradient-to-br from-accent-green via-accent-green-light to-primary p-7 shadow-xl">
+                <div class="flex items-center gap-4">
+                    <span class="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-white/20">
+                        <LayoutsAppImage
+                            :src="'/icons/plus.png'"
+                            alt="Medical plus icon"
+                            class="w-7 opacity-90"
+                        />
+                    </span>
+                    <div>
+                        <p class="font-secondary text-lg font-bold text-white sm:text-xl">
+                            Besoin d’un infirmier rapidement ?
+                        </p>
+                        <p class="mt-1 text-sm text-white/90">
                             Publiez une mission et recevez des candidatures en quelques minutes.
                         </p>
-                        <Button
-                            class="rounded-md animate-bounce mt-6"
-                            @click="handleCreateMission"
-                        >
-                            Publier une mission
-                        </Button>
                     </div>
                 </div>
+                <Button
+                    class="h-auto shrink-0 rounded-xl bg-white px-6 py-3.5 font-bold text-primary shadow-lg transition hover:scale-[1.02]"
+                    @click="handleCreateMission"
+                >
+                    Publier une mission
+                </Button>
+            </div>
 
-                <div class="md:col-span-1 grid grid-cols-2 gap-4">
-                    <div class="col-span-1 bg-white shadow rounded-lg p-6 space-y-1">
-                        <h4 class="text-sm text-gray-500">
-                            Mission en cours
-                        </h4>
-                        <p class="font-bold text-primary text-3xl">
-                            {{ dataReports?.stats?.mission?.in_progress }}
-                        </p>
-                    </div>
-                    <div class="col-span-1 bg-white shadow rounded-lg p-6 space-y-1">
-                        <h4 class="text-sm text-gray-500">
-                            Mission à pourvoir
-                        </h4>
-                        <p class="font-bold text-primary text-3xl">
-                            {{ dataReports?.stats?.mission?.open }}
-                        </p>
-                    </div>
-                    <div class="col-span-1 bg-white shadow rounded-lg p-6 space-y-1">
-                        <h4 class="text-sm text-gray-500">
-                            Feuille de temps à valider
-                        </h4>
-                        <p class="font-bold text-primary text-3xl">
-                            {{ dataReports?.stats?.timesheet_validate }}
-                        </p>
-                    </div>
-                    <div class="col-span-1 bg-white shadow rounded-lg p-6 space-y-1">
-                        <h4 class="text-sm text-gray-500">
-                            Factures en attente
-                        </h4>
-                        <p class="font-bold text-primary text-3xl">
-                            {{ dataReports?.stats?.mission?.invoice_pending || 0 }}
-                        </p>
-                    </div>
+            <!-- KPIs -->
+            <div class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <div class="rounded-2xl bg-gradient-to-br from-green-700 to-green-800 p-5 text-white shadow-lg">
+                    <span class="mb-2 flex size-9 items-center justify-center rounded-lg bg-white/15">
+                        <ClipboardCheck class="size-4" />
+                    </span>
+                    <p class="font-secondary text-2xl font-bold tabular-nums">
+                        {{ dataReports?.stats?.mission?.in_progress }}
+                    </p>
+                    <p class="mt-1 text-xs text-white/85">
+                        Mission en cours
+                    </p>
+                </div>
+
+                <div class="rounded-2xl bg-gradient-to-br from-green-700 to-green-800 p-5 text-white shadow-lg">
+                    <span class="mb-2 flex size-9 items-center justify-center rounded-lg bg-white/15">
+                        <UserSearch class="size-4" />
+                    </span>
+                    <p class="font-secondary text-2xl font-bold tabular-nums">
+                        {{ dataReports?.stats?.mission?.open }}
+                    </p>
+                    <p class="mt-1 text-xs text-white/85">
+                        Mission à pourvoir
+                    </p>
+                </div>
+
+                <div class="rounded-2xl bg-primary p-5 text-primary-foreground shadow-lg">
+                    <span class="mb-2 flex size-9 items-center justify-center rounded-lg bg-white/15">
+                        <Clock class="size-4" />
+                    </span>
+                    <p class="font-secondary text-2xl font-bold tabular-nums">
+                        {{ dataReports?.stats?.timesheet_validate }}
+                    </p>
+                    <p class="mt-1 text-xs text-white/85">
+                        Feuille de temps à valider
+                    </p>
+                </div>
+
+                <div class="rounded-2xl bg-primary p-5 text-primary-foreground shadow-lg">
+                    <span class="mb-2 flex size-9 items-center justify-center rounded-lg bg-white/15">
+                        <Receipt class="size-4" />
+                    </span>
+                    <p class="font-secondary text-2xl font-bold tabular-nums">
+                        {{ dataReports?.stats?.mission?.invoice_pending || 0 }}
+                    </p>
+                    <p class="mt-1 text-xs text-white/85">
+                        Factures en attente
+                    </p>
                 </div>
             </div>
 
-            <div class="mt-12 grid lg:grid-cols-3 gap-6">
-                <div class="lg:col-span-2 shadow p-6 rounded-lg">
-                    <div class="flex justify-between items-center">
-                        <h3 class="text-lg font-semibold text-gray-700">
+            <div class="mt-6 grid gap-6 lg:grid-cols-3">
+                <div class="rounded-2xl bg-card p-6 shadow-sm lg:col-span-2">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-secondary text-lg font-semibold text-foreground">
                             Vos récentes missions
                         </h3>
                         <Button
                             variant="ghost"
-                            class="text-primary font-bold"
+                            class="font-bold text-primary"
                             @click="handleShowMissions"
                         >
                             Voir tout
@@ -84,308 +111,152 @@
 
                     <Tabs
                         v-model="activeTab"
-                        class="mt-3 mb-6"
+                        class="mt-4"
                         @update:model-value="handleTabChange"
                     >
-                        <TabsList class="w-full">
+                        <TabsList class="gap-2.5 border-0 bg-transparent p-0">
                             <TabsTrigger
                                 value="open"
-                                class="w-full lg:w-64"
+                                class="gap-2 rounded-full border border-transparent px-4 py-2 text-xs font-bold data-[state=inactive]:border-primary/35 data-[state=inactive]:text-primary data-[state=active]:rounded-full data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm"
                             >
-                                À pourvoir
+                                <span class="tabular-nums">{{ dataReports?.stats?.mission?.open }}</span> À pourvoir
                             </TabsTrigger>
                             <TabsTrigger
                                 value="in_progress"
-                                class="w-full lg:w-64"
+                                class="gap-2 rounded-full border border-green-700/35 px-4 py-2 text-xs font-bold data-[state=inactive]:text-green-700 data-[state=active]:rounded-full data-[state=active]:bg-gradient-to-br data-[state=active]:from-green-700 data-[state=active]:to-green-800 data-[state=active]:text-white data-[state=active]:shadow-sm"
                             >
-                                En cours
+                                <span class="tabular-nums">{{ dataReports?.stats?.mission?.in_progress }}</span> En cours
                             </TabsTrigger>
                         </TabsList>
 
                         <TabsContent value="open">
-                            <div class="hidden mt-4 lg:grid">
-                                <Table class="w-full overflow-hidden">
-                                    <TableHeader>
-                                        <TableRow class="grid grid-cols-6 border-b">
-                                            <TableHead class="py-4 font-semibold text-gray-600">
-                                                Service
-                                            </TableHead>
-                                            <TableHead class="py-4 font-semibold text-gray-600">
-                                                Date de début
-                                            </TableHead>
-                                            <TableHead class="py-4 font-semibold text-gray-600">
-                                                Date de fin
-                                            </TableHead>
-                                            <TableHead class="py-4 font-semibold text-gray-600">
-                                                Horaire
-                                            </TableHead>
-                                            <TableHead class="py-4 font-semibold text-gray-600">
-                                                Nb.candidats
-                                            </TableHead>
-                                            <TableHead class="py-4 font-semibold text-gray-600">
-                                                Création
-                                            </TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-
-                                    <TableBody>
-                                        <div
-                                            v-if="dataReports.missions.open.length == 0"
-                                            class="text-center mt-12 text-gray-600"
-                                        >
-                                            Aucune mission pour le moment
-                                        </div>
-                                        <div
-                                            v-else
-                                        >
-                                            <TableRow
-                                                v-for="mission in dataReports.missions.open"
-                                                :key="mission.id"
-                                                class="grid grid-cols-6 pb-4 border-b"
-                                            >
-                                                <TableHead class="py-4 truncate text-gray-800">
-                                                    {{ mission.service.name || '-' }}
-                                                </TableHead>
-                                                <TableHead class="py-4 truncate text-gray-800">
-                                                    {{ formatToDMY(mission.start_date) }}
-                                                </TableHead>
-                                                <TableHead class="py-4 truncate text-gray-800">
-                                                    {{ formatToDMY(mission.end_date) }}
-                                                </TableHead>
-                                                <TableHead class="py-4 truncate text-gray-800">
-                                                    {{ formatTime(mission.time_start_at) }}
-                                                    <span class="mx-1 text-gray-500">→</span>
-                                                    {{ formatTime(mission.time_end_at) }}
-                                                </TableHead>
-                                                <TableHead class="py-4 truncate text-gray-800">
-                                                    {{ mission.matching_candidates.length }}
-                                                </TableHead>
-                                                <TableHead class="py-4 truncate text-gray-800">
-                                                    {{ formatRelativeDate(mission.created_at) }}
-                                                </TableHead>
-                                            </TableRow>
-                                        </div>
-                                    </TableBody>
-                                </Table>
+                            <div
+                                v-if="dataReports.missions.open.length == 0"
+                                class="py-10 text-center text-sm text-muted-foreground"
+                            >
+                                Aucune mission pour le moment
                             </div>
-
-                            <div class="lg:hidden mt-4 space-y-4">
+                            <div
+                                v-else
+                                class="mt-2 divide-y divide-border"
+                            >
                                 <div
                                     v-for="mission in dataReports.missions.open"
                                     :key="mission.id"
-                                    class="rounded-md bg-gray-50 p-4"
+                                    class="flex items-center gap-3 py-3"
                                 >
-                                    <div class="flex justify-between">
-                                        <span class="text-sm text-gray-500">Service</span>
-                                        <span class="font-semibold text-sm text-gray-500">{{ mission.service.name || '-' }}</span>
+                                    <span class="flex size-9 shrink-0 items-center justify-center rounded-[10px] bg-primary/10 font-secondary text-sm font-bold text-primary">
+                                        {{ getInitials(mission.service.name) }}
+                                    </span>
+                                    <div class="min-w-0 flex-1">
+                                        <p class="truncate text-sm font-semibold text-foreground">
+                                            {{ mission.service.name || '-' }}
+                                        </p>
+                                        <p class="mt-0.5 truncate text-xs text-muted-foreground">
+                                            {{ formatToDMY(mission.start_date) }} → {{ formatToDMY(mission.end_date) }} ·
+                                            {{ formatTime(mission.time_start_at) }}–{{ formatTime(mission.time_end_at) }}
+                                        </p>
                                     </div>
-
-                                    <div class="mt-2 grid grid-cols-2 gap-3 text-sm">
-                                        <div>
-                                            <p class="text-gray-500">
-                                                Début
-                                            </p>
-                                            <p>{{ formatToDMY(mission.start_date) }}</p>
-                                        </div>
-
-                                        <div>
-                                            <p class="text-gray-500">
-                                                Fin
-                                            </p>
-                                            <p>{{ formatToDMY(mission.start_date) }}</p>
-                                        </div>
-
-                                        <div>
-                                            <p class="text-gray-500">
-                                                Horaire
-                                            </p>
-                                            <p>
-                                                {{ formatTime(mission.time_start_at) }}
-                                                <span class="mx-1 text-gray-500">→</span>
-                                                {{ formatTime(mission.time_end_at) }}
-                                            </p>
-                                        </div>
-
-                                        <div>
-                                            <p class="text-gray-500">
-                                                Nb.candidats
-                                            </p>
-                                            <p>
-                                                {{ mission.matching_candidates.length }}
-                                            </p>
-                                        </div>
+                                    <div class="shrink-0 text-right">
+                                        <p class="text-xs font-bold text-primary">
+                                            {{ mission.matching_candidates.length }} candidat{{ mission.matching_candidates.length > 1 ? 's' : '' }}
+                                        </p>
+                                        <p class="mt-0.5 text-[11px] text-muted-foreground">
+                                            {{ formatRelativeDate(mission.created_at) }}
+                                        </p>
                                     </div>
-
-                                    <p class="mt-3 text-xs text-gray-400">
-                                        Créée {{ mission.created_at }}
-                                    </p>
                                 </div>
                             </div>
                         </TabsContent>
 
                         <TabsContent value="in_progress">
-                            <div class="hidden mt-4 lg:grid">
-                                <Table class="w-full overflow-hidden">
-                                    <TableHeader>
-                                        <TableRow class="grid grid-cols-6 pb-4 border-b">
-                                            <TableHead class="py-4 font-semibold text-gray-600">
-                                                Service
-                                            </TableHead>
-                                            <TableHead class="py-4 font-semibold text-gray-600">
-                                                Date de début
-                                            </TableHead>
-                                            <TableHead class="py-4 font-semibold text-gray-600">
-                                                Date de fin
-                                            </TableHead>
-                                            <TableHead class="py-4 font-semibold text-gray-600">
-                                                Horaire
-                                            </TableHead>
-                                            <TableHead class="py-4 font-semibold text-gray-600">
-                                                Infirmier
-                                            </TableHead>
-                                            <TableHead class="py-4 font-semibold text-gray-600">
-                                                Création
-                                            </TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-
-                                    <TableBody>
-                                        <div
-                                            v-if="dataReports.missions.in_progress.length == 0"
-                                            class="text-center mt-12 text-gray-600"
-                                        >
-                                            Aucune mission pour le moment
-                                        </div>
-                                        <div
-                                            v-else
-                                        >
-                                            <TableRow
-                                                v-for="mission in dataReports.missions.in_progress"
-                                                :key="mission.id"
-                                                class="grid grid-cols-6 pb-4 border-b"
-                                            >
-                                                <TableHead class="py-4 text-gray-800">
-                                                    {{ mission.service.name || '-' }}
-                                                </TableHead>
-                                                <TableHead class="py-4 text-gray-800">
-                                                    {{ formatToDMY(mission.start_date) }}
-                                                </TableHead>
-                                                <TableHead class="py-4 text-gray-800">
-                                                    {{ formatToDMY(mission.end_date) }}
-                                                </TableHead>
-                                                <TableHead class="py-4 text-gray-800">
-                                                    {{ formatTime(mission.time_start_at) }}
-                                                    <span class="mx-1 text-gray-500">→</span>
-                                                    {{ formatTime(mission.time_end_at) }}
-                                                </TableHead>
-                                                <TableHead class="py-4 text-gray-800">
-                                                    {{ mission.accepted_candidate.full_name }}
-                                                </TableHead>
-                                                <TableHead class="py-4 text-gray-800">
-                                                    {{ formatRelativeDate(mission.created_at) }}
-                                                </TableHead>
-                                            </TableRow>
-                                        </div>
-                                    </TableBody>
-                                </Table>
+                            <div
+                                v-if="dataReports.missions.in_progress.length == 0"
+                                class="py-10 text-center text-sm text-muted-foreground"
+                            >
+                                Aucune mission pour le moment
                             </div>
-
-                            <div class="lg:hidden mt-4 space-y-4">
+                            <div
+                                v-else
+                                class="mt-2 divide-y divide-border"
+                            >
                                 <div
                                     v-for="mission in dataReports.missions.in_progress"
                                     :key="mission.id"
-                                    class="rounded-md bg-gray-50 p-4"
+                                    class="flex items-center gap-3 py-3"
                                 >
-                                    <div class="flex justify-between">
-                                        <span class="text-sm text-gray-500">Service</span>
-                                        <span class="font-semibold text-sm text-gray-500">{{ mission.service.name || '-' }}</span>
+                                    <span class="flex size-9 shrink-0 items-center justify-center rounded-[10px] bg-green-700/10 font-secondary text-sm font-bold text-green-700">
+                                        {{ getInitials(mission.service.name) }}
+                                    </span>
+                                    <div class="min-w-0 flex-1">
+                                        <p class="truncate text-sm font-semibold text-foreground">
+                                            {{ mission.service.name || '-' }}
+                                        </p>
+                                        <p class="mt-0.5 truncate text-xs text-muted-foreground">
+                                            {{ formatToDMY(mission.start_date) }} → {{ formatToDMY(mission.end_date) }} ·
+                                            {{ formatTime(mission.time_start_at) }}–{{ formatTime(mission.time_end_at) }}
+                                        </p>
                                     </div>
-
-                                    <div class="mt-2 grid grid-cols-2 gap-3 text-sm">
-                                        <div>
-                                            <p class="text-gray-500">
-                                                Début
-                                            </p>
-                                            <p>{{ mission.start_date }}</p>
-                                        </div>
-
-                                        <div>
-                                            <p class="text-gray-500">
-                                                Fin
-                                            </p>
-                                            <p>{{ mission.end_date }}</p>
-                                        </div>
-
-                                        <div>
-                                            <p class="text-gray-500">
-                                                Horaire
-                                            </p>
-                                            <p>
-                                                {{ formatTime(mission.time_start_at) }}
-                                                <span class="mx-1 text-gray-500">→</span>
-                                                {{ formatTime(mission.time_end_at) }}
-                                            </p>
-                                        </div>
-
-                                        <div>
-                                            <p class="text-gray-500">
-                                                Infirmier
-                                            </p>
-                                            <p>{{ mission.accepted_candidate.full_name }}</p>
-                                        </div>
+                                    <div class="shrink-0 text-right">
+                                        <p class="truncate text-xs font-bold text-foreground">
+                                            {{ mission.accepted_candidate.full_name }}
+                                        </p>
+                                        <p class="mt-0.5 text-[11px] text-muted-foreground">
+                                            {{ formatRelativeDate(mission.created_at) }}
+                                        </p>
                                     </div>
-
-                                    <p class="mt-3 text-xs text-gray-400">
-                                        Créée {{ mission.created_at }}
-                                    </p>
                                 </div>
                             </div>
                         </TabsContent>
                     </Tabs>
                 </div>
 
-                <div class="lg:col-span-1 shadow p-6 rounded-lg">
-                    <h3 class="text-lg font-semibold text-gray-700">
+                <div class="rounded-2xl bg-card p-6 shadow-sm">
+                    <h3 class="font-secondary text-lg font-semibold text-foreground">
                         Notifications
                     </h3>
                     <div v-if="dataReports?.notifications?.missions?.length == 0 && dataReports?.notifications?.timesheets?.length == 0">
-                        <p class="mt-16 mb-16 lg:mb-0 text-center text-sm text-gray-500">
+                        <p class="py-16 text-center text-sm text-muted-foreground lg:py-0">
                             Aucune notification pour le moment
                         </p>
                     </div>
                     <div
                         v-else
-                        class="mt-4 grid gap-4"
+                        class="mt-4 grid gap-3"
                     >
                         <div
                             v-for="notification in dataReports?.notifications?.missions"
                             :key="notification.id"
-                            class="bg-gray-50 rounded-md p-4 shadow-sm flex gap-4 items-center hover:transition-all hover:duration-300 hover:scale-105 hover:cursor-pointer"
+                            class="flex cursor-pointer items-center gap-3 rounded-xl bg-muted/60 p-3.5 transition hover:bg-muted"
                             @click="handleReadNotification(notification, 'mission')"
                         >
-                            <UserPlus class="w-6 h-6 text-primary" />
-                            <div class="space-y-2">
-                                <h6 class="text-sm text-gray-600 font-medium">
+                            <span class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                                <UserPlus class="size-4" />
+                            </span>
+                            <div>
+                                <p class="text-xs font-semibold text-foreground">
                                     Un nouveau candidat pour la mission #{{ notification.notifiable_id }}
-                                </h6>
-                                <p class="text-xs text-gray-400">
-                                    {{ formatRelativeDate(notification.created_at) }} . Nouveau candidat
+                                </p>
+                                <p class="mt-0.5 text-[11px] text-muted-foreground">
+                                    {{ formatRelativeDate(notification.created_at) }} · Nouveau candidat
                                 </p>
                             </div>
                         </div>
                         <div
                             v-for="notification in dataReports?.notifications?.timesheets"
                             :key="notification.mission_id"
-                            class="bg-gray-50 rounded-md p-4 shadow-sm flex gap-4 items-center hover:transition-all hover:duration-300 hover:scale-105 hover:cursor-pointer"
+                            class="flex cursor-pointer items-center gap-3 rounded-xl bg-muted/60 p-3.5 transition hover:bg-muted"
                             @click="handleReadNotification(notification, 'timesheet')"
                         >
-                            <ClipboardList class="w-6 h-6 text-primary" />
-                            <div class="space-y-2">
-                                <h6 class="text-sm text-gray-600 font-medium">
+                            <span class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                                <ClipboardList class="size-4" />
+                            </span>
+                            <div>
+                                <p class="text-xs font-semibold text-foreground">
                                     Vous avez {{ notification.data.length > 1 ? `${notification.data.length} jours` : `${notification.data.length} jour` }} à valider pour la mission #{{ notification.mission_id }}
-                                </h6>
-                                <p class="text-xs text-gray-400">
-                                    {{ formatRelativeDate(notification.data[0].created_at) }} . Feuille de temps
+                                </p>
+                                <p class="mt-0.5 text-[11px] text-muted-foreground">
+                                    {{ formatRelativeDate(notification.data[0].created_at) }} · Feuille de temps
                                 </p>
                             </div>
                         </div>
@@ -397,7 +268,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ClipboardList, UserPlus } from 'lucide-vue-next';
+import { ClipboardCheck, ClipboardList, Clock, Receipt, UserPlus, UserSearch } from 'lucide-vue-next';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatRelativeDate, formatTime, formatToDMY } from '~/composables/useDate';
 
@@ -431,6 +302,8 @@ const activeTab = ref('open');
 const handleTabChange = async (newTab: string) => {
     activeTab.value = newTab;
 };
+
+const getInitials = (name?: string | null) => (name ?? '').trim().slice(0, 2).toUpperCase() || '–';
 
 const handleReadNotification = async (notification, typeNotif) => {
     if (typeNotif == 'mission') {

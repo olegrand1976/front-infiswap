@@ -34,6 +34,8 @@
   --color-primarytech-foreground: var(--primarytech-foreground);
   --color-primaryassur: var(--primaryassur);
   --color-primaryassur-foreground: var(--primaryassur-foreground);
+  --color-accent-green: var(--accent-green);
+  --color-accent-green-light: var(--accent-green-light);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -97,6 +99,9 @@
 
     --primaryassur: oklch(0.55 0.12 200);
     --primaryassur-foreground: oklch(0.985 0 0);
+
+    --accent-green: oklch(0.6814 0.1199 158.73);
+    --accent-green-light: oklch(0.7593 0.1261 145.09);
 
     --success: oklch(0.8125 0.1526 153.76);
     --success-foreground: oklch(0.985 0 0);

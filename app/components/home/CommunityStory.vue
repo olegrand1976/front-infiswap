@@ -11,7 +11,7 @@ const { copy } = usePlatformStats();
         aria-labelledby="community-story-title"
     >
         <div class="container mx-auto px-4 sm:px-6">
-            <div class="overflow-hidden rounded-3xl bg-gradient-to-br from-[#4caf7d] via-[#7bc67e] to-primary shadow-xl">
+            <div class="overflow-hidden rounded-3xl bg-gradient-to-br from-accent-green via-accent-green-light to-primary shadow-xl">
                 <div class="grid gap-8 px-6 py-10 sm:px-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-center lg:gap-12 lg:py-14">
                     <div class="text-white">
                         <h2
