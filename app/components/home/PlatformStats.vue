@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Headset, MapPin, Quote, Search, ShieldCheck, Users } from 'lucide-vue-next';
+import { Headset, Quote, ShieldCheck, Users } from 'lucide-vue-next';
 
 const { locale } = useI18n();
 const { stats, loading, copy, fetchStats, getKpiValue } = usePlatformStats();
@@ -53,7 +53,7 @@ const formattedAsOf = computed(() => {
                 </p>
             </div>
 
-            <div class="mx-auto grid max-w-5xl grid-cols-1 gap-4 text-left sm:grid-cols-2 lg:grid-cols-4">
+            <div class="mx-auto grid max-w-3xl grid-cols-1 gap-4 text-left sm:grid-cols-2">
                 <div class="rounded-2xl bg-gradient-to-br from-green-700 to-green-800 p-5 text-center shadow-lg">
                     <span class="mx-auto mb-2 flex size-9 items-center justify-center rounded-lg bg-white/15">
                         <Users class="size-4 text-white" />
@@ -79,27 +79,7 @@ const formattedAsOf = computed(() => {
                     </p>
                 </div>
 
-                <div class="rounded-2xl bg-gradient-to-br from-green-700 to-green-800 p-5 text-center shadow-lg">
-                    <span class="mx-auto mb-2 flex size-9 items-center justify-center rounded-lg bg-white/15">
-                        <MapPin class="size-4 text-white" />
-                    </span>
-                    <span class="font-secondary text-2xl font-semibold text-white">2</span>
-                    <p class="mt-1 text-xs text-white/80">
-                        {{ $t('home.stats.countriesLabel') }}
-                    </p>
-                </div>
-
-                <div class="rounded-2xl bg-gradient-to-br from-green-700 to-green-800 p-5 text-center shadow-lg">
-                    <span class="mx-auto mb-2 flex size-9 items-center justify-center rounded-lg bg-white/15">
-                        <Search class="size-4 text-white" />
-                    </span>
-                    <span class="font-secondary text-2xl font-semibold text-white">&lt;24h</span>
-                    <p class="mt-1 text-xs text-white/80">
-                        {{ $t('home.stats.delayLabel') }}
-                    </p>
-                </div>
-
-                <div class="flex flex-col rounded-2xl bg-primary p-5 shadow-lg sm:col-span-2 lg:col-span-1">
+                <div class="flex flex-col rounded-2xl bg-primary p-5 shadow-lg">
                     <Quote class="mb-2 size-5 text-white/70" />
                     <p class="flex-1 text-xs text-white">
                         {{ $t('home.stats.trustQuote') }}
