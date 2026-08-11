@@ -69,6 +69,7 @@ export type User = {
     pm_last_four?: string | null;
     trial_ends_at?: string | null;
     platform_access_paid_at?: string | null;
+    is_premium?: boolean;
     street_address?: string | null;
     city?: string | null;
     zip_code?: string | null;

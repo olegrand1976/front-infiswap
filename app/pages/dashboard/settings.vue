@@ -41,20 +41,22 @@
                         @click="profileDialog = !profileDialog"
                         @keydown.enter="profileDialog = !profileDialog"
                     >
-                        <ProfileLifetimeAccessBadge size="lg">
-                            <ProfileInamiVerifiedBadge size="lg">
-                                <img
-                                    v-if="user.profile?.profil_url != null"
-                                    :src="useRuntimeConfig().public.API_URL + '/storage/' + user.profile?.profil_url"
-                                    class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover"
-                                >
-                                <img
-                                    v-else
-                                    src="/images/icons/user-circle.png"
-                                    class="w-16 h-16 sm:w-20 sm:h-20 rounded-full opacity-60"
-                                >
-                            </ProfileInamiVerifiedBadge>
-                        </ProfileLifetimeAccessBadge>
+                        <ProfilePremiumBadge size="lg">
+                            <ProfileLifetimeAccessBadge size="lg">
+                                <ProfileInamiVerifiedBadge size="lg">
+                                    <img
+                                        v-if="user.profile?.profil_url != null"
+                                        :src="useRuntimeConfig().public.API_URL + '/storage/' + user.profile?.profil_url"
+                                        class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover"
+                                    >
+                                    <img
+                                        v-else
+                                        src="/images/icons/user-circle.png"
+                                        class="w-16 h-16 sm:w-20 sm:h-20 rounded-full opacity-60"
+                                    >
+                                </ProfileInamiVerifiedBadge>
+                            </ProfileLifetimeAccessBadge>
+                        </ProfilePremiumBadge>
                         <span class="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 transition-opacity group-hover/avatar:opacity-100">
                             <Camera class="size-5 text-white" />
                         </span>
@@ -1275,6 +1277,44 @@
                         </div>
                     </section>
 
+                    <section class="rounded-lg border border-amber-300/60 bg-amber-50/40 p-6 space-y-4 dark:border-amber-500/30 dark:bg-amber-500/5">
+                        <h3 class="flex items-center gap-3">
+                            <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-amber-400/15 text-amber-600">
+                                <Crown class="size-5" />
+                            </span>
+                            <span class="text-lg font-secondary">Abonnement Infiswap Premium</span>
+                        </h3>
+                        <p class="text-sm text-muted-foreground">
+                            <template v-if="isProSubscriber">
+                                Votre abonnement est actif. Factures, moyen de paiement et résiliation
+                                se gèrent depuis le portail sécurisé Stripe.
+                            </template>
+                            <template v-else>
+                                Alertes instantanées, un boost offert par mois et contrats inclus.
+                                Le reste du réseau demeure gratuit.
+                            </template>
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <Button
+                                v-if="isProSubscriber"
+                                type="button"
+                                class="min-h-11"
+                                :disabled="proLoading"
+                                @click="openBillingPortal"
+                            >
+                                Gérer mon abonnement
+                            </Button>
+                            <Button
+                                v-else
+                                type="button"
+                                class="min-h-11"
+                                @click="navigateTo('/dashboard/subscriptions')"
+                            >
+                                Découvrir Infiswap Premium
+                            </Button>
+                        </div>
+                    </section>
+
                     <section
                         v-if="user.type != 'institution'"
                         class="rounded-lg border border-border bg-card p-6"
@@ -1415,7 +1455,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeft, BellRing, Building2, Calendar, Camera, CircleEllipsis, CircleUser, Cookie, Download, Flag, GraduationCap, IdCard, KeyRound, Languages, LayoutGrid, Mail, Mailbox, Map, MapPin, Phone, ShieldCheck, Smartphone, Sparkles, SquarePen, Trash2, UserPlus, Users, VenusAndMars, Wrench } from 'lucide-vue-next';
+import { ArrowLeft, BellRing, Building2, Calendar, Camera, CircleEllipsis, CircleUser, Cookie, Crown, Download, Flag, GraduationCap, IdCard, KeyRound, Languages, LayoutGrid, Mail, Mailbox, Map, MapPin, Phone, ShieldCheck, Smartphone, Sparkles, SquarePen, Trash2, UserPlus, Users, VenusAndMars, Wrench } from 'lucide-vue-next';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { getErrorMessage, goBack } from '~/lib/utils';
 import { useRuntimeConfig } from '#app';
@@ -1444,6 +1484,12 @@ const {
     deleteAvatar,
 } = useAuth();
 const { createPreferences, createNotifPreferences } = useAuth();
+
+const {
+    isPremium: isProSubscriber,
+    loading: proLoading,
+    openBillingPortal,
+} = useProSubscription();
 
 const isExportingData = ref(false);
 

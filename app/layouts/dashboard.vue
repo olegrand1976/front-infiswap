@@ -22,6 +22,20 @@
                 </div>
 
                 <div class="ml-auto flex min-w-0 items-center gap-1 sm:gap-2">
+                    <NuxtLink
+                        v-if="isProSubscriber"
+                        to="/dashboard/subscriptions"
+                        class="flex shrink-0 items-center gap-1.5 rounded-full border border-primary/40 bg-primary/10 px-2.5 py-1 shadow-sm sm:px-3 sm:py-1.5"
+                        title="Abonnement Infiswap Premium actif"
+                    >
+                        <Crown
+                            class="size-4 shrink-0 text-primary"
+                            aria-hidden="true"
+                        />
+                        <span class="hidden text-xs font-semibold text-primary sm:inline">
+                            Premium
+                        </span>
+                    </NuxtLink>
                     <div
                         v-if="showNetworkMemberBadge"
                         class="flex shrink-0 items-center gap-1.5 rounded-full border border-amber-400/70 bg-gradient-to-r from-amber-50 via-yellow-50 to-amber-100 px-2.5 py-1 shadow-sm sm:px-3 sm:py-1.5"
@@ -213,18 +227,20 @@
 
                         <DropdownMenu>
                             <DropdownMenuTrigger class="flex shrink-0 items-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-                                <ProfileLifetimeAccessBadge session-consumer>
-                                    <ProfileInamiVerifiedBadge>
-                                        <Avatar v-if="user?.profil_url != null">
-                                            <AvatarImage :src="useRuntimeConfig().public.API_URL + '/storage/' + hasChangedAvatar" />
-                                            <AvatarFallback>{{ user.firstname.slice(1, 1).toUpperCase() + user.lastname.slice(1, 1).toUpperCase() }}</AvatarFallback>
-                                        </Avatar>
-                                        <CircleUser
-                                            v-else
-                                            class="size-11 text-black/40"
-                                        />
-                                    </ProfileInamiVerifiedBadge>
-                                </ProfileLifetimeAccessBadge>
+                                <ProfilePremiumBadge>
+                                    <ProfileLifetimeAccessBadge session-consumer>
+                                        <ProfileInamiVerifiedBadge>
+                                            <Avatar v-if="user?.profil_url != null">
+                                                <AvatarImage :src="useRuntimeConfig().public.API_URL + '/storage/' + hasChangedAvatar" />
+                                                <AvatarFallback>{{ user.firstname.slice(1, 1).toUpperCase() + user.lastname.slice(1, 1).toUpperCase() }}</AvatarFallback>
+                                            </Avatar>
+                                            <CircleUser
+                                                v-else
+                                                class="size-11 text-black/40"
+                                            />
+                                        </ProfileInamiVerifiedBadge>
+                                    </ProfileLifetimeAccessBadge>
+                                </ProfilePremiumBadge>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
                                 <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
@@ -319,7 +335,7 @@
 </template>
 
 <script lang="ts" setup>
-import { BellOff, CircleUser, Frown, Medal } from 'lucide-vue-next';
+import { BellOff, CircleUser, Crown, Frown, Medal } from 'lucide-vue-next';
 import { useRoute } from 'vue-router';
 import { useRuntimeConfig } from '#app';
 import type { AccountType, User } from '~/lib/types';
@@ -372,6 +388,7 @@ const settingsRoute = computed(() =>
     user.value?.type === 'institution' ? '/dashboard/institution/settings' : '/dashboard/settings',
 );
 
+const { isPremium: isProSubscriber, fetchStatus: fetchProStatus } = useProSubscription();
 const { activeCelebration, dismissCelebration } = usePurchaseCelebration();
 const { activeEngagement, requestEngagement } = usePostSuccessEngagement();
 const { processStripeReturn: processSponsorshipReturn } = useSponsorship();
@@ -565,6 +582,7 @@ onMounted(async () => {
         getRoles(),
         getUnreadCount(),
         processSponsorshipStripeReturn(),
+        fetchProStatus(),
     ]);
     const normalizedApiRoles = normalizeAccountRoles(fetchedRoles);
     if (normalizedApiRoles.length) {

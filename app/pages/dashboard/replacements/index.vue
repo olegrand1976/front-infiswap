@@ -39,6 +39,14 @@
             </p>
         </div>
 
+        <SubscriptionProUpsellCallout
+            v-if="showProSearchUpsell"
+            class="mt-4"
+            :title="t('replacements.proSearchUpsellTitle')"
+            :description="t('replacements.proSearchUpsellDesc')"
+            :benefits="proSearchBenefits"
+        />
+
         <Replacement
             v-model:selected-regions="selectedRegions"
             :filters="selectedFilters"
@@ -303,6 +311,8 @@ import { useConfirmProfileCountry } from '~/composables/useConfirmProfileCountry
 const { t } = useI18n();
 const localePath = useLocalePath();
 
+const { showProSearchUpsell, proSearchBenefits, ensureProStatus } = useProSearchUpsell();
+
 const user = useState<User>('user');
 const {
     showModal: showCountryModal,
@@ -336,6 +346,7 @@ onMounted(async () => {
     await ensureProfileCountry();
     syncSelectedCountryFromProfile();
     getMissions(1, PERPAGE, { type: 'nurse' });
+    await ensureProStatus();
 });
 
 watch(

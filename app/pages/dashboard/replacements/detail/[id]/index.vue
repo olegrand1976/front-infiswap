@@ -404,6 +404,7 @@
             v-model:open="boostModalOpen"
             :replacement="replacement"
             @cancelled="onBoostCancelled"
+            @boosted="fetchReplacement"
         />
 
         <Dialog v-model:open="inamiPromptOpen">

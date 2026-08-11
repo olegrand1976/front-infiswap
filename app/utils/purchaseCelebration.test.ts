@@ -4,6 +4,7 @@ import {
     buildBoostCelebrationDedupeKey,
     buildCelebrationSeenKey,
     buildContractCelebrationDedupeKey,
+    buildProCelebrationDedupeKey,
     isCelebrationSeen,
     shouldTrackPurchaseAnalytics,
 } from './purchaseCelebration';
@@ -24,6 +25,11 @@ describe('purchaseCelebration', () => {
         expect(buildBoostCelebrationDedupeKey(12, 'cs_test_abc')).toBe('boost:cs_test_abc');
         expect(buildContractCelebrationDedupeKey(12, 'cs_test_abc')).toBe('contract:cs_test_abc');
         expect(buildContractCelebrationDedupeKey(12)).toBe('contract:12');
+    });
+
+    it('builds dedupe keys for pro subscription', () => {
+        expect(buildProCelebrationDedupeKey('cs_test_pro')).toBe('pro:cs_test_pro');
+        expect(buildAnalyticsSeenKey('pro', 'cs_live_pro')).toBe('infiswap:analytics_seen:pro:cs_live_pro');
     });
 
     it('deduplicates purchase analytics by session id', () => {

@@ -13,18 +13,24 @@
                 :class="compact ? 'mb-2 w-28 hover:cursor-pointer' : 'mb-8 w-48 hover:cursor-pointer'"
                 format="png"
             />
-            <img
-                v-if="user.profil_url"
-                :src="useRuntimeConfig().public.API_URL + '/storage/' + user.profil_url"
-                alt="Photo de profil"
-                class="absolute rounded-full border-background"
-                :class="compact ? '-bottom-7 h-16 w-16 border-2' : '-bottom-14 h-28 w-28 border-4'"
+            <ProfilePremiumBadge
+                class="absolute"
+                :class="compact ? '-bottom-7' : '-bottom-14'"
+                :active="Boolean(user.is_premium)"
             >
-            <CircleUser
-                v-else
-                class="absolute rounded-full border-background bg-muted text-tertiary"
-                :class="compact ? '-bottom-7 h-16 w-16 border-2' : '-bottom-14 h-28 w-28 border-4'"
-            />
+                <img
+                    v-if="user.profil_url"
+                    :src="useRuntimeConfig().public.API_URL + '/storage/' + user.profil_url"
+                    alt="Photo de profil"
+                    class="rounded-full border-background"
+                    :class="compact ? 'h-16 w-16 border-2' : 'h-28 w-28 border-4'"
+                >
+                <CircleUser
+                    v-else
+                    class="rounded-full border-background bg-muted text-tertiary"
+                    :class="compact ? 'h-16 w-16 border-2' : 'h-28 w-28 border-4'"
+                />
+            </ProfilePremiumBadge>
         </div>
 
         <div

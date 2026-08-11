@@ -6,6 +6,10 @@ export type ConfirmContractResult = {
 
 export type ReplacementContractSignatureMode = 'electronic' | 'pdf_download';
 
+export type CheckoutContractResult =
+    | { kind: 'checkout'; url: string | null }
+    | { kind: 'granted'; contractId: number | null };
+
 export interface ReplacementContractItem {
     id: number;
     replacement_id: number;
@@ -22,6 +26,10 @@ export function useReplacementContract() {
     const { $apifetch } = useNuxtApp();
     const loading = ref(false);
 
+    /**
+     * Renvoie une URL Stripe, ou `granted` quand le contrat est inclus dans
+     * l'abonnement Infiswap Premium : dans ce cas aucun paiement n'a lieu.
+     */
     async function checkoutContract(
         replacementId: number,
         responseId: number,
@@ -29,10 +37,10 @@ export function useReplacementContract() {
             signatureMode: ReplacementContractSignatureMode;
             includesPatientAccess: boolean;
         },
-    ): Promise<string | null> {
+    ): Promise<CheckoutContractResult> {
         loading.value = true;
         try {
-            const response = await $apifetch<{ url?: string }>(
+            const response = await $apifetch<{ url?: string; status?: string; contract_id?: number }>(
                 `api/replacement-contracts/replacements/${replacementId}/responses/${responseId}/checkout`,
                 {
                     method: 'POST',
@@ -43,7 +51,11 @@ export function useReplacementContract() {
                 },
             );
 
-            return response.url ?? null;
+            if (response.status === 'granted') {
+                return { kind: 'granted', contractId: response.contract_id ?? null };
+            }
+
+            return { kind: 'checkout', url: response.url ?? null };
         }
         finally {
             loading.value = false;
