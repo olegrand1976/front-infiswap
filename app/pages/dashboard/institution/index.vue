@@ -16,7 +16,6 @@
         </div>
 
         <template v-else>
-            <!-- Hero CTA -->
             <div class="relative flex flex-wrap items-center justify-between gap-6 overflow-hidden rounded-3xl bg-gradient-to-br from-accent-green via-accent-green-light to-primary p-7 shadow-xl">
                 <div class="flex items-center gap-4">
                     <span class="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-white/20">
@@ -43,7 +42,6 @@
                 </Button>
             </div>
 
-            <!-- KPIs -->
             <div class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <div class="rounded-2xl bg-gradient-to-br from-green-700 to-green-800 p-5 text-white shadow-lg">
                     <span class="mb-2 flex size-9 items-center justify-center rounded-lg bg-white/15">

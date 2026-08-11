@@ -36,7 +36,7 @@ const { points, loading, error, isEmpty } = usePublicNursesMapData(countryCode);
                     id="home-nurses-map-title"
                     class="font-secondary text-[26px] font-semibold text-foreground sm:text-[28px]"
                 >
-                    {{ $t('home.map.title', { country: countryLabel }) }}
+                    {{ $t('home.map.title') }}
                 </h2>
                 <p class="mt-2.5 text-sm leading-relaxed text-muted-foreground">
                     {{ $t('home.map.body') }}
@@ -61,7 +61,7 @@ const { points, loading, error, isEmpty } = usePublicNursesMapData(countryCode);
                         v-else-if="isEmpty"
                         class="absolute inset-0 z-10 flex items-center justify-center bg-muted/40 px-6 text-center text-sm text-muted-foreground"
                     >
-                        {{ $t('home.map.empty', { country: countryLabel }) }}
+                        {{ $t('home.map.empty') }}
                     </div>
                     <ClientOnly v-else>
                         <NursesResidenceMap
