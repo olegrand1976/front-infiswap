@@ -352,41 +352,42 @@
     "networkTaglineBe": "Het nr. 1-netwerk voor verpleegkundige vervangingen in België"
   },
   "pricing": {
-    "title": "Duidelijke prijzen,",
-    "titleHighlight": "afgestemd op uw praktijk",
-    "subtitle": "Gratis registratie om het netwerk te verkennen, te publiceren en te solliciteren. Boost een aankondiging ponctueel voor meer zichtbaarheid.",
+    "title": "Het netwerk blijft",
+    "titleHighlight": "gratis",
+    "subtitle": "Publiceren, solliciteren en uitwisselen kost niets, en zal nooit iets kosten. Infiswap Premium voegt drie voordelen toe voor wie sneller wil gaan.",
     "discovery": "Ontdekking",
     "free": "Gratis",
     "freeAccount": "Gratis account · zonder bankkaart",
-    "freeDesc": "Ideaal om InfiSwap te verkennen en op de hoogte te blijven van vervangingen bij u in de buurt, zonder engagement.",
+    "freeDesc": "Het hele netwerk, zonder quota: publiceren, solliciteren, dagelijkse alerts, duo’s en kaart.",
     "createFree": "Gratis account aanmaken",
     "alreadyRegistered": "Al geregistreerd?",
-    "optional": "Optioneel",
+    "optional": "Per actie",
     "boost": "Boost vervanging",
-    "seoTitle": "Prijzen InfiSwap — Gratis & Boost vervanging",
+    "seoTitle": "Prijzen InfiSwap — Gratis, Premium & Boost",
     "days": "{n} dagen",
     "oneTimeVisibility": "Eenmalige betaling · 3 of 7 dagen zichtbaarheid",
-    "boostDefaultDesc": "Plaats uw aankondiging bovenaan de zoekresultaten en vergroot uw zichtbaarheid bij beschikbare vervangers.",
+    "boostDefaultDesc": "Punctuele optie om een aankondiging bovenaan de lijst te plaatsen, naast het gratis netwerk.",
     "manageReplacements": "Mijn vervangingen beheren",
     "startFree": "Gratis starten",
     "activableFrom": "Activeerbaar via « Mijn vervangingen » op elke aankondiging",
     "howItWorks": "Hoe werkt het?",
     "progressiveTitle": "Een progressief traject",
-    "progressiveBody": "Maak een gratis account om te verkennen, te publiceren en te solliciteren. Boost een aankondiging vanaf 2 € (3 dagen) voor meer zichtbaarheid.",
+    "progressiveBody": "Het netwerk is gratis. Kies Premium om als eerste verwittigd te worden, of boost ponctueel een aankondiging.",
     "secureStripe": "Veilige Stripe-betaling",
     "madeByPros": "Ontworpen door zorgprofessionals",
-    "fixedDuration": "Vaste duur, zonder abonnement",
+    "fixedDuration": "Premium opzegbaar met één klik",
+    "newBadge": "Nieuw",
     "freeFeatures": {
       "f1": "Beschikbare vervangingen zoeken",
       "f2": "Aankondigingen en institutionele missies raadplegen",
-      "f3": "Gepersonaliseerde waarschuwingen en meldingen",
+      "f3": "Dagelijkse e-mailalert + wekelijkse digest",
       "f4": "Filters op zone, datums en zorgtype",
       "f5": "Details bekijken vóór sollicitatie",
       "f6": "Uw vervangingen publiceren en beheren",
       "f7": "Solliciteren op aankondigingen die u interesseren",
       "f8": "Uw publicaties wijzigen of sluiten",
       "f9": "Een spoedvervanging publiceren",
-      "f10": "Uitlichten bovenaan de lijst"
+      "f10": "Onmiddellijke melding (voorbehouden aan Premium)"
     },
     "boostFeatures": {
       "b1": "Boost 2: 7 dagen voor 4,40 € — aanbevolen",
@@ -401,26 +402,46 @@
       "monthlyPrice": "9,90",
       "period": "per maand",
       "yearly": "of 99 € per jaar — 2 maanden gratis",
-      "desc": "Voor wie geen enkele kans wil missen: als eerste verwittigd, elke maand een vooruitgeschoven advertentie, contracten inbegrepen.",
+      "desc": "Slechts drie voordelen, voor wie sneller wil gaan.",
       "features": {
-        "p1": "Onmiddellijke melding zodra een vervanging verschijnt",
-        "p2": "Elke maand een boost van 7 dagen cadeau",
-        "p3": "Onbeperkt vervangingscontracten inbegrepen",
-        "p4": "Ondertekening en archivering van contracten inbegrepen",
-        "p5": "Maandelijks opzegbaar met één klik"
+        "p1": "Onmiddellijke melding — verwittigd bij publicatie",
+        "p2": "Elke maand een boost cadeau — 7 dagen bovenaan",
+        "p3": "Contracten inbegrepen — onbeperkt, met ondertekening en archief",
+        "p4": "Opzegbaar met één klik, zonder maandelijkse verbintenis"
       },
       "cta": "Ontdek Infiswap Premium",
-      "note": "Het netwerk blijft gratis: Premium voegt alleen snelheid en comfort toe."
+      "note": "Het netwerk blijft gratis. Premium voegt alleen snelheid en comfort toe."
     },
     "tips": {
       "freeTitle": "Gratis",
-      "freeText": "Ideaal om de markt te volgen, te publiceren en te solliciteren, zonder abonnement.",
+      "freeText": "Publiceren, solliciteren en uitwisselen: 0 €, voor altijd.",
       "boostTitle": "Boost vanaf 2 €",
-      "boostText": "Punctuele optie (3 of 7 dagen) om sneller een al gepubliceerde aankondiging in te vullen.",
-      "progressiveTitle": "Progressief",
-      "progressiveText": "Start gratis en boost een aankondiging wanneer u meer zichtbaarheid wilt."
+      "boostText": "Punctuele optie (3 of 7 dagen) om een aankondiging te versnellen.",
+      "progressiveTitle": "Premium",
+      "progressiveText": "Als eerste verwittigd, elke maand een boost cadeau, contracten inbegrepen."
     },
-    "seoDescription": "Prijzen InfiSwap: gratis account (zoeken, alerts, publiceren en solliciteren), boost zichtbaarheid vanaf 2 € (3 dagen) of 4,40 € (7 dagen) bovenaan de lijst."
+    "seoDescription": "Prijzen InfiSwap: 100% gratis netwerk, Infiswap Premium (directe alerts, gratis boost, contracten) vanaf 9,90 €/maand, ponctuele boost vanaf 2 €."
+  },
+  "premiumMarketing": {
+    "badge": "Nieuw · Infiswap Premium",
+    "title": "Het netwerk blijft gratis",
+    "subtitle": "Publiceren, solliciteren en uitwisselen kost niets, en zal nooit iets kosten. Infiswap Premium voegt drie voordelen toe voor wie sneller wil gaan.",
+    "cta": "Ontdek Infiswap Premium",
+    "priceNote": "Vanaf 9,90 € / maand · opzegbaar met één klik",
+    "benefits": {
+      "alert": {
+        "title": "Onmiddellijke melding",
+        "description": "Verwittigd bij publicatie, terwijl gratis accounts 's avonds een samenvatting krijgen."
+      },
+      "boost": {
+        "title": "Elke maand een boost cadeau",
+        "description": "7 dagen bovenaan de lijst voor de aankondiging van uw keuze, elke maand."
+      },
+      "contract": {
+        "title": "Contracten inbegrepen",
+        "description": "Onbeperkt vervangingscontracten, met ondertekening en archivering."
+      }
+    }
   },
   "contact": {
     "title": "Neem contact op",

@@ -1,5 +1,7 @@
 <template>
     <div class="space-y-6">
+        <SubscriptionProDashboardHero v-if="showPremiumHero" />
+
         <section
             aria-label="Statistiques remplacements"
             class="grid grid-cols-2 sm:grid-cols-4 gap-3"
@@ -39,15 +41,6 @@
         </section>
 
         <section class="grid items-center grid-cols-1 gap-4">
-            <SubscriptionProUpsellCallout
-                v-if="!isPremium"
-                title="Soyez prévenue en premier"
-                description="Infiswap Premium : alertes instantanées, un boost offert chaque mois, contrats inclus."
-                tone="amber"
-                :benefits="['Alerte dès la publication', '1 boost 7 jours / mois', 'Contrats PDF illimités']"
-                @click="trackProUpsellClick"
-            />
-
             <NurstechPresentation />
 
             <DashboardNurseQuickActions />
@@ -379,7 +372,9 @@ const { $toast } = useNuxtApp();
 
 const config = useRuntimeConfig();
 const { trackEvent } = useProductAnalytics();
-const { isPremium, fetchStatus: fetchProStatus } = useProSubscription();
+const { status, isPremium, fetchStatus: fetchProStatus } = useProSubscription();
+/** Évite le flash du hero avant résolution du statut Premium. */
+const showPremiumHero = computed(() => status.value !== null && !isPremium.value);
 
 const referralShareUrl = computed(() =>
     `${config.public.FRONT_END_URL}/register/?referral=${user.value?.referral_code ?? ''}`,
@@ -389,13 +384,9 @@ function trackReferralCopy() {
     trackEvent('referral_dashboard_copy', { source: 'nurse_dashboard' });
 }
 
-function trackProUpsellClick() {
-    trackEvent('pro_upsell_click', { source: 'nurse_dashboard' });
-}
-
 onMounted(async () => {
     await fetchProStatus();
-    if (!isPremium.value) {
+    if (showPremiumHero.value) {
         trackEvent('pro_upsell_impression', { source: 'nurse_dashboard' });
     }
 });
