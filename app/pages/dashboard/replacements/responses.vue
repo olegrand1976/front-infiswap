@@ -87,13 +87,13 @@
                                     </template>
                                 </h3>
 
-                                <Badge
+                                <div
                                     v-if="response.responses?.length != 0"
-                                    class="bg-success text-success-foreground whitespace-nowrap"
+                                    class="text-success font-semibold whitespace-nowrap"
                                 >
                                     {{ response.responses?.length }}
                                     {{ response.responses?.length == 1 ? t('replacements.interested') : t('replacements.interestedPlural') }}
-                                </Badge>
+                                </div>
                             </div>
 
                             <div class="flex flex-col gap-3">
@@ -206,13 +206,13 @@
                                     </div>
                                 </div>
 
-                                <Badge
+                                <Button
                                     v-if="responseDetail.status === 'confirmed'"
                                     class="bg-success text-success-foreground whitespace-nowrap"
                                 >
                                     <BadgeCheck class="size-3" />
                                     {{ t('replacements.accepted') }}
-                                </Badge>
+                                </Button>
                                 <span
                                     v-else
                                     class="whitespace-nowrap text-xs text-muted-foreground"
