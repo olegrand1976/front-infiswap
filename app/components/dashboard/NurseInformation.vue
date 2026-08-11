@@ -1,7 +1,5 @@
 <template>
     <div class="space-y-6">
-        <SubscriptionProDashboardHero v-if="showPremiumHero" />
-
         <section
             aria-label="Statistiques remplacements"
             class="grid grid-cols-2 sm:grid-cols-4 gap-3"
@@ -372,9 +370,6 @@ const { $toast } = useNuxtApp();
 
 const config = useRuntimeConfig();
 const { trackEvent } = useProductAnalytics();
-const { status, isPremium, fetchStatus: fetchProStatus } = useProSubscription();
-/** Évite le flash du hero avant résolution du statut Premium. */
-const showPremiumHero = computed(() => status.value !== null && !isPremium.value);
 
 const referralShareUrl = computed(() =>
     `${config.public.FRONT_END_URL}/register/?referral=${user.value?.referral_code ?? ''}`,
@@ -383,13 +378,6 @@ const referralShareUrl = computed(() =>
 function trackReferralCopy() {
     trackEvent('referral_dashboard_copy', { source: 'nurse_dashboard' });
 }
-
-onMounted(async () => {
-    await fetchProStatus();
-    if (showPremiumHero.value) {
-        trackEvent('pro_upsell_impression', { source: 'nurse_dashboard' });
-    }
-});
 
 async function copyReferralLink() {
     if (!import.meta.client) {

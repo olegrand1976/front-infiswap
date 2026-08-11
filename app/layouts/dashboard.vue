@@ -305,8 +305,14 @@
                     </div>
                 </div>
             </header>
-            <OnboardingNetworkJourneyWidget v-if="showNetworkJourneyWidget" />
-            <DashboardMarketingEngagementBanners />
+            <div
+                v-if="showPremiumHero"
+                class="mx-4 mt-3 sm:mx-6"
+            >
+                <SubscriptionProDashboardHero />
+            </div>
+            <OnboardingNetworkJourneyWidget v-if="showNetworkJourneyWidget && !isSubscriptionsRoute" />
+            <DashboardMarketingEngagementBanners v-if="!isSubscriptionsRoute" />
             <ProfileEducationLevelGateDialog />
             <div class="flex min-h-0 flex-1 flex-col overflow-hidden p-6">
                 <NuxtPage class="min-h-0 flex-1 overflow-x-hidden overflow-y-auto" />
@@ -344,7 +350,7 @@ import { getRole, getShortDisplayName } from '~/lib/utils';
 import { hasVerifiedMemberBadge } from '~/utils/platformAccess';
 import { mapCelebrationVariantToReviewSource } from '~/utils/googleReview';
 
-const { isAdmin, hasChangedAvatar } = useAuth();
+const { isAdmin, isCommunityManager, hasChangedAvatar } = useAuth();
 
 const roles = ref<AccountType[]>([]);
 const user = useState<User>('user');
@@ -379,6 +385,12 @@ const parsedSettings = computed(() => {
 });
 const route = useRoute();
 const currentPath = computed(() => route.fullPath.replace(/^\//, ''));
+/** Page Premium : pas de journey ni bannières partenaires au-dessus du catalogue. */
+const isSubscriptionsRoute = computed(() => {
+    const path = route.path.replace(/\/$/, '') || '/';
+
+    return /\/dashboard\/subscriptions$/.test(path);
+});
 const reportDescription = ref('');
 
 const displayFullName = computed(() => user.value?.full_name || 'xxx XXX');
@@ -388,11 +400,35 @@ const settingsRoute = computed(() =>
     user.value?.type === 'institution' ? '/dashboard/institution/settings' : '/dashboard/settings',
 );
 
-const { isPremium: isProSubscriber, fetchStatus: fetchProStatus } = useProSubscription();
+const { status: proStatus, isPremium: isProSubscriber, fetchStatus: fetchProStatus } = useProSubscription();
 const { activeCelebration, dismissCelebration } = usePurchaseCelebration();
 const { activeEngagement, requestEngagement } = usePostSuccessEngagement();
 const { processStripeReturn: processSponsorshipReturn } = useSponsorship();
+const { trackEvent } = useProductAnalytics();
 const router = useRouter();
+const premiumHeroImpressionSent = ref(false);
+
+/** Accueil nurse uniquement — Premium en tête, avant Journey / partenaires. */
+const isNurseDashboardHome = computed(() => {
+    const path = route.path.replace(/\/$/, '') || '/';
+
+    return /\/dashboard$/.test(path);
+});
+
+const showPremiumHero = computed(() =>
+    isNurseDashboardHome.value
+    && !isAdmin.value
+    && !isCommunityManager.value
+    && proStatus.value !== null
+    && !isProSubscriber.value,
+);
+
+watch(showPremiumHero, (visible) => {
+    if (visible && !premiumHeroImpressionSent.value) {
+        trackEvent('pro_upsell_impression', { source: 'nurse_dashboard' });
+        premiumHeroImpressionSent.value = true;
+    }
+});
 
 async function handleCelebrationContinue(targetRoute: string) {
     const variant = activeCelebration.value?.variant;

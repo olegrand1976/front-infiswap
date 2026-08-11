@@ -70,22 +70,17 @@
                     </div>
                 </div>
 
-                <ul class="grid gap-3 sm:grid-cols-3">
+                <ul class="flex flex-wrap gap-x-4 gap-y-2">
                     <li
                         v-for="benefit in proBenefits"
                         :key="benefit.title"
-                        class="rounded-lg border p-4 dark:border-gray-700"
+                        class="inline-flex items-center gap-1.5 text-sm text-muted-foreground"
                     >
                         <component
                             :is="benefit.icon"
-                            class="size-5 text-success"
+                            class="size-4 shrink-0 text-success"
                         />
-                        <p class="mt-2 font-medium">
-                            {{ benefit.title }}
-                        </p>
-                        <p class="mt-1 text-sm text-muted-foreground">
-                            {{ benefit.description }}
-                        </p>
+                        <span class="font-medium text-foreground">{{ benefit.title }}</span>
                     </li>
                 </ul>
             </div>
@@ -94,7 +89,7 @@
                 v-else
                 class="space-y-8"
             >
-                <div class="space-y-3 text-center">
+                <div class="space-y-2 text-center">
                     <div class="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
                         <Crown class="size-3.5" />
                         {{ badge }}
@@ -107,34 +102,82 @@
                     </p>
                 </div>
 
-                <ul class="grid gap-3 sm:grid-cols-3">
-                    <li
-                        v-for="benefit in proBenefits"
-                        :key="benefit.title"
-                        class="rounded-lg border p-4 dark:border-gray-700"
-                    >
-                        <component
-                            :is="benefit.icon"
-                            class="size-5 text-success"
-                        />
-                        <p class="mt-2 font-medium">
-                            {{ benefit.title }}
-                        </p>
-                        <p class="mt-1 text-sm text-muted-foreground">
-                            {{ benefit.description }}
-                        </p>
-                    </li>
-                </ul>
+                <section
+                    class="rounded-xl border border-amber-200/80 bg-amber-50/50 p-4 sm:p-5 dark:border-amber-500/30 dark:bg-amber-500/5"
+                    aria-label="Avantages Premium"
+                >
+                    <p class="text-center text-sm font-semibold uppercase tracking-wide text-amber-800 dark:text-amber-200">
+                        Ce que change Premium vs gratuit
+                    </p>
+                    <ul class="mt-4 grid gap-3 sm:grid-cols-3">
+                        <li
+                            v-for="row in benefitContrasts"
+                            :key="row.title"
+                            class="rounded-lg border border-amber-200/60 bg-white/90 p-3.5 dark:border-amber-500/20 dark:bg-background/70"
+                        >
+                            <div class="flex items-center gap-2">
+                                <component
+                                    :is="row.icon"
+                                    class="size-5 shrink-0 text-amber-600 dark:text-amber-400"
+                                    aria-hidden="true"
+                                />
+                                <p class="font-semibold text-foreground">
+                                    {{ row.title }}
+                                </p>
+                            </div>
+                            <p class="mt-2 text-sm leading-snug text-foreground">
+                                {{ row.premium }}
+                            </p>
+                            <p class="mt-1.5 text-xs text-muted-foreground line-through decoration-muted-foreground/50">
+                                Gratuit : {{ row.free }}
+                            </p>
+                        </li>
+                    </ul>
+                </section>
 
-                <div class="grid gap-4 md:grid-cols-2">
+                <div
+                    v-if="catalogLoading"
+                    class="grid gap-4 md:grid-cols-2"
+                    aria-busy="true"
+                    aria-label="Chargement des formules"
+                >
+                    <div
+                        v-for="n in 2"
+                        :key="n"
+                        class="h-64 animate-pulse rounded-xl border bg-muted/40 dark:border-gray-700"
+                    />
+                </div>
+
+                <div
+                    v-else-if="plans.length > 0"
+                    class="grid gap-4 md:grid-cols-2"
+                >
                     <SubscriptionProPlanCard
                         v-for="plan in plans"
                         :key="plan.lookup_key"
                         :plan="plan"
+                        :benefits="proBenefits"
                         :highlighted="plan.interval === 'year'"
                         :loading="loading"
                         @subscribe="subscribe(plan)"
                     />
+                </div>
+
+                <div
+                    v-else
+                    class="rounded-xl border border-dashed p-6 text-center dark:border-gray-700"
+                >
+                    <p class="text-sm text-muted-foreground">
+                        Les formules Premium sont temporairement indisponibles.
+                    </p>
+                    <Button
+                        variant="outline"
+                        class="mt-4 min-h-11"
+                        :disabled="catalogLoading"
+                        @click="retryCatalog"
+                    >
+                        Réessayer
+                    </Button>
                 </div>
 
                 <p class="text-center text-xs text-muted-foreground">
@@ -164,6 +207,28 @@ useHead({
 
 const { badge, title, subtitle, benefits: proBenefits } = usePremiumMarketing();
 
+/** Contraste vendeur Gratuit vs Premium (page abonnement uniquement). */
+const benefitContrasts = computed(() => [
+    {
+        icon: proBenefits.value[0]?.icon,
+        title: 'Alerte instantanée',
+        premium: 'Prévenue dès la publication — vous répondez avant les autres.',
+        free: 'un récap le soir seulement',
+    },
+    {
+        icon: proBenefits.value[1]?.icon,
+        title: 'Boost 7 jours offert / mois',
+        premium: 'Votre annonce en tête de liste, chaque mois, sans payer le boost à part.',
+        free: 'boost payant (2 € ou 4,40 €)',
+    },
+    {
+        icon: proBenefits.value[2]?.icon,
+        title: 'Contrats illimités inclus',
+        premium: 'Signature et archivage compris — plus de 3 € par contrat.',
+        free: '3 € par contrat de remplacement',
+    },
+]);
+
 const {
     status,
     catalog,
@@ -184,6 +249,8 @@ const { trackEvent } = useProductAnalytics();
 const { $toast } = useNuxtApp();
 const route = useRoute();
 const router = useRouter();
+
+const catalogLoading = ref(true);
 
 const plans = computed(() => catalog.value?.plans ?? []);
 const offer = computed(() => catalog.value?.offer ?? null);
@@ -212,6 +279,20 @@ function formatDate(value: string | null): string {
     }
 
     return new Date(value).toLocaleDateString('fr-BE', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+async function loadCatalog(): Promise<void> {
+    catalogLoading.value = true;
+    try {
+        await fetchCatalog();
+    }
+    finally {
+        catalogLoading.value = false;
+    }
+}
+
+async function retryCatalog(): Promise<void> {
+    await loadCatalog();
 }
 
 async function subscribe(plan: ProPlan): Promise<void> {
@@ -272,7 +353,7 @@ async function processStripeReturn(): Promise<void> {
 }
 
 onMounted(async () => {
-    await Promise.all([fetchStatus(), fetchCatalog()]);
+    await Promise.all([fetchStatus(), loadCatalog()]);
     await processStripeReturn();
 });
 </script>

@@ -513,21 +513,21 @@
   "premiumMarketing": {
     "badge": "Nouveau · Infiswap Premium",
     "title": "Le réseau reste gratuit",
-    "subtitle": "Publier, postuler et échanger ne coûte rien, et ne coûtera jamais rien. Infiswap Premium ajoute trois avantages à celles qui veulent aller plus vite.",
+    "subtitle": "Publier, postuler et échanger : toujours 0 €. Premium, c’est la différence de vitesse — alertes, boost et contrats — pour celles qui ne veulent plus attendre.",
     "cta": "Découvrir Infiswap Premium",
     "priceNote": "Dès 9,90 € / mois · annulable en un clic",
     "benefits": {
       "alert": {
         "title": "Alerte instantanée",
-        "description": "Prévenue dès la publication, quand les comptes gratuits reçoivent un récap le soir."
+        "description": "dès la publication, pas un récap le soir comme en gratuit"
       },
       "boost": {
         "title": "Un boost offert par mois",
-        "description": "7 jours en tête de liste sur l'annonce de votre choix, chaque mois."
+        "description": "7 jours en tête de liste inclus — le gratuit paie le boost à part"
       },
       "contract": {
         "title": "Contrats inclus",
-        "description": "Contrats de remplacement illimités, signature et archivage compris."
+        "description": "illimités avec signature — le gratuit paie 3 € par contrat"
       }
     }
   },

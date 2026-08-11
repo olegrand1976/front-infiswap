@@ -513,21 +513,21 @@
   "premiumMarketing": {
     "badge": "Nieuw · Infiswap Premium",
     "title": "Het netwerk blijft gratis",
-    "subtitle": "Publiceren, solliciteren en uitwisselen kost niets, en zal nooit iets kosten. Infiswap Premium voegt drie voordelen toe voor wie sneller wil gaan.",
+    "subtitle": "Publiceren, solliciteren en uitwisselen: altijd 0 €. Premium is het verschil in snelheid — alerts, boost en contracten — voor wie niet meer wil wachten.",
     "cta": "Ontdek Infiswap Premium",
     "priceNote": "Vanaf 9,90 € / maand · opzegbaar met één klik",
     "benefits": {
       "alert": {
         "title": "Onmiddellijke melding",
-        "description": "Verwittigd bij publicatie, terwijl gratis accounts 's avonds een samenvatting krijgen."
+        "description": "bij publicatie, geen avondrecap zoals bij gratis"
       },
       "boost": {
         "title": "Elke maand een boost cadeau",
-        "description": "7 dagen bovenaan de lijst voor de aankondiging van uw keuze, elke maand."
+        "description": "7 dagen bovenaan inbegrepen — gratis betaalt de boost apart"
       },
       "contract": {
         "title": "Contracten inbegrepen",
-        "description": "Onbeperkt vervangingscontracten, met ondertekening en archivering."
+        "description": "onbeperkt met handtekening — gratis betaalt 3 € per contract"
       }
     }
   },
