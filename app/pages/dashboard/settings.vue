@@ -14,31 +14,33 @@
 
         <form class="mt-6 mb-12">
             <div class="flex justify-center sm:justify-start space-x-4 items-center sm:w-96 h-20 sm:h-28 px-1 py-2 rounded-full border border-gray-300">
-                <ProfileLifetimeAccessBadge size="lg">
-                    <ProfileInamiVerifiedBadge size="lg">
-                        <div class="relative">
-                            <SquarePen
-                                class="w-5 text-gray-600 absolute -top-1 -right-2 sm:-right-1 cursor-pointer"
-                                @click="profileDialog = true"
-                            />
-                            <Trash2
-                                v-if="user.profile?.profil_url"
-                                class="w-5 text-primary absolute -bottom-1 -right-2 sm:-right-1 cursor-pointer"
-                                @click="deleteAvatarDialog = true"
-                            />
-                            <img
-                                v-if="user.profile?.profil_url != null"
-                                :src="useRuntimeConfig().public.API_URL + '/storage/' + user.profile?.profil_url"
-                                class="w-16 h-16 sm:w-24 sm:h-24 rounded-full"
-                            >
-                            <img
-                                v-else
-                                src="/images/icons/user-circle.png"
-                                class="w-16 h-16 sm:w-24 sm:h-24 rounded-full opacity-60"
-                            >
-                        </div>
-                    </ProfileInamiVerifiedBadge>
-                </ProfileLifetimeAccessBadge>
+                <ProfilePremiumBadge size="lg">
+                    <ProfileLifetimeAccessBadge size="lg">
+                        <ProfileInamiVerifiedBadge size="lg">
+                            <div class="relative">
+                                <SquarePen
+                                    class="w-5 text-gray-600 absolute -top-1 -right-2 sm:-right-1 cursor-pointer"
+                                    @click="profileDialog = true"
+                                />
+                                <Trash2
+                                    v-if="user.profile?.profil_url"
+                                    class="w-5 text-primary absolute -bottom-1 -right-2 sm:-right-1 cursor-pointer"
+                                    @click="deleteAvatarDialog = true"
+                                />
+                                <img
+                                    v-if="user.profile?.profil_url != null"
+                                    :src="useRuntimeConfig().public.API_URL + '/storage/' + user.profile?.profil_url"
+                                    class="w-16 h-16 sm:w-24 sm:h-24 rounded-full"
+                                >
+                                <img
+                                    v-else
+                                    src="/images/icons/user-circle.png"
+                                    class="w-16 h-16 sm:w-24 sm:h-24 rounded-full opacity-60"
+                                >
+                            </div>
+                        </ProfileInamiVerifiedBadge>
+                    </ProfileLifetimeAccessBadge>
+                </ProfilePremiumBadge>
 
                 <Dialog v-model:open="profileDialog">
                     <DialogContent class="sm:max-w-160">

@@ -12,14 +12,24 @@
                         et ouvert au moins une session.
                     </p>
                 </div>
-                <Button
-                    variant="outline"
-                    class="min-h-11"
-                    :disabled="lines.length === 0"
-                    @click="exportCsv"
-                >
-                    Export du mois (CSV)
-                </Button>
+                <div class="flex flex-wrap gap-2">
+                    <Button
+                        v-if="isAdminView"
+                        class="min-h-11"
+                        :disabled="selectedPayableIds.length === 0 || loading"
+                        @click="markSelectedPaid"
+                    >
+                        Marquer payées ({{ selectedPayableIds.length }})
+                    </Button>
+                    <Button
+                        variant="outline"
+                        class="min-h-11"
+                        :disabled="lines.length === 0"
+                        @click="exportCsv"
+                    >
+                        Export du mois (CSV)
+                    </Button>
+                </div>
             </header>
 
             <div
@@ -77,6 +87,19 @@
                                 v-if="isAdminView"
                                 class="px-4 py-3"
                             >
+                                <input
+                                    type="checkbox"
+                                    class="size-4"
+                                    :checked="allPayableSelected"
+                                    :disabled="payableLines.length === 0"
+                                    :aria-label="'Sélectionner toutes les commissions à payer'"
+                                    @change="toggleSelectAllPayable(($event.target as HTMLInputElement).checked)"
+                                >
+                            </th>
+                            <th
+                                v-if="isAdminView"
+                                class="px-4 py-3"
+                            >
                                 Commercial
                             </th>
                             <th class="px-4 py-3">
@@ -100,6 +123,12 @@
                             <th class="px-4 py-3">
                                 Payable le
                             </th>
+                            <th
+                                v-if="isAdminView"
+                                class="px-4 py-3"
+                            >
+                                Action
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -108,6 +137,19 @@
                             :key="line.id"
                             class="border-t dark:border-gray-700"
                         >
+                            <td
+                                v-if="isAdminView"
+                                class="px-4 py-3"
+                            >
+                                <input
+                                    v-if="line.status === 'payable'"
+                                    v-model="selectedIds"
+                                    type="checkbox"
+                                    class="size-4"
+                                    :value="line.id"
+                                    :aria-label="`Sélectionner la commission ${line.id}`"
+                                >
+                            </td>
                             <td
                                 v-if="isAdminView"
                                 class="px-4 py-3"
@@ -148,10 +190,37 @@
                             <td class="px-4 py-3">
                                 {{ formatDate(line.payable_at) }}
                             </td>
+                            <td
+                                v-if="isAdminView"
+                                class="px-4 py-3"
+                            >
+                                <Button
+                                    v-if="line.status === 'payable'"
+                                    size="sm"
+                                    variant="outline"
+                                    class="min-h-9"
+                                    :disabled="loading"
+                                    @click="markOnePaid(line.id)"
+                                >
+                                    Payée
+                                </Button>
+                                <span
+                                    v-else-if="line.paid_at"
+                                    class="text-xs text-muted-foreground"
+                                >
+                                    {{ formatDate(line.paid_at) }}
+                                </span>
+                                <span
+                                    v-else
+                                    class="text-xs text-muted-foreground"
+                                >
+                                    —
+                                </span>
+                            </td>
                         </tr>
                         <tr v-if="lines.length === 0">
                             <td
-                                :colspan="isAdminView ? 8 : 7"
+                                :colspan="isAdminView ? 10 : 7"
                                 class="px-4 py-8 text-center text-muted-foreground"
                             >
                                 Aucune commission enregistrée pour le moment.
@@ -191,15 +260,30 @@ const STATUS_CLASS: Record<SalesCommissionStatus, string> = {
     clawed_back: 'bg-destructive/10 text-destructive',
 };
 
-const { summary, fetchCommissions } = useSalesChannel();
+const {
+    summary,
+    loading,
+    fetchCommissions,
+    markCommissionPaid,
+    markCommissionsPaid,
+} = useSalesChannel();
 
 /** String pour éviter la coercition HTML `null` → `"null"`. */
 const selectedSalesUserId = ref('');
+const selectedIds = ref<number[]>([]);
 
 /** Présent uniquement dans la réponse admin (`sales_reps`). */
 const isAdminView = computed(() => Array.isArray(summary.value?.sales_reps));
 const salesReps = computed(() => summary.value?.sales_reps ?? []);
 const lines = computed(() => summary.value?.commissions ?? []);
+const payableLines = computed(() => lines.value.filter(line => line.status === 'payable'));
+const selectedPayableIds = computed(() =>
+    selectedIds.value.filter(id => payableLines.value.some(line => line.id === id)),
+);
+const allPayableSelected = computed(() =>
+    payableLines.value.length > 0
+    && payableLines.value.every(line => selectedIds.value.includes(line.id)),
+);
 
 const totalCards = computed(() =>
     (Object.keys(STATUS_LABEL) as SalesCommissionStatus[]).map(status => ({
@@ -218,10 +302,27 @@ function formatDate(value: string | null): string {
     return value ? new Date(value).toLocaleDateString('fr-BE') : '—';
 }
 
+function toggleSelectAllPayable(checked: boolean) {
+    selectedIds.value = checked ? payableLines.value.map(line => line.id) : [];
+}
+
 async function reload() {
     const raw = selectedSalesUserId.value.trim();
     const parsed = raw === '' ? null : Number(raw);
+    selectedIds.value = [];
     await fetchCommissions(parsed !== null && Number.isFinite(parsed) ? parsed : null);
+}
+
+async function markOnePaid(id: number) {
+    if (await markCommissionPaid(id)) {
+        await reload();
+    }
+}
+
+async function markSelectedPaid() {
+    if (await markCommissionsPaid(selectedPayableIds.value)) {
+        await reload();
+    }
 }
 
 /** Export du mois en cours, destiné à la facturation / au contrôle admin. */
@@ -236,7 +337,7 @@ function exportCsv() {
     });
 
     const header = isAdminView.value
-        ? ['commercial', 'commercial_email', 'abonnee', 'email', 'base_ht', 'taux', 'commission', 'statut', 'encaisse_le', 'payable_le']
+        ? ['commercial', 'commercial_email', 'abonnee', 'email', 'base_ht', 'taux', 'commission', 'statut', 'encaisse_le', 'payable_le', 'payee_le']
         : ['abonnee', 'email', 'base_ht', 'taux', 'commission', 'statut', 'encaisse_le', 'payable_le'];
 
     const body = rows.map((line) => {
@@ -259,6 +360,7 @@ function exportCsv() {
             line.sales_user?.name ?? '',
             line.sales_user?.email ?? '',
             ...base,
+            line.paid_at ?? '',
         ];
     });
 

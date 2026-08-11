@@ -39,6 +39,15 @@
         </section>
 
         <section class="grid items-center grid-cols-1 gap-4">
+            <SubscriptionProUpsellCallout
+                v-if="!isPremium"
+                title="Soyez prévenue en premier"
+                description="Infiswap Premium : alertes instantanées, un boost offert chaque mois, contrats inclus."
+                tone="amber"
+                :benefits="['Alerte dès la publication', '1 boost 7 jours / mois', 'Contrats PDF illimités']"
+                @click="trackProUpsellClick"
+            />
+
             <NurstechPresentation />
 
             <DashboardNurseQuickActions />
@@ -370,6 +379,7 @@ const { $toast } = useNuxtApp();
 
 const config = useRuntimeConfig();
 const { trackEvent } = useProductAnalytics();
+const { isPremium, fetchStatus: fetchProStatus } = useProSubscription();
 
 const referralShareUrl = computed(() =>
     `${config.public.FRONT_END_URL}/register/?referral=${user.value?.referral_code ?? ''}`,
@@ -378,6 +388,17 @@ const referralShareUrl = computed(() =>
 function trackReferralCopy() {
     trackEvent('referral_dashboard_copy', { source: 'nurse_dashboard' });
 }
+
+function trackProUpsellClick() {
+    trackEvent('pro_upsell_click', { source: 'nurse_dashboard' });
+}
+
+onMounted(async () => {
+    await fetchProStatus();
+    if (!isPremium.value) {
+        trackEvent('pro_upsell_impression', { source: 'nurse_dashboard' });
+    }
+});
 
 async function copyReferralLink() {
     if (!import.meta.client) {

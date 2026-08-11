@@ -173,6 +173,11 @@
                                 >
                                     <TableCell class="flex justify-center items-center bg-[#F1F2F7] text-xs">
                                         <div class="h-10 rounded bg-[#E4E7F4] px-3 flex justify-center items-center gap-3 overflow-hidden whitespace-nowrap text-ellipsis w-full">
+                                            <Crown
+                                                v-if="partnership.user.is_premium"
+                                                class="size-3.5 shrink-0 text-primary"
+                                                aria-label="Infiswap Premium"
+                                            />
                                             <span
                                                 :class="[cn({ 'text-success font-bold': isSubmitted && searchFormData.postalCodeTags.includes(partnership.user.zip_code) })]"
                                             >
@@ -278,6 +283,11 @@
                                 >
                                     <TableCell class="flex justify-center items-center bg-[#F1F2F7] text-xs">
                                         <div class="h-10 rounded bg-[#E4E7F4] px-3 flex justify-center items-center gap-3 overflow-hidden whitespace-nowrap text-ellipsis w-full">
+                                            <Crown
+                                                v-if="partnership.user.is_premium"
+                                                class="size-3.5 shrink-0 text-primary"
+                                                aria-label="Infiswap Premium"
+                                            />
                                             <span
                                                 :class="[cn({ 'text-success font-bold': isSubmitted && searchFormData.postalCodeTags.includes(partnership.user.zip_code) })]"
                                             >
@@ -387,6 +397,11 @@
                                 >
                                     <TableCell class="hidden md:flex justify-center items-center bg-[#F1F2F7] text-xs">
                                         <div class="h-10 rounded bg-[#E4E7F4] px-3 flex justify-center items-center gap-3 overflow-hidden whitespace-nowrap text-ellipsis w-full">
+                                            <Crown
+                                                v-if="partnership.user.is_premium"
+                                                class="size-3.5 shrink-0 text-primary"
+                                                aria-label="Infiswap Premium"
+                                            />
                                             <span>
                                                 {{ partnership.user.zip_code }}
                                             </span>
@@ -625,7 +640,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeft, BadgeCheck, Ellipsis, Eye, Info, RefreshCw, Search, X } from 'lucide-vue-next';
+import { ArrowLeft, BadgeCheck, Crown, Ellipsis, Eye, Info, RefreshCw, Search, X } from 'lucide-vue-next';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
