@@ -1,8 +1,8 @@
 <template>
-    <header class="bg-muted sm:fixed sm:z-50 w-full sm:h-20 sm:block lg:flex lg:justify-center items-center lg:py-5">
+    <header class="bg-muted sm:fixed sm:z-50 w-full sm:h-18 sm:block lg:flex lg:justify-center items-center lg:py-5">
         <div class="hidden lg:flex justify-between items-center container">
             <div>
-                <LayoutsLogo class="h-10 lg:h-14" />
+                <LayoutsLogo class="h-10 lg:h-12" />
             </div>
 
             <nav
