@@ -41,20 +41,22 @@
                         @click="profileDialog = !profileDialog"
                         @keydown.enter="profileDialog = !profileDialog"
                     >
-                        <ProfileLifetimeAccessBadge size="lg">
-                            <ProfileInamiVerifiedBadge size="lg">
-                                <img
-                                    v-if="user.profile?.profil_url != null"
-                                    :src="useRuntimeConfig().public.API_URL + '/storage/' + user.profile?.profil_url"
-                                    class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover"
-                                >
-                                <img
-                                    v-else
-                                    src="/images/icons/user-circle.png"
-                                    class="w-16 h-16 sm:w-20 sm:h-20 rounded-full opacity-60"
-                                >
-                            </ProfileInamiVerifiedBadge>
-                        </ProfileLifetimeAccessBadge>
+                        <ProfilePremiumBadge size="lg">
+                            <ProfileLifetimeAccessBadge size="lg">
+                                <ProfileInamiVerifiedBadge size="lg">
+                                    <img
+                                        v-if="user.profile?.profil_url != null"
+                                        :src="useRuntimeConfig().public.API_URL + '/storage/' + user.profile?.profil_url"
+                                        class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover"
+                                    >
+                                    <img
+                                        v-else
+                                        src="/images/icons/user-circle.png"
+                                        class="w-16 h-16 sm:w-20 sm:h-20 rounded-full opacity-60"
+                                    >
+                                </ProfileInamiVerifiedBadge>
+                            </ProfileLifetimeAccessBadge>
+                        </ProfilePremiumBadge>
                         <span class="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 transition-opacity group-hover/avatar:opacity-100">
                             <Camera class="size-5 text-white" />
                         </span>

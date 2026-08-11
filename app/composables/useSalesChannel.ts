@@ -119,6 +119,54 @@ export function useSalesChannel() {
         }
     }
 
+    async function markCommissionPaid(commissionId: number): Promise<boolean> {
+        loading.value = true;
+        try {
+            await $apifetch(`api/subscription/sales/commissions/${commissionId}/mark-paid`, {
+                method: 'POST',
+            });
+            $toast({ description: 'Commission marquée comme payée.' });
+
+            return true;
+        }
+        catch (error: unknown) {
+            $toast({ variant: 'destructive', description: salesErrorMessage(error, 'Marquage impossible.') });
+
+            return false;
+        }
+        finally {
+            loading.value = false;
+        }
+    }
+
+    async function markCommissionsPaid(commissionIds: number[]): Promise<boolean> {
+        if (commissionIds.length === 0) {
+            return false;
+        }
+
+        loading.value = true;
+        try {
+            const response = await $apifetch<{ marked: number; message?: string }>(
+                'api/subscription/sales/commissions/mark-paid',
+                {
+                    method: 'POST',
+                    body: { commission_ids: commissionIds },
+                },
+            );
+            $toast({ description: response.message ?? `${response.marked} commission(s) marquée(s) comme payée(s).` });
+
+            return true;
+        }
+        catch (error: unknown) {
+            $toast({ variant: 'destructive', description: salesErrorMessage(error, 'Marquage groupé impossible.') });
+
+            return false;
+        }
+        finally {
+            loading.value = false;
+        }
+    }
+
     return {
         plans,
         prospects,
@@ -128,6 +176,8 @@ export function useSalesChannel() {
         searchProspects,
         depositOffer,
         fetchCommissions,
+        markCommissionPaid,
+        markCommissionsPaid,
     };
 }
 
