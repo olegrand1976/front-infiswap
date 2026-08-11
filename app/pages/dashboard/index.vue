@@ -21,10 +21,10 @@
                             class="size-4 shrink-0 text-primary"
                             aria-hidden="true"
                         />
-                        {{ $t('dashboard.marketing') }}
+                        {{ t('dashboard.marketing') }}
                     </span>
                     <span class="text-xs font-medium text-primary">
-                        {{ $t('dashboard.open') }}
+                        {{ t('dashboard.open') }}
                     </span>
                 </NuxtLink>
             </div>

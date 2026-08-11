@@ -79,7 +79,7 @@
                 <DialogHeader>
                     <DialogTitle>{{ t('settings.preferencesAdd') }}</DialogTitle>
                     <DialogDescription>
-                        Renseignez le code postal ou la ville — l'autre se complète automatiquement.
+                        {{ t('dashboard.nurse.addPairHint') }}
                     </DialogDescription>
                 </DialogHeader>
 
@@ -100,13 +100,13 @@
                             v-if="nextEmptyZipIndex === -1"
                             class="text-[11px] text-muted-foreground"
                         >
-                            Limite de 4 codes postaux atteinte.
+                            {{ t('dashboard.nurse.zipLimitReached') }}
                         </p>
                         <p
                             v-else-if="zipAlreadyExists"
                             class="text-[11px] text-destructive"
                         >
-                            Ce code postal est déjà dans vos préférences.
+                            {{ t('dashboard.nurse.zipAlreadyExists') }}
                         </p>
                     </div>
 
@@ -126,19 +126,19 @@
                             v-if="nextEmptyCityIndex === -1"
                             class="text-[11px] text-muted-foreground"
                         >
-                            Limite de 4 villes atteinte.
+                            {{ t('dashboard.nurse.cityLimitReached') }}
                         </p>
                         <p
                             v-else-if="cityAlreadyExists"
                             class="text-[11px] text-destructive"
                         >
-                            Cette ville est déjà dans vos préférences.
+                            {{ t('dashboard.nurse.cityAlreadyExists') }}
                         </p>
                         <p
                             v-else-if="modalLookupLoading"
                             class="text-[11px] text-muted-foreground"
                         >
-                            Recherche…
+                            {{ t('dashboard.nurse.searching') }}
                         </p>
                     </div>
                 </div>
@@ -198,9 +198,6 @@ const user = useState<User>('user');
 
 const countryCode = computed<CountryCode>(() => (user.value.profile.country === 'fr' ? 'fr' : 'be'));
 
-const zipCodes = ref([...props.initialZipCodes]);
-const cities = ref([...props.initialCities]);
-
 const zipInputs = ref([
     props.initialZipCodes[0] || '',
     props.initialZipCodes[1] || '',
@@ -218,9 +215,6 @@ const cityInputs = ref([
 watch(
     () => [props.initialZipCodes, props.initialCities],
     ([z, c]) => {
-        zipCodes.value = [...z];
-        cities.value = [...c];
-
         zipInputs.value = [
             z[0] || '',
             z[1] || '',

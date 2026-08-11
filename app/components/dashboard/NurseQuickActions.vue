@@ -61,41 +61,43 @@ type QuickAction = {
     secondaryTextClass?: string;
 };
 
+const { t } = useI18n();
+
 const actions = computed((): QuickAction[] => {
     const base: QuickAction[] = [
         {
-            title: 'Rechercher',
-            description: 'Compléter votre tournée avec un remplacement.',
-            cta: 'Rechercher',
+            title: t('dashboard.nurse.quickActions.searchTitle'),
+            description: t('dashboard.nurse.quickActions.searchDesc'),
+            cta: t('dashboard.nurse.quickActions.searchCta'),
             to: '/dashboard/replacements',
             icon: Search,
             colorClass: 'bg-primary hover:bg-primary/90',
         },
         {
-            title: 'Me faire remplacer',
-            description: 'Publier une offre sur votre tournée.',
-            cta: 'Demander',
+            title: t('dashboard.nurse.quickActions.replaceTitle'),
+            description: t('dashboard.nurse.quickActions.replaceDesc'),
+            cta: t('dashboard.nurse.quickActions.replaceCta'),
             to: '/dashboard/replacements/create',
             icon: UserPlus,
             colorClass: 'bg-success hover:bg-success/90',
         },
         {
-            title: 'Candidats',
-            description: 'Voir les réponses positives à vos offres.',
-            cta: 'Consulter',
+            title: t('dashboard.nurse.quickActions.candidatesTitle'),
+            description: t('dashboard.nurse.quickActions.candidatesDesc'),
+            cta: t('dashboard.nurse.quickActions.candidatesCta'),
             to: '/dashboard/replacements/responses',
             icon: Users,
             colorClass: 'bg-indigo-600 hover:bg-indigo-600/90',
         },
         {
-            title: 'Mes accords',
-            description: 'Remplacements où vous avez postulé.',
-            cta: 'Accéder',
+            title: t('dashboard.nurse.quickActions.agreementsTitle'),
+            description: t('dashboard.nurse.quickActions.agreementsDesc'),
+            cta: t('dashboard.nurse.quickActions.agreementsCta'),
             to: '/dashboard/replacements/applied',
             icon: FileCheck2,
             colorClass: 'bg-orange-700 hover:bg-orange-700/90',
             secondaryTo: '/dashboard/replacements/contracts',
-            secondaryLabel: 'Mes contrats (3 €)',
+            secondaryLabel: t('dashboard.nurse.quickActions.contractsLabel'),
             secondaryTextClass: 'text-orange-700',
         },
     ];
