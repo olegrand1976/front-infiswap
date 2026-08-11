@@ -305,8 +305,8 @@
                 </div>
                 </div>
             </header>
-            <OnboardingNetworkJourneyWidget v-if="showNetworkJourneyWidget" />
-            <DashboardMarketingEngagementBanners />
+            <OnboardingNetworkJourneyWidget v-if="showNetworkJourneyWidget && !isSubscriptionsRoute" />
+            <DashboardMarketingEngagementBanners v-if="!isSubscriptionsRoute" />
             <ProfileEducationLevelGateDialog />
             <div class="flex min-h-0 flex-1 flex-col overflow-hidden p-6">
                 <NuxtPage class="min-h-0 flex-1 overflow-x-hidden overflow-y-auto" />
@@ -379,6 +379,12 @@ const parsedSettings = computed(() => {
 });
 const route = useRoute();
 const currentPath = computed(() => route.fullPath.replace(/^\//, ''));
+/** Page Premium : pas de journey ni bannières partenaires au-dessus du catalogue. */
+const isSubscriptionsRoute = computed(() => {
+    const path = route.path.replace(/\/$/, '') || '/';
+
+    return /\/dashboard\/subscriptions$/.test(path);
+});
 const reportDescription = ref('');
 
 const displayFullName = computed(() => user.value?.full_name || 'xxx XXX');
