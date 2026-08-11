@@ -2,91 +2,180 @@
     <div>
         <form class="w-full grid 2xl:grid-cols-2 gap-6">
             <div>
-                <label class="font-semibold text-primary flex items-center gap-1.5">
+                <label class="flex items-center gap-1.5 text-xs font-bold text-foreground">
                     {{ t('replacements.colZip') }}
                     <SettingsFieldHint
                         :text="t(SETTINGS_TOOLTIPS.zipCodesPreference)"
                         :label="t('replacements.colZip')"
                     />
                 </label>
-                <div class="grid gap-3 mt-3">
-                    <div
-                        v-for="i in 4"
-                        :key="'zip-' + i"
-                        class="flex relative items-center gap-2 rounded-md border border-input bg-background focus-within:border-primary"
+                <div class="mt-2 flex flex-wrap items-center gap-1.5">
+                    <span
+                        v-for="i in filledZipIndexes"
+                        :key="'zip-chip-' + i"
+                        class="inline-flex items-center gap-1 rounded-full border border-primary/20 bg-primary/10 py-1 pl-2.5 pr-1 text-xs font-semibold text-primary"
                     >
-                        <div
-                            v-if="showZipTooltip[i - 1]"
-                            class="absolute -top-10 left-2 text-xs bg-white shadow rounded-md p-2"
+                        {{ zipInputs[i] }}
+                        <button
+                            type="button"
+                            class="flex size-4 items-center justify-center rounded-full bg-primary/20 text-[10px] leading-none hover:bg-primary/30"
+                            :aria-label="t('settings.preferencesRemove')"
+                            @click="removeZip(i)"
                         >
-                            {{ t('settings.preferencesAddHint') }}
-                        </div>
+                            ✕
+                        </button>
+                    </span>
 
-                        <InputIcon
-                            v-model="zipInputs[i - 1]"
-                            type="text"
-                            :placeholder="user.profile.country === 'fr' ? '75000' : '1000'"
-                            class="border-none flex-1 w-full"
-                            :input-class="true"
-                            @input="onZipInput(i - 1)"
-                        />
-                        <Button
-                            class="bg-primary text-white rounded-md hover:bg-primary/90 h-10"
-                            @click="isInitialZip(i - 1) ? removeZip(i - 1) : saveZip(i - 1)"
-                        >
-                            {{ isInitialZip(i - 1) ? t('settings.preferencesRemove') : t('settings.preferencesAdd') }}
-                        </Button>
-                    </div>
+                    <button
+                        v-if="nextEmptyZipIndex !== -1"
+                        type="button"
+                        class="inline-flex items-center gap-1 rounded-full border border-dashed border-input px-2.5 py-1 text-xs font-semibold text-muted-foreground hover:border-primary hover:text-primary"
+                        @click="openAddModal"
+                    >
+                        + {{ t('settings.preferencesAdd') }}
+                    </button>
                 </div>
             </div>
 
             <div>
-                <label class="font-semibold text-primary flex items-center gap-1.5">
+                <label class="flex items-center gap-1.5 text-xs font-bold text-foreground">
                     {{ t('replacements.colCities') }}
                     <SettingsFieldHint
                         :text="t(SETTINGS_TOOLTIPS.citiesPreference)"
                         :label="t('replacements.colCities')"
                     />
                 </label>
-                <div class="grid gap-3 mt-3">
-                    <div
-                        v-for="i in 4"
-                        :key="'city-' + i"
-                        class="flex relative items-center gap-2 rounded-md border border-input bg-background focus-within:border-primary"
+                <div class="mt-2 flex flex-wrap items-center gap-1.5">
+                    <span
+                        v-for="i in filledCityIndexes"
+                        :key="'city-chip-' + i"
+                        class="inline-flex items-center gap-1 rounded-full border border-primary/20 bg-primary/10 py-1 pl-2.5 pr-1 text-xs font-semibold text-primary"
                     >
-                        <div
-                            v-if="showCityTooltip[i - 1]"
-                            class="absolute -top-10 left-2 text-xs bg-white shadow rounded-md p-2"
+                        {{ cityInputs[i] }}
+                        <button
+                            type="button"
+                            class="flex size-4 items-center justify-center rounded-full bg-primary/20 text-[10px] leading-none hover:bg-primary/30"
+                            :aria-label="t('settings.preferencesRemove')"
+                            @click="removeCity(i)"
                         >
-                            {{ t('settings.preferencesAddHint') }}
-                        </div>
+                            ✕
+                        </button>
+                    </span>
 
-                        <InputIcon
-                            v-model="cityInputs[i - 1]"
-                            type="text"
-                            :placeholder="user.profile.country === 'fr' ? 'Paris' : 'Bruxelles'"
-                            class="border-none flex-1 w-full bg-transparent"
-                            :input-class="true"
-                            @input="onCityInput(i - 1)"
-                        />
-                        <Button
-                            size="sm"
-                            class="bg-primary text-white rounded-md hover:bg-primary/90 h-10"
-                            @click="isInitialCity(i - 1) ? removeCity(i - 1) : saveCity(i - 1)"
-                        >
-                            {{ isInitialCity(i - 1) ? t('settings.preferencesRemove') : t('settings.preferencesAdd') }}
-                        </Button>
-                    </div>
+                    <button
+                        v-if="nextEmptyCityIndex !== -1"
+                        type="button"
+                        class="inline-flex items-center gap-1 rounded-full border border-dashed border-input px-2.5 py-1 text-xs font-semibold text-muted-foreground hover:border-primary hover:text-primary"
+                        @click="openAddModal"
+                    >
+                        + {{ t('settings.preferencesAdd') }}
+                    </button>
                 </div>
             </div>
         </form>
+
+        <Dialog v-model:open="modalOpen">
+            <DialogContent class="max-w-md">
+                <DialogHeader>
+                    <DialogTitle>{{ t('settings.preferencesAdd') }}</DialogTitle>
+                    <DialogDescription>
+                        Renseignez le code postal ou la ville — l'autre se complète automatiquement.
+                    </DialogDescription>
+                </DialogHeader>
+
+                <div class="mt-2 space-y-4">
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-medium text-muted-foreground">
+                            {{ t('replacements.colZip') }}
+                        </label>
+                        <InputIcon
+                            v-model="modalZip"
+                            type="text"
+                            rounded="md"
+                            :placeholder="user.profile.country === 'fr' ? '75000' : '1000'"
+                            :disabled="nextEmptyZipIndex === -1"
+                            class="w-full"
+                        />
+                        <p
+                            v-if="nextEmptyZipIndex === -1"
+                            class="text-[11px] text-muted-foreground"
+                        >
+                            Limite de 4 codes postaux atteinte.
+                        </p>
+                        <p
+                            v-else-if="zipAlreadyExists"
+                            class="text-[11px] text-destructive"
+                        >
+                            Ce code postal est déjà dans vos préférences.
+                        </p>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-medium text-muted-foreground">
+                            {{ t('replacements.colCities') }}
+                        </label>
+                        <InputIcon
+                            v-model="modalCity"
+                            type="text"
+                            rounded="md"
+                            :placeholder="user.profile.country === 'fr' ? 'Paris' : 'Bruxelles'"
+                            :disabled="nextEmptyCityIndex === -1"
+                            class="w-full"
+                        />
+                        <p
+                            v-if="nextEmptyCityIndex === -1"
+                            class="text-[11px] text-muted-foreground"
+                        >
+                            Limite de 4 villes atteinte.
+                        </p>
+                        <p
+                            v-else-if="cityAlreadyExists"
+                            class="text-[11px] text-destructive"
+                        >
+                            Cette ville est déjà dans vos préférences.
+                        </p>
+                        <p
+                            v-else-if="modalLookupLoading"
+                            class="text-[11px] text-muted-foreground"
+                        >
+                            Recherche…
+                        </p>
+                    </div>
+                </div>
+
+                <DialogFooter class="mt-4 flex flex-col gap-2 sm:flex-row">
+                    <Button
+                        variant="secondary"
+                        class="w-full sm:w-auto"
+                        @click="modalOpen = false"
+                    >
+                        {{ t('common.cancel') }}
+                    </Button>
+                    <Button
+                        class="w-full sm:w-auto"
+                        :disabled="!hasAddableValue"
+                        @click="confirmAddPair"
+                    >
+                        {{ t('settings.preferencesAdd') }}
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     </div>
 </template>
 
 <script lang="ts" setup>
 import { Button } from '@/components/ui/button';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 import { useAuth } from '~/composables/useAuth';
-import type { User } from '~/lib/types';
+import type { CountryCode, User } from '~/lib/types';
 import { SETTINGS_TOOLTIPS } from '~/utils/settingsTooltips';
 
 const { t } = useI18n();
@@ -104,13 +193,13 @@ const emit = defineEmits<{
 }>();
 
 const { createPreferences } = useAuth();
+const { getCitiesFomZipCode, getZipCodesFromCity } = useLocation();
 const user = useState<User>('user');
+
+const countryCode = computed<CountryCode>(() => (user.value.profile.country === 'fr' ? 'fr' : 'be'));
 
 const zipCodes = ref([...props.initialZipCodes]);
 const cities = ref([...props.initialCities]);
-
-const showZipTooltip = ref([false, false, false, false]);
-const showCityTooltip = ref([false, false, false, false]);
 
 const zipInputs = ref([
     props.initialZipCodes[0] || '',
@@ -185,29 +274,13 @@ function isInitialCity(index: number) {
     return current === initial && current.trim() !== '';
 }
 
-function onZipInput(index: number) {
-    const value = zipInputs.value[index].trim();
-    showZipTooltip.value[index] = value !== '' && !isInitialZip(index);
-}
+const slotIndexes = [0, 1, 2, 3];
 
-function onCityInput(index: number) {
-    const value = cityInputs.value[index].trim();
-    showCityTooltip.value[index] = value !== '' && !isInitialCity(index);
-}
+const filledZipIndexes = computed(() => slotIndexes.filter(i => isInitialZip(i)));
+const nextEmptyZipIndex = computed(() => slotIndexes.find(i => !isInitialZip(i)) ?? -1);
 
-async function saveZip(index: number) {
-    const value = zipInputs.value[index].trim();
-    if (!value) return;
-    showZipTooltip.value[index] = false;
-    await savePreferences(value);
-}
-
-async function saveCity(index: number) {
-    const value = cityInputs.value[index].trim();
-    if (!value) return;
-    showCityTooltip.value[index] = false;
-    await savePreferences(value);
-}
+const filledCityIndexes = computed(() => slotIndexes.filter(i => isInitialCity(i)));
+const nextEmptyCityIndex = computed(() => slotIndexes.find(i => !isInitialCity(i)) ?? -1);
 
 async function removeZip(index: number) {
     zipInputs.value[index] = '';
@@ -217,5 +290,100 @@ async function removeZip(index: number) {
 async function removeCity(index: number) {
     cityInputs.value[index] = '';
     await savePreferences();
+}
+
+// --- Ajout par modal, avec autocomplétion code postal <-> ville ---
+
+const modalOpen = ref(false);
+const modalZip = ref('');
+const modalCity = ref('');
+const modalLookupLoading = ref(false);
+
+let suppressAutofill = false;
+let zipLookupTimeout: ReturnType<typeof setTimeout> | null = null;
+let cityLookupTimeout: ReturnType<typeof setTimeout> | null = null;
+
+function openAddModal() {
+    modalZip.value = '';
+    modalCity.value = '';
+    modalOpen.value = true;
+}
+
+watch(modalZip, (value) => {
+    if (suppressAutofill) return;
+    if (zipLookupTimeout) clearTimeout(zipLookupTimeout);
+
+    const trimmed = value.trim();
+    if (!/^\d{4,5}$/.test(trimmed)) return;
+
+    zipLookupTimeout = setTimeout(async () => {
+        modalLookupLoading.value = true;
+        const matchedCities = await getCitiesFomZipCode(trimmed, countryCode.value);
+        modalLookupLoading.value = false;
+
+        if (matchedCities.length) {
+            suppressAutofill = true;
+            modalCity.value = matchedCities[0];
+            await nextTick();
+            suppressAutofill = false;
+        }
+    }, 300);
+});
+
+watch(modalCity, (value) => {
+    if (suppressAutofill) return;
+    if (cityLookupTimeout) clearTimeout(cityLookupTimeout);
+
+    const trimmed = value.trim();
+    if (trimmed.length < 2 || /^\d+$/.test(trimmed)) return;
+
+    cityLookupTimeout = setTimeout(async () => {
+        modalLookupLoading.value = true;
+        const matchedZips = await getZipCodesFromCity(trimmed, countryCode.value);
+        modalLookupLoading.value = false;
+
+        if (matchedZips.length) {
+            suppressAutofill = true;
+            modalZip.value = matchedZips[0];
+            await nextTick();
+            suppressAutofill = false;
+        }
+    }, 300);
+});
+
+const zipAlreadyExists = computed(() => {
+    const value = modalZip.value.trim();
+    if (!value) return false;
+    return zipInputs.value.some((v, i) => isInitialZip(i) && v === value);
+});
+
+const cityAlreadyExists = computed(() => {
+    const value = modalCity.value.trim().toLowerCase();
+    if (!value) return false;
+    return cityInputs.value.some((v, i) => isInitialCity(i) && v.toLowerCase() === value);
+});
+
+const canAddZip = computed(() =>
+    modalZip.value.trim() !== '' && !zipAlreadyExists.value && nextEmptyZipIndex.value !== -1,
+);
+
+const canAddCity = computed(() =>
+    modalCity.value.trim() !== '' && !cityAlreadyExists.value && nextEmptyCityIndex.value !== -1,
+);
+
+const hasAddableValue = computed(() => canAddZip.value || canAddCity.value);
+
+async function confirmAddPair() {
+    if (!hasAddableValue.value) return;
+
+    if (canAddZip.value) {
+        zipInputs.value[nextEmptyZipIndex.value] = modalZip.value.trim();
+    }
+    if (canAddCity.value) {
+        cityInputs.value[nextEmptyCityIndex.value] = modalCity.value.trim();
+    }
+
+    await savePreferences();
+    modalOpen.value = false;
 }
 </script>

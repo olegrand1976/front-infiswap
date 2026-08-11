@@ -4,36 +4,48 @@
             aria-label="Statistiques remplacements"
             class="grid grid-cols-2 sm:grid-cols-4 gap-3"
         >
-            <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
-                <p class="text-[11px] uppercase tracking-wide text-gray-500">
-                    Postés (mois)
-                </p>
-                <p class="text-2xl font-bold text-primary tabular-nums mt-0.5">
+            <div class="rounded-2xl bg-gradient-to-br from-primary to-primary/80 p-4 text-white shadow-lg">
+                <span class="mb-2 flex size-8 items-center justify-center rounded-lg bg-white/15">
+                    <Send class="size-4" />
+                </span>
+                <p class="font-secondary text-2xl font-bold tabular-nums">
                     {{ reports?.me ?? 0 }}
                 </p>
-            </div>
-            <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
-                <p class="text-[11px] uppercase tracking-wide text-gray-500">
-                    Acceptés (mois)
+                <p class="mt-0.5 text-[11px] text-white/80">
+                    Postés (mois)
                 </p>
-                <p class="text-2xl font-bold text-success tabular-nums mt-0.5">
+            </div>
+            <div class="rounded-2xl bg-gradient-to-br from-green-700 to-green-800 p-4 text-white shadow-lg">
+                <span class="mb-2 flex size-8 items-center justify-center rounded-lg bg-white/15">
+                    <CheckCircle2 class="size-4" />
+                </span>
+                <p class="font-secondary text-2xl font-bold tabular-nums">
                     {{ reports?.accepted ?? 0 }}
                 </p>
-            </div>
-            <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
-                <p class="text-[11px] uppercase tracking-wide text-gray-500">
-                    Réponses (mois)
+                <p class="mt-0.5 text-[11px] text-white/80">
+                    Acceptés (mois)
                 </p>
-                <p class="text-2xl font-bold text-indigo-600 tabular-nums mt-0.5">
+            </div>
+            <div class="rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-700 p-4 text-white shadow-lg">
+                <span class="mb-2 flex size-8 items-center justify-center rounded-lg bg-white/15">
+                    <MessageSquare class="size-4" />
+                </span>
+                <p class="font-secondary text-2xl font-bold tabular-nums">
                     {{ reports?.total ?? 0 }}
                 </p>
-            </div>
-            <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
-                <p class="text-[11px] uppercase tracking-wide text-gray-500">
-                    Parrainages
+                <p class="mt-0.5 text-[11px] text-white/80">
+                    Réponses (mois)
                 </p>
-                <p class="text-2xl font-bold text-amber-600 tabular-nums mt-0.5">
+            </div>
+            <div class="rounded-2xl bg-gradient-to-br from-amber-600 to-amber-700 p-4 text-white shadow-lg">
+                <span class="mb-2 flex size-8 items-center justify-center rounded-lg bg-white/15">
+                    <Users class="size-4" />
+                </span>
+                <p class="font-secondary text-2xl font-bold tabular-nums">
                     {{ reports?.referrals ?? 0 }}
+                </p>
+                <p class="mt-0.5 text-[11px] text-white/80">
+                    Parrainages
                 </p>
             </div>
         </section>
@@ -45,23 +57,24 @@
         </section>
 
         <section class="flex flex-col items-stretch w-full lg:flex-row gap-6">
-            <div class="w-full bg-gray-50 rounded-lg border border-gray-100 shadow-sm lg:w-1/2">
+            <div class="prefs-panel-tint w-full rounded-2xl border border-primary/15 shadow-sm lg:w-1/2">
                 <div class="p-4 rounded">
-                    <div class="flex items-center justify-between text-primary">
-                        <h2 class="font-semibold text-base">
+                    <div class="flex items-center justify-between">
+                        <h2 class="font-secondary text-base font-semibold text-foreground">
                             Mes préférences
                         </h2>
-                        <Button
+                        <button
                             variant="none"
-                            class="mt-2 text-xs font-bold"
+                            class="mt-2 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-br from-primary to-primary/80 px-3 py-1.5 text-xs font-bold text-primary-foreground"
                             @click="proposalDialog = true"
                         >
+                            <Sparkles class="size-3" />
                             Boost IA
-                        </Button>
+                        </button>
                     </div>
 
-                    <p class="hidden mt-4 text-sm text-gray-600 2xl:block">
-                        Entrez vos codes postaux et villes préférés afin de personnaliser vos résultats. Vous pouvez ajuster vos préférences à tout moment pour que les suggestions correspondent exactement à vos besoins.
+                    <p class="mt-2 text-sm text-muted-foreground">
+                        Codes postaux et villes préférés, pour personnaliser vos résultats.
                     </p>
 
                     <div class="sm:mt-4 2xl:mt-6">
@@ -86,32 +99,34 @@
                         @update:initial-cities="updateCities"
                     />
 
-                    <p class="hidden mt-8 text-sm text-gray-600 2xl:block">
-                        Indiquez la distance autour de votre localisation pour vos recherches.
-                    </p>
-
-                    <div class="relative block sm:grid sm:grid-cols-[40%_60%] sm:border sm:border-primary sm:h-9 sm:rounded-full mt-8 sm:mt-8 2xl:mt-6 overflow-hidden">
-                        <div class="flex flex-col mb-4 sm:bg-primary sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
-                            <label class="ml-3 font-semibold sm:ml-0 text-primary sm:font-normal sm:text-white">
-                                <span>Rayon de recherche</span>
-                            </label>
+                    <div class="mt-6 flex items-center justify-between gap-3 rounded-2xl border border-border bg-card px-4 py-3">
+                        <div>
+                            <p class="text-sm font-semibold text-foreground">
+                                Rayon de recherche
+                            </p>
+                            <p class="text-xs text-muted-foreground">
+                                Autour de vos codes postaux préférés
+                            </p>
                         </div>
-
-                        <div class="relative flex items-center -mt-1 border border-gray-400 rounded-full sm:-mt-0 focus-within:border-primary sm:border-none sm:rounded-none">
-                            <InputIcon
-                                v-model="radiusInput"
-                                type="number"
-                                title="Appuyer sur l'icône pour valider"
-                                class="w-full h-2 pr-10 text-sm bg-transparent border-none sm:h-8 rounded indent-3"
-                                :input-class="true"
-                                min="1"
-                            />
-
+                        <div class="flex shrink-0 items-center gap-3">
                             <button
-                                class="absolute transition top-2 right-4 sm:right-2 text-primary hover:text-green-600"
-                                @click="onUpdateRadius"
+                                type="button"
+                                aria-label="Diminuer"
+                                class="flex size-7 items-center justify-center rounded-full border border-border text-foreground transition hover:bg-muted"
+                                @click="decrementRadius"
                             >
-                                <Check class="w-4 h-4" />
+                                −
+                            </button>
+                            <span class="font-secondary tabular-nums text-sm font-bold text-primary">
+                                {{ radiusInput }} km
+                            </span>
+                            <button
+                                type="button"
+                                aria-label="Augmenter"
+                                class="flex size-7 items-center justify-center rounded-full border border-border text-foreground transition hover:bg-muted"
+                                @click="incrementRadius"
+                            >
+                                +
                             </button>
                         </div>
                     </div>
@@ -119,54 +134,67 @@
             </div>
 
             <div class="w-full lg:w-1/2 space-y-8">
-                <div class="flex flex-col w-full bg-white rounded-lg border border-gray-100 shadow-sm">
-                    <div class="p-5 bg-teal-50 rounded-t-lg">
-                        <User class="w-8 opacity-80 text-primary" />
+                <div class="flex flex-col gap-3 rounded-2xl border border-accent-green/20 bg-accent-green/10 p-5 shadow-sm">
+                    <h3 class="font-secondary text-sm font-semibold text-foreground">
+                        Collègues inscrits via votre parrainage
+                    </h3>
+                    <p class="text-xs text-muted-foreground">
+                        Partagez InfiSwap — plus le réseau grandit, plus vous trouvez de remplacements.
+                    </p>
+
+                    <div class="flex items-center gap-3">
+                        <span class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-accent-green to-accent-green-light text-white shadow-md">
+                            <Users class="size-5" />
+                        </span>
+                        <div>
+                            <p class="font-secondary text-2xl font-bold tabular-nums text-foreground">
+                                {{ reports?.referrals ?? 0 }}
+                            </p>
+                            <p class="text-[11px] text-muted-foreground">
+                                collègues inscrits
+                            </p>
+                        </div>
                     </div>
-                    <div class="p-4 space-y-3">
-                        <h3 class="text-sm text-gray-900">
-                            Collègues inscrits via votre parrainage
-                        </h3>
-                        <p class="text-xs text-gray-500">
-                            Partagez InfiSwap — plus le réseau grandit, plus vous trouvez de remplacements.
-                        </p>
-                        <p class="text-3xl font-bold text-primary">
-                            {{ reports?.referrals ?? 0 }}
-                        </p>
+
+                    <div class="flex items-center gap-2 rounded-xl border border-input bg-background py-1 pl-3 pr-1">
+                        <span class="min-w-0 flex-1 truncate text-xs text-muted-foreground">
+                            {{ referralShareUrl }}
+                        </span>
                         <button
                             type="button"
-                            class="text-sm font-medium text-primary hover:underline"
+                            class="flex shrink-0 items-center gap-1.5 rounded-lg bg-gradient-to-br from-accent-green to-accent-green-light px-3 py-2 text-xs font-bold text-white"
                             @click="copyReferralLink"
                         >
-                            Copier mon lien de parrainage
+                            <Copy class="size-3" />
+                            Copier
                         </button>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-lg border border-gray-100 shadow-sm">
-                    <h3 class="p-3 text-white rounded-t-lg bg-primary text-sm font-semibold">
-                        Annonces auxquelles j'ai répondu / mois
-                    </h3>
-                    <div v-if="loading">
-                        <Skeleton class="h-64 m-8 bg-gray-200" />
-                    </div>
-                    <div
-                        v-else
-                        class="p-4"
-                    >
-                        <ClientOnly>
-                            <LineChart
-                                :data="formattedData"
-                                index="month"
-                                :categories="['annonces']"
-                                :colors="['var(--primary)']"
-                                :y-formatter="(tick) => `${tick}`"
-                            />
-                        </ClientOnly>
                     </div>
                 </div>
             </div>
         </section>
+
+        <div class="overflow-hidden rounded-2xl bg-card shadow-sm">
+            <h3 class="p-3 text-primary-foreground rounded-t-2xl bg-primary text-sm font-semibold">
+                Annonces auxquelles j'ai répondu / mois
+            </h3>
+            <div v-if="loading">
+                <Skeleton class="h-64 m-8 bg-muted" />
+            </div>
+            <div
+                v-else
+                class="p-4"
+            >
+                <ClientOnly>
+                    <LineChart
+                        :data="formattedData"
+                        index="month"
+                        :categories="['annonces']"
+                        :colors="['var(--primary)']"
+                        :y-formatter="(tick) => `${tick}`"
+                    />
+                </ClientOnly>
+            </div>
+        </div>
     </div>
 
     <Dialog v-model:open="configDialog">
@@ -336,7 +364,7 @@
 </template>
 
 <script setup lang="ts">
-import { Building2, Check, CircleHelp, Inbox, Map, User } from 'lucide-vue-next';
+import { Building2, CheckCircle2, CircleHelp, Copy, Inbox, Map, MessageSquare, Send, Sparkles, Users } from 'lucide-vue-next';
 import { LineChart } from '@/components/ui/chart-line';
 import InputPreferences from '@/components/InputPreferences.vue';
 import InputTagManager from '~/components/InputTagManager.vue';
@@ -429,6 +457,16 @@ const radiusInput = ref(Number(radiusKm.value));
 
 const onUpdateRadius = async () => {
     await updateRadiusKm(radiusInput.value);
+};
+
+const decrementRadius = async () => {
+    radiusInput.value = Math.max(1, radiusInput.value - 1);
+    await onUpdateRadius();
+};
+
+const incrementRadius = async () => {
+    radiusInput.value += 1;
+    await onUpdateRadius();
 };
 
 const zipCodes = ref<string[]>([]);
@@ -575,5 +613,13 @@ onMounted(() => {
 }
 .relative {
     padding-bottom: 20px;
+}
+
+/* Fond du panneau "Mes préférences" — dégradé qui s'estompe vers la carte,
+   même recette que la maquette. En CSS brute (comme .home-hero__mesh dans
+   NewBanner.vue) car color-mix()/oklch imbriqués dans une valeur arbitraire
+   Tailwind ne se résolvaient pas correctement. */
+.prefs-panel-tint {
+    background: linear-gradient(160deg, color-mix(in oklch, var(--primary) 9%, var(--card)), var(--card) 65%);
 }
 </style>
