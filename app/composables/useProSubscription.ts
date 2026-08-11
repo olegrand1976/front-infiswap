@@ -101,7 +101,12 @@ export function useProSubscription() {
 
             return catalog.value;
         }
-        catch {
+        catch (error: unknown) {
+            $toast({
+                variant: 'destructive',
+                description: proErrorMessage(error, 'Impossible de charger les formules Premium.'),
+            });
+
             return null;
         }
     }

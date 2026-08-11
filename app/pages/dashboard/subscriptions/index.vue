@@ -70,31 +70,26 @@
                     </div>
                 </div>
 
-                <ul class="grid gap-3 sm:grid-cols-3">
+                <ul class="flex flex-wrap gap-x-4 gap-y-2">
                     <li
                         v-for="benefit in proBenefits"
                         :key="benefit.title"
-                        class="rounded-lg border p-4 dark:border-gray-700"
+                        class="inline-flex items-center gap-1.5 text-sm text-muted-foreground"
                     >
                         <component
                             :is="benefit.icon"
-                            class="size-5 text-success"
+                            class="size-4 shrink-0 text-success"
                         />
-                        <p class="mt-2 font-medium">
-                            {{ benefit.title }}
-                        </p>
-                        <p class="mt-1 text-sm text-muted-foreground">
-                            {{ benefit.description }}
-                        </p>
+                        <span class="font-medium text-foreground">{{ benefit.title }}</span>
                     </li>
                 </ul>
             </div>
 
             <div
                 v-else
-                class="space-y-8"
+                class="space-y-6"
             >
-                <div class="space-y-3 text-center">
+                <div class="space-y-2 text-center">
                     <div class="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
                         <Crown class="size-3.5" />
                         {{ badge }}
@@ -107,26 +102,23 @@
                     </p>
                 </div>
 
-                <ul class="grid gap-3 sm:grid-cols-3">
-                    <li
-                        v-for="benefit in proBenefits"
-                        :key="benefit.title"
-                        class="rounded-lg border p-4 dark:border-gray-700"
-                    >
-                        <component
-                            :is="benefit.icon"
-                            class="size-5 text-success"
-                        />
-                        <p class="mt-2 font-medium">
-                            {{ benefit.title }}
-                        </p>
-                        <p class="mt-1 text-sm text-muted-foreground">
-                            {{ benefit.description }}
-                        </p>
-                    </li>
-                </ul>
+                <div
+                    v-if="catalogLoading"
+                    class="grid gap-4 md:grid-cols-2"
+                    aria-busy="true"
+                    aria-label="Chargement des formules"
+                >
+                    <div
+                        v-for="n in 2"
+                        :key="n"
+                        class="h-44 animate-pulse rounded-xl border bg-muted/40 dark:border-gray-700"
+                    />
+                </div>
 
-                <div class="grid gap-4 md:grid-cols-2">
+                <div
+                    v-else-if="plans.length > 0"
+                    class="grid gap-4 md:grid-cols-2"
+                >
                     <SubscriptionProPlanCard
                         v-for="plan in plans"
                         :key="plan.lookup_key"
@@ -136,6 +128,37 @@
                         @subscribe="subscribe(plan)"
                     />
                 </div>
+
+                <div
+                    v-else
+                    class="rounded-xl border border-dashed p-6 text-center dark:border-gray-700"
+                >
+                    <p class="text-sm text-muted-foreground">
+                        Les formules Premium sont temporairement indisponibles.
+                    </p>
+                    <Button
+                        variant="outline"
+                        class="mt-4 min-h-11"
+                        :disabled="catalogLoading"
+                        @click="retryCatalog"
+                    >
+                        Réessayer
+                    </Button>
+                </div>
+
+                <ul class="flex flex-wrap justify-center gap-x-4 gap-y-2">
+                    <li
+                        v-for="benefit in proBenefits"
+                        :key="benefit.title"
+                        class="inline-flex items-center gap-1.5 text-sm text-muted-foreground"
+                    >
+                        <component
+                            :is="benefit.icon"
+                            class="size-4 shrink-0 text-success"
+                        />
+                        <span>{{ benefit.title }}</span>
+                    </li>
+                </ul>
 
                 <p class="text-center text-xs text-muted-foreground">
                     Sans engagement de durée sur la formule mensuelle, annulable en un clic.
@@ -185,6 +208,8 @@ const { $toast } = useNuxtApp();
 const route = useRoute();
 const router = useRouter();
 
+const catalogLoading = ref(true);
+
 const plans = computed(() => catalog.value?.plans ?? []);
 const offer = computed(() => catalog.value?.offer ?? null);
 const currentPlan = computed(() => status.value?.subscription?.plan ?? null);
@@ -212,6 +237,20 @@ function formatDate(value: string | null): string {
     }
 
     return new Date(value).toLocaleDateString('fr-BE', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+async function loadCatalog(): Promise<void> {
+    catalogLoading.value = true;
+    try {
+        await fetchCatalog();
+    }
+    finally {
+        catalogLoading.value = false;
+    }
+}
+
+async function retryCatalog(): Promise<void> {
+    await loadCatalog();
 }
 
 async function subscribe(plan: ProPlan): Promise<void> {
@@ -272,7 +311,7 @@ async function processStripeReturn(): Promise<void> {
 }
 
 onMounted(async () => {
-    await Promise.all([fetchStatus(), fetchCatalog()]);
+    await Promise.all([fetchStatus(), loadCatalog()]);
     await processStripeReturn();
 });
 </script>
