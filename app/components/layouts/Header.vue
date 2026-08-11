@@ -119,7 +119,7 @@
                         class="font-semibold cursor-pointer w-full h-10 shadow-lg rounded-full relative z-30"
                         :href="localePath('/login')"
                     >
-                        {{ $t('nav.login') }}
+                        {{ t('nav.login') }}
                     </Button>
                 </div>
             </div>

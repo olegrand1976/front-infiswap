@@ -1760,7 +1760,7 @@ const formData = reactive({
         street: '',
         city: '',
         zipCode: '',
-        country: countries[0].value,
+        country: country.value === 'France' ? 'fr' : 'be',
         workingAt: country.value ? [country.value as 'Belgique' | 'France'] : [] as ('Belgique' | 'France')[],
         additionalInformation: '',
     },
