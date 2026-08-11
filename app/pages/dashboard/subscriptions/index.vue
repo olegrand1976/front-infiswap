@@ -72,7 +72,7 @@
 
                 <ul class="grid gap-3 sm:grid-cols-3">
                     <li
-                        v-for="benefit in PRO_BENEFITS"
+                        v-for="benefit in proBenefits"
                         :key="benefit.title"
                         class="rounded-lg border p-4 dark:border-gray-700"
                     >
@@ -95,18 +95,21 @@
                 class="space-y-8"
             >
                 <div class="space-y-3 text-center">
+                    <div class="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
+                        <Crown class="size-3.5" />
+                        {{ badge }}
+                    </div>
                     <h1 class="text-3xl font-semibold sm:text-4xl">
-                        Le réseau reste gratuit
+                        {{ title }}
                     </h1>
                     <p class="mx-auto max-w-xl text-muted-foreground">
-                        Publier, postuler et échanger ne coûte rien, et ne coûtera jamais rien.
-                        Infiswap Premium ajoute trois avantages à celles qui veulent aller plus vite.
+                        {{ subtitle }}
                     </p>
                 </div>
 
                 <ul class="grid gap-3 sm:grid-cols-3">
                     <li
-                        v-for="benefit in PRO_BENEFITS"
+                        v-for="benefit in proBenefits"
                         :key="benefit.title"
                         class="rounded-lg border p-4 dark:border-gray-700"
                     >
@@ -144,7 +147,7 @@
 </template>
 
 <script setup lang="ts">
-import { BellRing, Crown, FileCheck, Sparkles } from 'lucide-vue-next';
+import { Crown, Sparkles } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import type { ProPlan } from '~/composables/useProSubscription';
 import { buildProCelebrationDedupeKey } from '~/utils/purchaseCelebration';
@@ -159,23 +162,7 @@ useHead({
     title: 'Infiswap Premium',
 });
 
-const PRO_BENEFITS = [
-    {
-        icon: BellRing,
-        title: 'Alerte instantanée',
-        description: 'Prévenue dès la publication, quand les comptes gratuits reçoivent un récap le soir.',
-    },
-    {
-        icon: Sparkles,
-        title: 'Un boost offert par mois',
-        description: '7 jours en tête de liste sur l\'annonce de votre choix, chaque mois.',
-    },
-    {
-        icon: FileCheck,
-        title: 'Contrats inclus',
-        description: 'Contrats de remplacement illimités, signature et archivage compris.',
-    },
-];
+const { badge, title, subtitle, benefits: proBenefits } = usePremiumMarketing();
 
 const {
     status,

@@ -83,6 +83,66 @@
                     </div>
                 </article>
 
+                <article class="relative flex flex-col rounded-xl border-2 border-primary/40 bg-white shadow-xl shadow-primary/15 overflow-hidden transition-transform duration-300 hover:-translate-y-1">
+                    <div class="absolute right-3 top-3 z-10 rounded-full bg-primary px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-primary-foreground">
+                        {{ $t('pricing.newBadge') }}
+                    </div>
+                    <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-primary/80 via-primary to-primary/60" />
+                    <div class="p-7 lg:p-8 flex flex-col flex-1">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-11 h-11 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
+                                <Crown class="w-5 h-5 text-primary" />
+                            </div>
+                            <div>
+                                <p class="text-xs font-semibold uppercase tracking-wide text-primary">
+                                    {{ $t('pricing.pro.eyebrow') }}
+                                </p>
+                                <h2 class="text-xl font-bold text-gray-900">
+                                    {{ $t('pricing.pro.name') }}
+                                </h2>
+                            </div>
+                        </div>
+
+                        <div class="lg:min-h-[5.25rem] mb-4">
+                            <div class="flex items-end gap-1">
+                                <span class="text-5xl font-bold text-gray-900 tracking-tight leading-none">
+                                    {{ $t('pricing.pro.monthlyPrice') }}
+                                </span>
+                                <span class="text-2xl font-semibold text-gray-700 mb-1">€</span>
+                                <span class="text-sm text-gray-500 mb-2 ml-1">{{ $t('pricing.pro.period') }}</span>
+                            </div>
+                            <p class="mt-2 text-sm text-gray-500">
+                                {{ $t('pricing.pro.yearly') }}
+                            </p>
+                        </div>
+
+                        <p class="text-gray-600 text-sm leading-relaxed mb-6 lg:min-h-[4.5rem]">
+                            {{ $t('pricing.pro.desc') }}
+                        </p>
+
+                        <ul class="space-y-3 mb-8 flex-1">
+                            <li
+                                v-for="item in proFeatures"
+                                :key="item"
+                                class="flex items-start gap-2.5 text-sm text-gray-700"
+                            >
+                                <CircleCheck class="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                                <span>{{ item }}</span>
+                            </li>
+                        </ul>
+
+                        <Button
+                            class="w-full font-semibold h-11"
+                            @click="handleProCta"
+                        >
+                            {{ $t('pricing.pro.cta') }}
+                        </Button>
+                        <p class="text-center text-xs text-gray-400 mt-3">
+                            {{ $t('pricing.pro.note') }}
+                        </p>
+                    </div>
+                </article>
+
                 <article class="relative flex flex-col rounded-xl border border-amber-200/60 bg-white shadow-xl shadow-amber-500/10 overflow-hidden transition-transform duration-300 hover:-translate-y-1">
                     <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-amber-400 via-orange-500 to-amber-500" />
                     <div class="p-7 lg:p-8 flex flex-col flex-1">
@@ -151,63 +211,6 @@
                         </Button>
                         <p class="text-center text-xs text-gray-400 mt-3">
                             {{ $t('pricing.activableFrom') }}
-                        </p>
-                    </div>
-                </article>
-
-                <article class="relative flex flex-col rounded-xl border border-primary/30 bg-white shadow-xl shadow-primary/10 overflow-hidden transition-transform duration-300 hover:-translate-y-1">
-                    <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-primary/80 via-primary to-primary/60" />
-                    <div class="p-7 lg:p-8 flex flex-col flex-1">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-11 h-11 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
-                                <Crown class="w-5 h-5 text-primary" />
-                            </div>
-                            <div>
-                                <p class="text-xs font-semibold uppercase tracking-wide text-primary">
-                                    {{ $t('pricing.pro.eyebrow') }}
-                                </p>
-                                <h2 class="text-xl font-bold text-gray-900">
-                                    {{ $t('pricing.pro.name') }}
-                                </h2>
-                            </div>
-                        </div>
-
-                        <div class="lg:min-h-[5.25rem] mb-4">
-                            <div class="flex items-end gap-1">
-                                <span class="text-5xl font-bold text-gray-900 tracking-tight leading-none">
-                                    {{ $t('pricing.pro.monthlyPrice') }}
-                                </span>
-                                <span class="text-2xl font-semibold text-gray-700 mb-1">€</span>
-                                <span class="text-sm text-gray-500 mb-2 ml-1">{{ $t('pricing.pro.period') }}</span>
-                            </div>
-                            <p class="mt-2 text-sm text-gray-500">
-                                {{ $t('pricing.pro.yearly') }}
-                            </p>
-                        </div>
-
-                        <p class="text-gray-600 text-sm leading-relaxed mb-6 lg:min-h-[4.5rem]">
-                            {{ $t('pricing.pro.desc') }}
-                        </p>
-
-                        <ul class="space-y-3 mb-8 flex-1">
-                            <li
-                                v-for="item in proFeatures"
-                                :key="item"
-                                class="flex items-start gap-2.5 text-sm text-gray-700"
-                            >
-                                <CircleCheck class="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                                <span>{{ item }}</span>
-                            </li>
-                        </ul>
-
-                        <Button
-                            class="w-full font-semibold h-11"
-                            @click="handleProCta"
-                        >
-                            {{ $t('pricing.pro.cta') }}
-                        </Button>
-                        <p class="text-center text-xs text-gray-400 mt-3">
-                            {{ $t('pricing.pro.note') }}
                         </p>
                     </div>
                 </article>
@@ -353,12 +356,11 @@ const boostFeatures = computed(() => [
     t('pricing.boostFeatures.b5'),
 ]);
 
+const { benefits: premiumBenefits } = usePremiumMarketing();
+
 const proFeatures = computed(() => [
-    t('pricing.pro.features.p1'),
-    t('pricing.pro.features.p2'),
-    t('pricing.pro.features.p3'),
+    ...premiumBenefits.value.map(benefit => benefit.title),
     t('pricing.pro.features.p4'),
-    t('pricing.pro.features.p5'),
 ]);
 
 const tips = computed(() => [
@@ -368,14 +370,14 @@ const tips = computed(() => [
         text: t('pricing.tips.freeText'),
     },
     {
+        icon: Crown,
+        title: t('pricing.tips.progressiveTitle'),
+        text: t('pricing.tips.progressiveText'),
+    },
+    {
         icon: Rocket,
         title: t('pricing.tips.boostTitle'),
         text: t('pricing.tips.boostText'),
-    },
-    {
-        icon: Search,
-        title: t('pricing.tips.progressiveTitle'),
-        text: t('pricing.tips.progressiveText'),
     },
 ]);
 

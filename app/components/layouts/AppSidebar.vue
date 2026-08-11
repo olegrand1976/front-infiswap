@@ -430,6 +430,11 @@ const nurseNavigationItems = computed<NavigationItem[]>(() => {
             icon: LayoutGrid,
         },
         {
+            label: 'Infiswap Premium',
+            route: '/dashboard/subscriptions',
+            icon: Crown,
+        },
+        {
             label: t('nav.nurseMap'),
             route: '/dashboard/nurses-map',
             icon: MapPin,
@@ -490,11 +495,6 @@ const nurseNavigationItems = computed<NavigationItem[]>(() => {
             label: t('nav.network'),
             route: '/dashboard/group',
             icon: Users,
-        },
-        {
-            label: 'Infiswap Premium',
-            route: '/dashboard/subscriptions',
-            icon: Crown,
         },
         {
             label: t('nav.settings'),
