@@ -106,8 +106,8 @@ class MainShell extends ConsumerWidget {
                               onTap: () => selectTab(2),
                             ),
                             _NavTab(
-                              icon: Icons.person_outline,
-                              activeIcon: Icons.person,
+                              icon: Icons.settings_outlined,
+                              activeIcon: Icons.settings,
                               label: 'Profil',
                               active: currentIndex == 3,
                               onTap: () => selectTab(3),
