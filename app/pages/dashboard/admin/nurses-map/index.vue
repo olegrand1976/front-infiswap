@@ -282,7 +282,7 @@ const zipInstitutionItems = ref<NursesMapZipInstitutionItem[]>([]);
 let zipListRequestId = 0;
 
 const countryLabel = computed(
-    () => COUNTRY_OPTIONS.find((o) => o.value === selectedCountry.value)?.label ?? '',
+    () => COUNTRY_OPTIONS.find(o => o.value === selectedCountry.value)?.label ?? '',
 );
 
 const placedNurses = computed(() =>
@@ -330,13 +330,15 @@ const load = async () => {
         unresolvedCount.value = data.unresolved_count ?? 0;
         institutionPoints.value = data.institution_points ?? [];
         institutionUnresolvedCount.value = data.institution_unresolved_count ?? 0;
-    } catch (e) {
+    }
+    catch (e) {
         points.value = [];
         institutionPoints.value = [];
         unresolvedCount.value = 0;
         institutionUnresolvedCount.value = 0;
         error.value = getErrorMessage(e) || 'Impossible de charger la carte.';
-    } finally {
+    }
+    finally {
         loading.value = false;
     }
 };
@@ -373,9 +375,11 @@ const onSearchAddress = async () => {
         }
 
         await applyFocus(result.latitude, result.longitude, result.label);
-    } catch (e) {
+    }
+    catch (e) {
         addressError.value = getErrorMessage(e) || 'Recherche d\'adresse impossible.';
-    } finally {
+    }
+    finally {
         searchingAddress.value = false;
     }
 };
@@ -428,12 +432,14 @@ const onSelectPoint = async (payload: NursesMapSelectPointPayload) => {
                 return _exhaustive;
             }
         }
-    } catch (e) {
+    }
+    catch (e) {
         if (requestId !== zipListRequestId) {
             return;
         }
         zipDialogError.value = getErrorMessage(e) || 'Impossible de charger la liste.';
-    } finally {
+    }
+    finally {
         if (requestId === zipListRequestId) {
             zipDialogLoading.value = false;
         }

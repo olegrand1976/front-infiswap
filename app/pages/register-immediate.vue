@@ -177,7 +177,7 @@
 import { CircleUser, Mail, Phone } from 'lucide-vue-next';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
 import { Checkbox } from '@/components/ui/checkbox';
-import { useAuthTokenCookie } from '~/lib/authTokenCookie';
+import { persistAuthTokenCookie, useAuthTokenCookie } from '~/lib/authTokenCookie';
 
 const formData = reactive({
     lastname: '',
@@ -234,7 +234,7 @@ const { submit, inProgress } = useSubmit(
         const pendingReplacement = useState('pendingReplacement');
 
         if (pendingReplacement.value) {
-            authToken.value = response.token;
+            persistAuthTokenCookie(authToken, response.token);
             const result = await sendUrgentReplacement(pendingReplacement.value);
 
             if (result === true) {

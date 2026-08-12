@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Sparkles, ShieldCheck, UsersRound } from 'lucide-vue-next';
+import { ShieldCheck, UsersRound } from 'lucide-vue-next';
 
 const localePath = useLocalePath();
 const { copy } = usePlatformStats();
@@ -11,17 +11,9 @@ const { copy } = usePlatformStats();
         aria-labelledby="community-story-title"
     >
         <div class="container mx-auto px-4 sm:px-6">
-            <div class="overflow-hidden rounded-3xl bg-gradient-to-br from-[#4caf7d] via-[#7bc67e] to-primary shadow-xl">
+            <div class="overflow-hidden rounded-3xl bg-gradient-to-br from-accent-green via-accent-green-light to-primary shadow-xl">
                 <div class="grid gap-8 px-6 py-10 sm:px-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-center lg:gap-12 lg:py-14">
                     <div class="text-white">
-                        <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-1.5 text-sm font-semibold backdrop-blur-sm">
-                            <Sparkles
-                                class="h-4 w-4"
-                                aria-hidden="true"
-                            />
-                            {{ copy.badgeHint }}
-                        </div>
-
                         <h2
                             id="community-story-title"
                             class="text-2xl font-bold leading-tight sm:text-3xl lg:text-4xl"
@@ -40,14 +32,14 @@ const { copy } = usePlatformStats();
                         <div class="mt-8 flex flex-col gap-3 sm:flex-row">
                             <Button
                                 :href="localePath('/register')"
-                                class="rounded-full bg-white px-6 py-3 text-primary hover:bg-white/90"
+                                class="h-auto rounded-full bg-white px-6 py-3 text-primary hover:bg-white/90"
                             >
                                 {{ copy.communityCta }}
                             </Button>
                             <Button
                                 variant="outline"
                                 :href="localePath('/about')"
-                                class="rounded-full border-white/60 bg-transparent px-6 py-3 text-white hover:bg-white/10 hover:text-white"
+                                class="h-auto rounded-full border-white/60 bg-transparent px-6 py-3 text-white hover:bg-white/10 hover:text-white"
                             >
                                 {{ copy.learnMore }}
                             </Button>

@@ -1,39 +1,27 @@
 <script setup lang="ts">
-import { useToast } from '~/components/ui/toast/use-toast';
+import { toast } from 'vue-sonner';
 import { Switch } from '~/components/ui/switch';
 
 const { settings, loading, saving, fetchSettings, saveSettings } = useInamiSettings();
-const { toast } = useToast();
 
 onMounted(async () => {
     try {
         await fetchSettings();
     }
     catch {
-        toast({
-            title: 'Erreur',
-            description: 'Impossible de charger la configuration INAMI.',
-            variant: 'destructive',
-        });
+        toast.error('Impossible de charger la configuration INAMI.');
     }
 });
 
 async function handleToggle(enabled: boolean) {
     try {
         await saveSettings({ cobrha_enabled: enabled });
-        toast({
-            title: 'Enregistré',
-            description: enabled
-                ? 'Vérification CoBRHA activée.'
-                : 'Vérification CoBRHA désactivée.',
-        });
+        toast.success(enabled
+            ? 'Vérification CoBRHA activée.'
+            : 'Vérification CoBRHA désactivée.');
     }
     catch {
-        toast({
-            title: 'Erreur',
-            description: 'Impossible d\'enregistrer la configuration.',
-            variant: 'destructive',
-        });
+        toast.error('Impossible d\'enregistrer la configuration.');
     }
 }
 </script>

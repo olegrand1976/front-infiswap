@@ -5,33 +5,9 @@
             <HomePlatformStats />
             <HomeNursesMapSection />
             <HomeCommunityStory />
-            <div class="container mt-12">
-                <HomePlatform />
-            </div>
+            <HomePlatform />
             <HomePartnerServices v-if="!isLoggedIn" />
             <HomeInstitutionBanner />
-        </div>
-        <div>
-            <HomeJoinBanner />
-        </div>
-
-        <div
-            class="hidden lg:block lg:fixed lg:right-0 lg:z-30 lg:top-32 lg:w-64"
-        >
-            <a
-                href="tel:+32478023377"
-                class="block rounded-l-md text-center shadow-lg bg-gray-50 p-2 transition-transform duration-500 ease-in-out"
-            >
-                <h5 class="mb-2 text-sm font-bold">
-                    {{ $t('home.contactUsAt') }}
-                </h5>
-                <p class="mt-1 text-xl font-bold text-success">
-                    (+32) 478 02 33 77
-                </p>
-                <div class="absolute p-1 rounded-lg bg-success -top-2 -left-2 animate-pulse">
-                    <Phone class="w-4 text-white" />
-                </div>
-            </a>
         </div>
 
         <NuxtLink

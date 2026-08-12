@@ -107,9 +107,10 @@
 </template>
 
 <script lang="ts" setup>
-const localePath = useLocalePath();
 import { Mail, MapPin } from 'lucide-vue-next';
 import { useRoute } from 'vue-router';
+
+const localePath = useLocalePath();
 
 const props = defineProps<{
     theme: string;

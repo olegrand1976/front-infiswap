@@ -121,8 +121,9 @@
 </template>
 
 <script lang="ts" setup>
-const localePath = useLocalePath();
 import { Globe, Mail, MapPin, Phone } from 'lucide-vue-next';
+
+const localePath = useLocalePath();
 
 const { isLoggedIn } = useAuth();
 const props = defineProps<{

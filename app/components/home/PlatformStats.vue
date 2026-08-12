@@ -1,12 +1,21 @@
 <script setup lang="ts">
-import { Users } from 'lucide-vue-next';
+import { Headset, Quote, ShieldCheck, Users } from 'lucide-vue-next';
 
 const { locale } = useI18n();
-const { stats, loading, copy, kpiDefinitions, fetchStats, getKpiValue } = usePlatformStats();
+const { stats, loading, copy, fetchStats, getKpiValue } = usePlatformStats();
 
 await fetchStats();
 
 const dateLocale = computed(() => (locale.value === 'nl' ? 'nl-BE' : 'fr-BE'));
+
+const growthLabel = computed(() => {
+    const percent = stats.value.growth?.percent_vs_previous_30d;
+    if (percent === undefined || percent === null) {
+        return '';
+    }
+
+    return `${percent >= 0 ? '+' : ''}${percent}%`;
+});
 
 const formattedAsOf = computed(() => {
     if (!stats.value.as_of) {
@@ -28,85 +37,71 @@ const formattedAsOf = computed(() => {
 
 <template>
     <section
-        class="relative overflow-hidden bg-muted/40 py-14 sm:py-16"
+        class="bg-background py-14 text-center sm:py-20"
         aria-labelledby="platform-stats-title"
     >
-        <div
-            class="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full bg-primary/10 blur-3xl"
-            aria-hidden="true"
-        />
-        <div
-            class="pointer-events-none absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-success/10 blur-3xl"
-            aria-hidden="true"
-        />
-
-        <div class="container relative mx-auto px-4 sm:px-6">
-            <div class="mx-auto mb-10 max-w-3xl text-center">
-                <Badge
-                    variant="secondary"
-                    class="mb-4 rounded-full px-4 py-1 text-xs font-semibold uppercase tracking-wide"
-                >
-                    {{ copy.badge }}
-                </Badge>
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="mx-auto mb-8 max-w-md sm:mb-11">
                 <h2
                     id="platform-stats-title"
-                    class="text-2xl font-bold tracking-tight text-foreground sm:text-3xl lg:text-4xl"
+                    class="font-secondary text-xl font-semibold text-foreground sm:text-2xl lg:text-3xl"
                 >
                     {{ copy.sectionTitle }}
                 </h2>
-                <p class="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                <p class="mt-2 text-sm text-muted-foreground sm:mt-3">
                     {{ copy.sectionSubtitle }}
                 </p>
             </div>
 
-            <div class="mx-auto max-w-md">
-                <Card
-                    v-for="kpi in kpiDefinitions"
-                    :key="kpi.key"
-                    variant="none"
-                    class="border-none bg-white/90 shadow-md backdrop-blur-sm"
-                >
-                    <div class="flex flex-col gap-4 p-6">
-                        <div class="flex items-center justify-between">
-                            <div class="rounded-2xl bg-primary/10 p-3 text-primary">
-                                <Users
-                                    class="h-6 w-6"
-                                    aria-hidden="true"
-                                />
-                            </div>
-                            <Skeleton
-                                v-if="loading"
-                                class="h-8 w-20"
-                            />
-                            <p
-                                v-else
-                                class="text-3xl font-extrabold text-primary sm:text-4xl"
-                            >
-                                <HomeStatCounter
-                                    :value="getKpiValue(kpi.key)"
-                                    :suffix="kpi.suffix"
-                                    :aria-label="`${kpi.label}: ${getKpiValue(kpi.key)}${kpi.suffix ?? ''}`"
-                                />
-                            </p>
-                        </div>
-                        <div>
-                            <p class="text-base font-semibold text-foreground">
-                                {{ kpi.label }}
-                            </p>
-                            <p class="mt-1 text-sm text-muted-foreground">
-                                {{ kpi.description }}
-                            </p>
-                        </div>
+            <div class="mx-auto grid max-w-3xl grid-cols-1 gap-4 text-left sm:grid-cols-2">
+                <div class="rounded-2xl bg-gradient-to-br from-green-700 to-green-800 p-5 text-center shadow-lg">
+                    <span class="mx-auto mb-2 flex size-9 items-center justify-center rounded-lg bg-white/15">
+                        <Users class="size-4 text-white" />
+                    </span>
+                    <div class="flex items-baseline justify-center gap-2">
+                        <Skeleton
+                            v-if="loading"
+                            class="h-7 w-16 bg-white/20"
+                        />
+                        <span
+                            v-else
+                            class="font-secondary text-2xl font-semibold text-white"
+                        >
+                            <HomeStatCounter :value="getKpiValue('members_total')" />
+                        </span>
+                        <span
+                            v-if="!loading && growthLabel"
+                            class="rounded-full bg-white/20 px-2 py-0.5 text-xs font-bold text-white"
+                        >{{ growthLabel }}</span>
                     </div>
-                </Card>
+                    <p class="mt-1 text-xs text-white/80">
+                        {{ $t('home.kpi.membersLabel') }}
+                    </p>
+                </div>
+
+                <div class="flex flex-col rounded-2xl bg-primary p-5 shadow-lg">
+                    <Quote class="mb-2 size-5 text-white/70" />
+                    <p class="flex-1 text-xs text-white">
+                        {{ $t('home.stats.trustQuote') }}
+                    </p>
+                    <div class="mt-3 flex flex-wrap gap-2">
+                        <span class="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-2 py-1 text-xs font-bold text-white">
+                            <ShieldCheck class="size-3.5" />
+                            {{ $t('home.stats.trustBadgeVerified') }}
+                        </span>
+                        <span class="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-2 py-1 text-xs font-bold text-white">
+                            <Headset class="size-3.5" />
+                            {{ $t('home.stats.trustBadgeSupport') }}
+                        </span>
+                    </div>
+                </div>
             </div>
 
             <p
                 v-if="!loading && formattedAsOf"
-                class="mt-8 text-center text-xs text-muted-foreground/80"
+                class="mt-6 text-xs text-muted-foreground"
             >
-                {{ copy.updatedLabel }}
-                {{ formattedAsOf }}
+                {{ copy.updatedLabel }} {{ formattedAsOf }}
             </p>
         </div>
     </section>

@@ -42,7 +42,6 @@ export function usePlatformStats() {
         sectionTitle: t('home.stats.sectionTitle'),
         sectionSubtitle: t('home.stats.sectionSubtitle'),
         badge: t('home.stats.badge'),
-        badgeHint: t('home.stats.badgeHint'),
         communityTitle: t('home.stats.communityTitle'),
         communityLead: t('home.stats.communityLead'),
         communityBody: t('home.stats.communityBody'),

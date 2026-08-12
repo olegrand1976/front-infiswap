@@ -1,39 +1,51 @@
 <template>
     <div class="space-y-6">
         <section
-            aria-label="Statistiques remplacements"
+            :aria-label="t('dashboard.nurse.statsAriaLabel')"
             class="grid grid-cols-2 sm:grid-cols-4 gap-3"
         >
-            <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
-                <p class="text-[11px] uppercase tracking-wide text-gray-500">
-                    Postés (mois)
-                </p>
-                <p class="text-2xl font-bold text-primary tabular-nums mt-0.5">
+            <div class="rounded-2xl bg-gradient-to-br from-primary to-primary/80 p-4 text-white shadow-lg">
+                <span class="mb-2 flex size-8 items-center justify-center rounded-lg bg-white/15">
+                    <Send class="size-4" />
+                </span>
+                <p class="font-secondary text-2xl font-bold tabular-nums">
                     {{ reports?.me ?? 0 }}
                 </p>
-            </div>
-            <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
-                <p class="text-[11px] uppercase tracking-wide text-gray-500">
-                    Acceptés (mois)
+                <p class="mt-0.5 text-[11px] text-white/80">
+                    {{ t('dashboard.nurse.statPosted') }}
                 </p>
-                <p class="text-2xl font-bold text-success tabular-nums mt-0.5">
+            </div>
+            <div class="rounded-2xl bg-gradient-to-br from-green-700 to-green-800 p-4 text-white shadow-lg">
+                <span class="mb-2 flex size-8 items-center justify-center rounded-lg bg-white/15">
+                    <CheckCircle2 class="size-4" />
+                </span>
+                <p class="font-secondary text-2xl font-bold tabular-nums">
                     {{ reports?.accepted ?? 0 }}
                 </p>
-            </div>
-            <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
-                <p class="text-[11px] uppercase tracking-wide text-gray-500">
-                    Réponses (mois)
+                <p class="mt-0.5 text-[11px] text-white/80">
+                    {{ t('dashboard.nurse.statAccepted') }}
                 </p>
-                <p class="text-2xl font-bold text-indigo-600 tabular-nums mt-0.5">
+            </div>
+            <div class="rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-700 p-4 text-white shadow-lg">
+                <span class="mb-2 flex size-8 items-center justify-center rounded-lg bg-white/15">
+                    <MessageSquare class="size-4" />
+                </span>
+                <p class="font-secondary text-2xl font-bold tabular-nums">
                     {{ reports?.total ?? 0 }}
                 </p>
-            </div>
-            <div class="bg-white rounded-md border border-gray-100 shadow-sm p-3">
-                <p class="text-[11px] uppercase tracking-wide text-gray-500">
-                    Parrainages
+                <p class="mt-0.5 text-[11px] text-white/80">
+                    {{ t('dashboard.nurse.statResponses') }}
                 </p>
-                <p class="text-2xl font-bold text-amber-600 tabular-nums mt-0.5">
+            </div>
+            <div class="rounded-2xl bg-gradient-to-br from-amber-600 to-amber-700 p-4 text-white shadow-lg">
+                <span class="mb-2 flex size-8 items-center justify-center rounded-lg bg-white/15">
+                    <Users class="size-4" />
+                </span>
+                <p class="font-secondary text-2xl font-bold tabular-nums">
                     {{ reports?.referrals ?? 0 }}
+                </p>
+                <p class="mt-0.5 text-[11px] text-white/80">
+                    {{ t('dashboard.nurse.statReferrals') }}
                 </p>
             </div>
         </section>
@@ -45,23 +57,24 @@
         </section>
 
         <section class="flex flex-col items-stretch w-full lg:flex-row gap-6">
-            <div class="w-full bg-gray-50 rounded-lg border border-gray-100 shadow-sm lg:w-1/2">
+            <div class="prefs-panel-tint w-full rounded-2xl border border-primary/15 shadow-sm lg:w-1/2">
                 <div class="p-4 rounded">
-                    <div class="flex items-center justify-between text-primary">
-                        <h2 class="font-semibold text-base">
-                            Mes préférences
+                    <div class="flex items-center justify-between">
+                        <h2 class="font-secondary text-base font-semibold text-foreground">
+                            {{ t('dashboard.nurse.preferencesTitle') }}
                         </h2>
-                        <Button
-                            variant="none"
-                            class="mt-2 text-xs font-bold"
+                        <button
+                            type="button"
+                            class="mt-2 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-br from-primary to-primary/80 px-3 py-1.5 text-xs font-bold text-primary-foreground"
                             @click="proposalDialog = true"
                         >
-                            Boost IA
-                        </Button>
+                            <Sparkles class="size-3" />
+                            {{ t('settings.aiBoost') }}
+                        </button>
                     </div>
 
-                    <p class="hidden mt-4 text-sm text-gray-600 2xl:block">
-                        Entrez vos codes postaux et villes préférés afin de personnaliser vos résultats. Vous pouvez ajuster vos préférences à tout moment pour que les suggestions correspondent exactement à vos besoins.
+                    <p class="mt-2 text-sm text-muted-foreground">
+                        {{ t('dashboard.nurse.preferencesDesc') }}
                     </p>
 
                     <div class="sm:mt-4 2xl:mt-6">
@@ -70,15 +83,14 @@
                             :initial-cities="cities"
                             @update:initial-zip-codes="updateZipCodes"
                             @update:initial-cities="updateCities"
-                            @open-proposal="openProposalDialog"
                         />
                     </div>
 
                     <ProposalLocationModal
                         v-model="proposalDialog"
                         v-model:newly-added-value="newlyAddedValue"
-                        title="Préférences"
-                        description="Sélectionnez uniquement les codes postaux/villes que vous souhaitez conserver parmi ceux déjà cochés pour l'encodage de vos préférences"
+                        :title="t('settings.preferences')"
+                        :description="t('settings.proposalLocationDesc')"
                         :initial-zip-codes="zipCodes"
                         :initial-cities="cities"
                         :is-preference-mode="true"
@@ -86,32 +98,34 @@
                         @update:initial-cities="updateCities"
                     />
 
-                    <p class="hidden mt-8 text-sm text-gray-600 2xl:block">
-                        Indiquez la distance autour de votre localisation pour vos recherches.
-                    </p>
-
-                    <div class="relative block sm:grid sm:grid-cols-[40%_60%] sm:border sm:border-primary sm:h-9 sm:rounded-full mt-8 sm:mt-8 2xl:mt-6 overflow-hidden">
-                        <div class="flex flex-col mb-4 sm:bg-primary sm:flex-row sm:items-center sm:text-white sm:ps-4 sm:rounded-s-full">
-                            <label class="ml-3 font-semibold sm:ml-0 text-primary sm:font-normal sm:text-white">
-                                <span>Rayon de recherche</span>
-                            </label>
+                    <div class="mt-6 flex items-center justify-between gap-3 rounded-2xl border border-border bg-card px-4 py-3">
+                        <div>
+                            <p class="text-sm font-semibold text-foreground">
+                                {{ t('dashboard.nurse.radiusLabel') }}
+                            </p>
+                            <p class="text-xs text-muted-foreground">
+                                {{ t('dashboard.nurse.radiusHint') }}
+                            </p>
                         </div>
-
-                        <div class="relative flex items-center -mt-1 border border-gray-400 rounded-full sm:-mt-0 focus-within:border-primary sm:border-none sm:rounded-none">
-                            <InputIcon
-                                v-model="radiusInput"
-                                type="number"
-                                title="Appuyer sur l'icône pour valider"
-                                class="w-full h-2 pr-10 text-sm bg-transparent border-none sm:h-8 rounded indent-3"
-                                :input-class="true"
-                                min="1"
-                            />
-
+                        <div class="flex shrink-0 items-center gap-3">
                             <button
-                                class="absolute transition top-2 right-4 sm:right-2 text-primary hover:text-green-600"
-                                @click="onUpdateRadius"
+                                type="button"
+                                :aria-label="t('dashboard.nurse.decrease')"
+                                class="flex size-7 items-center justify-center rounded-full border border-border text-foreground transition hover:bg-muted"
+                                @click="decrementRadius"
                             >
-                                <Check class="w-4 h-4" />
+                                −
+                            </button>
+                            <span class="font-secondary tabular-nums text-sm font-bold text-primary">
+                                {{ radiusInput }} km
+                            </span>
+                            <button
+                                type="button"
+                                :aria-label="t('dashboard.nurse.increase')"
+                                class="flex size-7 items-center justify-center rounded-full border border-border text-foreground transition hover:bg-muted"
+                                @click="incrementRadius"
+                            >
+                                +
                             </button>
                         </div>
                     </div>
@@ -119,61 +133,74 @@
             </div>
 
             <div class="w-full lg:w-1/2 space-y-8">
-                <div class="flex flex-col w-full bg-white rounded-lg border border-gray-100 shadow-sm">
-                    <div class="p-5 bg-teal-50 rounded-t-lg">
-                        <User class="w-8 opacity-80 text-primary" />
+                <div class="flex flex-col gap-3 rounded-2xl border border-accent-green/20 bg-accent-green/10 p-5 shadow-sm">
+                    <h3 class="font-secondary text-sm font-semibold text-foreground">
+                        {{ t('dashboard.nurse.referralTitle') }}
+                    </h3>
+                    <p class="text-xs text-muted-foreground">
+                        {{ t('dashboard.nurse.referralDesc') }}
+                    </p>
+
+                    <div class="flex items-center gap-3">
+                        <span class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-accent-green to-accent-green-light text-white shadow-md">
+                            <Users class="size-5" />
+                        </span>
+                        <div>
+                            <p class="font-secondary text-2xl font-bold tabular-nums text-foreground">
+                                {{ reports?.referrals ?? 0 }}
+                            </p>
+                            <p class="text-[11px] text-muted-foreground">
+                                {{ t('dashboard.nurse.referralCountLabel') }}
+                            </p>
+                        </div>
                     </div>
-                    <div class="p-4 space-y-3">
-                        <h3 class="text-sm text-gray-900">
-                            Collègues inscrits via votre parrainage
-                        </h3>
-                        <p class="text-xs text-gray-500">
-                            Partagez InfiSwap — plus le réseau grandit, plus vous trouvez de remplacements.
-                        </p>
-                        <p class="text-3xl font-bold text-primary">
-                            {{ reports?.referrals ?? 0 }}
-                        </p>
+
+                    <div class="flex items-center gap-2 rounded-xl border border-input bg-background py-1 pl-3 pr-1">
+                        <span class="min-w-0 flex-1 truncate text-xs text-muted-foreground">
+                            {{ referralShareUrl }}
+                        </span>
                         <button
                             type="button"
-                            class="text-sm font-medium text-primary hover:underline"
+                            class="flex shrink-0 items-center gap-1.5 rounded-lg bg-gradient-to-br from-accent-green to-accent-green-light px-3 py-2 text-xs font-bold text-white"
                             @click="copyReferralLink"
                         >
-                            Copier mon lien de parrainage
+                            <Copy class="size-3" />
+                            {{ t('dashboard.nurse.copy') }}
                         </button>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-lg border border-gray-100 shadow-sm">
-                    <h3 class="p-3 text-white rounded-t-lg bg-primary text-sm font-semibold">
-                        Annonces auxquelles j'ai répondu / mois
-                    </h3>
-                    <div v-if="loading">
-                        <Skeleton class="h-64 m-8 bg-gray-200" />
-                    </div>
-                    <div
-                        v-else
-                        class="p-4"
-                    >
-                        <ClientOnly>
-                            <LineChart
-                                :data="formattedData"
-                                index="month"
-                                :categories="['annonces']"
-                                :colors="['var(--primary)']"
-                                :y-formatter="(tick) => `${tick}`"
-                            />
-                        </ClientOnly>
                     </div>
                 </div>
             </div>
         </section>
+
+        <div class="overflow-hidden rounded-2xl bg-card shadow-sm">
+            <h3 class="p-3 text-primary-foreground rounded-t-2xl bg-primary text-sm font-semibold">
+                {{ t('dashboard.nurse.chartTitle') }}
+            </h3>
+            <div v-if="loading">
+                <Skeleton class="h-64 m-8 bg-muted" />
+            </div>
+            <div
+                v-else
+                class="p-4"
+            >
+                <ClientOnly>
+                    <LineChart
+                        :data="formattedData"
+                        index="month"
+                        :categories="['annonces']"
+                        :colors="['var(--primary)']"
+                        :y-formatter="(tick) => `${tick}`"
+                    />
+                </ClientOnly>
+            </div>
+        </div>
     </div>
 
     <Dialog v-model:open="configDialog">
         <DialogContent class="max-w-2xl h-[60vh] overflow-y-auto">
             <DialogHeader>
                 <DialogTitle class="text-xl text-primary">
-                    Préférences de recherche
+                    {{ t('dashboard.nurse.searchPreferencesTitle') }}
                 </DialogTitle>
             </DialogHeader>
 
@@ -181,7 +208,7 @@
                 <div>
                     <div class="space-y-2">
                         <label class="text-sm font-medium text-gray-700">
-                            Quel rayon de recherche préférez-vous ?
+                            {{ t('dashboard.nurse.radiusQuestion') }}
                         </label>
 
                         <InputIcon
@@ -192,14 +219,14 @@
                             :placeholder="'5 km'"
                         />
 
-                        <label class="text-[0.65rem]"> Ce rayon s’applique aux recherches de remplacement autour de vos codes postaux préférés.</label>
+                        <label class="text-[0.65rem]"> {{ t('dashboard.nurse.radiusApplyHint') }}</label>
                     </div>
                 </div>
 
                 <div>
                     <div class="space-y-2">
                         <label class="text-sm font-medium text-gray-700">
-                            Quels sont vos préférences pour une remplacement ?
+                            {{ t('dashboard.nurse.preferencesQuestion') }}
                         </label>
 
                         <div class="hidden lg:flex space-x-4">
@@ -207,8 +234,8 @@
                                 <InputTagManager
                                     v-model="formData.zipCodesArray"
                                     :icon="Inbox"
-                                    label="Codes postaux *"
-                                    :placeholder="formData.zipCodesArray.length === 0 ? 'Codes postaux *' : 'Codes postaux *'"
+                                    :label="t('dashboard.nurse.zipCodesFieldLabel')"
+                                    :placeholder="t('dashboard.nurse.zipCodesFieldLabel')"
                                     :is-mobile="false"
                                     :comma-validation="false"
                                     @keydown.enter.prevent
@@ -219,8 +246,8 @@
                                 <InputTagManager
                                     v-model="formData.citiesArray"
                                     :icon="Building2"
-                                    label="Villes associées"
-                                    :placeholder="formData.citiesArray.length === 0 ? 'Villes' : 'Villes'"
+                                    :label="t('dashboard.nurse.citiesFieldLabelDesktop')"
+                                    :placeholder="t('replacements.colCities')"
                                     :is-mobile="false"
                                     :comma-validation="true"
                                     :no-space-validation="true"
@@ -233,8 +260,8 @@
                                 <InputTagManager
                                     v-model="formData.zipCodesArray"
                                     :icon="Inbox"
-                                    label="Codes postaux *"
-                                    :placeholder="formData.zipCodesArray.length === 0 ? 'Codes postaux *' : 'Codes postaux *'"
+                                    :label="t('dashboard.nurse.zipCodesFieldLabel')"
+                                    :placeholder="t('dashboard.nurse.zipCodesFieldLabel')"
                                     :is-mobile="true"
                                     :comma-validation="false"
                                     @keydown.enter.prevent
@@ -245,8 +272,8 @@
                                 <InputTagManager
                                     v-model="formData.citiesArray"
                                     :icon="Building2"
-                                    label="Villes"
-                                    :placeholder="formData.citiesArray.length === 0 ? 'Villes' : 'Villes'"
+                                    :label="t('replacements.colCities')"
+                                    :placeholder="t('replacements.colCities')"
                                     :is-mobile="true"
                                     :comma-validation="true"
                                     :no-space-validation="true"
@@ -260,7 +287,7 @@
                 <div>
                     <div class="space-y-2">
                         <label class="text-sm font-medium text-gray-700">
-                            Comment nous avez-vous connu ?
+                            {{ t('dashboard.nurse.referralSourceQuestion') }}
                         </label>
 
                         <div class="relative w-full">
@@ -276,7 +303,7 @@
                                     disabled
                                     value=""
                                 >
-                                    Sélectionnez une option
+                                    {{ t('dashboard.nurse.selectOption') }}
                                 </option>
                                 <option
                                     v-for="option in referral_source"
@@ -307,8 +334,8 @@
                         <InputIcon
                             v-if="formData.referralSource.startsWith('other:')"
                             :value="formData.referralSource.replace(/^other:/, '')"
-                            placeholder="Veuillez préciser"
-                            :icon="EllipsisHorizontalCircleIcon"
+                            :placeholder="t('dashboard.nurse.pleaseSpecify')"
+                            :icon="CircleEllipsis"
                             class="w-full"
                             @input="event => formData.referralSource = `other:${event.target.value}`"
                         />
@@ -322,13 +349,13 @@
                     class="w-full sm:w-auto"
                     @click="configDialog = false"
                 >
-                    <span class="mt-2">Annuler</span>
+                    <span class="mt-2">{{ t('common.cancel') }}</span>
                 </Button>
                 <Button
                     class="w-full sm:w-auto"
                     @click="handleSetPreference"
                 >
-                    <span class="mt-2">Enregistrer</span>
+                    <span class="mt-2">{{ t('common.save') }}</span>
                 </Button>
             </DialogFooter>
         </DialogContent>
@@ -336,7 +363,7 @@
 </template>
 
 <script setup lang="ts">
-import { Building2, Check, CircleHelp, Inbox, Map, User } from 'lucide-vue-next';
+import { Building2, CheckCircle2, CircleEllipsis, CircleHelp, Copy, Inbox, Map, MessageSquare, Send, Sparkles, Users } from 'lucide-vue-next';
 import { LineChart } from '@/components/ui/chart-line';
 import InputPreferences from '@/components/InputPreferences.vue';
 import InputTagManager from '~/components/InputTagManager.vue';
@@ -360,6 +387,7 @@ const props = defineProps<{
     tours: Patient[];
 }>();
 
+const { t } = useI18n();
 const loading = ref(true);
 const { updateRadiusKm, createPreferences, refresh } = useAuth();
 const user = useUser();
@@ -386,25 +414,8 @@ async function copyReferralLink() {
 
     await navigator.clipboard.writeText(referralShareUrl.value);
     trackReferralCopy();
-    $toast({ description: 'Lien copié avec succès' });
+    $toast({ description: t('dashboard.nurse.linkCopied') });
 }
-
-const arePreferencesEmpty = () => {
-    if (!user.value?.settings) return true;
-
-    try {
-        const settings: UserSettings = JSON.parse(user.value.settings || '{}');
-
-        const hasZipCodes = settings.replacement?.zip_codes?.filter(Boolean).length > 0;
-        const hasCities = settings.replacement?.cities?.filter(Boolean).length > 0;
-        const hasReferral = user.value.referral_source !== '';
-
-        return !(hasZipCodes && hasCities && hasReferral);
-    }
-    catch {
-        return true;
-    }
-};
 
 const formatDate = (dateString: string) => {
     const [year, month] = dateString.split('-');
@@ -429,6 +440,16 @@ const radiusInput = ref(Number(radiusKm.value));
 
 const onUpdateRadius = async () => {
     await updateRadiusKm(radiusInput.value);
+};
+
+const decrementRadius = async () => {
+    radiusInput.value = Math.max(1, radiusInput.value - 1);
+    await onUpdateRadius();
+};
+
+const incrementRadius = async () => {
+    radiusInput.value += 1;
+    await onUpdateRadius();
 };
 
 const zipCodes = ref<string[]>([]);
@@ -460,48 +481,32 @@ const updateCities = async (newCities: string[]) => {
     await nextTick();
 };
 
-const openProposalDialog = (value: string) => {
-    newlyAddedValue.value = value;
-    proposalDialog.value = true;
-};
-
-const previousMonth = ref('');
-
-const currentDate = new Date();
-const months = [
-    'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
-    'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre',
-];
-const currentMonthIndex = currentDate.getMonth();
-const previousMonthIndex = (currentMonthIndex - 1 + 12) % 12;
-previousMonth.value = months[previousMonthIndex];
-
-const referral_source = [
+const referral_source = computed(() => [
     {
-        label: 'Publicité Facebook',
+        label: t('dashboard.nurse.referralSource.facebookAds'),
         value: 'facebook_ads',
     },
     {
-        label: 'Post page Infiswap',
+        label: t('dashboard.nurse.referralSource.infiswapPost'),
         value: 'infiswap_post',
     },
     {
-        label: 'Communication forum infirmière',
+        label: t('dashboard.nurse.referralSource.nurseForum'),
         value: 'nurse_forum',
     },
     {
-        label: 'Moteur de recherche',
+        label: t('dashboard.nurse.referralSource.searchEngine'),
         value: 'search_engine',
     },
     {
-        label: 'Bouche à oreille',
+        label: t('dashboard.nurse.referralSource.wordOfMouth'),
         value: 'word_of_mouth',
     },
     {
-        label: 'Autres',
+        label: t('dashboard.nurse.referralSource.other'),
         value: 'other:',
     },
-];
+]);
 
 const selectedReferral = computed({
     get() {
@@ -555,11 +560,11 @@ const handleSetPreference = async () => {
         zipCodes.value = [...formData.zipCodesArray];
         cities.value = [...formData.citiesArray];
 
-        $toast({ description: 'Préférences enregistrées avec succès' });
+        $toast({ description: t('dashboard.nurse.preferencesSaved') });
         configDialog.value = false;
     }
     catch {
-        $toast({ variant: 'destructive', description: 'Erreur lors de l’enregistrement' });
+        $toast({ variant: 'destructive', description: t('dashboard.nurse.saveError') });
     }
 };
 
@@ -575,5 +580,8 @@ onMounted(() => {
 }
 .relative {
     padding-bottom: 20px;
+}
+.prefs-panel-tint {
+    background: linear-gradient(160deg, color-mix(in oklch, var(--primary) 9%, var(--card)), var(--card) 65%);
 }
 </style>

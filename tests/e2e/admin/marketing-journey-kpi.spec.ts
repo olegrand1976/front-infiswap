@@ -134,7 +134,7 @@ async function mockMarketingJourneyApis(page: Page): Promise<void> {
     });
 }
 
-test.describe('Admin marketing Journey KPI', () => {
+test.describe('Admin marketing Journey KPI', { tag: '@p1' }, () => {
     test('ouvre le dialog template / destinataires au clic KPI', async ({ page }) => {
         const email = process.env.E2E_ADMIN_EMAIL || process.env.E2E_LOGIN_EMAIL;
         const password = process.env.E2E_ADMIN_PASSWORD || process.env.E2E_LOGIN_PASSWORD;

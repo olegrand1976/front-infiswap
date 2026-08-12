@@ -7,6 +7,7 @@ export type GoogleReviewSource =
     | 'platform_access'
     | 'boost'
     | 'contract'
+    | 'pro'
     | 'replacement_accepted'
     | 'onboarding_quest'
     | 'onboarding_complete';
@@ -37,6 +38,10 @@ const GOOGLE_REVIEW_COPY: Record<GoogleReviewSource, GoogleReviewCopy> = {
     contract: {
         title: 'Remplacement confirmé',
         subtitle: 'Recommandez InfiSwap à vos collègues avec un avis Google.',
+    },
+    pro: {
+        title: 'Bienvenue dans Infiswap Premium',
+        subtitle: 'Votre avis Google aide le réseau à attirer plus de remplaçantes.',
     },
     replacement_accepted: {
         title: 'Remplaçant trouvé',
@@ -104,6 +109,8 @@ export function mapCelebrationVariantToReviewSource(
             return 'boost';
         case 'contract':
             return 'contract';
+        case 'pro':
+            return 'pro';
         default: {
             const _exhaustive: never = variant;
             return _exhaustive;

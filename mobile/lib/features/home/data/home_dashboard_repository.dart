@@ -1,0 +1,56 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../core/api/api_client.dart';
+import '../../replacements/data/replacements_repository.dart';
+import '../../replacements/models/dashboard_replacements_summary.dart';
+import '../models/home_dashboard_data.dart';
+import '../models/user_activity_stats.dart';
+
+class HomeDashboardRepository {
+  HomeDashboardRepository({
+    required ApiClient apiClient,
+    required ReplacementsRepository replacementsRepository,
+  })  : _api = apiClient,
+        _replacements = replacementsRepository;
+
+  final ApiClient _api;
+  final ReplacementsRepository _replacements;
+
+  Future<HomeDashboardData> fetch(int userId) async {
+    final statsFuture = _fetchActivity();
+    final summaryFuture = _replacements.fetchDashboardSummary();
+
+    final results = await Future.wait<Object>([statsFuture, summaryFuture]);
+
+    return HomeDashboardData(
+      stats: results[0] as UserActivityStats,
+      replacements: results[1] as DashboardReplacementsSummary,
+    );
+  }
+
+  Future<UserActivityStats> _fetchActivity() async {
+    try {
+      final response = await _api.get<Map<String, dynamic>>('/reports');
+      final replacement = response.data?['replacement'];
+      if (replacement is Map<String, dynamic>) {
+        return UserActivityStats.fromJson(replacement);
+      }
+      if (replacement is Map) {
+        return UserActivityStats.fromJson(
+          replacement.map((key, value) => MapEntry(key.toString(), value)),
+        );
+      }
+    } catch (_) {
+      // Fallback: null counts displayed as "—"
+    }
+
+    return const UserActivityStats();
+  }
+}
+
+final homeDashboardRepositoryProvider = Provider<HomeDashboardRepository>((ref) {
+  return HomeDashboardRepository(
+    apiClient: ref.watch(apiClientProvider),
+    replacementsRepository: ref.watch(replacementsRepositoryProvider),
+  );
+});

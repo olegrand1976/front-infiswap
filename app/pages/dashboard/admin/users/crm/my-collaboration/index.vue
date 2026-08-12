@@ -56,20 +56,36 @@
                     </h2>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                         <div>
-                            <p class="text-muted-foreground">Acquise</p>
-                            <p class="font-semibold">{{ formatEuro(kpis?.commission_earned ?? 0) }}</p>
+                            <p class="text-muted-foreground">
+                                Acquise
+                            </p>
+                            <p class="font-semibold">
+                                {{ formatEuro(kpis?.commission_earned ?? 0) }}
+                            </p>
                         </div>
                         <div>
-                            <p class="text-muted-foreground">Versée</p>
-                            <p class="font-semibold">{{ formatEuro(kpis?.commission_paid ?? 0) }}</p>
+                            <p class="text-muted-foreground">
+                                Versée
+                            </p>
+                            <p class="font-semibold">
+                                {{ formatEuro(kpis?.commission_paid ?? 0) }}
+                            </p>
                         </div>
                         <div>
-                            <p class="text-muted-foreground">Reprises</p>
-                            <p class="font-semibold text-red-600">{{ formatEuro(kpis?.commission_reversed ?? 0) }}</p>
+                            <p class="text-muted-foreground">
+                                Reprises
+                            </p>
+                            <p class="font-semibold text-red-600">
+                                {{ formatEuro(kpis?.commission_reversed ?? 0) }}
+                            </p>
                         </div>
                         <div>
-                            <p class="text-muted-foreground">Impact net</p>
-                            <p class="font-semibold">{{ formatEuro(kpis?.net_remuneration_impact ?? 0) }}</p>
+                            <p class="text-muted-foreground">
+                                Impact net
+                            </p>
+                            <p class="font-semibold">
+                                {{ formatEuro(kpis?.net_remuneration_impact ?? 0) }}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -90,8 +106,12 @@
                         class="flex flex-wrap justify-between gap-2 border-t pt-3 text-sm"
                     >
                         <div>
-                            <p class="font-medium">{{ contract.reference ?? `#${contract.id}` }}</p>
-                            <p class="text-muted-foreground">{{ contractTypeLabel(contract.contract_type) }} — {{ contract.status }}</p>
+                            <p class="font-medium">
+                                {{ contract.reference ?? `#${contract.id}` }}
+                            </p>
+                            <p class="text-muted-foreground">
+                                {{ contractTypeLabel(contract.contract_type) }} — {{ contract.status }}
+                            </p>
                         </div>
                         <Button
                             v-if="contract.status !== 'signed'"
@@ -139,7 +159,7 @@ const isCollaborationEligible = computed(() =>
 
 const hasFrameworkContract = computed(() =>
     (collaboration.value?.contracts ?? []).some(
-        (contract) => contract.contract_type === 'commercial_collaboration_framework',
+        contract => contract.contract_type === 'commercial_collaboration_framework',
     ),
 );
 

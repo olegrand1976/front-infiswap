@@ -1,5 +1,5 @@
 import { expect, type Locator, type Page } from '@playwright/test';
-import type { RegistrationFormData } from './test-data';
+import { AUTH_TOKEN_COOKIE, type RegistrationFormData } from './test-data';
 
 function visibleRegistrationForm(page: Page): Locator {
     return page.locator('form:visible').first();
@@ -17,10 +17,44 @@ export async function seedCookieConsent(page: Page): Promise<void> {
                 'infiswap:cookie_consent:v1',
                 JSON.stringify({ necessary: true, analytics: false, marketing: false }),
             );
-        } catch {
+        }
+        catch {
             // storage indisponible : le bandeau s'affichera, sans bloquer le script
         }
     });
+}
+
+/**
+ * Simule le cookie host-only vide (régression login bounce août 2026).
+ * Une seule fois via evaluate (addCookies refuse value='', addInitScript
+ * réinjecterait le vide à chaque navigation).
+ */
+export async function seedEmptyAuthTokenCookie(page: Page): Promise<void> {
+    const baseURL = process.env.BASE_URL || 'http://127.0.0.1:3000';
+    await page.goto(new URL('/', baseURL).href);
+    await page.evaluate((cookieName: string) => {
+        document.cookie = `${cookieName}=; path=/; SameSite=Lax`;
+    }, AUTH_TOKEN_COOKIE);
+}
+
+/**
+ * Ferme le gate niveau d'études (overlay Dialog z-50) qui bloque le menu compte.
+ */
+export async function dismissEducationLevelGateIfOpen(page: Page): Promise<void> {
+    const gate = page.locator('[role="dialog"]').filter({
+        has: page.locator('input[name="education-level-gate"]'),
+    });
+
+    try {
+        await gate.waitFor({ state: 'visible', timeout: 2_000 });
+    }
+    catch {
+        return;
+    }
+
+    await gate.locator('input[name="education-level-gate"]').first().check({ force: true });
+    await gate.getByRole('button', { name: 'Valider' }).click({ force: true });
+    await expect(gate).toBeHidden({ timeout: 15_000 });
 }
 
 export async function fillLoginForm(page: Page, identifier: string, password: string): Promise<void> {
@@ -36,6 +70,78 @@ export async function submitLogin(page: Page): Promise<void> {
     }
 
     await page.getByRole('button', { name: /Se connecter|Inloggen/ }).first().click();
+}
+
+/** Attend le dashboard authentifié (évite le skeleton tant que user est null). */
+export async function waitForAuthenticatedDashboard(page: Page): Promise<void> {
+    await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
+    // Soft nav peut basculer en hard reload (window.location.assign).
+    await page.waitForLoadState('domcontentloaded');
+    await expect(page.getByTestId('account-menu-trigger').first()).toBeVisible({ timeout: 45_000 });
+}
+
+/** Cookie session non vide (évite INFISWAP_TOKEN= host-only qui masque le vrai token). */
+export async function getAuthTokenCookieValue(context: { cookies: () => Promise<Array<{ name: string; value: string }>> }): Promise<string | undefined> {
+    const cookies = await context.cookies();
+    const match = cookies
+        .filter(cookie => cookie.name === AUTH_TOKEN_COOKIE)
+        .map(cookie => cookie.value.trim())
+        .find(Boolean);
+
+    return match;
+}
+
+/** Déconnexion session (contrat useAuth.logout) — le menu UI est masqué par le gate études (overlay z-50). */
+export async function logoutViaDashboard(page: Page): Promise<void> {
+    await waitForAuthenticatedDashboard(page);
+
+    const apiURL = (process.env.API_URL || '').replace(/\/$/, '');
+
+    await page.evaluate(async ({ api, cookieName }) => {
+        const token = document.cookie
+            .split(';')
+            .map(part => part.trim())
+            .filter(part => part.startsWith(`${cookieName}=`))
+            .map(part => {
+                try {
+                    return decodeURIComponent(part.slice(cookieName.length + 1)).trim();
+                }
+                catch {
+                    return part.slice(cookieName.length + 1).trim();
+                }
+            })
+            .find(Boolean) ?? '';
+
+        if (api && token) {
+            try {
+                await fetch(`${api}/api/logout`, {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        Accept: 'application/json',
+                    },
+                });
+            }
+            catch {
+                // Purge locale même si l'API échoue
+            }
+        }
+
+        for (const directive of [
+            `${cookieName}=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT`,
+            `${cookieName}=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; samesite=lax`,
+            `${cookieName}=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=lax`,
+        ]) {
+            document.cookie = directive;
+        }
+    }, { api: apiURL, cookieName: AUTH_TOKEN_COOKIE });
+
+    await page.context().clearCookies();
+    await page.goto('/');
+    await expect(page).toHaveURL((url) => {
+        const path = typeof url === 'string' ? new URL(url).pathname : url.pathname;
+        return path === '/' || path === '';
+    }, { timeout: 15_000 });
 }
 
 export async function fillRegistrationForm(page: Page, data: RegistrationFormData): Promise<void> {
@@ -103,7 +209,7 @@ export async function cleanupE2eUsers(apiUrl: string): Promise<void> {
         method: 'POST',
         headers: {
             'X-Monitoring-Secret': secret,
-            Accept: 'application/json',
+            'Accept': 'application/json',
         },
     }).catch(() => undefined);
 }

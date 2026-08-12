@@ -1,30 +1,28 @@
 <template>
     <div class="lg:ml-20 xl:ml-0">
-        <ArrowLeft
-            class="size-6 cursor-pointer hover:text-primary mt-4"
-            title="Retour"
-            @click="goBack"
-        />
+        <DashboardAdminPageHeader title="Mon compte" />
 
-        <div class="mt-6 bg-gray-100 flex flex-col space-y-4 sm:space-y-0 sm:flex-row py-4 sm:py-0 px-4 rounded-lg items-center sm:h-12">
-            <h1 class="text-primary">
-                Mon compte
-            </h1>
-        </div>
+        <DashboardAdminPageContent>
+            <div class="grid grid-cols-1 gap-4 p-4 sm:grid-cols-3 sm:gap-8 sm:p-6">
+                <div>
+                    <h2 class="font-secondary text-base font-semibold text-foreground">
+                        Compte
+                    </h2>
+                    <p class="mt-2 text-sm text-muted-foreground">
+                        Vous pouvez supprimer votre compte. Cette action désactive l’accès et anonymise vos données personnelles
+                        (sous réserve des obligations légales de conservation, ex. facturation).
+                    </p>
+                </div>
 
-        <div class="mt-6 mb-12 max-w-xl">
-            <p class="text-gray-600 mb-4">
-            Vous pouvez supprimer votre compte. Cette action désactive l’accès et anonymise vos données personnelles
-            (sous réserve des obligations légales de conservation, ex. facturation).
-            </p>
-            <DeleteAccountSection />
-        </div>
+                <div class="sm:col-span-2">
+                    <DeleteAccountSection />
+                </div>
+            </div>
+        </DashboardAdminPageContent>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeft } from 'lucide-vue-next';
-import { goBack } from '~/lib/utils';
 import DeleteAccountSection from '@/components/account/DeleteAccountSection.vue';
 
 useHead({

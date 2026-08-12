@@ -22,7 +22,7 @@ const forwardedProps = useForwardProps(delegatedProps);
     <SelectTrigger
         v-bind="forwardedProps"
         :class="cn(
-            'flex h-10 l w-full items-center bg-transparent px-3 py-2 text-sm ring-offset-background data-placeholder:text-muted-foreground text-foreground/80 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 rounded-full [&>span]:truncate text-start border-2 border-gray-300',
+            'flex h-10 l w-full items-center bg-transparent px-3 py-2 text-sm ring-offset-background data-placeholder:text-muted-foreground text-foreground/80 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 rounded-full [&>span]:truncate text-start border-2 border-gray-300 transition-colors duration-150',
             props.class,
         )"
     >
@@ -34,12 +34,12 @@ const forwardedProps = useForwardProps(delegatedProps);
         </template>
 
         <template v-else>
-            <div class="w-full flex items-center justify-between">
-                <slot />
+            <div class="w-full flex items-center justify-between gap-2">
+                <div class="flex min-w-0 flex-1 items-center gap-2">
+                    <slot />
+                </div>
                 <SelectIcon as-child>
-                    <div class="w-full flex justify-end">
-                        <ChevronDown class="w-5 h-5 text-primary font-bold opacity-50 shrink-0 ms-6" />
-                    </div>
+                    <ChevronDown class="w-5 h-5 text-primary font-bold opacity-50 shrink-0" />
                 </SelectIcon>
             </div>
         </template>

@@ -3,7 +3,7 @@ import { fillLoginForm, seedCookieConsent, submitLogin } from '../fixtures/auth-
 
 const SIMULATED_SESSION = 'cs_e2e_simulated';
 
-test.describe('Retours Stripe simulés', () => {
+test.describe('Retours Stripe simulés', { tag: '@p0' }, () => {
     test.beforeEach(async ({ page }) => {
         const email = process.env.E2E_LOGIN_EMAIL;
         const password = process.env.E2E_LOGIN_PASSWORD;

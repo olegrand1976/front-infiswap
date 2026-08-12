@@ -12,100 +12,10 @@
                     to="/"
                     class="flex items-center"
                 >
-                    <svg
-                        class="h-12 w-auto sm:h-14"
-                        viewBox="0 0 420 120"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        aria-label="InfiSwap"
-                    >
-                        <g transform="translate(10, 15)">
-                            <rect
-                                x="25"
-                                y="5"
-                                width="28"
-                                height="66"
-                                rx="6"
-                                fill="#46d88e"
-                                transform="rotate(-8, 39, 38)"
-                            />
-                            <rect
-                                x="28"
-                                y="8"
-                                width="22"
-                                height="60"
-                                rx="4"
-                                fill="#FEFEEA"
-                                transform="rotate(-8, 39, 38)"
-                            />
-                            <circle
-                                cx="34"
-                                cy="11"
-                                r="1.5"
-                                fill="#1e293b"
-                            />
-                            <rect
-                                x="33"
-                                y="63"
-                                width="8"
-                                height="2"
-                                rx="1"
-                                fill="#46d88e"
-                            />
-                            <path
-                                d="M 12 30 C 10 15, 22 5, 38 7 C 54 9, 65 20, 61 35 C 57 50, 42 62, 33 69"
-                                stroke="#d3405c"
-                                stroke-width="2.5"
-                                fill="none"
-                                stroke-linecap="round"
-                            />
-                            <circle
-                                cx="12"
-                                cy="30"
-                                r="2.5"
-                                fill="#d3405c"
-                            />
-                            <circle
-                                cx="61"
-                                cy="35"
-                                r="2.5"
-                                fill="#d3405c"
-                            />
-                            <path
-                                d="M 33 69 C 25 76, 12 78, 8 68 C 4 58, 18 56, 14 68 C 10 80, -2 74, 1 65"
-                                stroke="#d3405c"
-                                stroke-width="1.8"
-                                fill="none"
-                            />
-                            <circle
-                                cx="14"
-                                cy="68"
-                                r="3.5"
-                                fill="#d3405c"
-                            />
-                        </g>
-                        <text
-                            x="95"
-                            y="65"
-                            font-family="'Plus Jakarta Sans', sans-serif"
-                            font-weight="800"
-                            font-size="52"
-                            letter-spacing="-1"
-                        >
-                            <tspan fill="#46d88e">infi</tspan><tspan fill="#d3405c">Swap</tspan>
-                        </text>
-                        <text
-                            x="98"
-                            y="90"
-                            font-family="'Plus Jakarta Sans', sans-serif"
-                            font-weight="500"
-                            font-size="14"
-                            fill="#46d88e"
-                            letter-spacing="3.5"
-                        >
-                            vos soins sans interruption
-                        </text>
-                    </svg>
+                    <LayoutsAppImage
+                        src="logo.png"
+                        class="relative h-10 lg:h-12 w-auto"
+                    />
                 </NuxtLink>
 
                 <div

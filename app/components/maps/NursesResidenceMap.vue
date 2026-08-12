@@ -13,9 +13,9 @@
 </template>
 
 <script setup lang="ts">
-import type { NursesMapPoint, NursesMapPointType } from '@/composables/useNursesMap';
 import type { Circle, LayerGroup, Map as LeafletMap } from 'leaflet';
 import type LType from 'leaflet';
+import type { NursesMapPoint, NursesMapPointType } from '@/composables/useNursesMap';
 import 'leaflet/dist/leaflet.css';
 
 export type NursesMapSelectPointPayload = {

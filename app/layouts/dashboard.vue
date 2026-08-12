@@ -22,6 +22,20 @@
                 </div>
 
                 <div class="ml-auto flex min-w-0 items-center gap-1 sm:gap-2">
+                    <NuxtLink
+                        v-if="isProSubscriber"
+                        to="/dashboard/subscriptions"
+                        class="flex shrink-0 items-center gap-1.5 rounded-full border border-primary/40 bg-primary/10 px-2.5 py-1 shadow-sm sm:px-3 sm:py-1.5"
+                        title="Abonnement Infiswap Premium actif"
+                    >
+                        <Crown
+                            class="size-4 shrink-0 text-primary"
+                            aria-hidden="true"
+                        />
+                        <span class="hidden text-xs font-semibold text-primary sm:inline">
+                            Premium
+                        </span>
+                    </NuxtLink>
                     <div
                         v-if="showNetworkMemberBadge"
                         class="flex shrink-0 items-center gap-1.5 rounded-full border border-amber-400/70 bg-gradient-to-r from-amber-50 via-yellow-50 to-amber-100 px-2.5 py-1 shadow-sm sm:px-3 sm:py-1.5"
@@ -212,85 +226,99 @@
                         </Select>
 
                         <DropdownMenu>
-                            <DropdownMenuTrigger class="flex shrink-0 items-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-                                <ProfileLifetimeAccessBadge session-consumer>
-                                    <ProfileInamiVerifiedBadge>
-                                        <Avatar v-if="user?.profil_url != null">
-                                            <AvatarImage :src="useRuntimeConfig().public.API_URL + '/storage/' + hasChangedAvatar" />
-                                            <AvatarFallback>{{ user.firstname.slice(1, 1).toUpperCase() + user.lastname.slice(1, 1).toUpperCase() }}</AvatarFallback>
-                                        </Avatar>
-                                        <CircleUser
-                                            v-else
-                                            class="size-11 text-black/40"
-                                        />
-                                    </ProfileInamiVerifiedBadge>
-                                </ProfileLifetimeAccessBadge>
+                            <DropdownMenuTrigger as-child>
+                                <button
+                                    type="button"
+                                    data-testid="account-menu-trigger"
+                                    class="flex shrink-0 items-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                                >
+                                    <ProfilePremiumBadge>
+                                        <ProfileLifetimeAccessBadge session-consumer>
+                                            <ProfileInamiVerifiedBadge>
+                                                <Avatar v-if="user?.profil_url != null">
+                                                    <AvatarImage :src="useRuntimeConfig().public.API_URL + '/storage/' + hasChangedAvatar" />
+                                                    <AvatarFallback>{{ user.firstname.slice(1, 1).toUpperCase() + user.lastname.slice(1, 1).toUpperCase() }}</AvatarFallback>
+                                                </Avatar>
+                                                <CircleUser
+                                                    v-else
+                                                    class="size-11 text-black/40"
+                                                />
+                                            </ProfileInamiVerifiedBadge>
+                                        </ProfileLifetimeAccessBadge>
+                                    </ProfilePremiumBadge>
+                                </button>
                             </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                            <DropdownMenuLabel>{{ t('accountMenu.myAccount') }}</DropdownMenuLabel>
-                            <template v-if="hasMultipleContexts">
-                                <DropdownMenuSeparator />
-                                <DropdownMenuLabel class="text-xs text-muted-foreground">
-                                    {{ t('accountMenu.switchSpace') }}
-                                </DropdownMenuLabel>
-                                <DropdownMenuItem
-                                    v-if="canAccessNurse"
-                                    :disabled="activeContext === 'nurse'"
-                                    @click="switchContext('nurse')"
-                                >
-                                    {{ activeContext === 'nurse' ? '✓ ' : '' }}{{ t('accountMenu.nurse') }}
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    v-if="canAccessAdmin"
-                                    :disabled="activeContext === 'admin'"
-                                    @click="switchContext('admin')"
-                                >
-                                    {{ activeContext === 'admin' ? '✓ ' : '' }}{{ t('accountMenu.admin') }}
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    v-if="canAccessInstitution"
-                                    :disabled="activeContext === 'institution'"
-                                    @click="switchContext('institution')"
-                                >
-                                    {{ activeContext === 'institution' ? '✓ ' : '' }}{{ t('accountMenu.institution') }}
-                                </DropdownMenuItem>
-                            </template>
+                            <DropdownMenuContent>
+                                <DropdownMenuLabel>{{ t('accountMenu.myAccount') }}</DropdownMenuLabel>
+                                <template v-if="hasMultipleContexts">
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuLabel class="text-xs text-muted-foreground">
+                                        {{ t('accountMenu.switchSpace') }}
+                                    </DropdownMenuLabel>
+                                    <DropdownMenuItem
+                                        v-if="canAccessNurse"
+                                        :disabled="activeContext === 'nurse'"
+                                        @click="switchContext('nurse')"
+                                    >
+                                        {{ activeContext === 'nurse' ? '✓ ' : '' }}{{ t('accountMenu.nurse') }}
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        v-if="canAccessAdmin"
+                                        :disabled="activeContext === 'admin'"
+                                        @click="switchContext('admin')"
+                                    >
+                                        {{ activeContext === 'admin' ? '✓ ' : '' }}{{ t('accountMenu.admin') }}
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        v-if="canAccessInstitution"
+                                        :disabled="activeContext === 'institution'"
+                                        @click="switchContext('institution')"
+                                    >
+                                        {{ activeContext === 'institution' ? '✓ ' : '' }}{{ t('accountMenu.institution') }}
+                                    </DropdownMenuItem>
+                                </template>
 
-                            <template v-if="secondaryRoles.length > 0">
+                                <template v-if="secondaryRoles.length > 0">
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem
+                                        v-for="role in secondaryRoles"
+                                        :key="role"
+                                        @click="switchRole(role)"
+                                    >
+                                        {{ t('accountMenu.switchToRole', { role: getRole(role) }) }}
+                                    </DropdownMenuItem>
+                                </template>
+
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
-                                    v-for="role in secondaryRoles"
-                                    :key="role"
-                                    @click="switchRole(role)"
+                                    v-if="showReenableNetworkJourney"
+                                    @click="reenableNetworkJourney"
                                 >
-                                    {{ t('accountMenu.switchToRole', { role: getRole(role) }) }}
+                                    {{ t('accountMenu.reenableNetwork') }}
                                 </DropdownMenuItem>
-                            </template>
-
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                                v-if="showReenableNetworkJourney"
-                                @click="reenableNetworkJourney"
-                            >
-                                {{ t('accountMenu.reenableNetwork') }}
-                            </DropdownMenuItem>
-                            <DropdownMenuItem as-child>
-                                <NuxtLink :to="settingsRoute">{{ t('nav.settings') }}</NuxtLink>
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                                class="hover:bg-primary"
-                                @click="logout"
-                            >
-                                {{ t('nav.logout') }}
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </div>
+                                <DropdownMenuItem as-child>
+                                    <NuxtLink :to="settingsRoute">{{ t('nav.settings') }}</NuxtLink>
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem
+                                    class="hover:bg-primary"
+                                    @click="logout"
+                                >
+                                    {{ t('nav.logout') }}
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
                 </div>
             </header>
-            <OnboardingNetworkJourneyWidget v-if="showNetworkJourneyWidget" />
-            <DashboardMarketingEngagementBanners />
+            <div
+                v-if="showPremiumHero"
+                class="mx-4 mt-3 sm:mx-6"
+            >
+                <SubscriptionProDashboardHero />
+            </div>
+            <OnboardingNetworkJourneyWidget v-if="showNetworkJourneyWidget && !isSubscriptionsRoute" />
+            <DashboardMarketingEngagementBanners v-if="!isSubscriptionsRoute" />
             <ProfileEducationLevelGateDialog />
             <div class="flex min-h-0 flex-1 flex-col overflow-hidden p-6">
                 <NuxtPage class="min-h-0 flex-1 overflow-x-hidden overflow-y-auto" />
@@ -319,7 +347,7 @@
 </template>
 
 <script lang="ts" setup>
-import { BellOff, CircleUser, Frown, Medal } from 'lucide-vue-next';
+import { BellOff, CircleUser, Crown, Frown, Medal } from 'lucide-vue-next';
 import { useRoute } from 'vue-router';
 import { useRuntimeConfig } from '#app';
 import type { AccountType, User } from '~/lib/types';
@@ -328,7 +356,7 @@ import { getRole, getShortDisplayName } from '~/lib/utils';
 import { hasVerifiedMemberBadge } from '~/utils/platformAccess';
 import { mapCelebrationVariantToReviewSource } from '~/utils/googleReview';
 
-const { isAdmin, hasChangedAvatar } = useAuth();
+const { isAdmin, isCommunityManager, hasChangedAvatar } = useAuth();
 const { t } = useI18n();
 
 const roles = ref<AccountType[]>([]);
@@ -364,6 +392,12 @@ const parsedSettings = computed(() => {
 });
 const route = useRoute();
 const currentPath = computed(() => route.fullPath.replace(/^\//, ''));
+/** Page Premium : pas de journey ni bannières partenaires au-dessus du catalogue. */
+const isSubscriptionsRoute = computed(() => {
+    const path = route.path.replace(/\/$/, '') || '/';
+
+    return /\/dashboard\/subscriptions$/.test(path);
+});
 const reportDescription = ref('');
 
 const displayFullName = computed(() => user.value?.full_name || 'xxx XXX');
@@ -373,10 +407,35 @@ const settingsRoute = computed(() =>
     user.value?.type === 'institution' ? '/dashboard/institution/settings' : '/dashboard/settings',
 );
 
+const { status: proStatus, isPremium: isProSubscriber, fetchStatus: fetchProStatus } = useProSubscription();
 const { activeCelebration, dismissCelebration } = usePurchaseCelebration();
 const { activeEngagement, requestEngagement } = usePostSuccessEngagement();
 const { processStripeReturn: processSponsorshipReturn } = useSponsorship();
+const { trackEvent } = useProductAnalytics();
 const router = useRouter();
+const premiumHeroImpressionSent = ref(false);
+
+/** Accueil nurse uniquement — Premium en tête, avant Journey / partenaires. */
+const isNurseDashboardHome = computed(() => {
+    const path = route.path.replace(/\/$/, '') || '/';
+
+    return /\/dashboard$/.test(path);
+});
+
+const showPremiumHero = computed(() =>
+    isNurseDashboardHome.value
+    && !isAdmin.value
+    && !isCommunityManager.value
+    && proStatus.value !== null
+    && !isProSubscriber.value,
+);
+
+watch(showPremiumHero, (visible) => {
+    if (visible && !premiumHeroImpressionSent.value) {
+        trackEvent('pro_upsell_impression', { source: 'nurse_dashboard' });
+        premiumHeroImpressionSent.value = true;
+    }
+});
 
 async function handleCelebrationContinue(targetRoute: string) {
     const variant = activeCelebration.value?.variant;
@@ -566,6 +625,7 @@ onMounted(async () => {
         getRoles(),
         getUnreadCount(),
         processSponsorshipStripeReturn(),
+        fetchProStatus(),
     ]);
     const normalizedApiRoles = normalizeAccountRoles(fetchedRoles);
     if (normalizedApiRoles.length) {

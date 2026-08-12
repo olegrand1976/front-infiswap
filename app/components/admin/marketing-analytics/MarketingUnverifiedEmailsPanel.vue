@@ -242,7 +242,8 @@ async function loadUsers() {
         count.value = response.count;
         verifiedUsers.value = response.verified_recent;
         verifiedCount.value = response.verified_recent_count;
-    } finally {
+    }
+    finally {
         loading.value = false;
     }
 }

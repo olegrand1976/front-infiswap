@@ -171,7 +171,7 @@ async function mockCrmInstitutionKpiApis(page: Page): Promise<{
     return state;
 }
 
-test.describe('Admin CRM institution KPI +', () => {
+test.describe('Admin CRM institution KPI +', { tag: '@p1' }, () => {
     test.use({ viewport: { width: 1440, height: 900 } });
 
     test('ensure-contact puis + RDV envoie POST /api/crm/plus meeting', async ({ page }) => {

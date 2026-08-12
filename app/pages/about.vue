@@ -1,10 +1,13 @@
 <template>
-    <div class="sm:mt-0 -mt-20">
+    <div>
         <div class="relative font-light">
-            <div class="absolute inset-0 bg-tertiary/30 h-[300px] lg:h-full w-full" />
+            <div class="absolute inset-0 bg-tertiary/30 h-[350px] lg:h-full w-full" />
             <div class="container">
+                <div class="md:hidden">
+                    <LayoutsLogo class="w-46 mx-auto pt-6" />
+                </div>
                 <div
-                    class="relative my-8 lg:my-16 z-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-8 lg:py-20 mt-20"
+                    class="relative mb-8 lg:my-16 z-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-44 items-center py-8 lg:py-20 sm:mt-20"
                 >
                     <div class="lg:hidden text-center mb-8">
                         <h2 class="text-primary text-4xl font-semibold">

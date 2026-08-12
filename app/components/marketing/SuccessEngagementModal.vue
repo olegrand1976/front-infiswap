@@ -84,7 +84,10 @@ watch(source, (nextSource) => {
 
         <div class="flex flex-1 flex-col justify-center space-y-6 overflow-y-auto animate-in fade-in duration-500">
             <div class="inline-flex items-center gap-2 rounded-full bg-amber-400/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-amber-700">
-                <Star class="size-3.5 fill-amber-400 text-amber-400" aria-hidden="true" />
+                <Star
+                    class="size-3.5 fill-amber-400 text-amber-400"
+                    aria-hidden="true"
+                />
                 Votre avis compte
             </div>
 

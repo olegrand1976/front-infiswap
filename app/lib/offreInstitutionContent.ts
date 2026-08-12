@@ -43,8 +43,8 @@ export function getOffreInstitutionNetworkProfilesLabel(
         : `${formatted}+ profils`;
 }
 
-export const OFFRE_INSTITUTION_JAUMANA_BELGIUM_ONLY_LABEL =
-    'Service Jaumana Soins — disponible en Belgique uniquement';
+export const OFFRE_INSTITUTION_JAUMANA_BELGIUM_ONLY_LABEL
+    = 'Service Jaumana Soins — disponible en Belgique uniquement';
 
 export function getOffreInstitutionJaumanaBelgiumOnlyLabel(locale: AppLocale = 'fr'): string {
     return locale === 'nl'

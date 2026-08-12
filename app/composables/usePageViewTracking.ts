@@ -38,14 +38,17 @@ export async function flushPageViews(): Promise<void> {
             method: 'POST',
             body: { views: batch },
         });
-    } catch {
+    }
+    catch {
         buffer.unshift(...batch);
-    } finally {
+    }
+    finally {
         isFlushing = false;
 
         if (buffer.length >= MAX_BUFFER) {
             void flushPageViews();
-        } else if (buffer.length > 0) {
+        }
+        else if (buffer.length > 0) {
             scheduleFlush();
         }
     }

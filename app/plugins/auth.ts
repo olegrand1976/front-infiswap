@@ -1,6 +1,6 @@
 import { defineNuxtPlugin, useNuxtApp, type NuxtApp } from '#app';
 import { useUser } from '~/composables/useAuth';
-import { clearAllAuthTokenCookies, healAuthTokenCookies, useAuthTokenCookie } from '~/lib/authTokenCookie';
+import { clearAuthSessionCookie, healAuthTokenCookies, useAuthTokenCookie } from '~/lib/authTokenCookie';
 import type { User } from '~/lib/types';
 import { isAppLocale, normalizeAppLocale } from '~/utils/appLocale';
 import { LANGUAGE } from '~/lib/constants';
@@ -26,8 +26,7 @@ export default defineNuxtPlugin({
             catch (error: { data?: { code?: string }; status?: number; statusCode?: number }) {
                 const status = error?.status ?? error?.statusCode;
                 if (status === 401 || status === 403 || error?.data?.code === 'institution_deleted') {
-                    token.value = null;
-                    clearAllAuthTokenCookies();
+                    clearAuthSessionCookie(token);
                 }
 
                 return null;

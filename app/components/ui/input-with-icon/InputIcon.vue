@@ -103,7 +103,7 @@ const togglePasswordVisibility = () => {
                 :disabled="props.disabled"
                 :autocomplete="props.autocomplete"
                 :class="cn(
-                    'flex w-full rounded-full py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground placeholder:font-normal focus-visible:border-spacing-0.5 focus-visible:border-primary focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
+                    'flex w-full rounded-full py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground placeholder:font-normal transition-colors duration-150 hover:border-gray-400 focus-visible:border-spacing-0.5 focus-visible:border-primary focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
                     sizeClasses,
                     roundedClass,
                     { 'border-red-500': props.errors && props.errors.length > 0 },
@@ -120,7 +120,7 @@ const togglePasswordVisibility = () => {
                 :autocomplete="props.autocomplete"
                 :class="cn(
                     props.inputClass,
-                    'flex w-full rounded-full border-2 border-gray-300 bg-background py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground placeholder:font-normal focus-visible:border-spacing-0.5 focus-visible:border-primary focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
+                    'flex w-full rounded-full border-2 border-gray-300 bg-background py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground placeholder:font-normal transition-colors duration-150 hover:border-gray-400 focus-visible:border-spacing-0.5 focus-visible:border-primary focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
                     sizeClasses,
                     roundedClass,
                     { 'border-red-500': props.errors && props.errors.length > 0 },

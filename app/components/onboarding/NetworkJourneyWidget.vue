@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ChevronDown, ChevronLeft, ChevronRight, Lightbulb, Sparkles, X } from 'lucide-vue-next';
+import { Check, ChevronDown, ChevronLeft, ChevronRight, Lightbulb, Sparkles, X } from 'lucide-vue-next';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -155,6 +155,10 @@ function previousTip() {
     }
 }
 
+function finishTips() {
+    showTipsModal.value = false;
+}
+
 function nextTip() {
     if (hasNextTip.value) {
         currentTipIndex.value += 1;
@@ -211,7 +215,7 @@ async function confirmDisable() {
 <template>
     <div
         v-if="journeyState.isVisible"
-        class="relative px-3 pb-3 pt-2 sm:px-6"
+        class="relative px-3 py-1.5 sm:px-6"
     >
         <div
             v-if="minimized"
@@ -219,13 +223,13 @@ async function confirmDisable() {
         >
             <button
                 type="button"
-                class="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-white px-3 py-1.5 text-xs font-medium text-primary shadow-sm transition hover:bg-primary/5"
+                class="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-white px-2.5 py-1 text-xs font-medium text-primary shadow-sm transition hover:bg-primary/5"
                 @click="minimized = false"
             >
                 <img
                     :src="journeyState.level.avatarSrc"
                     :alt="journeyState.level.avatarAlt"
-                    class="size-6 object-contain"
+                    class="size-5 object-contain"
                 >
                 <span>Niv. {{ journeyState.level.level }} · {{ journeyState.level.title }}</span>
             </button>
@@ -234,11 +238,11 @@ async function confirmDisable() {
         <div
             v-else
             :class="[
-                'relative overflow-hidden rounded-2xl border p-4 shadow-sm transition',
+                'relative overflow-hidden rounded-lg border px-2.5 py-1.5 shadow-sm transition',
                 showNudge
                     ? 'border-amber-300/60 bg-gradient-to-r from-amber-50 via-white to-primary/5'
                     : 'border-primary/15 bg-gradient-to-r from-white via-primary/5 to-emerald-50',
-                celebrating ? 'ring-2 ring-emerald-300/70' : '',
+                celebrating ? 'ring-1 ring-emerald-300/70' : '',
             ]"
         >
             <div
@@ -246,160 +250,131 @@ async function confirmDisable() {
                 class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.18),transparent_55%)]"
             />
 
-            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div class="flex min-w-0 items-center gap-3">
-                    <div
-                        class="relative shrink-0 transition-transform duration-300"
-                        :class="celebrating ? 'scale-105' : ''"
-                        :title="journeyState.level.mood"
+            <div class="relative flex items-center gap-2">
+                <div
+                    class="relative size-9 shrink-0 transition-transform duration-300"
+                    :class="celebrating ? 'scale-105' : ''"
+                    :title="journeyState.level.mood"
+                >
+                    <svg
+                        class="size-9 -rotate-90"
+                        viewBox="0 0 44 44"
+                        aria-hidden="true"
                     >
-                        <svg
-                            class="size-16 -rotate-90"
-                            viewBox="0 0 44 44"
-                            aria-hidden="true"
-                        >
-                            <circle
-                                cx="22"
-                                cy="22"
-                                r="18"
-                                fill="none"
-                                stroke="currentColor"
-                                class="text-primary/15"
-                                stroke-width="4"
-                            />
-                            <circle
-                                cx="22"
-                                cy="22"
-                                r="18"
-                                fill="none"
-                                stroke="url(#journeyRingGradient)"
-                                stroke-width="4"
-                                stroke-linecap="round"
-                                :stroke-dasharray="`${ringCircumference}`"
-                                :stroke-dashoffset="`${ringOffset}`"
-                            />
-                            <defs>
-                                <linearGradient
-                                    id="journeyRingGradient"
-                                    x1="0%"
-                                    y1="0%"
-                                    x2="100%"
-                                    y2="100%"
-                                >
-                                    <stop
-                                        offset="0%"
-                                        stop-color="hsl(var(--primary))"
-                                    />
-                                    <stop
-                                        offset="100%"
-                                        stop-color="hsl(142 71% 45%)"
-                                    />
-                                </linearGradient>
-                            </defs>
-                        </svg>
-                        <img
-                            :src="journeyState.level.avatarSrc"
-                            :alt="journeyState.level.avatarAlt"
-                            class="pointer-events-none absolute inset-0 m-auto size-9 object-contain"
-                        >
-                    </div>
+                        <circle
+                            cx="22"
+                            cy="22"
+                            r="18"
+                            fill="none"
+                            stroke="currentColor"
+                            class="text-primary/15"
+                            stroke-width="4"
+                        />
+                        <circle
+                            cx="22"
+                            cy="22"
+                            r="18"
+                            fill="none"
+                            stroke="url(#journeyRingGradient)"
+                            stroke-width="4"
+                            stroke-linecap="round"
+                            :stroke-dasharray="`${ringCircumference}`"
+                            :stroke-dashoffset="`${ringOffset}`"
+                        />
+                        <defs>
+                            <linearGradient
+                                id="journeyRingGradient"
+                                x1="0%"
+                                y1="0%"
+                                x2="100%"
+                                y2="100%"
+                            >
+                                <stop
+                                    offset="0%"
+                                    stop-color="hsl(var(--primary))"
+                                />
+                                <stop
+                                    offset="100%"
+                                    stop-color="hsl(142 71% 45%)"
+                                />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <img
+                        :src="journeyState.level.avatarSrc"
+                        :alt="journeyState.level.avatarAlt"
+                        class="pointer-events-none absolute inset-0 m-auto size-5 object-contain"
+                    >
+                </div>
 
-                    <div class="min-w-0">
-                        <p class="text-xs font-semibold uppercase tracking-wide text-primary/80">
-                            Mon réseau InfiSwap
-                        </p>
-                        <p class="text-sm font-semibold text-gray-900">
-                            Niveau {{ journeyState.level.level }} · {{ journeyState.level.title }}
-                        </p>
-                        <p
-                            v-if="showNudge"
-                            class="mt-0.5 text-xs font-medium text-amber-800"
-                        >
-                            {{ journeyState.nudge?.message }}
-                        </p>
-                        <p
-                            v-else
-                            class="mt-0.5 text-xs text-muted-foreground"
-                        >
-                            {{ journeyState.welcomeMessage }}
+                <div class="min-w-0 flex-1">
+                    <div class="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                        <p class="text-xs font-semibold text-gray-900">
+                            Niv. {{ journeyState.level.level }} · {{ journeyState.level.title }}
                         </p>
                         <button
                             v-if="nextQuest"
                             type="button"
-                            class="mt-1 inline-flex max-w-full items-center gap-1 text-left text-sm font-medium text-primary hover:underline"
+                            class="inline-flex max-w-full items-center gap-1 text-left text-xs font-medium text-primary hover:underline"
                             @click="handleQuestClick"
                         >
-                            <Sparkles class="size-3.5 shrink-0" />
+                            <Sparkles class="size-3 shrink-0" />
                             <span class="truncate">
-                                {{ showNudge ? 'Reprendre :' : 'Prochaine étape :' }} {{ nextQuest.cta }} →
+                                {{ showNudge ? 'Reprendre :' : 'Étape :' }} {{ nextQuest.cta }} →
                             </span>
                         </button>
-                        <div
-                            v-if="journeyState.tip"
-                            class="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1"
-                        >
-                            <p class="text-xs text-muted-foreground">
-                                <Lightbulb class="mr-1 inline size-3.5 text-amber-500" />
-                                Conseil : {{ journeyState.tip.text }}
-                            </p>
-                            <button
-                                type="button"
-                                class="text-xs font-medium text-primary hover:underline"
-                                @click="openTipsModal"
-                            >
-                                Voir tous les conseils
-                            </button>
-                        </div>
                     </div>
+                    <p
+                        v-if="showNudge"
+                        class="truncate text-[11px] font-medium text-amber-800"
+                    >
+                        {{ journeyState.nudge?.message }}
+                    </p>
                 </div>
 
-                <div class="flex flex-wrap items-center gap-2 sm:justify-end">
+                <div class="flex shrink-0 items-center gap-0.5">
                     <span
                         v-if="celebrating"
-                        class="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700"
+                        class="mr-1 hidden rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 sm:inline"
                     >
                         {{ celebrationText }}
                     </span>
                     <Button
                         variant="ghost"
                         size="sm"
-                        class="h-8 gap-1 px-2 text-xs"
+                        class="h-7 gap-1 px-1.5 text-xs"
                         :class="showTipsModal ? 'text-primary' : 'text-muted-foreground'"
+                        :aria-label="'Conseils'"
                         @click="toggleTipsModal"
                     >
                         <Lightbulb class="size-3.5" />
-                        Conseils
+                        <span class="hidden sm:inline">Conseils</span>
                     </Button>
                     <Button
                         variant="ghost"
                         size="sm"
-                        class="h-8 px-2 text-xs text-muted-foreground"
+                        class="hidden h-7 px-1.5 text-xs text-muted-foreground sm:inline-flex"
                         @click="minimized = true"
                     >
                         Réduire
-                    </Button>
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        class="h-8 px-2 text-xs text-muted-foreground"
-                        @click="snooze()"
-                    >
-                        Plus tard
                     </Button>
                     <DropdownMenu>
                         <DropdownMenuTrigger as-child>
                             <Button
                                 variant="ghost"
                                 size="sm"
-                                class="h-8 gap-1 px-2 text-xs text-muted-foreground"
+                                class="h-7 gap-0.5 px-1.5 text-xs text-muted-foreground"
+                                aria-label="Options parcours"
                             >
-                                Désactiver
                                 <ChevronDown class="size-3.5" />
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuItem @click="snooze()">
-                                Masquer 7 jours
+                                Plus tard (7 jours)
+                            </DropdownMenuItem>
+                            <DropdownMenuItem @click="minimized = true">
+                                Réduire
                             </DropdownMenuItem>
                             <DropdownMenuItem @click="showDisableDialog = true">
                                 Désactiver le parcours
@@ -412,7 +387,7 @@ async function confirmDisable() {
                         aria-label="Réduire"
                         @click="minimized = true"
                     >
-                        <X class="size-4" />
+                        <X class="size-3.5" />
                     </button>
                 </div>
             </div>
@@ -470,14 +445,22 @@ async function confirmDisable() {
                             Précédent
                         </Button>
                         <Button
-                            variant="outline"
+                            v-if="hasNextTip"
                             size="sm"
-                            class="flex-1 sm:flex-none"
-                            :disabled="!hasNextTip"
+                            class="rounded-md! flex-1 sm:flex-none"
                             @click="nextTip"
                         >
                             Suivant
                             <ChevronRight class="size-4" />
+                        </Button>
+                        <Button
+                            v-else
+                            size="sm"
+                            class="rounded-md! flex-1 sm:flex-none"
+                            @click="finishTips"
+                        >
+                            Terminé
+                            <Check class="size-4" />
                         </Button>
                     </div>
                 </DialogFooter>

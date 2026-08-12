@@ -239,7 +239,6 @@
 </template>
 
 <script lang="ts" setup>
-const { t } = useI18n();
 import { ArrowLeft, Plus, X } from 'lucide-vue-next';
 import { toast } from 'vue-sonner';
 import { useReplacements } from '@/composables/useReplacements';
@@ -255,6 +254,8 @@ import type { CareType, ReplacementPeriod } from '~/lib/types';
 import type { ReplacementCountryCode } from '~/lib/replacementCountry';
 import { toReplacementCountryCode } from '~/lib/replacementCountry';
 import { goBack } from '~/lib/utils';
+
+const { t } = useI18n();
 
 const route = useRoute();
 const router = useRouter();

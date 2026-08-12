@@ -11,7 +11,7 @@ import { AUTH_TOKEN_COOKIE, buildRegistrationForm, E2E_PASSWORD } from '../fixtu
 
 const apiUrl = process.env.API_URL ?? 'https://api-infiswap.ll-it-sc.be';
 
-test.describe('Inscription', () => {
+test.describe('Inscription', { tag: '@p1' }, () => {
     test.afterAll(async () => {
         await cleanupE2eUsers(apiUrl);
     });
@@ -49,7 +49,7 @@ test.describe('Inscription', () => {
         await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
 
         const cookies = await context.cookies();
-        const authCookie = cookies.find((c) => c.name === AUTH_TOKEN_COOKIE);
+        const authCookie = cookies.find(c => c.name === AUTH_TOKEN_COOKIE);
         expect(authCookie?.value).toBeTruthy();
     });
 });

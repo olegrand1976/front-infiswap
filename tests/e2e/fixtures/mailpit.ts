@@ -64,7 +64,7 @@ export async function waitForVerificationLink(
             }
         }
 
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        await new Promise(resolve => setTimeout(resolve, 2000));
     }
 
     throw new Error(`Email de vérification introuvable pour ${recipientEmail} (${timeoutMs}ms).`);

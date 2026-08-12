@@ -1,12 +1,14 @@
 <template>
     <NuxtLayout name="guest">
         <div class="relative font-light">
-            <div
-                class="hidden lg:block absolute inset-x-0 bg-tertiary/30 md:h-[300px] lg:h-full w-full z-10"
-            />
+            <div class="my-5">
+                <LayoutsLogo class="w-48 mx-auto" />
+            </div>
+            <div class="absolute inset-0 bg-tertiary/30 h-[350px] lg:h-full w-full" />
+
             <div class="lg:container">
                 <div
-                    class="relative md:my-8 lg:my-16 md:z-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24 items-center py-8 lg:py-20 md:mt-20"
+                    class="relative md:my-8 lg:my-16 md:z-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24 items-center lg:py-20 md:mt-20"
                 >
                     <div class="lg:space-y-6 space-y-8 order-2 lg:order-1 relative z-30">
                         <h3
@@ -17,7 +19,9 @@
 
                         <p
                             class="text-center lg:text-left text-base px-8"
-                        >{{ $t('services.intro') }}</p>
+                        >
+                            {{ $t('services.intro') }}
+                        </p>
                     </div>
 
                     <div
@@ -456,16 +460,9 @@
                 >
                     <Button
                         :href="localePath('/register')"
-                        class="w-44 mx-auto lg:mx-0 flex justify-center items-center font-bold"
+                        class="w-44 h-12 rounded-md mx-auto lg:mx-0 flex justify-center items-center font-bold"
                     >
                         {{ $t('services.ctaRegister') }}
-                    </Button>
-                    <Button
-                        variant="outline"
-                        class="w-44 mx-auto inline-flex rounded-3xl"
-                        :href="localePath('/login')"
-                    >
-                        {{ $t('services.ctaLogin') }}
                     </Button>
                 </div>
             </div>

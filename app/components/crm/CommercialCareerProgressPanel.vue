@@ -34,23 +34,37 @@
             <!-- Statut actuel -->
             <dl class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 text-sm">
                 <div>
-                    <dt class="text-muted-foreground">Grade actuel</dt>
-                    <dd class="font-medium mt-1">{{ status.grade?.name ?? 'Non défini' }}</dd>
+                    <dt class="text-muted-foreground">
+                        Grade actuel
+                    </dt>
+                    <dd class="font-medium mt-1">
+                        {{ status.grade?.name ?? 'Non défini' }}
+                    </dd>
                 </div>
                 <div>
-                    <dt class="text-muted-foreground">Multiplicateur direct</dt>
-                    <dd class="font-medium mt-1">×{{ status.grade?.direct_commission_multiplier ?? 1 }}</dd>
+                    <dt class="text-muted-foreground">
+                        Multiplicateur direct
+                    </dt>
+                    <dd class="font-medium mt-1">
+                        ×{{ status.grade?.direct_commission_multiplier ?? 1 }}
+                    </dd>
                 </div>
                 <div>
-                    <dt class="text-muted-foreground">Override L1 / L2</dt>
+                    <dt class="text-muted-foreground">
+                        Override L1 / L2
+                    </dt>
                     <dd class="font-medium mt-1">
                         {{ status.grade?.upline_override_level_1_rate ?? 0 }}% /
                         {{ status.grade?.upline_override_level_2_rate ?? 0 }}%
                     </dd>
                 </div>
                 <div>
-                    <dt class="text-muted-foreground">Upline</dt>
-                    <dd class="font-medium mt-1">{{ status.upline?.full_name ?? '—' }}</dd>
+                    <dt class="text-muted-foreground">
+                        Upline
+                    </dt>
+                    <dd class="font-medium mt-1">
+                        {{ status.upline?.full_name ?? '—' }}
+                    </dd>
                 </div>
             </dl>
 
