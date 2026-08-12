@@ -34,6 +34,15 @@
     "switchToRole": "Passer en {role}",
     "reenableNetwork": "Réactiver Mon réseau InfiSwap"
   },
+  "accountMenu": {
+    "myAccount": "Mon compte",
+    "switchSpace": "Changer d'espace",
+    "nurse": "Infirmier(e)",
+    "admin": "Administration InfiSwap",
+    "institution": "Institution",
+    "switchToRole": "Passer en {role}",
+    "reenableNetwork": "Réactiver Mon réseau InfiSwap"
+  },
   "nav": {
     "home": "Accueil",
     "about": "À propos",
