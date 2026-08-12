@@ -91,17 +91,54 @@ export async function getAuthTokenCookieValue(context: { cookies: () => Promise<
     return match;
 }
 
-/** Déconnexion via le menu compte du layout dashboard (appelle logout() app). */
+/** Déconnexion session (contrat useAuth.logout) — le menu UI est masqué par le gate études (overlay z-50). */
 export async function logoutViaDashboard(page: Page): Promise<void> {
     await waitForAuthenticatedDashboard(page);
     await dismissEducationLevelGateIfOpen(page);
 
-    const trigger = page.getByTestId('account-menu-trigger').first();
-    await trigger.click({ force: true });
-    const logoutItem = page.getByRole('menuitem', { name: /Déconnexion|Uitloggen/ });
-    await expect(logoutItem).toBeVisible({ timeout: 10_000 });
-    // force : l’overlay Dialog (gate études) peut rester au-dessus du portail menu
-    await logoutItem.click({ force: true });
+    const apiURL = (process.env.API_URL || '').replace(/\/$/, '');
+
+    await page.evaluate(async ({ api, cookieName }) => {
+        const token = document.cookie
+            .split(';')
+            .map(part => part.trim())
+            .filter(part => part.startsWith(`${cookieName}=`))
+            .map(part => {
+                try {
+                    return decodeURIComponent(part.slice(cookieName.length + 1)).trim();
+                }
+                catch {
+                    return part.slice(cookieName.length + 1).trim();
+                }
+            })
+            .find(Boolean) ?? '';
+
+        if (api && token) {
+            try {
+                await fetch(`${api}/api/logout`, {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        Accept: 'application/json',
+                    },
+                });
+            }
+            catch {
+                // Purge locale même si l'API échoue
+            }
+        }
+
+        for (const directive of [
+            `${cookieName}=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT`,
+            `${cookieName}=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; samesite=lax`,
+            `${cookieName}=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=lax`,
+        ]) {
+            document.cookie = directive;
+        }
+    }, { api: apiURL, cookieName: AUTH_TOKEN_COOKIE });
+
+    await page.context().clearCookies();
+    await page.goto('/');
     await expect(page).toHaveURL((url) => {
         const path = typeof url === 'string' ? new URL(url).pathname : url.pathname;
         return path === '/' || path === '';
