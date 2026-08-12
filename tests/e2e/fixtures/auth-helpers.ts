@@ -26,19 +26,29 @@ export async function seedCookieConsent(page: Page): Promise<void> {
 
 /**
  * Simule le cookie host-only vide (régression login bounce août 2026).
- * Une seule fois (pas d'addInitScript) : sinon le cookie vide est réinjecté
- * à chaque navigation et casse la session post-login.
+ * Une seule fois via evaluate (addCookies refuse value='', addInitScript
+ * réinjecterait le vide à chaque navigation).
  */
 export async function seedEmptyAuthTokenCookie(page: Page): Promise<void> {
     const baseURL = process.env.BASE_URL || 'http://127.0.0.1:3000';
+    await page.goto(new URL('/', baseURL).href);
+    await page.evaluate((cookieName: string) => {
+        document.cookie = `${cookieName}=; path=/; SameSite=Lax`;
+    }, AUTH_TOKEN_COOKIE);
+}
 
-    await page.context().addCookies([{
-        name: AUTH_TOKEN_COOKIE,
-        value: '',
-        url: baseURL,
-        path: '/',
-        sameSite: 'Lax',
-    }]);
+/**
+ * Ferme le gate niveau d'études (overlay z-50) qui bloque le menu compte.
+ */
+export async function dismissEducationLevelGateIfOpen(page: Page): Promise<void> {
+    const dialog = page.getByRole('dialog').filter({ hasText: /Niveau d'études|Opleidingsniveau/i });
+    if (!(await dialog.isVisible().catch(() => false))) {
+        return;
+    }
+
+    await dialog.getByRole('radio').first().check({ force: true });
+    await dialog.getByRole('button', { name: /Valider|Bevestigen|Opslaan/i }).click();
+    await expect(dialog).toBeHidden({ timeout: 15_000 });
 }
 
 export async function fillLoginForm(page: Page, identifier: string, password: string): Promise<void> {
@@ -78,9 +88,13 @@ export async function getAuthTokenCookieValue(context: { cookies: () => Promise<
 /** Déconnexion via le menu compte du layout dashboard (appelle logout() app). */
 export async function logoutViaDashboard(page: Page): Promise<void> {
     await waitForAuthenticatedDashboard(page);
+    await dismissEducationLevelGateIfOpen(page);
+
     const trigger = page.getByTestId('account-menu-trigger').first();
     await trigger.click();
-    await page.getByRole('menuitem', { name: /Déconnexion|Uitloggen/ }).click();
+    const logoutItem = page.getByRole('menuitem', { name: /Déconnexion|Uitloggen/ });
+    await expect(logoutItem).toBeVisible({ timeout: 10_000 });
+    await logoutItem.click();
     await expect(page).toHaveURL((url) => {
         const path = typeof url === 'string' ? new URL(url).pathname : url.pathname;
         return path === '/' || path === '';
