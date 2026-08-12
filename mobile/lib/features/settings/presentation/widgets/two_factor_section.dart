@@ -91,16 +91,31 @@ class _TwoFactorSectionState extends State<TwoFactorSection> {
   Widget build(BuildContext context) {
     final colors = context.appColors;
 
-    return SwitchListTile(
-      contentPadding: EdgeInsets.zero,
-      title: Text(
-        'Authentification à deux facteurs',
-        style: TextStyle(color: colors.textPrimary, fontSize: 14),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              'Authentification à deux facteurs',
+              style: TextStyle(
+                color: colors.textPrimary,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          Transform.scale(
+            scale: 0.8,
+            child: Switch(
+              value: _enabled,
+              activeThumbColor: colors.onPrimary,
+              activeTrackColor: colors.primary,
+              onChanged: _isBusy ? null : _handleToggle,
+            ),
+          ),
+        ],
       ),
-      value: _enabled,
-      activeThumbColor: colors.onPrimary,
-      activeTrackColor: colors.primary,
-      onChanged: _isBusy ? null : _handleToggle,
     );
   }
 }

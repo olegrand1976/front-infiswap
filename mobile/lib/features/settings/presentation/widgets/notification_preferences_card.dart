@@ -17,10 +17,12 @@ class NotificationPreferencesCard extends StatefulWidget {
   final NotificationPreferences initial;
 
   @override
-  State<NotificationPreferencesCard> createState() => _NotificationPreferencesCardState();
+  State<NotificationPreferencesCard> createState() =>
+      _NotificationPreferencesCardState();
 }
 
-class _NotificationPreferencesCardState extends State<NotificationPreferencesCard> {
+class _NotificationPreferencesCardState
+    extends State<NotificationPreferencesCard> {
   late NotificationPreferences _prefs;
   bool _isSaving = false;
 
@@ -106,13 +108,31 @@ class _NotificationSwitchTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
 
-    return SwitchListTile(
-      contentPadding: EdgeInsets.zero,
-      title: Text(title, style: TextStyle(color: colors.textPrimary, fontSize: 14)),
-      value: value,
-      activeThumbColor: colors.onPrimary,
-      activeTrackColor: colors.primary,
-      onChanged: enabled ? onChanged : null,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              title,
+              style: TextStyle(
+                color: colors.textPrimary,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          Transform.scale(
+            scale: 0.8,
+            child: Switch(
+              value: value,
+              activeThumbColor: colors.onPrimary,
+              activeTrackColor: colors.primary,
+              onChanged: enabled ? onChanged : null,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -246,7 +246,6 @@ class _ReplacementDetailScreenState
                               ? AppColors.mint
                               : colors.primary,
                       disabledForegroundColor: AppColors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                     child: _ApplyButtonLabel(status: effectiveStatus),
                   ),
@@ -407,7 +406,7 @@ class _OwnerFooter extends ConsumerWidget {
             ),
             child: Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+              padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 16),
               decoration: BoxDecoration(
                 color: background,
                 borderRadius: BorderRadius.circular(AppRadii.md),
@@ -454,7 +453,6 @@ class _OwnerFooter extends ConsumerWidget {
               ),
               style: OutlinedButton.styleFrom(
                 side: BorderSide(color: colors.primaryOutline),
-                padding: const EdgeInsets.symmetric(vertical: 13),
               ),
             ),
           ),
@@ -484,7 +482,6 @@ class _OwnerFooter extends ConsumerWidget {
               ),
               style: OutlinedButton.styleFrom(
                 side: BorderSide(color: colors.primaryOutline),
-                padding: const EdgeInsets.symmetric(vertical: 13),
               ),
             ),
           ),
@@ -504,7 +501,6 @@ class _OwnerFooter extends ConsumerWidget {
               ),
               style: OutlinedButton.styleFrom(
                 side: BorderSide(color: colors.primaryOutline),
-                padding: const EdgeInsets.symmetric(vertical: 13),
               ),
             ),
           ),
@@ -526,7 +522,6 @@ class _OwnerFooter extends ConsumerWidget {
                 ),
                 style: OutlinedButton.styleFrom(
                   side: BorderSide(color: colors.primaryOutline),
-                  padding: const EdgeInsets.symmetric(vertical: 13),
                 ),
               ),
             ),

@@ -28,7 +28,7 @@ class _DeleteAccountSectionState extends State<DeleteAccountSection> {
   Future<void> _handleDelete() async {
     final password = await showConfirmPasswordSheet(
       context: context,
-      title: 'Se désinscrire du site',
+      title: 'Se désinscrire',
       description:
           'Confirmez avec votre mot de passe. Votre compte sera supprimé et les '
           'administrateurs du site seront informés par e-mail.',
@@ -38,7 +38,8 @@ class _DeleteAccountSectionState extends State<DeleteAccountSection> {
 
     setState(() => _isDeleting = true);
     try {
-      await widget.repository.deleteAccount(userId: widget.userId, password: password);
+      await widget.repository
+          .deleteAccount(userId: widget.userId, password: password);
       await widget.onDeleted();
     } on ApiException catch (error) {
       if (mounted) showSettingsErrorSnackBar(context, error.message);
@@ -61,10 +62,11 @@ class _DeleteAccountSectionState extends State<DeleteAccountSection> {
             ? const SizedBox(
                 height: 18,
                 width: 18,
-                child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.coral),
+                child: CircularProgressIndicator(
+                    strokeWidth: 2, color: AppColors.coral),
               )
             : const Icon(Icons.delete_outline),
-        label: const Text('Se désinscrire du site'),
+        label: const Text('Se désinscrire'),
       ),
     );
   }
