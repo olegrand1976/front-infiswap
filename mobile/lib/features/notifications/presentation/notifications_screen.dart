@@ -75,7 +75,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                           'Notifications',
                           style: TextStyle(
                             color: colors.textPrimary,
-                            fontSize: 28,
+                            fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

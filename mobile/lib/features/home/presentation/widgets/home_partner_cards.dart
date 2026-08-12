@@ -37,7 +37,8 @@ class HomePartnerCards extends StatelessWidget {
             subtitle: 'formules dès 450 €.',
             primaryLabel: 'Demander mon devis page web',
             secondaryLabel: 'Être rappelé sous 24h',
-            onTap: () => _open('$webBaseUrl/nurstech-by-infiswap#information-form'),
+            onTap: () =>
+                _open('$webBaseUrl/nurstech-by-infiswap#information-form'),
           ),
         if (showNursTech && showNursAssur) const SizedBox(height: 10),
         if (showNursAssur)
@@ -97,7 +98,8 @@ class _PartnerCard extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: HomeDecorations.card(context, accent: accent, radius: AppRadii.lg),
+      decoration:
+          HomeDecorations.card(context, accent: accent, radius: AppRadii.md),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -147,7 +149,11 @@ class _PartnerCard extends StatelessWidget {
             runSpacing: 8,
             children: [
               _PartnerButton(label: primaryLabel, color: accent, onTap: onTap),
-              _PartnerButton(label: secondaryLabel, color: accent, onTap: onTap, ghost: true),
+              _PartnerButton(
+                  label: secondaryLabel,
+                  color: accent,
+                  onTap: onTap,
+                  ghost: true),
             ],
           ),
         ],
@@ -188,7 +194,8 @@ class _PartnerButton extends StatelessWidget {
               color: color,
               fontSize: 11,
               fontWeight: FontWeight.w700,
-              decoration: ghost ? TextDecoration.underline : TextDecoration.none,
+              decoration:
+                  ghost ? TextDecoration.underline : TextDecoration.none,
             ),
           ),
         ),

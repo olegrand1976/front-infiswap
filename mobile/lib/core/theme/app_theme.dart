@@ -119,7 +119,7 @@ class AppTheme {
         color: palette.card,
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadii.lg),
+          borderRadius: BorderRadius.circular(AppRadii.md),
           side: BorderSide(color: palette.border),
         ),
       ),

@@ -115,7 +115,7 @@ class _TwoFactorScreenState extends ConsumerState<TwoFactorScreen> {
                         'Vérification',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 28,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: colors.textPrimary,
                         ),

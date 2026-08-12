@@ -74,7 +74,7 @@ class _ApplicationsScreenState extends ConsumerState<ApplicationsScreen> {
                           'Mes candidatures',
                           style: TextStyle(
                             color: colors.textPrimary,
-                            fontSize: 28,
+                            fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

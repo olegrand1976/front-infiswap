@@ -74,7 +74,7 @@ class _MyReplacementsScreenState extends ConsumerState<MyReplacementsScreen> {
                           'Mes remplacements',
                           style: TextStyle(
                             color: colors.textPrimary,
-                            fontSize: 28,
+                            fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

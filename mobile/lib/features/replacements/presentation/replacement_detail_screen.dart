@@ -155,7 +155,7 @@ class _ReplacementDetailScreenState
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: colors.textPrimary,
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

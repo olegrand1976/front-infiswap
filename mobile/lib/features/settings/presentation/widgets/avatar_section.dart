@@ -174,7 +174,7 @@ class _AvatarSectionState extends State<AvatarSection> {
         const SizedBox(height: 12),
         Text(
           widget.displayName,
-          style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.w700),
+          style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w700),
         ),
         const SizedBox(height: 2),
         Text(

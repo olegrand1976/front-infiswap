@@ -49,7 +49,7 @@ class CreateTypeSheet extends StatelessWidget {
                       'Nouveau remplacement',
                       style: TextStyle(
                         color: colors.textPrimary,
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: FontWeight.w700,
                       ),
                     ),

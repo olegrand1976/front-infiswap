@@ -308,7 +308,7 @@ class _ListHeader extends StatelessWidget {
                     'Remplacements',
                     style: TextStyle(
                       color: colors.textPrimary,
-                      fontSize: 24,
+                      fontSize: 16,
                       fontWeight: FontWeight.w800,
                     ),
                   ),

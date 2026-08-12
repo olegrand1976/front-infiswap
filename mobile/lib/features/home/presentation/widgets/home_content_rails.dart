@@ -6,6 +6,7 @@ import '../../../replacements/models/replacement_item.dart';
 import '../../../replacements/presentation/widgets/mission_avatar.dart';
 import '../../../shell/providers/shell_tab_index_provider.dart';
 import 'home_decorations.dart';
+import '../../../../core/theme/app_radii.dart';
 
 class HomeReplacementsRail extends ConsumerWidget {
   const HomeReplacementsRail({
@@ -182,7 +183,7 @@ class _ReplacementMiniCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         child: Container(
           width: 158,
           padding: const EdgeInsets.all(12),

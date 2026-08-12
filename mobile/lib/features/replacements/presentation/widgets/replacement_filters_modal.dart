@@ -139,7 +139,7 @@ class _ReplacementFiltersModalState extends State<ReplacementFiltersModal> {
                         'Filtres',
                         style: TextStyle(
                           color: colors.textPrimary,
-                          fontSize: 20,
+                          fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
                       ),

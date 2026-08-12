@@ -95,7 +95,7 @@ class _QuickActionCard extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(13),
-      decoration: HomeDecorations.card(context, radius: AppRadii.lg),
+      decoration: HomeDecorations.card(context, radius: AppRadii.md),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

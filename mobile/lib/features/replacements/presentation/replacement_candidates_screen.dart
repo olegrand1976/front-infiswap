@@ -162,7 +162,7 @@ class _ReplacementCandidatesScreenState
                           'Intéressés',
                           style: TextStyle(
                             color: colors.textPrimary,
-                            fontSize: 19,
+                            fontSize: 16,
                             fontWeight: FontWeight.w800,
                           ),
                         ),

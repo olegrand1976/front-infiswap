@@ -23,8 +23,9 @@ class HomeReferralCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Color.alphaBlend(colors.secondary.withValues(alpha: .1), colors.card),
-        borderRadius: BorderRadius.circular(AppRadii.lg),
+        color: Color.alphaBlend(
+            colors.secondary.withValues(alpha: .1), colors.card),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(color: colors.secondary.withValues(alpha: .3)),
       ),
       child: Column(
@@ -41,7 +42,8 @@ class HomeReferralCard extends StatelessWidget {
           const SizedBox(height: 2),
           Text(
             'Partagez InfiSwap — plus le réseau grandit, plus vous trouvez de remplacements.',
-            style: TextStyle(color: colors.textSecondary, fontSize: 10.5, height: 1.4),
+            style: TextStyle(
+                color: colors.textSecondary, fontSize: 10.5, height: 1.4),
           ),
           const SizedBox(height: 12),
           Row(
@@ -57,7 +59,8 @@ class HomeReferralCard extends StatelessWidget {
                   ),
                   borderRadius: BorderRadius.circular(13),
                 ),
-                child: const Icon(Icons.people_alt_outlined, color: Colors.white, size: 19),
+                child: const Icon(Icons.people_alt_outlined,
+                    color: Colors.white, size: 19),
               ),
               const SizedBox(width: 10),
               Column(
@@ -96,7 +99,8 @@ class HomeReferralCard extends StatelessWidget {
                     shareUrl,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: colors.textSecondary, fontSize: 10.5),
+                    style:
+                        TextStyle(color: colors.textSecondary, fontSize: 10.5),
                   ),
                 ),
                 Material(
@@ -105,7 +109,8 @@ class HomeReferralCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(9),
                     onTap: () => _copy(context),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 11, vertical: 8),
                       decoration: BoxDecoration(
                         color: colors.secondary,
                         borderRadius: BorderRadius.circular(9),

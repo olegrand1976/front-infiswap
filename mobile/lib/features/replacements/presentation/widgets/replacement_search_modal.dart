@@ -157,7 +157,7 @@ class _ReplacementSearchModalState
                         'Rechercher',
                         style: TextStyle(
                           color: colors.textPrimary,
-                          fontSize: 20,
+                          fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
