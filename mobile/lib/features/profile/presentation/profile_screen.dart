@@ -90,7 +90,7 @@ class ProfileScreen extends ConsumerWidget {
               ),
               const _MenuRow(
                 icon: Icons.forum_outlined,
-                color: AppColors.onCoral,
+                color: AppColors.mintDark,
                 label: 'Mes réponses',
                 onTap: null,
               ),
@@ -161,11 +161,10 @@ class ProfileScreen extends ConsumerWidget {
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.coral,
                   side: const BorderSide(color: AppColors.coral, width: 1.5),
-                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  padding: const EdgeInsets.symmetric(vertical: 9),
                 ),
-                icon: const Icon(Icons.logout, size: 17),
-                label: const Text('Se déconnecter',
-                    style: TextStyle(fontSize: 12.5)),
+                icon: const Icon(Icons.logout, size: 16),
+                label: const Text('Se déconnecter', style: TextStyle(fontSize: 12)),
               ),
             ),
           ],
@@ -248,14 +247,12 @@ class _MenuRow extends StatelessWidget {
     required this.color,
     required this.label,
     this.onTap,
-    this.soon = false,
   });
 
   final IconData icon;
   final Color color;
   final String label;
   final VoidCallback? onTap;
-  final bool soon;
 
   @override
   Widget build(BuildContext context) {
@@ -264,7 +261,7 @@ class _MenuRow extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: soon ? null : onTap,
+        onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 11),
           child: Row(
@@ -273,36 +270,23 @@ class _MenuRow extends StatelessWidget {
                 width: 26,
                 height: 26,
                 decoration: BoxDecoration(
-                  color: soon ? colors.divider : color,
+                  color: color,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(icon,
-                    size: 13,
-                    color: soon ? colors.textSecondary : Colors.white),
+                child: Icon(icon, size: 13, color: Colors.white),
               ),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
                   label,
                   style: TextStyle(
-                    color: soon ? colors.textSecondary : colors.textPrimary,
+                    color: colors.textPrimary,
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
-              if (soon)
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: colors.divider,
-                    borderRadius: BorderRadius.circular(999),
-                  ),
-                )
-              else
-                Icon(Icons.chevron_right,
-                    size: 18, color: colors.textSecondary),
+              Icon(Icons.chevron_right, size: 18, color: colors.textSecondary),
             ],
           ),
         ),
@@ -361,11 +345,14 @@ class _ThemeToggleRow extends StatelessWidget {
               ],
             ),
           ),
-          Switch(
-            value: isDark,
-            onChanged: onChanged,
-            activeThumbColor: colors.onPrimary,
-            activeTrackColor: colors.primary,
+          Transform.scale(
+            scale: 0.8,
+            child: Switch(
+              value: isDark,
+              onChanged: onChanged,
+              activeThumbColor: colors.onPrimary,
+              activeTrackColor: colors.primary,
+            ),
           ),
         ],
       ),

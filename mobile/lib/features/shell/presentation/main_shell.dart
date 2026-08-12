@@ -203,8 +203,8 @@ class _CreateFab extends StatelessWidget {
         onTap: onTap,
         customBorder: const CircleBorder(),
         child: Container(
-          width: 56,
-          height: 56,
+          width: 48,
+          height: 48,
           alignment: Alignment.center,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
@@ -218,7 +218,7 @@ class _CreateFab extends StatelessWidget {
               ),
             ],
           ),
-          child: Icon(Icons.add, color: colors.onPrimary, size: 26),
+          child: Icon(Icons.add, color: colors.onPrimary, size: 20),
         ),
       ),
     );

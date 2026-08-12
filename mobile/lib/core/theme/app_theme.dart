@@ -53,9 +53,9 @@ class AppTheme {
         filled: true,
         fillColor: palette.inputBackground,
         isDense: true,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        labelStyle: TextStyle(color: palette.textSecondary, fontSize: 13.5),
-        hintStyle: TextStyle(color: palette.textSecondary, fontSize: 13.5),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        labelStyle: TextStyle(color: palette.textSecondary, fontSize: 12.5),
+        hintStyle: TextStyle(color: palette.textSecondary, fontSize: 12.5),
         prefixIconColor: palette.primary,
         suffixIconColor: palette.textSecondary,
         enabledBorder: OutlineInputBorder(
@@ -82,8 +82,8 @@ class AppTheme {
         style: ElevatedButton.styleFrom(
           backgroundColor: palette.primary,
           foregroundColor: palette.onPrimary,
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+          padding: const EdgeInsets.symmetric(vertical: 9),
+          textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppRadii.md),
           ),
@@ -93,16 +93,16 @@ class AppTheme {
         style: OutlinedButton.styleFrom(
           foregroundColor: palette.textPrimary,
           side: BorderSide(color: palette.border),
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+          padding: const EdgeInsets.symmetric(vertical: 9),
+          textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppRadii.md),
           ),
         ),
       ),
       chipTheme: ChipThemeData(
-        labelStyle: TextStyle(color: palette.textPrimary, fontSize: 12),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+        labelStyle: TextStyle(color: palette.textPrimary, fontSize: 11),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadii.md),
           side: BorderSide(color: palette.border),
