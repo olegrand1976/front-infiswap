@@ -3,7 +3,9 @@ import type { Ref } from 'vue';
 import { AUTH_TOKEN } from '~/lib/constants';
 import {
     buildAuthCookieExpireDirectives,
+    normalizeAuthTokenValue,
     pickAuthTokenFromCookieHeader,
+    readAuthTokenFromDocument,
     resolveAuthCookieDomain,
     resolveHealedAuthToken,
 } from '~/lib/authTokenCookieUtils';
@@ -68,8 +70,12 @@ export function clearAuthSessionCookie(cookie: Ref<string | null | undefined>): 
 }
 
 /**
- * Self-heal client prod uniquement — appeler une fois (plugin auth).
- * Ordre critique : purge host-only AVANT lecture.
+ * Self-heal client — appeler une fois (plugin auth).
+ *
+ * Prod (.infiswap.be) : purge host-only (souvent `INFISWAP_TOKEN=` vide) puis
+ * lit le cookie domaine.
+ * Staging / hors domaine partagé : ne pas détruire un token host-only valide
+ * (sinon hard reload post-login → session perdue → skeleton dashboard).
  */
 export function healAuthTokenCookies(cookie: Ref<string | null | undefined>): void {
     if (!import.meta.client) {
@@ -77,16 +83,20 @@ export function healAuthTokenCookies(cookie: Ref<string | null | undefined>): vo
     }
 
     const domain = import.meta.env.PROD ? authCookieDomain() : undefined;
-
-    clearHostOnlyAuthTokenCookie();
+    const fromDocument = readAuthTokenFromDocument();
 
     if (!domain) {
-        cookie.value = resolveHealedAuthToken({
-            documentCookieAfterHostOnlyPurge: document.cookie,
-            cookieRefValue: cookie.value,
-        });
+        if (!fromDocument) {
+            clearHostOnlyAuthTokenCookie();
+        }
+
+        cookie.value = fromDocument
+            ?? normalizeAuthTokenValue(cookie.value);
+
         return;
     }
+
+    clearHostOnlyAuthTokenCookie();
 
     const raw = resolveHealedAuthToken({
         documentCookieAfterHostOnlyPurge: document.cookie,
@@ -104,7 +114,7 @@ export function healAuthTokenCookies(cookie: Ref<string | null | undefined>): vo
 
 /**
  * Lecture seule (pas de purge). Le heal client est dans le plugin auth.
- * SSR : préfère un token non vide si le header Cookie en contient plusieurs.
+ * SSR / client : préfère un token non vide si plusieurs INFISWAP_TOKEN.
  */
 export function useAuthTokenCookie() {
     const domain = import.meta.env.PROD ? authCookieDomain() : undefined;
@@ -122,11 +132,12 @@ export function useAuthTokenCookie() {
 
     if (import.meta.server) {
         const header = useRequestHeaders(['cookie']).cookie ?? '';
-        const picked = pickAuthTokenFromCookieHeader(header);
-        cookie.value = picked;
+        cookie.value = pickAuthTokenFromCookieHeader(header);
     }
-    else if (cookie.value === '') {
-        cookie.value = null;
+    else {
+        const picked = readAuthTokenFromDocument()
+            ?? normalizeAuthTokenValue(cookie.value);
+        cookie.value = picked;
     }
 
     return cookie;
