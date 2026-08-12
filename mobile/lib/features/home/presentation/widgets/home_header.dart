@@ -40,7 +40,7 @@ class HomeHeader extends StatelessWidget {
           children: [
             Image.asset(
               'assets/images/logo.png',
-              height: 50,
+              height: 30,
               fit: BoxFit.contain,
             ),
           ],
@@ -62,7 +62,7 @@ class HomeHeader extends StatelessWidget {
                     '$greeting, $firstName',
                     style: TextStyle(
                       color: colors.textPrimary,
-                      fontSize: 24,
+                      fontSize: 16,
                       fontWeight: FontWeight.w700,
                       height: 1.1,
                     ),
