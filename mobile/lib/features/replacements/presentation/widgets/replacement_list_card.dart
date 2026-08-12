@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../models/replacement_item.dart';
 import 'mission_avatar.dart';
+import '../../../../core/theme/app_radii.dart';
 
 class ReplacementListCard extends StatelessWidget {
   const ReplacementListCard({
@@ -35,11 +36,11 @@ class ReplacementListCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         child: Container(
           decoration: BoxDecoration(
             color: colors.card,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppRadii.md),
             border: Border.all(color: colors.border),
             boxShadow: [
               BoxShadow(
@@ -206,7 +207,7 @@ class ReplacementUrgentBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
         color: AppColors.coral,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadii.md),
       ),
       child: const Row(
         mainAxisSize: MainAxisSize.min,

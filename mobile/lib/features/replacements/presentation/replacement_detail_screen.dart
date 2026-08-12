@@ -14,6 +14,7 @@ import 'replacement_candidates_screen.dart';
 import 'widgets/mission_avatar.dart';
 import 'widgets/platform_access_sheet.dart';
 import 'widgets/replacement_boost_sheet.dart';
+import '../../../core/theme/app_radii.dart';
 
 enum _ApplyStatus { idle, loading, applied }
 
@@ -398,7 +399,7 @@ class _OwnerFooter extends ConsumerWidget {
         Material(
           color: Colors.transparent,
           child: InkWell(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppRadii.md),
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => ReplacementCandidatesScreen(item: item),
@@ -409,7 +410,7 @@ class _OwnerFooter extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
               decoration: BoxDecoration(
                 color: background,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppRadii.md),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -649,7 +650,7 @@ class _SimpleHeader extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: colors.card,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(color: colors.border),
         boxShadow: [
           BoxShadow(
@@ -754,7 +755,7 @@ class _MissionHeader extends StatelessWidget {
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
             color: colors.card,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppRadii.md),
             border: Border.all(color: colors.border),
             boxShadow: [
               BoxShadow(
@@ -816,7 +817,7 @@ class _LocationDetailCard extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: colors.card,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(color: colors.border),
         boxShadow: [
           BoxShadow(
@@ -1044,7 +1045,7 @@ class _ShiftLine extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
         color: colors.background,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(color: colors.primaryOutline),
       ),
       child: Row(
@@ -1089,7 +1090,7 @@ class _InfoCard extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: colors.card,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(color: colors.border),
         boxShadow: [
           BoxShadow(
@@ -1190,7 +1191,7 @@ class _UrgentBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: AppColors.coral,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadii.md),
       ),
       child: const Row(
         mainAxisSize: MainAxisSize.min,

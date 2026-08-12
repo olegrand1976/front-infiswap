@@ -442,7 +442,7 @@ class _Avatar extends StatelessWidget {
       width: 42,
       height: 42,
       alignment: Alignment.center,
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(13)),
+      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(AppRadii.md)),
       child: Text(
         initials,
         style: TextStyle(color: fg, fontSize: 14, fontWeight: FontWeight.w800),

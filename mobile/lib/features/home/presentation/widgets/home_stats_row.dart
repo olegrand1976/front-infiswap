@@ -90,7 +90,7 @@ class _StatCard extends StatelessWidget {
             height: 24,
             decoration: BoxDecoration(
               color: foreground.withValues(alpha: .18),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppRadii.md),
             ),
             child: Icon(icon, color: foreground, size: 13),
           ),

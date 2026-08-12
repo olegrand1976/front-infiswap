@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/location/location_repository.dart';
 import '../../../../core/theme/app_colors.dart';
 import 'section_label.dart';
+import '../../../../core/theme/app_radii.dart';
 
 class ReplacementSearchModal extends ConsumerStatefulWidget {
   const ReplacementSearchModal({
@@ -132,7 +133,7 @@ class _ReplacementSearchModalState
         ),
         decoration: BoxDecoration(
           color: colors.card,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadii.md)),
         ),
         child: SafeArea(
           top: false,
@@ -291,11 +292,11 @@ class _TagInputRow extends StatelessWidget {
               filled: true,
               fillColor: colors.inputBackground,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppRadii.md),
                 borderSide: BorderSide(color: colors.inputBorder),
               ),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppRadii.md),
                 borderSide: BorderSide(color: colors.inputBorder),
               ),
               contentPadding:

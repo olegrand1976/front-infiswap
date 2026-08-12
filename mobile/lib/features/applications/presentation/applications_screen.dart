@@ -8,6 +8,7 @@ import '../../replacements/presentation/replacement_detail_screen.dart';
 import '../data/applications_list_notifier.dart';
 import '../models/application_item.dart';
 import 'widgets/application_card.dart';
+import '../../../core/theme/app_radii.dart';
 
 class ApplicationsScreen extends ConsumerStatefulWidget {
   const ApplicationsScreen({super.key});
@@ -218,7 +219,7 @@ class _StatsStrip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 13),
       decoration: BoxDecoration(
         color: colors.card,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(color: colors.border),
         boxShadow: [
           BoxShadow(
@@ -383,12 +384,12 @@ class _FilterTab extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
             color: selected ? colors.textPrimary : Colors.transparent,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppRadii.md),
             border: Border.all(
                 color: selected ? colors.textPrimary : colors.divider,
                 width: 1.3),

@@ -31,8 +31,14 @@ class HomePartnerCards extends StatelessWidget {
         if (showNursTech)
           _PartnerCard(
             accent: AppColors.nursTech,
-            // No NursTech logo on mobile — a neutral icon stands in for it.
-            mark: const Icon(Icons.language, color: Colors.white, size: 19),
+            mark: const Text(
+              'NursTech',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
             title: 'Créez votre page web pro',
             subtitle: 'formules dès 450 €.',
             primaryLabel: 'Demander mon devis page web',
@@ -113,7 +119,7 @@ class _PartnerCard extends StatelessWidget {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: accent,
-                  borderRadius: BorderRadius.circular(11),
+                  borderRadius: BorderRadius.circular(AppRadii.md),
                 ),
                 child: mark,
               ),
@@ -181,11 +187,11 @@ class _PartnerButton extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(9),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(9),
+            borderRadius: BorderRadius.circular(AppRadii.md),
             border: ghost ? null : Border.all(color: color, width: 1.5),
           ),
           child: Text(

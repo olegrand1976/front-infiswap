@@ -158,7 +158,7 @@ class _RailEmpty extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: colors.card,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(color: colors.divider),
       ),
       child: Text(
@@ -190,7 +190,7 @@ class _ReplacementMiniCard extends StatelessWidget {
           decoration: HomeDecorations.card(
             context,
             accent: item.isUrgent ? AppColors.urgent : null,
-            radius: 16,
+            radius: AppRadii.md,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -256,12 +256,12 @@ class _MissionMiniCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         child: Container(
           width: 158,
           padding: const EdgeInsets.all(12),
           decoration: HomeDecorations.card(context,
-              accent: AppColors.mission, radius: 16),
+              accent: AppColors.mission, radius: AppRadii.md),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -322,7 +322,7 @@ class _MiniTypeBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
       decoration: BoxDecoration(
-          color: background, borderRadius: BorderRadius.circular(7)),
+          color: background, borderRadius: BorderRadius.circular(AppRadii.md)),
       child: Text(
         isUrgent ? 'Urgent' : 'Classique',
         style: TextStyle(

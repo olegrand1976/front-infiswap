@@ -11,6 +11,7 @@ import '../models/create_replacement_payload.dart';
 import '../models/replacement_edit_data.dart';
 import '../models/replacement_item.dart';
 import 'widgets/create_form_fields.dart';
+import '../../../core/theme/app_radii.dart';
 
 class EditReplacementScreen extends ConsumerStatefulWidget {
   const EditReplacementScreen({
@@ -331,7 +332,7 @@ class _EditReplacementScreenState extends ConsumerState<EditReplacementScreen> {
                     decoration: BoxDecoration(
                       color: colors.card,
                       border: Border.all(color: colors.border),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(AppRadii.md),
                     ),
                     child: Row(
                       children: [

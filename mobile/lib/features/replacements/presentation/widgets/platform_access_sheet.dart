@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/config/app_config.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../subscription/data/subscription_repository.dart';
+import '../../../../core/theme/app_radii.dart';
 
 const _fallbackAccessPrice = '9,90 €';
 
@@ -38,7 +39,7 @@ class PlatformAccessSheet extends ConsumerWidget {
         padding: const EdgeInsets.fromLTRB(22, 24, 22, 18),
         decoration: BoxDecoration(
           color: colors.card,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(AppRadii.md),
           boxShadow: [
             BoxShadow(color: colors.shadow, blurRadius: 24, offset: const Offset(0, -6)),
           ],
@@ -51,7 +52,7 @@ class PlatformAccessSheet extends ConsumerWidget {
               height: 46,
               decoration: BoxDecoration(
                 color: colors.primaryMuted,
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(AppRadii.md),
               ),
               child: Icon(Icons.lock_outline, color: colors.primary),
             ),
@@ -79,7 +80,7 @@ class PlatformAccessSheet extends ConsumerWidget {
               decoration: BoxDecoration(
                 color: colors.primaryMuted,
                 border: Border.all(color: colors.primaryOutline),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(AppRadii.md),
               ),
               child: Column(
                 children: [

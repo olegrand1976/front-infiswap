@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../models/application_item.dart';
+import '../../../../core/theme/app_radii.dart';
 
 class ApplicationCard extends StatelessWidget {
   const ApplicationCard({
@@ -22,12 +23,12 @@ class ApplicationCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         child: Container(
           padding: const EdgeInsets.all(13),
           decoration: BoxDecoration(
             color: colors.card,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppRadii.md),
             border: Border.all(color: colors.divider),
             boxShadow: [
               BoxShadow(
@@ -166,7 +167,7 @@ class _TypeBadge extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-      decoration: BoxDecoration(color: background, borderRadius: BorderRadius.circular(7)),
+      decoration: BoxDecoration(color: background, borderRadius: BorderRadius.circular(AppRadii.md)),
       child: Text(
         isUrgent ? 'Urgent' : 'Classique',
         style: TextStyle(color: foreground, fontSize: 9, fontWeight: FontWeight.w800, letterSpacing: .2),

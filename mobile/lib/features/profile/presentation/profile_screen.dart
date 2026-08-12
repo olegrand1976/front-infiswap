@@ -271,7 +271,7 @@ class _MenuRow extends StatelessWidget {
                 height: 26,
                 decoration: BoxDecoration(
                   color: color,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppRadii.md),
                 ),
                 child: Icon(icon, size: 13, color: Colors.white),
               ),
@@ -319,7 +319,7 @@ class _ThemeToggleRow extends StatelessWidget {
             height: 26,
             decoration: BoxDecoration(
               color: colors.textSecondary,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppRadii.md),
             ),
             child: Icon(
               isDark ? Icons.dark_mode_outlined : Icons.light_mode_outlined,

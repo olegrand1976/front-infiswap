@@ -10,6 +10,7 @@ import '../../../subscription/data/subscription_repository.dart';
 import '../../../subscription/models/boost_plan.dart';
 import '../../data/my_replacements_list_notifier.dart';
 import '../../models/replacement_item.dart';
+import '../../../../core/theme/app_radii.dart';
 
 const _boostCallbackScheme = 'infiswapmobile';
 
@@ -158,7 +159,7 @@ class _ReplacementBoostSheetState extends ConsumerState<ReplacementBoostSheet> {
         padding: const EdgeInsets.fromLTRB(22, 24, 22, 18),
         decoration: BoxDecoration(
           color: colors.card,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(AppRadii.md),
           boxShadow: [
             BoxShadow(
                 color: colors.shadow,
@@ -174,7 +175,7 @@ class _ReplacementBoostSheetState extends ConsumerState<ReplacementBoostSheet> {
               height: 46,
               decoration: BoxDecoration(
                 color: colors.primaryMuted,
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(AppRadii.md),
               ),
               child: Icon(Icons.trending_up, color: colors.primary),
             ),
@@ -315,7 +316,7 @@ class _BoostPlanTile extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         child: Container(
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -323,7 +324,7 @@ class _BoostPlanTile extends StatelessWidget {
             color: selected ? colors.primaryMuted : colors.background,
             border: Border.all(
                 color: selected ? colors.primaryOutline : colors.border),
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(AppRadii.md),
           ),
           child: Row(
             children: [

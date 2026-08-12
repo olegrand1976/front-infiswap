@@ -9,6 +9,7 @@ import '../../../core/theme/app_colors.dart';
 import '../data/auth_repository.dart';
 import '../models/auth_models.dart';
 import '../providers/auth_session_provider.dart';
+import '../../../core/theme/app_radii.dart';
 
 class TwoFactorScreen extends ConsumerStatefulWidget {
   const TwoFactorScreen({
@@ -171,7 +172,7 @@ class _TwoFactorScreenState extends ConsumerState<TwoFactorScreen> {
                       const SizedBox(height: 24),
                       DecoratedBox(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppRadii.md),
                           color: colors.primary,
                           boxShadow: [
                             BoxShadow(

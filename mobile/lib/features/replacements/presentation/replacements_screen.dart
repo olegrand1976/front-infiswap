@@ -11,6 +11,7 @@ import 'widgets/active_search_chips.dart';
 import 'widgets/mission_avatar.dart';
 import 'widgets/replacement_filters_modal.dart';
 import 'widgets/replacement_search_modal.dart';
+import '../../../core/theme/app_radii.dart';
 
 class ReplacementsScreen extends ConsumerStatefulWidget {
   const ReplacementsScreen({super.key});
@@ -353,14 +354,14 @@ class _FilterButton extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(AppRadii.md),
       child: Container(
         width: 40,
         height: 40,
         decoration: BoxDecoration(
           color: colors.card,
           border: Border.all(color: colors.divider),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadii.md),
         ),
         child: Stack(
           clipBehavior: Clip.none,
@@ -406,7 +407,7 @@ class _SearchPill extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(AppRadii.md),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
@@ -415,7 +416,7 @@ class _SearchPill extends StatelessWidget {
             color: isActive ? colors.primaryOutline : colors.divider,
             width: isActive ? 1.4 : 1,
           ),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadii.md),
           boxShadow: [
             BoxShadow(
                 color: colors.shadow,
@@ -483,7 +484,7 @@ class _TypeTabs extends StatelessWidget {
 
           return InkWell(
             onTap: () => onSelect(key),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppRadii.md),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 14),
               alignment: Alignment.center,
@@ -491,7 +492,7 @@ class _TypeTabs extends StatelessWidget {
                 color: isOn ? colors.textPrimary : colors.card,
                 border: Border.all(
                     color: isOn ? colors.textPrimary : colors.divider),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppRadii.md),
               ),
               child: Text(
                 replacementTypeLabels[key]!,
@@ -542,12 +543,12 @@ class _ReplacementCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         child: Container(
           padding: const EdgeInsets.fromLTRB(14, 13, 14, 12),
           decoration: BoxDecoration(
             color: colors.card,
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(AppRadii.md),
             border: Border.all(color: colors.divider),
             boxShadow: [
               BoxShadow(
@@ -655,7 +656,7 @@ class _TypeBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
       decoration: BoxDecoration(
-          color: background, borderRadius: BorderRadius.circular(8)),
+          color: background, borderRadius: BorderRadius.circular(AppRadii.md)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

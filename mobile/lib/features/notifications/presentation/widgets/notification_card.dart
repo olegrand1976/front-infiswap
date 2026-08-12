@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/date_time_format.dart';
 import '../../models/notification_item.dart';
+import '../../../../core/theme/app_radii.dart';
 
 class NotificationCard extends StatelessWidget {
   const NotificationCard({
@@ -24,12 +25,12 @@ class NotificationCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         child: Container(
           padding: const EdgeInsets.all(13),
           decoration: BoxDecoration(
             color: isUnread ? colors.primaryMuted : colors.card,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppRadii.md),
             border: Border.all(
               color: isUnread ? colors.primaryOutline : colors.divider,
             ),

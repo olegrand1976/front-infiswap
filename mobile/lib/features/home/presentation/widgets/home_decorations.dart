@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_radii.dart';
 
 abstract final class HomeDecorations {
   static bool isDark(BuildContext context) =>
@@ -9,7 +10,7 @@ abstract final class HomeDecorations {
   static BoxDecoration card(
     BuildContext context, {
     Color? accent,
-    double radius = 16,
+    double radius = AppRadii.md,
   }) {
     final colors = context.appColors;
     final dark = isDark(context);
@@ -45,7 +46,7 @@ abstract final class HomeDecorations {
 
     return BoxDecoration(
       color: colors.inputBackground,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(AppRadii.md),
       border: Border.all(
         color: dark
             ? colors.secondary.withValues(alpha: 0.55)

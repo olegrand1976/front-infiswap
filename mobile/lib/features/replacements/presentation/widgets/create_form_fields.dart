@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/date_time_format.dart';
+import '../../../../core/theme/app_radii.dart';
 
 /// Légende de section pour les groupes qui ne sont pas un champ de texte
 /// (grille de pastilles, sélecteur de rôle) — les vrais champs portent leur
@@ -46,7 +47,7 @@ class CreateTimeField extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(AppRadii.md),
       child: InputDecorator(
         decoration: InputDecoration(
           labelText: label,
@@ -159,13 +160,13 @@ class CreateTogglePill extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(AppRadii.md),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
           color: selected ? colors.primary : colors.card,
           border: Border.all(color: selected ? colors.primary : colors.border),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadii.md),
         ),
         child: Text(
           label,

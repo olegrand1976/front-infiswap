@@ -57,7 +57,7 @@ class HomeReferralCard extends StatelessWidget {
                     end: Alignment.bottomRight,
                     colors: [AppColors.mint, AppColors.mintDark],
                   ),
-                  borderRadius: BorderRadius.circular(13),
+                  borderRadius: BorderRadius.circular(AppRadii.md),
                 ),
                 child: const Icon(Icons.people_alt_outlined,
                     color: Colors.white, size: 19),
@@ -106,14 +106,14 @@ class HomeReferralCard extends StatelessWidget {
                 Material(
                   color: Colors.transparent,
                   child: InkWell(
-                    borderRadius: BorderRadius.circular(9),
+                    borderRadius: BorderRadius.circular(AppRadii.md),
                     onTap: () => _copy(context),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 11, vertical: 8),
                       decoration: BoxDecoration(
                         color: colors.secondary,
-                        borderRadius: BorderRadius.circular(9),
+                        borderRadius: BorderRadius.circular(AppRadii.md),
                       ),
                       child: const Row(
                         mainAxisSize: MainAxisSize.min,

@@ -8,6 +8,7 @@ import '../data/my_replacements_list_notifier.dart';
 import '../models/replacement_item.dart';
 import 'replacement_detail_screen.dart';
 import 'widgets/replacement_list_card.dart';
+import '../../../core/theme/app_radii.dart';
 
 class MyReplacementsScreen extends ConsumerStatefulWidget {
   const MyReplacementsScreen({super.key});
@@ -192,7 +193,7 @@ class _StatsStrip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 13),
       decoration: BoxDecoration(
         color: colors.card,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(color: colors.border),
         boxShadow: [
           BoxShadow(color: colors.shadow, blurRadius: 10, offset: const Offset(0, 3)),
@@ -290,12 +291,12 @@ class _MyReplacementCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         child: Container(
           padding: const EdgeInsets.all(13),
           decoration: BoxDecoration(
             color: colors.card,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppRadii.md),
             border: Border.all(color: colors.divider),
             boxShadow: [
               BoxShadow(color: colors.shadow, blurRadius: 14, offset: const Offset(0, 6)),

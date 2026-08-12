@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../models/replacement_search_params.dart';
 import 'section_label.dart';
+import '../../../../core/theme/app_radii.dart';
 
 class ReplacementFiltersModal extends StatefulWidget {
   const ReplacementFiltersModal({
@@ -114,7 +115,7 @@ class _ReplacementFiltersModalState extends State<ReplacementFiltersModal> {
         ),
         decoration: BoxDecoration(
           color: colors.card,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadii.md)),
         ),
         child: SafeArea(
           top: false,

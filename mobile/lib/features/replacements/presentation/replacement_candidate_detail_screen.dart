@@ -7,6 +7,7 @@ import '../../../core/theme/app_colors.dart';
 import '../data/replacement_candidates_notifier.dart';
 import '../models/replacement_candidate.dart';
 import '../models/replacement_item.dart';
+import '../../../core/theme/app_radii.dart';
 
 class ReplacementCandidateDetailScreen extends ConsumerWidget {
   const ReplacementCandidateDetailScreen({
@@ -281,7 +282,7 @@ class _Hero extends StatelessWidget {
           width: 74,
           height: 74,
           alignment: Alignment.center,
-          decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(22)),
+          decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(AppRadii.md)),
           child: Text(
             candidate.initials,
             style: TextStyle(color: fg, fontSize: 24, fontWeight: FontWeight.w800),
@@ -337,7 +338,7 @@ class _StatsStrip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 13),
       decoration: BoxDecoration(
         color: colors.card,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(color: colors.border),
         boxShadow: [
           BoxShadow(color: colors.shadow, blurRadius: 10, offset: const Offset(0, 3)),
@@ -484,7 +485,7 @@ class _InfoCard extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: highlighted ? colors.primaryMuted : colors.card,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(color: highlighted ? colors.primaryOutline : colors.border),
         boxShadow: highlighted
             ? null
@@ -582,7 +583,7 @@ class _ContactRow extends StatelessWidget {
             width: 32,
             height: 32,
             alignment: Alignment.center,
-            decoration: BoxDecoration(color: colors.background, borderRadius: BorderRadius.circular(10)),
+            decoration: BoxDecoration(color: colors.background, borderRadius: BorderRadius.circular(AppRadii.md)),
             child: Icon(icon, size: 15, color: colors.textSecondary),
           ),
           const SizedBox(width: 10),
@@ -605,12 +606,12 @@ class _ContactRow extends StatelessWidget {
               color: Colors.transparent,
               child: InkWell(
                 onTap: onTap,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(AppRadii.md),
                 child: Container(
                   width: 32,
                   height: 32,
                   alignment: Alignment.center,
-                  decoration: BoxDecoration(border: Border.all(color: colors.border), borderRadius: BorderRadius.circular(10)),
+                  decoration: BoxDecoration(border: Border.all(color: colors.border), borderRadius: BorderRadius.circular(AppRadii.md)),
                   child: Icon(icon, size: 14, color: colors.textPrimary),
                 ),
               ),
@@ -681,7 +682,7 @@ class _Footer extends StatelessWidget {
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-              decoration: BoxDecoration(color: colors.successBg, borderRadius: BorderRadius.circular(12)),
+              decoration: BoxDecoration(color: colors.successBg, borderRadius: BorderRadius.circular(AppRadii.md)),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

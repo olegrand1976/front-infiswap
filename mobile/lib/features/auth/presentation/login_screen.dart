@@ -9,6 +9,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/theme_mode_provider.dart';
 import '../data/auth_repository.dart';
 import '../providers/auth_session_provider.dart';
+import '../../../core/theme/app_radii.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -241,7 +242,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                       DecoratedBox(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppRadii.md),
                           color: colors.primary,
                           boxShadow: [
                             BoxShadow(

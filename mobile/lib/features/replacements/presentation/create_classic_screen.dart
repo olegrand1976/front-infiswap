@@ -13,6 +13,7 @@ import '../models/create_replacement_payload.dart';
 import '../models/replacement_search_params.dart' show replacementRoleLabels;
 import 'widgets/create_form_fields.dart';
 import 'widgets/platform_access_sheet.dart';
+import '../../../core/theme/app_radii.dart';
 
 const _validRoleKeys = ['nurse', 'caregiver', 'midwife'];
 
@@ -287,7 +288,7 @@ class _CreateClassicScreenState extends ConsumerState<CreateClassicScreen> {
                     decoration: BoxDecoration(
                       color: colors.card,
                       border: Border.all(color: colors.border),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(AppRadii.md),
                     ),
                     child: Row(
                       children: [

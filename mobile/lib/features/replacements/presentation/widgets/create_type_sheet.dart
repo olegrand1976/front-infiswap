@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../create_classic_screen.dart';
 import '../create_immediate_screen.dart';
+import '../../../../core/theme/app_radii.dart';
 
 // Create replacement type selection sheet
 class CreateTypeSheet extends StatelessWidget {
@@ -26,7 +27,7 @@ class CreateTypeSheet extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: colors.card,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadii.md)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -126,7 +127,7 @@ class _TypeOption extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
           child: Row(
@@ -136,7 +137,7 @@ class _TypeOption extends StatelessWidget {
                 height: 44,
                 decoration: BoxDecoration(
                   color: highlight ? colors.primaryMuted : colors.background,
-                  borderRadius: BorderRadius.circular(13),
+                  borderRadius: BorderRadius.circular(AppRadii.md),
                 ),
                 child: Icon(
                   icon,

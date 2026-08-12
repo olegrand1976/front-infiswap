@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../auth/models/auth_models.dart';
+import '../../../../core/theme/app_radii.dart';
 
 class HomeHeader extends StatelessWidget {
   const HomeHeader({
@@ -84,7 +85,7 @@ class HomeHeader extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(6),
+            borderRadius: BorderRadius.circular(AppRadii.md),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

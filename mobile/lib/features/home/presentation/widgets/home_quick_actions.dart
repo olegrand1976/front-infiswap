@@ -106,7 +106,7 @@ class _QuickActionCard extends StatelessWidget {
                 height: 26,
                 decoration: BoxDecoration(
                   color: action.color,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppRadii.md),
                 ),
                 child: Icon(action.icon, color: Colors.white, size: 13),
               ),
@@ -138,13 +138,13 @@ class _QuickActionCard extends StatelessWidget {
             color: Colors.transparent,
             child: InkWell(
               onTap: action.onTap,
-              borderRadius: BorderRadius.circular(11),
+              borderRadius: BorderRadius.circular(AppRadii.md),
               child: Container(
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 decoration: BoxDecoration(
                   color: action.color,
-                  borderRadius: BorderRadius.circular(11),
+                  borderRadius: BorderRadius.circular(AppRadii.md),
                 ),
                 alignment: Alignment.center,
                 child: Text(
