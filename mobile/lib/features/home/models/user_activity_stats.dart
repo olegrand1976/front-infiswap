@@ -1,13 +1,25 @@
+/// Mirrors the nurse report payload returned by `GET /reports`
+/// (`ReplacementReportService::generateNursePercentageReport`), same
+/// endpoint and fields the web nurse dashboard uses.
 class UserActivityStats {
   const UserActivityStats({
-    this.applicationsCount,
+    this.postedCount,
     this.acceptedCount,
-    this.createdCount,
+    this.responsesCount,
+    this.referralsCount,
   });
 
-  final int? applicationsCount;
+  /// Replacements posted by the nurse this month (`me`).
+  final int? postedCount;
+
+  /// Responses accepted this month (`accepted`).
   final int? acceptedCount;
-  final int? createdCount;
+
+  /// Total responses this month (`total`).
+  final int? responsesCount;
+
+  /// Colleagues registered through the nurse's referral link (`referrals`).
+  final int? referralsCount;
 
   factory UserActivityStats.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
@@ -15,9 +27,10 @@ class UserActivityStats {
     }
 
     return UserActivityStats(
-      applicationsCount: _parseInt(json['placements_made']),
-      acceptedCount: _parseInt(json['placements_accepted']),
-      createdCount: _parseInt(json['replacements_created']),
+      postedCount: _parseInt(json['me']),
+      acceptedCount: _parseInt(json['accepted']),
+      responsesCount: _parseInt(json['total']),
+      referralsCount: _parseInt(json['referrals']),
     );
   }
 

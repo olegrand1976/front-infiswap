@@ -17,7 +17,7 @@ class HomeDashboardRepository {
   final ReplacementsRepository _replacements;
 
   Future<HomeDashboardData> fetch(int userId) async {
-    final statsFuture = _fetchActivity(userId);
+    final statsFuture = _fetchActivity();
     final summaryFuture = _replacements.fetchDashboardSummary();
 
     final results = await Future.wait<Object>([statsFuture, summaryFuture]);
@@ -28,18 +28,16 @@ class HomeDashboardRepository {
     );
   }
 
-  Future<UserActivityStats> _fetchActivity(int userId) async {
+  Future<UserActivityStats> _fetchActivity() async {
     try {
-      final response = await _api.get<Map<String, dynamic>>(
-        '/replacements/$userId/activity',
-      );
-      final activity = response.data?['activity'];
-      if (activity is Map<String, dynamic>) {
-        return UserActivityStats.fromJson(activity);
+      final response = await _api.get<Map<String, dynamic>>('/reports');
+      final replacement = response.data?['replacement'];
+      if (replacement is Map<String, dynamic>) {
+        return UserActivityStats.fromJson(replacement);
       }
-      if (activity is Map) {
+      if (replacement is Map) {
         return UserActivityStats.fromJson(
-          activity.map((key, value) => MapEntry(key.toString(), value)),
+          replacement.map((key, value) => MapEntry(key.toString(), value)),
         );
       }
     } catch (_) {

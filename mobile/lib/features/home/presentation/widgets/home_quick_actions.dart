@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../../replacements/presentation/widgets/create_type_sheet.dart';
+import '../../../../core/theme/app_radii.dart';
+import '../../../replacements/presentation/create_classic_screen.dart';
+import '../../../replacements/presentation/my_replacements_screen.dart';
 import '../../../shell/providers/shell_tab_index_provider.dart';
 import 'home_decorations.dart';
 
@@ -12,123 +14,151 @@ class HomeQuickActions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SizedBox(
-      height: 40,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        clipBehavior: Clip.none,
-        children: [
-          _QuickActionPill(
-            icon: Icons.search,
-            label: 'Rechercher',
-            accent: HomeDecorations.accentCoral(context),
-            onTap: () => ref.read(shellTabIndexProvider.notifier).state = 1,
-          ),
-          const SizedBox(width: 8),
-          _QuickActionPill(
-            icon: Icons.add_circle_outline,
-            label: 'Créer',
-            accent: HomeDecorations.accentMint(context),
-            onTap: () => CreateTypeSheet.show(context),
-          ),
-          const SizedBox(width: 8),
-          _QuickActionPill(
-            icon: Icons.send_outlined,
-            label: 'Candidatures',
-            accent: HomeDecorations.accentCoral(context),
-            onTap: () => context.push('/applications'),
-          ),
-          const SizedBox(width: 8),
-          _QuickActionPill(
-            icon: Icons.notifications_outlined,
-            label: 'Notifications',
-            accent: HomeDecorations.accentMint(context),
-            showBadge: true,
-            onTap: () => ref.read(shellTabIndexProvider.notifier).state = 2,
-          ),
-        ],
+    final actions = [
+      _QuickAction(
+        icon: Icons.search,
+        title: 'Rechercher',
+        description: 'Compléter votre tournée avec un remplacement.',
+        cta: 'Rechercher',
+        color: AppColors.coral,
+        onTap: () => ref.read(shellTabIndexProvider.notifier).state = 1,
       ),
+      _QuickAction(
+        icon: Icons.person_add_alt_outlined,
+        title: 'Me faire remplacer',
+        description: 'Publier une offre sur votre tournée.',
+        cta: 'Demander',
+        color: const Color(0xFF059669),
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute<void>(builder: (_) => const CreateClassicScreen()),
+        ),
+      ),
+      _QuickAction(
+        icon: Icons.groups_outlined,
+        title: 'Candidats',
+        description: 'Voir les réponses positives à vos offres.',
+        cta: 'Consulter',
+        color: AppColors.mission,
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute<void>(builder: (_) => const MyReplacementsScreen()),
+        ),
+      ),
+      _QuickAction(
+        icon: Icons.fact_check_outlined,
+        title: 'Mes accords',
+        description: 'Remplacements où vous avez postulé.',
+        cta: 'Accéder',
+        color: const Color(0xFFB45309),
+        onTap: () => context.push('/applications'),
+      ),
+    ];
+
+    return GridView.count(
+      crossAxisCount: 2,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      mainAxisSpacing: 10,
+      crossAxisSpacing: 10,
+      childAspectRatio: 1.4,
+      children:
+          actions.map((action) => _QuickActionCard(action: action)).toList(),
     );
   }
 }
 
-class _QuickActionPill extends StatelessWidget {
-  const _QuickActionPill({
+class _QuickAction {
+  const _QuickAction({
     required this.icon,
-    required this.label,
-    required this.accent,
+    required this.title,
+    required this.description,
+    required this.cta,
+    required this.color,
     required this.onTap,
-    this.showBadge = false,
   });
 
   final IconData icon;
-  final String label;
-  final Color accent;
+  final String title;
+  final String description;
+  final String cta;
+  final Color color;
   final VoidCallback onTap;
-  final bool showBadge;
+}
+
+class _QuickActionCard extends StatelessWidget {
+  const _QuickActionCard({required this.action});
+
+  final _QuickAction action;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final dark = HomeDecorations.isDark(context);
 
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(999),
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(6, 6, 14, 6),
-          decoration: BoxDecoration(
-            color: colors.card,
-            borderRadius: BorderRadius.circular(999),
-            border: Border.all(
-              color: dark ? colors.primaryOutline.withValues(alpha: 0.45) : colors.border,
-            ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
+    return Container(
+      padding: const EdgeInsets.all(13),
+      decoration: HomeDecorations.card(context, radius: AppRadii.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Stack(
-                clipBehavior: Clip.none,
-                alignment: Alignment.center,
-                children: [
-                  Container(
-                    width: 26,
-                    height: 26,
-                    decoration: BoxDecoration(
-                      color: accent.withValues(alpha: 0.12),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(icon, color: accent, size: 13),
-                  ),
-                  if (showBadge)
-                    Positioned(
-                      top: -1,
-                      right: -1,
-                      child: Container(
-                        width: 8,
-                        height: 8,
-                        decoration: const BoxDecoration(
-                          color: AppColors.coral,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ),
-                ],
+              Container(
+                width: 26,
+                height: 26,
+                decoration: BoxDecoration(
+                  color: action.color,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(action.icon, color: Colors.white, size: 13),
               ),
               const SizedBox(width: 8),
-              Text(
-                label,
-                style: TextStyle(
-                  color: colors.textPrimary,
-                  fontSize: 11.5,
-                  fontWeight: FontWeight.w700,
+              Expanded(
+                child: Text(
+                  action.title,
+                  style: TextStyle(
+                    color: colors.textPrimary,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ],
           ),
-        ),
+          const SizedBox(height: 8),
+          Expanded(
+            child: Text(
+              action.description,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 10.5,
+                height: 1.4,
+              ),
+            ),
+          ),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: action.onTap,
+              borderRadius: BorderRadius.circular(11),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                  color: action.color,
+                  borderRadius: BorderRadius.circular(11),
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  action.cta,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 11.5,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

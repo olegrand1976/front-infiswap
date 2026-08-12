@@ -23,6 +23,11 @@ abstract final class AppColors {
 
   static const Color white = Color(0xFFFFFFFF);
 
+  // Partner brand accents (NursTech / NursAssur cards on the home dashboard).
+  static const Color nursTech = Color(0xFF4A649F);
+
+  static const Color nursAssur = Color(0xFF00858D);
+
   static const List<(Color, Color)> avatarPalette = [
     (Color(0xFFEDE9FE), Color(0xFF6D28D9)),
     (Color(0xFFFEF3C7), Color(0xFFB45309)),

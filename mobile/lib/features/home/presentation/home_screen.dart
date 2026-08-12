@@ -11,7 +11,9 @@ import '../../replacements/presentation/replacement_detail_screen.dart';
 import '../data/home_dashboard_notifier.dart';
 import 'widgets/home_content_rails.dart';
 import 'widgets/home_header.dart';
+import 'widgets/home_partner_cards.dart';
 import 'widgets/home_quick_actions.dart';
+import 'widgets/home_referral_card.dart';
 import 'widgets/home_search_bar.dart';
 import 'widgets/home_stats_row.dart';
 
@@ -24,7 +26,8 @@ class HomeScreen extends ConsumerWidget {
     final session = ref.watch(authSessionProvider);
     final asyncDashboard = ref.watch(homeDashboardProvider);
     final notifier = ref.read(homeDashboardProvider.notifier);
-    final apiBaseUrl = ref.watch(appConfigProvider).apiBaseUrl;
+    final config = ref.watch(appConfigProvider);
+    final apiBaseUrl = config.apiBaseUrl;
 
     if (session == null) {
       return Scaffold(
@@ -50,6 +53,10 @@ class HomeScreen extends ConsumerWidget {
           ),
           data: (dashboard) {
             final summary = dashboard.replacements;
+            final user = session.user;
+            final referralCode = user['referral_code']?.toString() ?? '';
+            final shareUrl = '${config.webBaseUrl}/register/?referral=$referralCode';
+
             void onCardTap(ReplacementItem item) {
               Navigator.of(context).push(
                 MaterialPageRoute<void>(
@@ -71,9 +78,20 @@ class HomeScreen extends ConsumerWidget {
                   const SizedBox(height: 20),
                   const HomeSearchBar(),
                   const SizedBox(height: 16),
+                  HomeStatsRow(stats: dashboard.stats),
+                  const SizedBox(height: 16),
                   const HomeQuickActions(),
                   const SizedBox(height: 16),
-                  HomeStatsRow(stats: dashboard.stats),
+                  HomePartnerCards(
+                    webBaseUrl: config.webBaseUrl,
+                    showNursTech: !_isPartnerActive(user['site']),
+                    showNursAssur: !_isPartnerActive(user['insurance']),
+                  ),
+                  const SizedBox(height: 16),
+                  HomeReferralCard(
+                    referralsCount: dashboard.stats.referralsCount,
+                    shareUrl: shareUrl,
+                  ),
                   const SizedBox(height: 24),
                   HomeReplacementsRail(
                     items: _replacementsRailItems(summary),
@@ -94,6 +112,12 @@ class HomeScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+/// Mirrors web's `isPartnerProductActive`: a nurse already has the
+/// NursTech / NursAssur product once their `site` / `insurance` flag is on.
+bool _isPartnerActive(Object? flag) {
+  return flag == true || flag == 1;
 }
 
 const _replacementsRailTargetCount = 6;
