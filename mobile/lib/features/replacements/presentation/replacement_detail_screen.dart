@@ -175,20 +175,28 @@ class _ReplacementDetailScreenState
                     _SimpleHeader(item: item),
                   const SizedBox(height: 12),
                   _PeriodsCard(periods: item.periods),
-                  const SizedBox(height: 12),
-                  _LocationDetailCard(item: item),
+                  if (item.zipCodes.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    _ListInfoCard(
+                      icon: Icons.map_outlined,
+                      label: 'CODE POSTAL',
+                      values: item.zipCodes,
+                    ),
+                  ],
+                  if (item.cities.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    _ListInfoCard(
+                      icon: Icons.location_city_outlined,
+                      label: 'VILLE',
+                      values: item.cities,
+                    ),
+                  ],
                   if (item.careTypes.isNotEmpty) ...[
                     const SizedBox(height: 12),
-                    _InfoCard(
+                    _ListInfoCard(
                       icon: Icons.favorite_border,
                       label: 'TYPES DE SOINS',
-                      child: Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: item.careTypes
-                            .map((care) => _CareChip(label: care))
-                            .toList(),
-                      ),
+                      values: item.careTypes,
                     ),
                   ],
                   if (item.isMission) ...[
@@ -200,7 +208,7 @@ class _ReplacementDetailScreenState
                         item.role,
                         style: TextStyle(
                           color: colors.textPrimary,
-                          fontSize: 15,
+                          fontSize: 13,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -215,7 +223,7 @@ class _ReplacementDetailScreenState
                         item.description,
                         style: TextStyle(
                           color: colors.textPrimary,
-                          fontSize: 14,
+                          fontSize: 13,
                           height: 1.45,
                           fontWeight: FontWeight.w400,
                         ),
@@ -642,7 +650,7 @@ class _SimpleHeader extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: colors.card,
         borderRadius: BorderRadius.circular(AppRadii.md),
@@ -665,65 +673,27 @@ class _SimpleHeader extends StatelessWidget {
               if (item.isUrgent) const _UrgentBadge(),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 10),
           Text(
             item.title,
             style: TextStyle(
               color: colors.textPrimary,
-              fontSize: 22,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 6),
-          Text(
-            item.subtitle,
-            style: TextStyle(
-              color: colors.textSecondary,
-              fontSize: 14,
+          if (item.subtitle.isNotEmpty) ...[
+            const SizedBox(height: 3),
+            Text(
+              item.subtitle,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 12.5,
+              ),
             ),
-          ),
+          ],
           const SizedBox(height: 12),
-          Row(
-            children: [
-              Icon(
-                Icons.pin_drop_outlined,
-                size: 16,
-                color: colors.primary,
-              ),
-              const SizedBox(width: 4),
-              Flexible(
-                child: Text(
-                  item.zipCodesLabel,
-                  style: TextStyle(
-                    color: colors.textSecondary,
-                    fontSize: 13,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Container(
-                width: 1,
-                height: 14,
-                color: colors.divider,
-              ),
-              const SizedBox(width: 10),
-              Icon(
-                Icons.calendar_today_outlined,
-                size: 14,
-                color: colors.primary,
-              ),
-              const SizedBox(width: 4),
-              Flexible(
-                child: Text(
-                  item.dateLabel,
-                  style: TextStyle(
-                    color: colors.textSecondary,
-                    fontSize: 13,
-                  ),
-                ),
-              ),
-            ],
-          ),
+          _MetaLine(icon: Icons.calendar_today_outlined, text: item.dateLabel),
         ],
       ),
     );
@@ -760,36 +730,43 @@ class _MissionHeader extends StatelessWidget {
               ),
             ],
           ),
-          child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              MissionAvatar(logoUrl: item.institutionLogoUrl, size: 48),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'INSTITUTION',
-                      style: TextStyle(
-                        color: colors.textSecondary,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.6,
-                      ),
+              Row(
+                children: [
+                  MissionAvatar(logoUrl: item.institutionLogoUrl, size: 40),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'INSTITUTION',
+                          style: TextStyle(
+                            color: colors.textSecondary,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.6,
+                          ),
+                        ),
+                        const SizedBox(height: 3),
+                        Text(
+                          item.institutionName ?? 'Institution',
+                          style: TextStyle(
+                            color: colors.textPrimary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      item.institutionName ?? 'Institution',
-                      style: TextStyle(
-                        color: colors.textPrimary,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                  if (item.isUrgent) const _UrgentBadge(),
+                ],
               ),
-              if (item.isUrgent) const _UrgentBadge(),
+              const SizedBox(height: 12),
+              _MetaLine(icon: Icons.calendar_today_outlined, text: item.dateLabel),
             ],
           ),
         ),
@@ -798,149 +775,32 @@ class _MissionHeader extends StatelessWidget {
   }
 }
 
-class _LocationDetailCard extends StatelessWidget {
-  const _LocationDetailCard({required this.item});
+class _MetaLine extends StatelessWidget {
+  const _MetaLine({required this.icon, required this.text});
 
-  final ReplacementItem item;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: colors.card,
-        borderRadius: BorderRadius.circular(AppRadii.md),
-        border: Border.all(color: colors.border),
-        boxShadow: [
-          BoxShadow(
-            color: colors.shadow,
-            blurRadius: 10,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 36,
-                height: 36,
-                decoration: BoxDecoration(
-                  color: colors.primaryMuted,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.pin_drop_outlined,
-                  size: 18,
-                  color: colors.primary,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Text(
-                'CODES POSTAUX',
-                style: TextStyle(
-                  color: colors.textSecondary,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.6,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          if (item.zipCodes.isEmpty)
-            Text(
-              'Aucun code postal',
-              style: TextStyle(color: colors.textSecondary, fontSize: 14),
-            )
-          else
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: item.zipCodes
-                  .map((zip) => _LocationChip(label: zip, emphasized: true))
-                  .toList(),
-            ),
-          const SizedBox(height: 16),
-          Divider(color: colors.divider, height: 1),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Icon(
-                Icons.location_city_outlined,
-                size: 18,
-                color: colors.primary,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'VILLES',
-                style: TextStyle(
-                  color: colors.textSecondary,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.6,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          if (item.cities.isEmpty)
-            Text(
-              'Aucune ville',
-              style: TextStyle(color: colors.textSecondary, fontSize: 14),
-            )
-          else
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: item.cities
-                  .map((city) => _LocationChip(label: city))
-                  .toList(),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class _LocationChip extends StatelessWidget {
-  const _LocationChip({
-    required this.label,
-    this.emphasized = false,
-  });
-
-  final String label;
-  final bool emphasized;
+  final IconData icon;
+  final String text;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: emphasized ? colors.primaryMuted : colors.background,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: emphasized ? colors.primaryOutline : colors.border,
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 14, color: colors.primary),
+        const SizedBox(width: 5),
+        Expanded(
+          child: Text(
+            text,
+            style: TextStyle(color: colors.textSecondary, fontSize: 12.5),
+          ),
         ),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: emphasized ? colors.primary : colors.textPrimary,
-          fontSize: 13,
-          fontWeight: emphasized ? FontWeight.w600 : FontWeight.w400,
-        ),
-      ),
+      ],
     );
   }
 }
+
 
 class _PeriodsCard extends StatelessWidget {
   const _PeriodsCard({required this.periods});
@@ -1065,6 +925,89 @@ class _ShiftLine extends StatelessWidget {
   }
 }
 
+/// Icon + label header, then one value per line (divided, no icon
+/// repeated per row) — used for CP, ville and types de soins.
+class _ListInfoCard extends StatelessWidget {
+  const _ListInfoCard({
+    required this.icon,
+    required this.label,
+    required this.values,
+  });
+
+  final IconData icon;
+  final String label;
+  final List<String> values;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: colors.card,
+        borderRadius: BorderRadius.circular(AppRadii.md),
+        border: Border.all(color: colors.border),
+        boxShadow: [
+          BoxShadow(
+            color: colors.shadow,
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 26,
+                height: 26,
+                decoration: BoxDecoration(
+                  color: colors.primaryMuted,
+                  borderRadius: BorderRadius.circular(AppRadii.md),
+                ),
+                child: Icon(icon, size: 13, color: colors.primary),
+              ),
+              const SizedBox(width: 9),
+              Text(
+                label,
+                style: TextStyle(
+                  color: colors.textSecondary,
+                  fontSize: 10.5,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ],
+          ),
+          for (var i = 0; i < values.length; i++)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 7),
+              decoration: BoxDecoration(
+                border: i > 0
+                    ? Border(top: BorderSide(color: colors.divider))
+                    : null,
+              ),
+              margin: i == 0 ? const EdgeInsets.only(top: 2) : null,
+              child: Text(
+                values[i],
+                style: TextStyle(
+                  color: colors.textPrimary,
+                  fontSize: 12.5,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
 class _InfoCard extends StatelessWidget {
   const _InfoCard({
     required this.icon,
@@ -1082,7 +1025,7 @@ class _InfoCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: colors.card,
         borderRadius: BorderRadius.circular(AppRadii.md),
@@ -1099,15 +1042,15 @@ class _InfoCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 36,
-            height: 36,
+            width: 26,
+            height: 26,
             decoration: BoxDecoration(
               color: colors.primaryMuted,
-              shape: BoxShape.circle,
+              borderRadius: BorderRadius.circular(AppRadii.md),
             ),
-            child: Icon(icon, size: 18, color: colors.primary),
+            child: Icon(icon, size: 13, color: colors.primary),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1116,12 +1059,12 @@ class _InfoCard extends StatelessWidget {
                   label,
                   style: TextStyle(
                     color: colors.textSecondary,
-                    fontSize: 11,
+                    fontSize: 10.5,
                     fontWeight: FontWeight.w600,
-                    letterSpacing: 0.6,
+                    letterSpacing: 0.5,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 6),
                 child,
               ],
             ),
@@ -1132,32 +1075,6 @@ class _InfoCard extends StatelessWidget {
   }
 }
 
-class _CareChip extends StatelessWidget {
-  const _CareChip({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: colors.primaryOutline),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: colors.primary,
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    );
-  }
-}
 
 class _BoostStars extends StatelessWidget {
   const _BoostStars();
