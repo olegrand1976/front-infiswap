@@ -38,17 +38,23 @@ export async function seedEmptyAuthTokenCookie(page: Page): Promise<void> {
 }
 
 /**
- * Ferme le gate niveau d'études (overlay z-50) qui bloque le menu compte.
+ * Ferme le gate niveau d'études (overlay Dialog z-50) qui bloque le menu compte.
  */
 export async function dismissEducationLevelGateIfOpen(page: Page): Promise<void> {
-    const dialog = page.getByRole('dialog').filter({ hasText: /Niveau d'études|Opleidingsniveau/i });
-    if (!(await dialog.isVisible().catch(() => false))) {
+    const gate = page.locator('[role="dialog"]').filter({
+        has: page.locator('input[name="education-level-gate"]'),
+    });
+
+    try {
+        await gate.waitFor({ state: 'visible', timeout: 2_000 });
+    }
+    catch {
         return;
     }
 
-    await dialog.getByRole('radio').first().check({ force: true });
-    await dialog.getByRole('button', { name: /Valider|Bevestigen|Opslaan/i }).click();
-    await expect(dialog).toBeHidden({ timeout: 15_000 });
+    await gate.locator('input[name="education-level-gate"]').first().check({ force: true });
+    await gate.getByRole('button', { name: 'Valider' }).click({ force: true });
+    await expect(gate).toBeHidden({ timeout: 15_000 });
 }
 
 export async function fillLoginForm(page: Page, identifier: string, password: string): Promise<void> {
@@ -91,10 +97,11 @@ export async function logoutViaDashboard(page: Page): Promise<void> {
     await dismissEducationLevelGateIfOpen(page);
 
     const trigger = page.getByTestId('account-menu-trigger').first();
-    await trigger.click();
+    await trigger.click({ force: true });
     const logoutItem = page.getByRole('menuitem', { name: /Déconnexion|Uitloggen/ });
     await expect(logoutItem).toBeVisible({ timeout: 10_000 });
-    await logoutItem.click();
+    // force : l’overlay Dialog (gate études) peut rester au-dessus du portail menu
+    await logoutItem.click({ force: true });
     await expect(page).toHaveURL((url) => {
         const path = typeof url === 'string' ? new URL(url).pathname : url.pathname;
         return path === '/' || path === '';

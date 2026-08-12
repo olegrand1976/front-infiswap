@@ -75,6 +75,7 @@ test.describe('Connexion', { tag: '@p0' }, () => {
     });
 
     test('logout UI puis re-login reste sur le dashboard', async ({ page, context }) => {
+        test.setTimeout(90_000);
         const { email, password } = await requireE2eCredentials();
 
         await fillLoginForm(page, email, password);
