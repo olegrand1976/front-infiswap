@@ -243,32 +243,32 @@
                                 </ProfilePremiumBadge>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
-                                <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
+                                <DropdownMenuLabel>{{ t('accountMenu.myAccount') }}</DropdownMenuLabel>
                                 <template v-if="hasMultipleContexts">
                                     <DropdownMenuSeparator />
                                     <DropdownMenuLabel class="text-xs text-muted-foreground">
-                                        Changer d'espace
+                                        {{ t('accountMenu.switchSpace') }}
                                     </DropdownMenuLabel>
                                     <DropdownMenuItem
                                         v-if="canAccessNurse"
                                         :disabled="activeContext === 'nurse'"
                                         @click="switchContext('nurse')"
                                     >
-                                        {{ activeContext === 'nurse' ? '✓ ' : '' }}Infirmier(e)
+                                        {{ activeContext === 'nurse' ? '✓ ' : '' }}{{ t('accountMenu.nurse') }}
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
                                         v-if="canAccessAdmin"
                                         :disabled="activeContext === 'admin'"
                                         @click="switchContext('admin')"
                                     >
-                                        {{ activeContext === 'admin' ? '✓ ' : '' }}Administration InfiSwap
+                                        {{ activeContext === 'admin' ? '✓ ' : '' }}{{ t('accountMenu.admin') }}
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
                                         v-if="canAccessInstitution"
                                         :disabled="activeContext === 'institution'"
                                         @click="switchContext('institution')"
                                     >
-                                        {{ activeContext === 'institution' ? '✓ ' : '' }} Institution
+                                        {{ activeContext === 'institution' ? '✓ ' : '' }}{{ t('accountMenu.institution') }}
                                     </DropdownMenuItem>
                                 </template>
 
@@ -279,7 +279,7 @@
                                         :key="role"
                                         @click="switchRole(role)"
                                     >
-                                        Passer en {{ getRole(role) }}
+                                        {{ t('accountMenu.switchToRole', { role: getRole(role) }) }}
                                     </DropdownMenuItem>
                                 </template>
 
@@ -288,17 +288,17 @@
                                     v-if="showReenableNetworkJourney"
                                     @click="reenableNetworkJourney"
                                 >
-                                    Réactiver Mon réseau InfiSwap
+                                    {{ t('accountMenu.reenableNetwork') }}
                                 </DropdownMenuItem>
                                 <DropdownMenuItem as-child>
-                                    <NuxtLink :to="settingsRoute">Paramètres</NuxtLink>
+                                    <NuxtLink :to="settingsRoute">{{ t('nav.settings') }}</NuxtLink>
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
                                     class="hover:bg-primary"
                                     @click="logout"
                                 >
-                                    Déconnexion
+                                    {{ t('nav.logout') }}
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
@@ -351,6 +351,7 @@ import { hasVerifiedMemberBadge } from '~/utils/platformAccess';
 import { mapCelebrationVariantToReviewSource } from '~/utils/googleReview';
 
 const { isAdmin, isCommunityManager, hasChangedAvatar } = useAuth();
+const { t } = useI18n();
 
 const roles = ref<AccountType[]>([]);
 const user = useState<User>('user');

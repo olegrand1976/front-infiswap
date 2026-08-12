@@ -25,6 +25,15 @@
     "deleteAccountDesc": "Bevestig met uw wachtwoord. Uw account wordt gedeactiveerd, uw persoonsgegevens worden geanonimiseerd (recht op vergetelheid), en de beheerders worden per e-mail geïnformeerd. Bepaalde facturatiegegevens kunnen worden bewaard volgens de wettelijke verplichtingen.",
     "unsubscribeSuccess": "Uw uitschrijving is geregistreerd. Uw persoonsgegevens zijn geanonimiseerd."
   },
+  "accountMenu": {
+    "myAccount": "Mijn account",
+    "switchSpace": "Ruimte wisselen",
+    "nurse": "Verpleegkundige",
+    "admin": "Beheer InfiSwap",
+    "institution": "Instelling",
+    "switchToRole": "Overschakelen naar {role}",
+    "reenableNetwork": "Mijn InfiSwap-netwerk opnieuw activeren"
+  },
   "nav": {
     "home": "Home",
     "about": "Over ons",
