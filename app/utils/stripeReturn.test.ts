@@ -56,6 +56,26 @@ describe('stripeReturn', () => {
         });
     });
 
+    it('detects Infiswap Premium returns', () => {
+        expect(parseStripeProductReturn({
+            pro: 'success',
+            session_id: 'cs_test_pro',
+        })).toEqual({
+            zone: 'pro',
+            sessionId: 'cs_test_pro',
+            outcome: 'success',
+        });
+
+        expect(parseStripeProductReturn({
+            pro: 'cancel',
+            session_id: 'cs_test_pro_cancel',
+        })).toEqual({
+            zone: 'pro',
+            sessionId: 'cs_test_pro_cancel',
+            outcome: 'cancel',
+        });
+    });
+
     it('ignores invalid session ids', () => {
         expect(parseStripeProductReturn({ session_id: 'invalid' })).toBeNull();
         expect(parseStripeProductReturn({ boost: 'success' })).toBeNull();
@@ -68,6 +88,7 @@ describe('stripeReturn', () => {
             boost: 'success',
             contract: 'cancel',
             sponsorship: 'success',
+            pro: 'success',
         })).toEqual({ tab: 'home' });
     });
 
@@ -82,6 +103,13 @@ describe('stripeReturn', () => {
             boost: 'success',
             session_id: 'cs_test_boost',
         })).toBe('/dashboard/replacements/detail/12?session_id=cs_test_boost&boost=success');
+    });
+
+    it('builds login redirect preserving Premium return', () => {
+        expect(buildLoginRedirectWithStripeReturn('/dashboard/subscriptions', {
+            pro: 'success',
+            session_id: 'cs_test_pro',
+        })).toBe('/dashboard/subscriptions?session_id=cs_test_pro&pro=success');
     });
 
     it('validates stripe session id helper', () => {
