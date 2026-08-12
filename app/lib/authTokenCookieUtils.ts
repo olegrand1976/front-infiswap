@@ -31,24 +31,55 @@ export function buildAuthCookieExpireDirectives(domain?: string): string[] {
     return bases.map(base => `${base}${domainPart}`);
 }
 
+function decodeCookieValue(raw: string): string {
+    try {
+        return decodeURIComponent(raw);
+    }
+    catch {
+        return raw;
+    }
+}
+
 /**
- * Lit INFISWAP_TOKEN depuis document.cookie.
- * Après purge host-only, ne reste en principe que le cookie domain=.infiswap.be.
+ * Prefère toute valeur non vide si plusieurs INFISWAP_TOKEN (host-only vide + domain valide).
+ * Régression bloquée : prendre le 1er match seul → login bounce (session effacée).
  */
+export function pickAuthTokenFromCookieHeader(cookieHeader: string): string | null {
+    if (!cookieHeader) {
+        return null;
+    }
+
+    const re = new RegExp(`(?:^|;\\s*)${AUTH_TOKEN}=([^;]*)`, 'g');
+    let match: RegExpExecArray | null;
+    let best: string | null = null;
+
+    while ((match = re.exec(cookieHeader)) !== null) {
+        const normalized = normalizeAuthTokenValue(decodeCookieValue(match[1]));
+        if (normalized) {
+            best = normalized;
+        }
+    }
+
+    return best;
+}
+
+/** Lit INFISWAP_TOKEN depuis document.cookie (préfère non vide). */
 export function readAuthTokenFromDocument(): string | null {
     if (typeof document === 'undefined') {
         return null;
     }
 
-    const match = document.cookie.match(new RegExp(`(?:^|;\\s*)${AUTH_TOKEN}=([^;]*)`));
-    if (!match) {
-        return null;
-    }
+    return pickAuthTokenFromCookieHeader(document.cookie);
+}
 
-    try {
-        return normalizeAuthTokenValue(decodeURIComponent(match[1]));
-    }
-    catch {
-        return normalizeAuthTokenValue(match[1]);
-    }
+/**
+ * Décision heal après purge host-only (pure, testable).
+ * Si on lit vide alors qu'un token domaine existe encore → on NE doit PAS nullifier.
+ */
+export function resolveHealedAuthToken(input: {
+    documentCookieAfterHostOnlyPurge: string;
+    cookieRefValue: string | null | undefined;
+}): string | null {
+    return pickAuthTokenFromCookieHeader(input.documentCookieAfterHostOnlyPurge)
+        ?? normalizeAuthTokenValue(input.cookieRefValue);
 }

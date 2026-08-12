@@ -3,10 +3,9 @@ import type { Ref } from 'vue';
 import { AUTH_TOKEN } from '~/lib/constants';
 import {
     buildAuthCookieExpireDirectives,
-    normalizeAuthTokenValue,
     pickAuthTokenFromCookieHeader,
-    readAuthTokenFromDocument,
     resolveAuthCookieDomain,
+    resolveHealedAuthToken,
 } from '~/lib/authTokenCookieUtils';
 
 function authCookieDomain(): string | undefined {
@@ -82,11 +81,17 @@ export function healAuthTokenCookies(cookie: Ref<string | null | undefined>): vo
     clearHostOnlyAuthTokenCookie();
 
     if (!domain) {
-        cookie.value = normalizeAuthTokenValue(cookie.value) ?? readAuthTokenFromDocument();
+        cookie.value = resolveHealedAuthToken({
+            documentCookieAfterHostOnlyPurge: document.cookie,
+            cookieRefValue: cookie.value,
+        });
         return;
     }
 
-    const raw = readAuthTokenFromDocument() ?? normalizeAuthTokenValue(cookie.value);
+    const raw = resolveHealedAuthToken({
+        documentCookieAfterHostOnlyPurge: document.cookie,
+        cookieRefValue: cookie.value,
+    });
 
     if (!raw) {
         expireAuthCookie(domain);
