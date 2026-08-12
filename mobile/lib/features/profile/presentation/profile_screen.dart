@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/config/app_config.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_radii.dart';
 import '../../../core/theme/theme_mode_provider.dart';
 import '../../auth/data/auth_repository.dart';
 import '../../auth/providers/auth_session_provider.dart';
@@ -123,11 +124,11 @@ class ProfileScreen extends ConsumerWidget {
             const SizedBox(height: 20),
             const _GroupLabel('Compte'),
             _MenuGroup(children: [
-              const _MenuRow(
+              _MenuRow(
                 icon: Icons.workspace_premium_outlined,
-                color: AppColors.boostGold,
+                color: const Color(0xFFB45309),
                 label: 'Infiswap Premium',
-                soon: true,
+                onTap: () {},
               ),
               _MenuRow(
                 icon: Icons.settings_outlined,
@@ -218,7 +219,7 @@ class _MenuGroup extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: colors.card,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(color: colors.border),
         boxShadow: [
           BoxShadow(color: colors.shadow, blurRadius: 10, offset: const Offset(0, 3)),

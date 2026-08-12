@@ -16,6 +16,7 @@ class AvatarSection extends StatefulWidget {
     required this.displayName,
     required this.subtitle,
     required this.onAvatarChanged,
+    this.compact = false,
   });
 
   final SettingsRepository repository;
@@ -24,6 +25,11 @@ class AvatarSection extends StatefulWidget {
   final String displayName;
   final String subtitle;
   final Future<void> Function() onAvatarChanged;
+
+  /// Small horizontal row instead of the big centered layout — used
+  /// where the avatar is a secondary header (e.g. Settings), not the
+  /// screen's main focus (e.g. Profile).
+  final bool compact;
 
   @override
   State<AvatarSection> createState() => _AvatarSectionState();
@@ -77,62 +83,94 @@ class _AvatarSectionState extends State<AvatarSection> {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final initial = widget.displayName.isNotEmpty ? widget.displayName[0].toUpperCase() : '?';
+    final radius = widget.compact ? 24.0 : 44.0;
+
+    final avatar = GestureDetector(
+      onTap: _isBusy ? null : _openActions,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          CircleAvatar(
+            radius: radius,
+            backgroundColor: colors.primaryMuted,
+            backgroundImage:
+                widget.initialImageUrl != null ? NetworkImage(widget.initialImageUrl!) : null,
+            child: widget.initialImageUrl == null
+                ? Text(
+                    initial,
+                    style: TextStyle(
+                      color: colors.primary,
+                      fontSize: widget.compact ? 17 : 30,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                : null,
+          ),
+          if (_isBusy)
+            Positioned.fill(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.3),
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: SizedBox(
+                    height: widget.compact ? 16 : 22,
+                    width: widget.compact ? 16 : 22,
+                    child: const CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
+          Positioned(
+            right: -2,
+            bottom: -2,
+            child: Container(
+              padding: EdgeInsets.all(widget.compact ? 4 : 6),
+              decoration: BoxDecoration(
+                color: colors.primary,
+                shape: BoxShape.circle,
+                border: Border.all(color: colors.background, width: 2),
+              ),
+              child: Icon(
+                Icons.photo_camera_outlined,
+                size: widget.compact ? 11 : 16,
+                color: colors.onPrimary,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (widget.compact) {
+      return Row(
+        children: [
+          avatar,
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.displayName,
+                  style:
+                      TextStyle(color: colors.textPrimary, fontSize: 14.5, fontWeight: FontWeight.w700),
+                ),
+                Text(
+                  widget.subtitle,
+                  style: TextStyle(color: colors.textSecondary, fontSize: 11),
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
+    }
 
     return Column(
       children: [
-        GestureDetector(
-          onTap: _isBusy ? null : _openActions,
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              CircleAvatar(
-                radius: 44,
-                backgroundColor: colors.primaryMuted,
-                backgroundImage:
-                    widget.initialImageUrl != null ? NetworkImage(widget.initialImageUrl!) : null,
-                child: widget.initialImageUrl == null
-                    ? Text(
-                        initial,
-                        style: TextStyle(
-                          color: colors.primary,
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )
-                    : null,
-              ),
-              if (_isBusy)
-                Positioned.fill(
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.3),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Center(
-                      child: SizedBox(
-                        height: 22,
-                        width: 22,
-                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ),
-              Positioned(
-                right: -2,
-                bottom: -2,
-                child: Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: colors.primary,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: colors.background, width: 2),
-                  ),
-                  child: Icon(Icons.photo_camera_outlined, size: 16, color: colors.onPrimary),
-                ),
-              ),
-            ],
-          ),
-        ),
+        avatar,
         const SizedBox(height: 12),
         Text(
           widget.displayName,

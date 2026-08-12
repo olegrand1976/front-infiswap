@@ -128,8 +128,10 @@ class _ZonePreferencesCardState extends State<ZonePreferencesCard> {
               style: IconButton.styleFrom(
                 backgroundColor: colors.primary,
                 foregroundColor: colors.onPrimary,
+                minimumSize: const Size(40, 40),
+                padding: EdgeInsets.zero,
               ),
-              icon: const Icon(Icons.add),
+              icon: const Icon(Icons.add, size: 18),
             ),
           ],
         ),
@@ -162,8 +164,10 @@ class _ZonePreferencesCardState extends State<ZonePreferencesCard> {
               style: IconButton.styleFrom(
                 backgroundColor: colors.primary,
                 foregroundColor: colors.onPrimary,
+                minimumSize: const Size(40, 40),
+                padding: EdgeInsets.zero,
               ),
-              icon: const Icon(Icons.add),
+              icon: const Icon(Icons.add, size: 18),
             ),
           ],
         ),

@@ -52,8 +52,10 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: palette.inputBackground,
-        labelStyle: TextStyle(color: palette.textSecondary),
-        hintStyle: TextStyle(color: palette.textSecondary),
+        isDense: true,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        labelStyle: TextStyle(color: palette.textSecondary, fontSize: 13.5),
+        hintStyle: TextStyle(color: palette.textSecondary, fontSize: 13.5),
         prefixIconColor: palette.primary,
         suffixIconColor: palette.textSecondary,
         enabledBorder: OutlineInputBorder(
@@ -80,7 +82,8 @@ class AppTheme {
         style: ElevatedButton.styleFrom(
           backgroundColor: palette.primary,
           foregroundColor: palette.onPrimary,
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppRadii.md),
           ),
@@ -90,13 +93,16 @@ class AppTheme {
         style: OutlinedButton.styleFrom(
           foregroundColor: palette.textPrimary,
           side: BorderSide(color: palette.border),
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppRadii.md),
           ),
         ),
       ),
       chipTheme: ChipThemeData(
+        labelStyle: TextStyle(color: palette.textPrimary, fontSize: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadii.md),
           side: BorderSide(color: palette.border),

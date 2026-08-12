@@ -6,6 +6,7 @@ import '../../../core/api/api_exception.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/location/location_repository.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_radii.dart';
 import '../../auth/data/auth_repository.dart';
 import '../../auth/providers/auth_session_provider.dart';
 import '../data/settings_repository.dart';
@@ -111,24 +112,22 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(8, 8, 20, 8),
+              padding: const EdgeInsets.fromLTRB(8, 8, 20, 4),
               child: Row(
                 children: [
                   if (canPop)
                     IconButton(
                       onPressed: () => context.pop(),
-                      icon: Icon(Icons.arrow_back, color: colors.primary),
+                      icon: Icon(Icons.arrow_back, size: 20, color: colors.primary),
                     )
                   else
                     const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'Paramètres',
-                      style: TextStyle(
-                        color: colors.textPrimary,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  Text(
+                    'Paramètres',
+                    style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 14.5,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ],
@@ -208,13 +207,14 @@ class _SettingsBody extends ConsumerWidget {
           displayName: displayName,
           subtitle: personalInfo.email,
           onAvatarChanged: onUserChanged,
+          compact: true,
         ),
-        const SizedBox(height: 28),
+        const SizedBox(height: 20),
         const _SectionLabel('Compte'),
-        _SettingsGroup(children: [
+        _FieldGrid(cells: [
           if (isInstitution && personalInfo.institutionName != null)
-            _SettingsRow(label: "Nom de l'institution", value: personalInfo.institutionName!),
-          _SettingsRow(
+            _FieldCell(label: "Nom de l'institution", value: personalInfo.institutionName!),
+          _FieldCell(
             label: 'Nom',
             value: personalInfo.lastname,
             onTap: () => _editTextRow(
@@ -227,7 +227,7 @@ class _SettingsBody extends ConsumerWidget {
               },
             ),
           ),
-          _SettingsRow(
+          _FieldCell(
             label: 'Prénom',
             value: personalInfo.firstname,
             onTap: () => _editTextRow(
@@ -240,7 +240,7 @@ class _SettingsBody extends ConsumerWidget {
               },
             ),
           ),
-          _SettingsRow(
+          _FieldCell(
             label: 'Date de naissance',
             value: personalInfo.dateOfBirth != null ? _formatDate(personalInfo.dateOfBirth!) : '-',
             onTap: () async {
@@ -258,7 +258,7 @@ class _SettingsBody extends ConsumerWidget {
               });
             },
           ),
-          _SettingsRow(
+          _FieldCell(
             label: 'Email',
             value: personalInfo.email,
             onTap: () => _editTextRow(
@@ -277,7 +277,7 @@ class _SettingsBody extends ConsumerWidget {
               },
             ),
           ),
-          _SettingsRow(
+          _FieldCell(
             label: "N° d'identification",
             value: personalInfo.identifierNumber ?? '-',
             onTap: () => _editTextRow(
@@ -291,7 +291,7 @@ class _SettingsBody extends ConsumerWidget {
               },
             ),
           ),
-          _SettingsRow(
+          _FieldCell(
             label: 'Téléphone',
             value: personalInfo.phoneNumber ?? '-',
             onTap: () => _editTextRow(
@@ -306,7 +306,7 @@ class _SettingsBody extends ConsumerWidget {
               },
             ),
           ),
-          _SettingsRow(
+          _FieldCell(
             label: 'Sexe',
             value: _genderLabels[personalInfo.gender] ?? '-',
             onTap: () => _editSelectRow<String>(
@@ -321,7 +321,7 @@ class _SettingsBody extends ConsumerWidget {
             ),
           ),
           if (!isInstitution)
-            _SettingsRow(
+            _FieldCell(
               label: 'Catégorie pro.',
               value: _professionalCategoryLabels[personalInfo.professionalCategory] ?? '-',
               onTap: () => _editSelectRow<String>(
@@ -338,8 +338,8 @@ class _SettingsBody extends ConsumerWidget {
         ]),
         const SizedBox(height: 24),
         const _SectionLabel('Adresse'),
-        _SettingsGroup(children: [
-          _SettingsRow(
+        _FieldGrid(cells: [
+          _FieldCell(
             label: 'Rue',
             value: address.streetAddress.isEmpty ? '-' : address.streetAddress,
             onTap: () => _editTextRow(
@@ -352,7 +352,7 @@ class _SettingsBody extends ConsumerWidget {
               },
             ),
           ),
-          _SettingsRow(
+          _FieldCell(
             label: 'Ville',
             value: address.city.isEmpty ? '-' : address.city,
             onTap: () => _editTextRow(
@@ -365,7 +365,7 @@ class _SettingsBody extends ConsumerWidget {
               },
             ),
           ),
-          _SettingsRow(
+          _FieldCell(
             label: 'Pays',
             value: _countryLabels[address.country] ?? '-',
             onTap: () => _editSelectRow<String>(
@@ -379,7 +379,7 @@ class _SettingsBody extends ConsumerWidget {
               },
             ),
           ),
-          _SettingsRow(
+          _FieldCell(
             label: 'Pays de travail',
             value: address.workingAt ?? '-',
             onTap: () => _editSelectRow<String>(
@@ -393,7 +393,7 @@ class _SettingsBody extends ConsumerWidget {
               },
             ),
           ),
-          _SettingsRow(
+          _FieldCell(
             label: 'Code postal',
             value: address.zipCode.isEmpty ? '-' : address.zipCode,
             onTap: () async {
@@ -429,7 +429,7 @@ class _SettingsBody extends ConsumerWidget {
               });
             },
           ),
-          _SettingsRow(
+          _FieldCell(
             label: 'Complément',
             value: address.additionalInfo ?? '-',
             onTap: () => _editTextRow(
@@ -590,14 +590,14 @@ class _SectionLabel extends StatelessWidget {
     final colors = context.appColors;
 
     return Padding(
-      padding: const EdgeInsets.only(left: 4, bottom: 8),
+      padding: const EdgeInsets.only(left: 4, bottom: 7),
       child: Text(
         label.toUpperCase(),
         style: TextStyle(
           color: colors.textSecondary,
-          fontSize: 12,
+          fontSize: 10.5,
           fontWeight: FontWeight.w700,
-          letterSpacing: .4,
+          letterSpacing: .5,
         ),
       ),
     );
@@ -617,7 +617,7 @@ class _SettingsGroup extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         color: colors.card,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(color: colors.border),
         boxShadow: [
           BoxShadow(color: colors.shadow, blurRadius: 10, offset: const Offset(0, 3)),
@@ -627,7 +627,7 @@ class _SettingsGroup extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           for (var i = 0; i < children.length; i++) ...[
-            if (i > 0) Divider(height: 1, indent: 16, color: colors.divider),
+            if (i > 0) Divider(height: 1, indent: 13, color: colors.divider),
             children[i],
           ],
         ],
@@ -637,10 +637,9 @@ class _SettingsGroup extends StatelessWidget {
 }
 
 class _SettingsRow extends StatelessWidget {
-  const _SettingsRow({required this.label, this.value, this.onTap});
+  const _SettingsRow({required this.label, this.onTap});
 
   final String label;
-  final String? value;
   final VoidCallback? onTap;
 
   @override
@@ -650,24 +649,88 @@ class _SettingsRow extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 11),
         child: Row(
           children: [
-            Text(label, style: TextStyle(color: colors.textPrimary, fontSize: 14)),
+            Text(label, style: TextStyle(color: colors.textPrimary, fontSize: 13, fontWeight: FontWeight.w600)),
             const Spacer(),
-            if (value != null)
-              Flexible(
-                child: Text(
-                  value!,
-                  textAlign: TextAlign.right,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: colors.textSecondary, fontSize: 14),
-                ),
+            if (onTap != null) Icon(Icons.chevron_right, size: 18, color: colors.textSecondary),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// One field per row: a fixed-width label column, then the value —
+/// both start-aligned, so values line up in their own column instead
+/// of being pushed to the right edge.
+const _fieldLabelWidth = 118.0;
+
+class _FieldGrid extends StatelessWidget {
+  const _FieldGrid({required this.cells});
+
+  final List<Widget> cells;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: colors.card,
+        borderRadius: BorderRadius.circular(AppRadii.md),
+        border: Border.all(color: colors.border),
+        boxShadow: [
+          BoxShadow(color: colors.shadow, blurRadius: 10, offset: const Offset(0, 3)),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (var i = 0; i < cells.length; i++) ...[
+            if (i > 0) Divider(height: 1, indent: 13, color: colors.divider),
+            cells[i],
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _FieldCell extends StatelessWidget {
+  const _FieldCell({required this.label, required this.value, this.onTap});
+
+  final String label;
+  final String value;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 12),
+        child: Row(
+          children: [
+            SizedBox(
+              width: _fieldLabelWidth,
+              child: Text(
+                label,
+                style: TextStyle(color: colors.textSecondary, fontSize: 12, fontWeight: FontWeight.w600),
               ),
-            if (onTap != null) ...[
-              const SizedBox(width: 6),
-              Icon(Icons.chevron_right, size: 20, color: colors.textSecondary),
-            ],
+            ),
+            Expanded(
+              child: Text(
+                value,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: colors.textPrimary, fontSize: 13, fontWeight: FontWeight.w600),
+              ),
+            ),
+            if (onTap != null) Icon(Icons.chevron_right, size: 16, color: colors.textSecondary),
           ],
         ),
       ),
