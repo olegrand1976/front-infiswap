@@ -1,9 +1,10 @@
-import { useCookie } from '#app';
+import { useCookie, useRequestHeaders } from '#app';
 import type { Ref } from 'vue';
 import { AUTH_TOKEN } from '~/lib/constants';
 import {
     buildAuthCookieExpireDirectives,
     normalizeAuthTokenValue,
+    pickAuthTokenFromCookieHeader,
     readAuthTokenFromDocument,
     resolveAuthCookieDomain,
 } from '~/lib/authTokenCookieUtils';
@@ -51,29 +52,40 @@ export function clearAllAuthTokenCookies(): void {
     }
 }
 
+/** Pose un token après slate propre (login / register / 2FA / offer). */
+export function persistAuthTokenCookie(cookie: Ref<string | null | undefined>, token: string): void {
+    if (import.meta.client) {
+        clearAllAuthTokenCookies();
+    }
+    cookie.value = token;
+}
+
+/** Efface ref + cookies host-only/domaine. */
+export function clearAuthSessionCookie(cookie: Ref<string | null | undefined>): void {
+    cookie.value = null;
+    if (import.meta.client) {
+        clearAllAuthTokenCookies();
+    }
+}
+
 /**
- * Self-heal prod.
- * Ordre critique : purge host-only AVANT lecture, sinon le cookie vide
- * masque le token domain et on efface la session au login.
+ * Self-heal client prod uniquement — appeler une fois (plugin auth).
+ * Ordre critique : purge host-only AVANT lecture.
  */
 export function healAuthTokenCookies(cookie: Ref<string | null | undefined>): void {
     if (!import.meta.client) {
-        cookie.value = normalizeAuthTokenValue(cookie.value);
         return;
     }
 
     const domain = import.meta.env.PROD ? authCookieDomain() : undefined;
 
-    // 1) Toujours retirer le host-only avant de faire confiance à la valeur.
     clearHostOnlyAuthTokenCookie();
 
     if (!domain) {
-        const normalized = normalizeAuthTokenValue(cookie.value) ?? readAuthTokenFromDocument();
-        cookie.value = normalized;
+        cookie.value = normalizeAuthTokenValue(cookie.value) ?? readAuthTokenFromDocument();
         return;
     }
 
-    // 2) Après purge, lire ce qui reste (cookie domaine).
     const raw = readAuthTokenFromDocument() ?? normalizeAuthTokenValue(cookie.value);
 
     if (!raw) {
@@ -82,10 +94,13 @@ export function healAuthTokenCookies(cookie: Ref<string | null | undefined>): vo
         return;
     }
 
-    // 3) Réécriture domaine = un seul cookie propre.
     cookie.value = raw;
 }
 
+/**
+ * Lecture seule (pas de purge). Le heal client est dans le plugin auth.
+ * SSR : préfère un token non vide si le header Cookie en contient plusieurs.
+ */
 export function useAuthTokenCookie() {
     const domain = import.meta.env.PROD ? authCookieDomain() : undefined;
     const config = import.meta.env.PROD
@@ -100,14 +115,10 @@ export function useAuthTokenCookie() {
 
     const cookie = useCookie<string | null>(AUTH_TOKEN, config);
 
-    // Ne jamais écrire null tant que le host-only vide n'est pas purgé :
-    // sinon on efface le token domaine valide.
-    if (import.meta.client && domain) {
-        clearHostOnlyAuthTokenCookie();
-        const raw = readAuthTokenFromDocument() ?? normalizeAuthTokenValue(cookie.value);
-        if (cookie.value !== raw) {
-            cookie.value = raw;
-        }
+    if (import.meta.server) {
+        const header = useRequestHeaders(['cookie']).cookie ?? '';
+        const picked = pickAuthTokenFromCookieHeader(header);
+        cookie.value = picked;
     }
     else if (cookie.value === '') {
         cookie.value = null;

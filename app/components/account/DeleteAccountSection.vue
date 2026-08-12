@@ -1,72 +1,71 @@
 <template>
-    <section class="rounded-lg border border-destructive/30 bg-destructive/5 p-6">
-        <h3 class="flex items-center gap-3">
-            <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-destructive/15 text-destructive">
-                <TriangleAlert class="size-5" />
-            </span>
-            <span class="text-lg font-secondary">{{ t('account.dangerZone') }}</span>
-        </h3>
-        <p class="mt-3 text-sm text-foreground">
-            {{ t('account.deleteAccountDesc') }}
-        </p>
+    <section class="flex flex-col justify-end items-center pt-8 space-y-4">
+        <Button
+            class="flex w-48 ml-auto text-end text-primary bg-transparent border border-primary shadow-none hover:text-white"
+            @click="deleteAccountDialog = true"
+        >
+            <Trash2 class="w-5" />
+            <span>Se désinscrire du site</span>
+        </Button>
 
-        <div class="mt-4">
-            <Button
-                v-if="!deleteAccountDialog"
-                variant="outline"
-                @click="deleteAccountDialog = true"
-            >
-                <Trash2 class="size-4" />
-                {{ t('account.unsubscribe') }}
-            </Button>
+        <Dialog v-model:open="deleteAccountDialog">
+            <DialogContent class="w-full max-w-sm sm:max-w-xl max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                    <DialogTitle class="text-center">
+                        Se désinscrire du site
+                    </DialogTitle>
+                </DialogHeader>
+                <div class="mt-8">
+                    Confirmez avec votre mot de passe. Votre compte sera désactivé, vos données personnelles
+                    anonymisées (droit à l’effacement), et les administrateurs seront informés par e-mail.
+                    Certaines données de facturation peuvent être conservées selon les obligations légales.
+                </div>
 
-            <form
-                v-else
-                class="space-y-3"
-                @submit.prevent="handleDeleteAccount"
-            >
-                <div class="flex flex-col gap-1.5 sm:max-w-xs">
-                    <label class="text-xs font-medium text-muted-foreground">{{ t('settings.password') }}</label>
-                    <div class="flex h-11 items-center gap-2 rounded-md border border-input bg-background px-3 focus-within:border-destructive focus-within:ring-2 focus-within:ring-destructive/15">
-                        <KeyRound class="size-4 shrink-0 text-destructive" />
+                <div class="mt-4 space-y-3">
+                    <div class="mb-0 sm:mb-12 grid sm:grid-cols-[40%_60%] items-center sm:border sm:border-primary sm:h-9 sm:rounded-full">
+                        <p class="text-primary sm:text-white sm:bg-primary flex items-center h-full ps-4 rounded-s-full">
+                            Mot de passe
+                        </p>
                         <Input
                             v-model="password"
                             type="password"
-                            class="h-auto border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
+                            class="mb-12 sm:mb-0 w-full sm:w-auto sm:bg-transparent placeholder:text-black h-9 bg-gray-100 border border-gray-200 sm:border-none rounded-full"
+                            @keyup.enter="handleDeleteAccount"
                         />
                     </div>
+
+                    <DialogFooter class="mt-12 flex flex-col sm:flex-row justify-end items-center space-y-2 sm:space-y-0 sm:space-x-8">
+                        <Button
+                            variant="secondary"
+                            class="bg-gray-200 hover:bg-gray-300 w-full sm:w-auto"
+                            :disabled="isDeleting"
+                            @click="deleteAccountDialog = false"
+                        >
+                            Annuler
+                        </Button>
+                        <Button
+                            class="w-full sm:w-auto"
+                            :in-progress="isDeleting"
+                            :disabled="isDeleting || !password.trim()"
+                            @click="handleDeleteAccount"
+                        >
+                            Valider
+                        </Button>
+                    </DialogFooter>
                 </div>
-                <div class="flex gap-2">
-                    <Button
-                        type="button"
-                        variant="ghost"
-                        :disabled="isDeleting"
-                        @click="deleteAccountDialog = false"
-                    >
-                        {{ t('common.cancel') }}
-                    </Button>
-                    <Button
-                        type="submit"
-                        variant="destructive"
-                        :in-progress="isDeleting"
-                        :disabled="isDeleting || !password.trim()"
-                    >
-                        {{ t('common.confirm') }}
-                    </Button>
-                </div>
-            </form>
-        </div>
+            </DialogContent>
+        </Dialog>
     </section>
 </template>
 
 <script lang="ts" setup>
-import { KeyRound, Trash2, TriangleAlert } from 'lucide-vue-next';
-import { clearAllAuthTokenCookies, useAuthTokenCookie } from '~/lib/authTokenCookie';
+import { Trash2 } from 'lucide-vue-next';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { clearAuthSessionCookie, useAuthTokenCookie } from '~/lib/authTokenCookie';
 import { getErrorMessage } from '~/lib/utils';
 import { useAuth } from '~/composables/useAuth';
 import type { User } from '~/lib/types';
 
-const { t } = useI18n();
 const { $toast } = useNuxtApp();
 const router = useRouter();
 const { deleteAccount } = useAuth();
@@ -87,13 +86,12 @@ const handleDeleteAccount = async () => {
         await deleteAccount({ password: password.value });
 
         user.value = null;
-        useAuthTokenCookie().value = null;
-        clearAllAuthTokenCookies();
+        clearAuthSessionCookie(useAuthTokenCookie());
         password.value = '';
         deleteAccountDialog.value = false;
 
         $toast({
-            description: t('account.unsubscribeSuccess'),
+            description: 'Votre désinscription a été enregistrée. Vos données personnelles ont été anonymisées.',
         });
 
         await router.push('/');
