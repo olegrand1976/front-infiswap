@@ -6,6 +6,7 @@ import {
     seedCookieConsent,
     seedEmptyAuthTokenCookie,
     submitLogin,
+    waitForAuthenticatedDashboard,
 } from '../fixtures/auth-helpers';
 
 async function requireE2eCredentials(): Promise<{ email: string; password: string }> {
@@ -35,11 +36,11 @@ test.describe('Connexion', { tag: '@p0' }, () => {
         await fillLoginForm(page, email, password);
         await submitLogin(page);
 
-        await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
+        await waitForAuthenticatedDashboard(page);
         expect(userRequestAuthorizations.some(value => /^Bearer .+/.test(value))).toBe(true);
 
         await page.reload();
-        await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
+        await waitForAuthenticatedDashboard(page);
     });
 
     test('login réussi redirige vers le dashboard', async ({ page, context }) => {
@@ -48,7 +49,7 @@ test.describe('Connexion', { tag: '@p0' }, () => {
         await fillLoginForm(page, email, password);
         await submitLogin(page);
 
-        await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
+        await waitForAuthenticatedDashboard(page);
 
         const authToken = await getAuthTokenCookieValue(context);
         expect(authToken).toBeTruthy();
@@ -67,10 +68,10 @@ test.describe('Connexion', { tag: '@p0' }, () => {
 
         await fillLoginForm(page, email, password);
         await submitLogin(page);
-        await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
+        await waitForAuthenticatedDashboard(page);
 
         await page.goto('/login');
-        await expect(page).toHaveURL(/\/dashboard/, { timeout: 15_000 });
+        await waitForAuthenticatedDashboard(page);
     });
 
     test('logout UI puis re-login reste sur le dashboard', async ({ page, context }) => {
@@ -78,7 +79,7 @@ test.describe('Connexion', { tag: '@p0' }, () => {
 
         await fillLoginForm(page, email, password);
         await submitLogin(page);
-        await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
+        await waitForAuthenticatedDashboard(page);
 
         await logoutViaDashboard(page);
 
@@ -87,9 +88,9 @@ test.describe('Connexion', { tag: '@p0' }, () => {
         await fillLoginForm(page, email, password);
         await submitLogin(page);
 
-        await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
+        await waitForAuthenticatedDashboard(page);
         await page.reload();
-        await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
+        await waitForAuthenticatedDashboard(page);
 
         const authToken = await getAuthTokenCookieValue(context);
         expect(authToken).toBeTruthy();
@@ -100,15 +101,16 @@ test.describe('Connexion — cookie vide host-only', { tag: '@p0' }, () => {
     test('login OK malgré INFISWAP_TOKEN= (régression bounce)', async ({ page, context }) => {
         const { email, password } = await requireE2eCredentials();
 
+        await context.clearCookies();
         await seedCookieConsent(page);
         await seedEmptyAuthTokenCookie(page);
         await page.goto('/login');
         await fillLoginForm(page, email, password);
         await submitLogin(page);
 
-        await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
+        await waitForAuthenticatedDashboard(page);
         await page.reload();
-        await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
+        await waitForAuthenticatedDashboard(page);
 
         const authToken = await getAuthTokenCookieValue(context);
         expect(authToken).toBeTruthy();

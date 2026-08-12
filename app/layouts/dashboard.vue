@@ -226,24 +226,27 @@
                         </Select>
 
                         <DropdownMenu>
-                            <DropdownMenuTrigger
-                                data-testid="account-menu-trigger"
-                                class="flex shrink-0 items-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                            >
-                                <ProfilePremiumBadge>
-                                    <ProfileLifetimeAccessBadge session-consumer>
-                                        <ProfileInamiVerifiedBadge>
-                                            <Avatar v-if="user?.profil_url != null">
-                                                <AvatarImage :src="useRuntimeConfig().public.API_URL + '/storage/' + hasChangedAvatar" />
-                                                <AvatarFallback>{{ user.firstname.slice(1, 1).toUpperCase() + user.lastname.slice(1, 1).toUpperCase() }}</AvatarFallback>
-                                            </Avatar>
-                                            <CircleUser
-                                                v-else
-                                                class="size-11 text-black/40"
-                                            />
-                                        </ProfileInamiVerifiedBadge>
-                                    </ProfileLifetimeAccessBadge>
-                                </ProfilePremiumBadge>
+                            <DropdownMenuTrigger as-child>
+                                <button
+                                    type="button"
+                                    data-testid="account-menu-trigger"
+                                    class="flex shrink-0 items-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                                >
+                                    <ProfilePremiumBadge>
+                                        <ProfileLifetimeAccessBadge session-consumer>
+                                            <ProfileInamiVerifiedBadge>
+                                                <Avatar v-if="user?.profil_url != null">
+                                                    <AvatarImage :src="useRuntimeConfig().public.API_URL + '/storage/' + hasChangedAvatar" />
+                                                    <AvatarFallback>{{ user.firstname.slice(1, 1).toUpperCase() + user.lastname.slice(1, 1).toUpperCase() }}</AvatarFallback>
+                                                </Avatar>
+                                                <CircleUser
+                                                    v-else
+                                                    class="size-11 text-black/40"
+                                                />
+                                            </ProfileInamiVerifiedBadge>
+                                        </ProfileLifetimeAccessBadge>
+                                    </ProfilePremiumBadge>
+                                </button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
                                 <DropdownMenuLabel>{{ t('accountMenu.myAccount') }}</DropdownMenuLabel>

@@ -49,6 +49,12 @@ export async function submitLogin(page: Page): Promise<void> {
     await page.getByRole('button', { name: /Se connecter|Inloggen/ }).first().click();
 }
 
+/** Attend le dashboard authentifié (évite le skeleton tant que user est null). */
+export async function waitForAuthenticatedDashboard(page: Page): Promise<void> {
+    await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
+    await expect(page.getByTestId('account-menu-trigger').first()).toBeVisible({ timeout: 30_000 });
+}
+
 /** Cookie session non vide (évite INFISWAP_TOKEN= host-only qui masque le vrai token). */
 export async function getAuthTokenCookieValue(context: { cookies: () => Promise<Array<{ name: string; value: string }>> }): Promise<string | undefined> {
     const cookies = await context.cookies();
@@ -62,8 +68,8 @@ export async function getAuthTokenCookieValue(context: { cookies: () => Promise<
 
 /** Déconnexion via le menu compte du layout dashboard (appelle logout() app). */
 export async function logoutViaDashboard(page: Page): Promise<void> {
+    await waitForAuthenticatedDashboard(page);
     const trigger = page.getByTestId('account-menu-trigger').first();
-    await expect(trigger).toBeVisible({ timeout: 15_000 });
     await trigger.click();
     await page.getByRole('menuitem', { name: /Déconnexion|Uitloggen/ }).click();
     await expect(page).toHaveURL((url) => {
