@@ -42,7 +42,9 @@ class ProfileScreen extends ConsumerWidget {
     final avatarPath = user['profil_url']?.toString();
     final avatarUrl = (avatarPath == null || avatarPath.isEmpty)
         ? null
-        : (avatarPath.startsWith('http') ? avatarPath : '$apiBaseUrl/storage/$avatarPath');
+        : (avatarPath.startsWith('http')
+            ? avatarPath
+            : '$apiBaseUrl/storage/$avatarPath');
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -88,9 +90,9 @@ class ProfileScreen extends ConsumerWidget {
               ),
               const _MenuRow(
                 icon: Icons.forum_outlined,
-                color: AppColors.mission,
+                color: AppColors.onCoral,
                 label: 'Mes réponses',
-                soon: true,
+                onTap: null,
               ),
               _MenuRow(
                 icon: Icons.send_outlined,
@@ -162,7 +164,8 @@ class ProfileScreen extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(vertical: 12),
                 ),
                 icon: const Icon(Icons.logout, size: 17),
-                label: const Text('Se déconnecter', style: TextStyle(fontSize: 12.5)),
+                label: const Text('Se déconnecter',
+                    style: TextStyle(fontSize: 12.5)),
               ),
             ),
           ],
@@ -222,7 +225,8 @@ class _MenuGroup extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(color: colors.border),
         boxShadow: [
-          BoxShadow(color: colors.shadow, blurRadius: 10, offset: const Offset(0, 3)),
+          BoxShadow(
+              color: colors.shadow, blurRadius: 10, offset: const Offset(0, 3)),
         ],
       ),
       child: Column(
@@ -238,9 +242,6 @@ class _MenuGroup extends StatelessWidget {
   }
 }
 
-/// A tappable row. When [soon] is true it's shown dimmed with a
-/// "Bientôt" tag instead of a chevron — for sidebar items that don't
-/// have a mobile screen yet.
 class _MenuRow extends StatelessWidget {
   const _MenuRow({
     required this.icon,
@@ -275,7 +276,9 @@ class _MenuRow extends StatelessWidget {
                   color: soon ? colors.divider : color,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(icon, size: 13, color: soon ? colors.textSecondary : Colors.white),
+                child: Icon(icon,
+                    size: 13,
+                    color: soon ? colors.textSecondary : Colors.white),
               ),
               const SizedBox(width: 10),
               Expanded(
@@ -290,23 +293,16 @@ class _MenuRow extends StatelessWidget {
               ),
               if (soon)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
                   decoration: BoxDecoration(
                     color: colors.divider,
                     borderRadius: BorderRadius.circular(999),
                   ),
-                  child: Text(
-                    'Bientôt',
-                    style: TextStyle(
-                      color: colors.textSecondary,
-                      fontSize: 8.5,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: .2,
-                    ),
-                  ),
                 )
               else
-                Icon(Icons.chevron_right, size: 18, color: colors.textSecondary),
+                Icon(Icons.chevron_right,
+                    size: 18, color: colors.textSecondary),
             ],
           ),
         ),
@@ -354,9 +350,14 @@ class _ThemeToggleRow extends StatelessWidget {
               children: [
                 Text(
                   'Thème sombre',
-                  style: TextStyle(color: colors.textPrimary, fontSize: 13, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                      color: colors.textPrimary,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600),
                 ),
-                Text(subtitle, style: TextStyle(color: colors.textSecondary, fontSize: 11)),
+                Text(subtitle,
+                    style:
+                        TextStyle(color: colors.textSecondary, fontSize: 11)),
               ],
             ),
           ),
