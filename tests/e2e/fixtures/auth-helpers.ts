@@ -26,12 +26,19 @@ export async function seedCookieConsent(page: Page): Promise<void> {
 
 /**
  * Simule le cookie host-only vide (régression login bounce août 2026).
- * Doit être appelé avant la navigation vers /login.
+ * Une seule fois (pas d'addInitScript) : sinon le cookie vide est réinjecté
+ * à chaque navigation et casse la session post-login.
  */
 export async function seedEmptyAuthTokenCookie(page: Page): Promise<void> {
-    await page.addInitScript((cookieName: string) => {
-        document.cookie = `${cookieName}=; path=/; SameSite=Lax`;
-    }, AUTH_TOKEN_COOKIE);
+    const baseURL = process.env.BASE_URL || 'http://127.0.0.1:3000';
+
+    await page.context().addCookies([{
+        name: AUTH_TOKEN_COOKIE,
+        value: '',
+        url: baseURL,
+        path: '/',
+        sameSite: 'Lax',
+    }]);
 }
 
 export async function fillLoginForm(page: Page, identifier: string, password: string): Promise<void> {
@@ -52,7 +59,9 @@ export async function submitLogin(page: Page): Promise<void> {
 /** Attend le dashboard authentifié (évite le skeleton tant que user est null). */
 export async function waitForAuthenticatedDashboard(page: Page): Promise<void> {
     await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
-    await expect(page.getByTestId('account-menu-trigger').first()).toBeVisible({ timeout: 30_000 });
+    // Soft nav peut basculer en hard reload (window.location.assign).
+    await page.waitForLoadState('domcontentloaded');
+    await expect(page.getByTestId('account-menu-trigger').first()).toBeVisible({ timeout: 45_000 });
 }
 
 /** Cookie session non vide (évite INFISWAP_TOKEN= host-only qui masque le vrai token). */
