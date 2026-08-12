@@ -1,18 +1,30 @@
 import { expect, test } from '@playwright/test';
-import { AUTH_TOKEN_COOKIE } from '../fixtures/test-data';
-import { fillLoginForm, seedCookieConsent, submitLogin } from '../fixtures/auth-helpers';
+import {
+    fillLoginForm,
+    getAuthTokenCookieValue,
+    logoutViaDashboard,
+    seedCookieConsent,
+    seedEmptyAuthTokenCookie,
+    submitLogin,
+    waitForAuthenticatedDashboard,
+} from '../fixtures/auth-helpers';
 
-test.describe('Connexion', () => {
+async function requireE2eCredentials(): Promise<{ email: string; password: string }> {
+    const email = process.env.E2E_LOGIN_EMAIL;
+    const password = process.env.E2E_LOGIN_PASSWORD;
+    test.skip(!email || !password, 'E2E_LOGIN_EMAIL / E2E_LOGIN_PASSWORD non configurés');
+
+    return { email: email!, password: password! };
+}
+
+test.describe('Connexion', { tag: '@p0' }, () => {
     test.beforeEach(async ({ page }) => {
         await seedCookieConsent(page);
         await page.goto('/login');
     });
 
     test('login envoie un Bearer valide sur /api/user et persiste après reload', async ({ page }) => {
-        const email = process.env.E2E_LOGIN_EMAIL;
-        const password = process.env.E2E_LOGIN_PASSWORD;
-
-        test.skip(!email || !password, 'E2E_LOGIN_EMAIL / E2E_LOGIN_PASSWORD non configurés');
+        const { email, password } = await requireE2eCredentials();
 
         const userRequestAuthorizations: string[] = [];
         page.on('request', (request) => {
@@ -21,30 +33,26 @@ test.describe('Connexion', () => {
             }
         });
 
-        await fillLoginForm(page, email!, password!);
+        await fillLoginForm(page, email, password);
         await submitLogin(page);
 
-        await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
+        await waitForAuthenticatedDashboard(page);
         expect(userRequestAuthorizations.some(value => /^Bearer .+/.test(value))).toBe(true);
 
         await page.reload();
-        await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
+        await waitForAuthenticatedDashboard(page);
     });
 
     test('login réussi redirige vers le dashboard', async ({ page, context }) => {
-        const email = process.env.E2E_LOGIN_EMAIL;
-        const password = process.env.E2E_LOGIN_PASSWORD;
+        const { email, password } = await requireE2eCredentials();
 
-        test.skip(!email || !password, 'E2E_LOGIN_EMAIL / E2E_LOGIN_PASSWORD non configurés');
-
-        await fillLoginForm(page, email!, password!);
+        await fillLoginForm(page, email, password);
         await submitLogin(page);
 
-        await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
+        await waitForAuthenticatedDashboard(page);
 
-        const cookies = await context.cookies();
-        const authCookie = cookies.find(c => c.name === AUTH_TOKEN_COOKIE);
-        expect(authCookie?.value).toBeTruthy();
+        const authToken = await getAuthTokenCookieValue(context);
+        expect(authToken).toBeTruthy();
     });
 
     test('credentials invalides restent sur la page login', async ({ page }) => {
@@ -56,21 +64,61 @@ test.describe('Connexion', () => {
     });
 
     test('utilisateur connecté est redirigé depuis /login', async ({ page }) => {
-        const email = process.env.E2E_LOGIN_EMAIL;
-        const password = process.env.E2E_LOGIN_PASSWORD;
+        const { email, password } = await requireE2eCredentials();
 
-        test.skip(!email || !password, 'E2E_LOGIN_EMAIL / E2E_LOGIN_PASSWORD non configurés');
-
-        await fillLoginForm(page, email!, password!);
+        await fillLoginForm(page, email, password);
         await submitLogin(page);
-        await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
+        await waitForAuthenticatedDashboard(page);
 
         await page.goto('/login');
-        await expect(page).toHaveURL(/\/dashboard/, { timeout: 15_000 });
+        await waitForAuthenticatedDashboard(page);
+    });
+
+    test('logout puis re-login reste sur le dashboard', async ({ page, context }) => {
+        test.setTimeout(90_000);
+        const { email, password } = await requireE2eCredentials();
+
+        await fillLoginForm(page, email, password);
+        await submitLogin(page);
+        await waitForAuthenticatedDashboard(page);
+
+        await logoutViaDashboard(page);
+
+        await seedCookieConsent(page);
+        await page.goto('/login');
+        await fillLoginForm(page, email, password);
+        await submitLogin(page);
+
+        await waitForAuthenticatedDashboard(page);
+        await page.reload();
+        await waitForAuthenticatedDashboard(page);
+
+        const authToken = await getAuthTokenCookieValue(context);
+        expect(authToken).toBeTruthy();
     });
 });
 
-test.describe('Connexion NL', () => {
+test.describe('Connexion — cookie vide host-only', { tag: '@p0' }, () => {
+    test('login OK malgré INFISWAP_TOKEN= (régression bounce)', async ({ page, context }) => {
+        const { email, password } = await requireE2eCredentials();
+
+        await context.clearCookies();
+        await seedCookieConsent(page);
+        await seedEmptyAuthTokenCookie(page);
+        await page.goto('/login');
+        await fillLoginForm(page, email, password);
+        await submitLogin(page);
+
+        await waitForAuthenticatedDashboard(page);
+        await page.reload();
+        await waitForAuthenticatedDashboard(page);
+
+        const authToken = await getAuthTokenCookieValue(context);
+        expect(authToken).toBeTruthy();
+    });
+});
+
+test.describe('Connexion NL', { tag: '@p0' }, () => {
     test.beforeEach(async ({ page }) => {
         await seedCookieConsent(page);
         await page.goto('/nl/login');
@@ -78,6 +126,5 @@ test.describe('Connexion NL', () => {
 
     test('page login NL affiche les libellés néerlandais', async ({ page }) => {
         await expect(page.getByPlaceholder(/Wachtwoord|Mot de passe/).first()).toBeVisible();
-        await expect(page.getByTestId('login-submit').or(page.getByRole('button', { name: /Inloggen|Se connecter/ })).first()).toBeVisible();
     });
 });

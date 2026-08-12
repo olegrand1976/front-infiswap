@@ -33,7 +33,7 @@
 
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
-import { useAuthTokenCookie } from '~/lib/authTokenCookie';
+import { clearAuthSessionCookie, persistAuthTokenCookie, useAuthTokenCookie } from '~/lib/authTokenCookie';
 
 definePageMeta({
     layout: false,
@@ -60,11 +60,11 @@ onMounted(async () => {
         return;
     }
 
-    authToken.value = token;
+    persistAuthTokenCookie(authToken, token);
     await refresh(token);
 
     if (!user.value) {
-        authToken.value = null;
+        clearAuthSessionCookie(authToken);
         failed.value = true;
 
         return;
@@ -78,19 +78,19 @@ onMounted(async () => {
         });
 
         if (response?.token) {
-            authToken.value = response.token;
+            persistAuthTokenCookie(authToken, response.token);
             await refresh(response.token);
         }
     }
     catch {
-        authToken.value = null;
+        clearAuthSessionCookie(authToken);
         failed.value = true;
 
         return;
     }
 
     if (!user.value) {
-        authToken.value = null;
+        clearAuthSessionCookie(authToken);
         failed.value = true;
 
         return;

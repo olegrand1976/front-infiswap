@@ -226,49 +226,55 @@
                         </Select>
 
                         <DropdownMenu>
-                            <DropdownMenuTrigger class="flex shrink-0 items-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-                                <ProfilePremiumBadge>
-                                    <ProfileLifetimeAccessBadge session-consumer>
-                                        <ProfileInamiVerifiedBadge>
-                                            <Avatar v-if="user?.profil_url != null">
-                                                <AvatarImage :src="useRuntimeConfig().public.API_URL + '/storage/' + hasChangedAvatar" />
-                                                <AvatarFallback>{{ user.firstname.slice(1, 1).toUpperCase() + user.lastname.slice(1, 1).toUpperCase() }}</AvatarFallback>
-                                            </Avatar>
-                                            <CircleUser
-                                                v-else
-                                                class="size-11 text-black/40"
-                                            />
-                                        </ProfileInamiVerifiedBadge>
-                                    </ProfileLifetimeAccessBadge>
-                                </ProfilePremiumBadge>
+                            <DropdownMenuTrigger as-child>
+                                <button
+                                    type="button"
+                                    data-testid="account-menu-trigger"
+                                    class="flex shrink-0 items-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                                >
+                                    <ProfilePremiumBadge>
+                                        <ProfileLifetimeAccessBadge session-consumer>
+                                            <ProfileInamiVerifiedBadge>
+                                                <Avatar v-if="user?.profil_url != null">
+                                                    <AvatarImage :src="useRuntimeConfig().public.API_URL + '/storage/' + hasChangedAvatar" />
+                                                    <AvatarFallback>{{ user.firstname.slice(1, 1).toUpperCase() + user.lastname.slice(1, 1).toUpperCase() }}</AvatarFallback>
+                                                </Avatar>
+                                                <CircleUser
+                                                    v-else
+                                                    class="size-11 text-black/40"
+                                                />
+                                            </ProfileInamiVerifiedBadge>
+                                        </ProfileLifetimeAccessBadge>
+                                    </ProfilePremiumBadge>
+                                </button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
-                                <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
+                                <DropdownMenuLabel>{{ t('accountMenu.myAccount') }}</DropdownMenuLabel>
                                 <template v-if="hasMultipleContexts">
                                     <DropdownMenuSeparator />
                                     <DropdownMenuLabel class="text-xs text-muted-foreground">
-                                        Changer d'espace
+                                        {{ t('accountMenu.switchSpace') }}
                                     </DropdownMenuLabel>
                                     <DropdownMenuItem
                                         v-if="canAccessNurse"
                                         :disabled="activeContext === 'nurse'"
                                         @click="switchContext('nurse')"
                                     >
-                                        {{ activeContext === 'nurse' ? '✓ ' : '' }}Infirmier(e)
+                                        {{ activeContext === 'nurse' ? '✓ ' : '' }}{{ t('accountMenu.nurse') }}
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
                                         v-if="canAccessAdmin"
                                         :disabled="activeContext === 'admin'"
                                         @click="switchContext('admin')"
                                     >
-                                        {{ activeContext === 'admin' ? '✓ ' : '' }}Administration InfiSwap
+                                        {{ activeContext === 'admin' ? '✓ ' : '' }}{{ t('accountMenu.admin') }}
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
                                         v-if="canAccessInstitution"
                                         :disabled="activeContext === 'institution'"
                                         @click="switchContext('institution')"
                                     >
-                                        {{ activeContext === 'institution' ? '✓ ' : '' }} Institution
+                                        {{ activeContext === 'institution' ? '✓ ' : '' }}{{ t('accountMenu.institution') }}
                                     </DropdownMenuItem>
                                 </template>
 
@@ -279,7 +285,7 @@
                                         :key="role"
                                         @click="switchRole(role)"
                                     >
-                                        Passer en {{ getRole(role) }}
+                                        {{ t('accountMenu.switchToRole', { role: getRole(role) }) }}
                                     </DropdownMenuItem>
                                 </template>
 
@@ -288,17 +294,17 @@
                                     v-if="showReenableNetworkJourney"
                                     @click="reenableNetworkJourney"
                                 >
-                                    Réactiver Mon réseau InfiSwap
+                                    {{ t('accountMenu.reenableNetwork') }}
                                 </DropdownMenuItem>
                                 <DropdownMenuItem as-child>
-                                    <NuxtLink :to="settingsRoute">Paramètres</NuxtLink>
+                                    <NuxtLink :to="settingsRoute">{{ t('nav.settings') }}</NuxtLink>
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
                                     class="hover:bg-primary"
                                     @click="logout"
                                 >
-                                    Déconnexion
+                                    {{ t('nav.logout') }}
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
@@ -351,6 +357,7 @@ import { hasVerifiedMemberBadge } from '~/utils/platformAccess';
 import { mapCelebrationVariantToReviewSource } from '~/utils/googleReview';
 
 const { isAdmin, isCommunityManager, hasChangedAvatar } = useAuth();
+const { t } = useI18n();
 
 const roles = ref<AccountType[]>([]);
 const user = useState<User>('user');

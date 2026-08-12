@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { toast } from 'vue-sonner';
 import { useRouter, useState, useCookie, useNuxtApp } from '#app';
-import { useAuthTokenCookie } from '~/lib/authTokenCookie';
+import { clearAuthSessionCookie, persistAuthTokenCookie, useAuthTokenCookie } from '~/lib/authTokenCookie';
 import { safeLoginRedirectPath } from '~/utils/accessReturn';
 import type { AccountType, Address, Pagination, User } from '~/lib/types';
 
@@ -130,7 +130,7 @@ export const useAuth = () => {
             const err = error as { status?: number; statusCode?: number };
             const status = err.status ?? err.statusCode;
             if (status === 401 || status === 403) {
-                authToken.value = null;
+                clearAuthSessionCookie(authToken);
             }
         }
     }
@@ -143,7 +143,7 @@ export const useAuth = () => {
             });
 
             if (response.token) {
-                authToken.value = response.token;
+                persistAuthTokenCookie(authToken, response.token);
                 await refresh(response.token);
 
                 if (!user.value) {
@@ -181,7 +181,7 @@ export const useAuth = () => {
             .then((response) => {
                 if (response?.token) {
                     registeredToken = response.token;
-                    authToken.value = response.token;
+                    persistAuthTokenCookie(authToken, response.token);
                 }
             })
             .then(() => {
@@ -325,7 +325,7 @@ export const useAuth = () => {
             body: formData,
         });
 
-        authToken.value = response.token;
+        persistAuthTokenCookie(authToken, response.token);
         await refresh(response.token);
         return navigateTo(safeLoginRedirectPath(redirectPath));
     };
@@ -357,15 +357,20 @@ export const useAuth = () => {
         });
     }
 
-    function logout() {
+    async function logout() {
         loading.value = false;
         try {
             if (!isLoggedIn.value) return;
-            $apifetch('api/logout', { method: 'post' });
+            try {
+                await $apifetch('api/logout', { method: 'post' });
+            }
+            catch {
+                // Purge locale même si l'API échoue (réseau / 401).
+            }
             user.value = null;
-            authToken.value = '';
+            clearAuthSessionCookie(authToken);
 
-            router.push('/');
+            await router.push('/');
         }
         catch {
             toast.error('Erreur lors de la déconnexion.');

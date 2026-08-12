@@ -327,6 +327,29 @@
                                         />
                                     </div>
                                 </div>
+                                <div class="mt-3">
+                                    <p class="sr-only">
+                                        {{ $t('register.passwordHintTitle') }}
+                                    </p>
+                                    <div class="flex flex-wrap gap-x-3.5 gap-y-1.5">
+                                        <span
+                                            v-for="req in passwordRequirements"
+                                            :key="req.key"
+                                            class="flex items-center gap-1 text-[11.5px]"
+                                            :class="req.met ? 'text-success' : 'text-gray-500'"
+                                        >
+                                            <Check
+                                                v-if="req.met"
+                                                class="size-3"
+                                            />
+                                            <span
+                                                v-else
+                                                class="size-3 rounded-full border border-gray-300"
+                                            />
+                                            {{ req.label }}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -784,6 +807,28 @@
                             </div>
                         </div>
 
+                        <div
+                            v-if="showSubmitBlockers"
+                            class="mb-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950"
+                            role="status"
+                            aria-live="polite"
+                        >
+                            <p class="font-semibold">
+                                {{ $t('register.submitBlockedTitle') }}
+                            </p>
+                            <p class="mt-0.5 text-amber-900/80">
+                                {{ $t('register.submitBlockedIntro') }}
+                            </p>
+                            <ul class="mt-2 list-disc space-y-0.5 pl-5">
+                                <li
+                                    v-for="item in submitBlockerItems"
+                                    :key="item.key"
+                                >
+                                    {{ item.label }}
+                                </li>
+                            </ul>
+                        </div>
+
                         <div class="flex justify-center items-center">
                             <Button
                                 class="w-[70%] text-base font-bold"
@@ -1107,6 +1152,29 @@
                                         type="password"
                                         :placeholder="$t('register.passwordConfirm')"
                                     />
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <p class="sr-only">
+                                    {{ $t('register.passwordHintTitle') }}
+                                </p>
+                                <div class="flex flex-wrap gap-x-3.5 gap-y-1.5">
+                                    <span
+                                        v-for="req in passwordRequirements"
+                                        :key="req.key"
+                                        class="flex items-center gap-1 text-[11.5px]"
+                                        :class="req.met ? 'text-success' : 'text-gray-500'"
+                                    >
+                                        <Check
+                                            v-if="req.met"
+                                            class="size-3"
+                                        />
+                                        <span
+                                            v-else
+                                            class="size-3 rounded-full border border-gray-300"
+                                        />
+                                        {{ req.label }}
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -1565,6 +1633,35 @@
                         </div>
                     </div>
 
+                    <div
+                        v-if="showSubmitBlockers"
+                        :class="cn(
+                            'mb-3 rounded-lg border px-4 py-3 text-sm',
+                            formData.accountType === 'institution'
+                                ? 'border-white/30 bg-white/15 text-white'
+                                : 'border-amber-200 bg-amber-50 text-amber-950',
+                        )"
+                        role="status"
+                        aria-live="polite"
+                    >
+                        <p class="font-semibold">
+                            {{ $t('register.submitBlockedTitle') }}
+                        </p>
+                        <p
+                            :class="formData.accountType === 'institution' ? 'mt-0.5 text-white/80' : 'mt-0.5 text-amber-900/80'"
+                        >
+                            {{ $t('register.submitBlockedIntro') }}
+                        </p>
+                        <ul class="mt-2 list-disc space-y-0.5 pl-5">
+                            <li
+                                v-for="item in submitBlockerItems"
+                                :key="item.key"
+                            >
+                                {{ item.label }}
+                            </li>
+                        </ul>
+                    </div>
+
                     <div class="flex justify-center mt-2 items-center">
                         <Button
                             :class="cn('w-full', formData.accountType === 'institution' ? 'bg-white text-primary hover:bg-white/80' : 'bg-primary text-white hover:bg-primary/80')"
@@ -1595,6 +1692,12 @@
 import { ArrowRight, Building2, Check, CircleChevronDown, CircleUser, GraduationCap, IdCard, Inbox, Lock, Mail, MapPin, Phone, Users } from 'lucide-vue-next';
 import { EDUCATION_LEVEL_OPTIONS, isBelgiumCountryCode } from '~/utils/educationLevel';
 import { INAMI_FORMAT_ERROR, isValidInamiFormat } from '~/utils/inamiNumber';
+import {
+    getRegisterBlockers,
+    needsRegisterEducationLevel,
+    REGISTER_MIN_PASSWORD_LENGTH,
+    type RegisterBlockerKey,
+} from '~/utils/registerValidation';
 import InstitutionPricing from '~/components/register/InstitutionPricing.vue';
 import RegisterStepHeading from '~/components/register/StepHeading.vue';
 import InputIcon from '~/components/ui/input-with-icon/InputIcon.vue';
@@ -1773,11 +1876,13 @@ const formData = reactive({
     groupName: '',
 });
 
-const showEducationLevel = computed(() => (
-    formData.accountType !== 'institution'
-    && formData.role === 'nurse'
-    && isBelgiumCountryCode(formData.address.country)
-));
+const showEducationLevel = computed(() =>
+    needsRegisterEducationLevel({
+        accountType: formData.accountType,
+        role: formData.role,
+        country: formData.address.country,
+    }),
+);
 
 watch(showEducationLevel, (visible) => {
     if (!visible) {
@@ -1808,52 +1913,104 @@ const identifierLabel = computed(() => {
     return 'Numéro INAMI';
 });
 
-const canSubmit = computed(() => {
-    if (!charteAccepted.value || !termsAccepted.value || !privacyAccepted.value) {
+const registerValidationInput = computed(() => ({
+    accountType: formData.accountType,
+    role: formData.role,
+    lastname: formData.lastname,
+    firstname: formData.firstname,
+    email: formData.email,
+    phoneNumber: formData.phoneNumber,
+    password: formData.password,
+    passwordConfirmation: formData.passwordConfirmation,
+    professionalCategory: formData.professionalCategory,
+    educationLevel: formData.educationLevel,
+    identifierNumber: formData.identifierNumber,
+    institutionName: formData.institutionName,
+    address: formData.address,
+    charteAccepted: charteAccepted.value,
+    termsAccepted: termsAccepted.value,
+    privacyAccepted: privacyAccepted.value,
+}));
+
+const registerBlockers = computed(() => getRegisterBlockers(registerValidationInput.value));
+
+const canSubmit = computed(() => registerBlockers.value.length === 0);
+
+const passwordRequirements = computed(() => {
+    const password = formData.password ?? '';
+    const confirmation = formData.passwordConfirmation ?? '';
+    return [
+        {
+            key: 'length' as const,
+            met: password.length >= REGISTER_MIN_PASSWORD_LENGTH,
+            label: t('auth.requirementLength'),
+        },
+        {
+            key: 'match' as const,
+            met: password.length > 0 && password === confirmation,
+            label: t('auth.requirementMatch'),
+        },
+    ];
+});
+
+function registerBlockerLabel(key: RegisterBlockerKey): string {
+    switch (key) {
+        case 'consents':
+            return t('register.blocker_consents');
+        case 'personal':
+            return t('register.blocker_personal');
+        case 'password_length':
+            return t('register.blocker_password_length');
+        case 'password_mismatch':
+            return t('register.blocker_password_mismatch');
+        case 'address':
+            return t('register.blocker_address');
+        case 'working_at':
+            return t('register.blocker_working_at');
+        case 'institution_name':
+            return t('register.blocker_institution_name');
+        case 'professional_category':
+            return t('register.blocker_professional_category');
+        case 'education_level':
+            return t('register.blocker_education_level');
+        case 'inami_format':
+            return t('register.blocker_inami_format');
+        default: {
+            const _exhaustive: never = key;
+            return _exhaustive;
+        }
+    }
+}
+
+const submitBlockerItems = computed(() =>
+    registerBlockers.value.map(key => ({
+        key,
+        label: registerBlockerLabel(key),
+    })),
+);
+
+const showSubmitBlockers = computed(() => {
+    if (canSubmit.value || submitBlockerItems.value.length === 0) {
         return false;
     }
 
-    if (!formData.lastname?.trim() || !formData.firstname?.trim() || !formData.email?.trim() || !formData.phoneNumber?.trim()) {
-        return false;
-    }
-
-    if (!formData.password || formData.password.length < 8) {
-        return false;
-    }
-
-    if (formData.password !== formData.passwordConfirmation) {
-        return false;
-    }
-
-    if (!formData.address.street?.trim() || !formData.address.city?.trim() || !formData.address.zipCode?.trim()) {
-        return false;
-    }
-
-    if (!formData.address.workingAt?.length) {
-        return false;
-    }
-
-    if (formData.accountType === 'institution' && !formData.institutionName?.trim()) {
-        return false;
-    }
-
-    if (formData.accountType !== 'institution' && !formData.professionalCategory) {
-        return false;
-    }
-
-    if (showEducationLevel.value && !formData.educationLevel) {
-        return false;
-    }
-
-    if (
-        formData.accountType !== 'institution'
-        && isBelgiumCountryCode(formData.address.country)
-        && !isValidInamiFormat(formData.identifierNumber)
-    ) {
-        return false;
-    }
-
-    return true;
+    return Boolean(
+        formData.lastname?.trim()
+        || formData.firstname?.trim()
+        || formData.email?.trim()
+        || formData.phoneNumber?.trim()
+        || formData.password
+        || formData.passwordConfirmation
+        || formData.address.street?.trim()
+        || formData.address.city?.trim()
+        || formData.address.zipCode?.trim()
+        || formData.professionalCategory
+        || formData.educationLevel
+        || formData.institutionName?.trim()
+        || termsAccepted.value
+        || privacyAccepted.value
+        || charteAccepted.value,
+    );
 });
 
 function trimOrNull(value: string | null | undefined): string | null {

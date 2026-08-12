@@ -11,7 +11,7 @@ import { AUTH_TOKEN_COOKIE, buildRegistrationForm, E2E_PASSWORD } from '../fixtu
 
 const apiUrl = process.env.API_URL ?? 'https://api-infiswap.ll-it-sc.be';
 
-test.describe('Inscription', () => {
+test.describe('Inscription', { tag: '@p1' }, () => {
     test.afterAll(async () => {
         await cleanupE2eUsers(apiUrl);
     });

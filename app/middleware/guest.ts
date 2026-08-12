@@ -1,6 +1,6 @@
 import { defineNuxtRouteMiddleware, navigateTo } from '#app';
 import { useUser } from '~/composables/useAuth';
-import { useAuthTokenCookie } from '~/lib/authTokenCookie';
+import { clearAuthSessionCookie, useAuthTokenCookie } from '~/lib/authTokenCookie';
 
 export default defineNuxtRouteMiddleware(async () => {
     const user = useUser();
@@ -16,7 +16,7 @@ export default defineNuxtRouteMiddleware(async () => {
         if (!user.value.email_verified_at) {
             await $apifetch('api/logout', { method: 'post' });
             user.value = null;
-            token.value = '';
+            clearAuthSessionCookie(token);
             return navigateTo('/');
         }
         return navigateTo('/dashboard', { replace: true });

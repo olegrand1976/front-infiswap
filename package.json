@@ -10,6 +10,8 @@
     "lint": "npm run lint:eslint && npm run lint:prettier",
     "test": "vitest run",
     "test:e2e": "playwright test",
+    "test:e2e:p0": "playwright test --grep @p0",
+    "test:e2e:p1": "playwright test --grep @p1",
     "test:e2e:ui": "playwright test --ui",
     "lint:eslint": "eslint .",
     "lint:fix": "eslint . --fix"

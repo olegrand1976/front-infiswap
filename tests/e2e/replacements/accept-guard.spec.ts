@@ -9,7 +9,7 @@ import {
     replacementE2eCredentials,
 } from '../fixtures/replacement-helpers';
 
-test.describe('Remplacements — garde anti double acceptation', () => {
+test.describe('Remplacements — garde anti double acceptation', { tag: '@p1' }, () => {
     test('après une acceptation, plus de bouton Accepter pour les autres candidatures', async ({ page, context }) => {
         const credentials = replacementE2eCredentials();
         test.skip(!credentials, 'E2E_CREATOR_* / E2E_CANDIDATE_* non configurés');
