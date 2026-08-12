@@ -61,7 +61,7 @@
 
 <script lang="ts" setup>
 import { KeyRound, Trash2, TriangleAlert } from 'lucide-vue-next';
-import { useAuthTokenCookie } from '~/lib/authTokenCookie';
+import { clearAllAuthTokenCookies, useAuthTokenCookie } from '~/lib/authTokenCookie';
 import { getErrorMessage } from '~/lib/utils';
 import { useAuth } from '~/composables/useAuth';
 import type { User } from '~/lib/types';
@@ -87,7 +87,8 @@ const handleDeleteAccount = async () => {
         await deleteAccount({ password: password.value });
 
         user.value = null;
-        useAuthTokenCookie().value = '';
+        useAuthTokenCookie().value = null;
+        clearAllAuthTokenCookies();
         password.value = '';
         deleteAccountDialog.value = false;
 
