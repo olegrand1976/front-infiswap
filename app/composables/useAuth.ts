@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { toast } from 'vue-sonner';
 import { useRouter, useState, useCookie, useNuxtApp } from '#app';
-import { useAuthTokenCookie } from '~/lib/authTokenCookie';
+import { clearAllAuthTokenCookies, useAuthTokenCookie } from '~/lib/authTokenCookie';
 import { safeLoginRedirectPath } from '~/utils/accessReturn';
 import type { AccountType, Address, Pagination, User } from '~/lib/types';
 
@@ -357,15 +357,21 @@ export const useAuth = () => {
         });
     }
 
-    function logout() {
+    async function logout() {
         loading.value = false;
         try {
             if (!isLoggedIn.value) return;
-            $apifetch('api/logout', { method: 'post' });
+            try {
+                await $apifetch('api/logout', { method: 'post' });
+            }
+            catch {
+                // Purge locale même si l'API échoue (réseau / 401).
+            }
             user.value = null;
-            authToken.value = '';
+            authToken.value = null;
+            clearAllAuthTokenCookies();
 
-            router.push('/');
+            await router.push('/');
         }
         catch {
             toast.error('Erreur lors de la déconnexion.');

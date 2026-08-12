@@ -1,30 +1,75 @@
 import { useCookie } from '#app';
+import type { Ref } from 'vue';
 import { AUTH_TOKEN } from '~/lib/constants';
+import {
+    buildAuthCookieExpireDirectives,
+    normalizeAuthTokenValue,
+    resolveAuthCookieDomain,
+} from '~/lib/authTokenCookieUtils';
 
 function authCookieDomain(): string | undefined {
     const siteUrl = useRuntimeConfig().public.FRONT_END_URL || '';
 
     try {
-        const hostname = new URL(siteUrl).hostname;
-
-        if (hostname === 'infiswap.be' || hostname.endsWith('.infiswap.be')) {
-            return '.infiswap.be';
-        }
+        return resolveAuthCookieDomain(new URL(siteUrl).hostname);
     }
     catch {
         return undefined;
     }
-
-    return undefined;
 }
 
-/** Supprime l'ancien cookie host-only après migration vers domain=.infiswap.be */
-export function clearLegacyHostOnlyAuthCookie(): void {
-    if (!import.meta.client || !import.meta.env.PROD || !authCookieDomain()) {
+function expireAuthCookie(domain?: string): void {
+    for (const directive of buildAuthCookieExpireDirectives(domain)) {
+        document.cookie = directive;
+    }
+}
+
+/**
+ * Supprime host-only + domain=.infiswap.be.
+ * Évite le cookie vide `INFISWAP_TOKEN=` qui casse lecture auth / login.
+ */
+export function clearAllAuthTokenCookies(): void {
+    if (!import.meta.client) {
         return;
     }
 
-    document.cookie = `${AUTH_TOKEN}=; path=/; max-age=0; secure; samesite=lax`;
+    expireAuthCookie();
+
+    const domain = authCookieDomain();
+    if (domain) {
+        expireAuthCookie(domain);
+    }
+}
+
+/**
+ * Self-heal prod : une visite suffit pour les comptes déjà cassés.
+ * 1) purge le host-only (souvent le `INFISWAP_TOKEN=` vide)
+ * 2) si plus de token lisible → purge domaine aussi (login propre)
+ * 3) si token valide → le réécrit une fois sur domain=.infiswap.be (un seul cookie)
+ */
+export function healAuthTokenCookies(cookie: Ref<string | null | undefined>): void {
+    const normalized = normalizeAuthTokenValue(cookie.value);
+
+    if (!import.meta.client || !import.meta.env.PROD || !authCookieDomain()) {
+        cookie.value = normalized;
+        return;
+    }
+
+    const domain = authCookieDomain();
+
+    // Toujours retirer le host-only (legacy / vide laissé par logout '').
+    expireAuthCookie();
+
+    if (!normalized) {
+        if (domain) {
+            expireAuthCookie(domain);
+        }
+        cookie.value = null;
+        return;
+    }
+
+    // Réécriture domaine = un seul cookie propre ; l'infirmière reste connectée.
+    cookie.value = normalized;
 }
 
 export function useAuthTokenCookie() {
@@ -39,5 +84,8 @@ export function useAuthTokenCookie() {
         }
         : { maxAge: 1209600, path: '/' };
 
-    return useCookie(AUTH_TOKEN, config);
+    const cookie = useCookie<string | null>(AUTH_TOKEN, config);
+    cookie.value = normalizeAuthTokenValue(cookie.value);
+
+    return cookie;
 }
