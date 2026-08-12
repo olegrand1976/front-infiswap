@@ -15,6 +15,15 @@
     "french": "Frans",
     "dutch": "Nederlands"
   },
+  "accountMenu": {
+    "myAccount": "Mijn account",
+    "switchSpace": "Ruimte wisselen",
+    "nurse": "Verpleegkundige",
+    "admin": "Beheer InfiSwap",
+    "institution": "Instelling",
+    "switchToRole": "Overschakelen naar {role}",
+    "reenableNetwork": "Mijn InfiSwap-netwerk opnieuw activeren"
+  },
   "nav": {
     "home": "Home",
     "about": "Over ons",
