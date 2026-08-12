@@ -1,4 +1,5 @@
 import { assertAllowedExternalRedirectUrl, type ConfirmAccessOutcome } from '~/utils/accessReturn';
+import { parseProOutcome } from '~/utils/proSubscriptionOutcome';
 
 export interface ProPlan {
     id: number;
@@ -51,25 +52,6 @@ export interface ProStatus {
 export interface ProCatalog {
     plans: ProPlan[];
     offer: ProOffer | null;
-}
-
-/** Le back renvoie `outcome` à plat ; `status` porte le libellé traduit de jsonResponse(). */
-function parseProOutcome(response: { outcome?: string } | null, error?: unknown): ConfirmAccessOutcome {
-    if (!error) {
-        return response?.outcome === 'active' ? 'active' : 'pending';
-    }
-
-    const err = error as { status?: number; data?: { outcome?: string } };
-
-    if (err?.status === 401 || err?.status === 403) {
-        return 'auth_error';
-    }
-
-    if (err?.status === 202) {
-        return 'pending';
-    }
-
-    return 'error';
 }
 
 export function useProSubscription() {

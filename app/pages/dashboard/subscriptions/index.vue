@@ -194,7 +194,13 @@ import { Crown, Sparkles } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import type { ProPlan } from '~/composables/useProSubscription';
 import { buildProCelebrationDedupeKey } from '~/utils/purchaseCelebration';
-import { extractStripeSessionId } from '~/utils/accessReturn';
+import {
+    buildLoginRedirectWithStripeReturn,
+    extractStripeSessionId,
+    isStripeCheckoutSessionId,
+    parseStripeProductReturn,
+    stripStripeReturnQuery,
+} from '~/utils/accessReturn';
 
 definePageMeta({
     layout: 'dashboard',
@@ -323,19 +329,31 @@ async function subscribeToOffer(): Promise<void> {
 
 /** Retour Stripe : on confirme avant toute célébration, jamais sur la seule query. */
 async function processStripeReturn(): Promise<void> {
+    const query = route.query as Record<string, unknown>;
+    const stripeReturn = parseStripeProductReturn(query);
+
+    if (stripeReturn?.zone === 'pro' && stripeReturn.outcome === 'cancel') {
+        await router.replace({ query: stripStripeReturnQuery(query) });
+        $toast({ description: 'Paiement annulé. Aucun montant n\'a été débité.' });
+
+        return;
+    }
+
     if (route.query.pro !== 'success') {
         return;
     }
 
-    const sessionId = extractStripeSessionId(route.query as Record<string, unknown>);
+    const sessionId = extractStripeSessionId(query);
 
-    if (!sessionId) {
+    if (!sessionId || !isStripeCheckoutSessionId(sessionId)) {
+        await router.replace({ query: stripStripeReturnQuery(query) });
+
         return;
     }
 
     const outcome = await confirm(sessionId);
 
-    await router.replace({ query: {} });
+    await router.replace({ query: stripStripeReturnQuery(query) });
 
     if (outcome === 'active') {
         trackEvent('pro_checkout_success', { session_id: sessionId });
@@ -347,8 +365,26 @@ async function processStripeReturn(): Promise<void> {
         return;
     }
 
+    if (outcome === 'pending') {
+        $toast({
+            description: 'Paiement enregistré : votre abonnement s\'activera dans quelques instants.',
+        });
+
+        return;
+    }
+
+    if (outcome === 'auth_error') {
+        await navigateTo(buildLoginRedirectWithStripeReturn('/dashboard/subscriptions', {
+            pro: 'success',
+            session_id: sessionId,
+        }));
+
+        return;
+    }
+
     $toast({
-        description: 'Paiement enregistré : votre abonnement s\'activera dans quelques instants.',
+        variant: 'destructive',
+        description: 'Impossible de confirmer l\'abonnement. Contactez le support si le prélèvement apparaît.',
     });
 }
 
