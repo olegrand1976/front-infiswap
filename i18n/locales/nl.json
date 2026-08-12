@@ -446,7 +446,20 @@
     "step5Subtitle": "Functie, taal, werkgebieden en kwalificaties.",
     "step6Title": "Laatste stap",
     "step6Subtitle": "Voorwaarden te accepteren vóór bevestiging.",
-    "workingAtHint": "Selecteer een of meer landen"
+    "workingAtHint": "Selecteer een of meer landen",
+    "passwordHintTitle": "Wachtwoordvereisten",
+    "submitBlockedTitle": "Registratie nog onvolledig",
+    "submitBlockedIntro": "Om de knop te activeren, corrigeer:",
+    "blocker_consents": "Accepteer de 3 voorwaarden (AV, privacy, charter)",
+    "blocker_personal": "Vul naam, voornaam, e-mail en telefoon in",
+    "blocker_password_length": "Wachtwoord: minimaal 8 tekens",
+    "blocker_password_mismatch": "Beide wachtwoorden moeten identiek zijn",
+    "blocker_address": "Vul straat, postcode en stad in",
+    "blocker_working_at": "Selecteer minstens één zoekland",
+    "blocker_institution_name": "Vul de naam van de instelling in",
+    "blocker_professional_category": "Kies de beroepscategorie",
+    "blocker_education_level": "Kies het opleidingsniveau",
+    "blocker_inami_format": "Corrigeer het RIZIV-nummerformaat"
   },
   "pricing": {
     "title": "Het netwerk blijft",

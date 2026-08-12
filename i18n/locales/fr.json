@@ -446,7 +446,20 @@
     "step5Subtitle": "Rôle, langue, zones de travail et qualifications.",
     "step6Title": "Dernière étape",
     "step6Subtitle": "Conditions à accepter avant de valider.",
-    "workingAtHint": "Sélectionnez un ou plusieurs pays"
+    "workingAtHint": "Sélectionnez un ou plusieurs pays",
+    "passwordHintTitle": "Exigences du mot de passe",
+    "submitBlockedTitle": "Inscription encore incomplète",
+    "submitBlockedIntro": "Pour activer le bouton, corrigez :",
+    "blocker_consents": "Accepter les 3 conditions (CGU, données, charte)",
+    "blocker_personal": "Compléter nom, prénom, email et téléphone",
+    "blocker_password_length": "Mot de passe : 8 caractères minimum",
+    "blocker_password_mismatch": "Les deux mots de passe doivent être identiques",
+    "blocker_address": "Compléter rue, code postal et ville",
+    "blocker_working_at": "Sélectionner au moins un pays de recherche",
+    "blocker_institution_name": "Renseigner le nom de l'institution",
+    "blocker_professional_category": "Choisir la catégorie professionnelle",
+    "blocker_education_level": "Choisir le niveau d'études",
+    "blocker_inami_format": "Corriger le format du numéro INAMI"
   },
   "pricing": {
     "title": "Le réseau reste",
