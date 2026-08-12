@@ -39,6 +39,7 @@ class HomePartnerCards extends StatelessWidget {
                 fontWeight: FontWeight.w800,
               ),
             ),
+            markPadding: const EdgeInsets.symmetric(horizontal: 10),
             title: 'Créez votre page web pro',
             subtitle: 'formules dès 450 €.',
             primaryLabel: 'Demander mon devis page web',
