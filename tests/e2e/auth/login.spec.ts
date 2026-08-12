@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
-import { AUTH_TOKEN_COOKIE } from '../fixtures/test-data';
 import {
     fillLoginForm,
+    getAuthTokenCookieValue,
     logoutViaDashboard,
     seedCookieConsent,
     seedEmptyAuthTokenCookie,
@@ -50,9 +50,8 @@ test.describe('Connexion', { tag: '@p0' }, () => {
 
         await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
 
-        const cookies = await context.cookies();
-        const authCookie = cookies.find(c => c.name === AUTH_TOKEN_COOKIE);
-        expect(authCookie?.value).toBeTruthy();
+        const authToken = await getAuthTokenCookieValue(context);
+        expect(authToken).toBeTruthy();
     });
 
     test('credentials invalides restent sur la page login', async ({ page }) => {
@@ -92,8 +91,8 @@ test.describe('Connexion', { tag: '@p0' }, () => {
         await page.reload();
         await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
 
-        const authCookie = (await context.cookies()).find(c => c.name === AUTH_TOKEN_COOKIE);
-        expect(authCookie?.value).toBeTruthy();
+        const authToken = await getAuthTokenCookieValue(context);
+        expect(authToken).toBeTruthy();
     });
 });
 
@@ -111,8 +110,8 @@ test.describe('Connexion — cookie vide host-only', { tag: '@p0' }, () => {
         await page.reload();
         await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
 
-        const authCookie = (await context.cookies()).find(c => c.name === AUTH_TOKEN_COOKIE);
-        expect(authCookie?.value).toBeTruthy();
+        const authToken = await getAuthTokenCookieValue(context);
+        expect(authToken).toBeTruthy();
     });
 });
 

@@ -226,7 +226,10 @@
                         </Select>
 
                         <DropdownMenu>
-                            <DropdownMenuTrigger class="flex shrink-0 items-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                            <DropdownMenuTrigger
+                                data-testid="account-menu-trigger"
+                                class="flex shrink-0 items-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                            >
                                 <ProfilePremiumBadge>
                                     <ProfileLifetimeAccessBadge session-consumer>
                                         <ProfileInamiVerifiedBadge>

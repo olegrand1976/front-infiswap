@@ -49,10 +49,22 @@ export async function submitLogin(page: Page): Promise<void> {
     await page.getByRole('button', { name: /Se connecter|Inloggen/ }).first().click();
 }
 
+/** Cookie session non vide (évite INFISWAP_TOKEN= host-only qui masque le vrai token). */
+export async function getAuthTokenCookieValue(context: { cookies: () => Promise<Array<{ name: string; value: string }>> }): Promise<string | undefined> {
+    const cookies = await context.cookies();
+    const match = cookies
+        .filter(cookie => cookie.name === AUTH_TOKEN_COOKIE)
+        .map(cookie => cookie.value.trim())
+        .find(Boolean);
+
+    return match;
+}
+
 /** Déconnexion via le menu compte du layout dashboard (appelle logout() app). */
 export async function logoutViaDashboard(page: Page): Promise<void> {
-    const header = page.locator('header').first();
-    await header.getByRole('button').last().click();
+    const trigger = page.getByTestId('account-menu-trigger').first();
+    await expect(trigger).toBeVisible({ timeout: 15_000 });
+    await trigger.click();
     await page.getByRole('menuitem', { name: /Déconnexion|Uitloggen/ }).click();
     await expect(page).toHaveURL((url) => {
         const path = typeof url === 'string' ? new URL(url).pathname : url.pathname;
