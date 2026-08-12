@@ -30,3 +30,25 @@ export function buildAuthCookieExpireDirectives(domain?: string): string[] {
 
     return bases.map(base => `${base}${domainPart}`);
 }
+
+/**
+ * Lit INFISWAP_TOKEN depuis document.cookie.
+ * Après purge host-only, ne reste en principe que le cookie domain=.infiswap.be.
+ */
+export function readAuthTokenFromDocument(): string | null {
+    if (typeof document === 'undefined') {
+        return null;
+    }
+
+    const match = document.cookie.match(new RegExp(`(?:^|;\\s*)${AUTH_TOKEN}=([^;]*)`));
+    if (!match) {
+        return null;
+    }
+
+    try {
+        return normalizeAuthTokenValue(decodeURIComponent(match[1]));
+    }
+    catch {
+        return normalizeAuthTokenValue(match[1]);
+    }
+}

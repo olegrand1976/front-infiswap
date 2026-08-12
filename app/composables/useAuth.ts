@@ -143,6 +143,10 @@ export const useAuth = () => {
             });
 
             if (response.token) {
+                // Slate propre : évite host-only vide qui masque le nouveau token domaine.
+                if (import.meta.client) {
+                    clearAllAuthTokenCookies();
+                }
                 authToken.value = response.token;
                 await refresh(response.token);
 

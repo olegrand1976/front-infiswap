@@ -3,6 +3,7 @@ import { AUTH_TOKEN } from './constants';
 import {
     buildAuthCookieExpireDirectives,
     normalizeAuthTokenValue,
+    readAuthTokenFromDocument,
     resolveAuthCookieDomain,
 } from './authTokenCookieUtils';
 
@@ -47,5 +48,49 @@ describe('buildAuthCookieExpireDirectives', () => {
         const directives = buildAuthCookieExpireDirectives('.infiswap.be');
 
         expect(directives.every(d => d.includes('domain=.infiswap.be'))).toBe(true);
+    });
+});
+
+describe('readAuthTokenFromDocument', () => {
+    it('lit et décode le token depuis document.cookie', () => {
+        const original = globalThis.document;
+        Object.defineProperty(globalThis, 'document', {
+            configurable: true,
+            writable: true,
+            value: {
+                cookie: 'LANGUAGE=fr; INFISWAP_TOKEN=6251%7Cabc; other=1',
+            },
+        });
+
+        try {
+            expect(readAuthTokenFromDocument()).toBe('6251|abc');
+        }
+        finally {
+            Object.defineProperty(globalThis, 'document', {
+                configurable: true,
+                writable: true,
+                value: original,
+            });
+        }
+    });
+
+    it('ignore un cookie vide', () => {
+        const original = globalThis.document;
+        Object.defineProperty(globalThis, 'document', {
+            configurable: true,
+            writable: true,
+            value: { cookie: 'INFISWAP_TOKEN=' },
+        });
+
+        try {
+            expect(readAuthTokenFromDocument()).toBeNull();
+        }
+        finally {
+            Object.defineProperty(globalThis, 'document', {
+                configurable: true,
+                writable: true,
+                value: original,
+            });
+        }
     });
 });

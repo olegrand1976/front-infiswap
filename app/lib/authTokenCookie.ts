@@ -4,6 +4,7 @@ import { AUTH_TOKEN } from '~/lib/constants';
 import {
     buildAuthCookieExpireDirectives,
     normalizeAuthTokenValue,
+    readAuthTokenFromDocument,
     resolveAuthCookieDomain,
 } from '~/lib/authTokenCookieUtils';
 
@@ -24,6 +25,15 @@ function expireAuthCookie(domain?: string): void {
     }
 }
 
+/** Purge uniquement le cookie host-only (souvent `INFISWAP_TOKEN=` vide). */
+export function clearHostOnlyAuthTokenCookie(): void {
+    if (!import.meta.client) {
+        return;
+    }
+
+    expireAuthCookie();
+}
+
 /**
  * Supprime host-only + domain=.infiswap.be.
  * Évite le cookie vide `INFISWAP_TOKEN=` qui casse lecture auth / login.
@@ -42,34 +52,38 @@ export function clearAllAuthTokenCookies(): void {
 }
 
 /**
- * Self-heal prod : une visite suffit pour les comptes déjà cassés.
- * 1) purge le host-only (souvent le `INFISWAP_TOKEN=` vide)
- * 2) si plus de token lisible → purge domaine aussi (login propre)
- * 3) si token valide → le réécrit une fois sur domain=.infiswap.be (un seul cookie)
+ * Self-heal prod.
+ * Ordre critique : purge host-only AVANT lecture, sinon le cookie vide
+ * masque le token domain et on efface la session au login.
  */
 export function healAuthTokenCookies(cookie: Ref<string | null | undefined>): void {
-    const normalized = normalizeAuthTokenValue(cookie.value);
+    if (!import.meta.client) {
+        cookie.value = normalizeAuthTokenValue(cookie.value);
+        return;
+    }
 
-    if (!import.meta.client || !import.meta.env.PROD || !authCookieDomain()) {
+    const domain = import.meta.env.PROD ? authCookieDomain() : undefined;
+
+    // 1) Toujours retirer le host-only avant de faire confiance à la valeur.
+    clearHostOnlyAuthTokenCookie();
+
+    if (!domain) {
+        const normalized = normalizeAuthTokenValue(cookie.value) ?? readAuthTokenFromDocument();
         cookie.value = normalized;
         return;
     }
 
-    const domain = authCookieDomain();
+    // 2) Après purge, lire ce qui reste (cookie domaine).
+    const raw = readAuthTokenFromDocument() ?? normalizeAuthTokenValue(cookie.value);
 
-    // Toujours retirer le host-only (legacy / vide laissé par logout '').
-    expireAuthCookie();
-
-    if (!normalized) {
-        if (domain) {
-            expireAuthCookie(domain);
-        }
+    if (!raw) {
+        expireAuthCookie(domain);
         cookie.value = null;
         return;
     }
 
-    // Réécriture domaine = un seul cookie propre ; l'infirmière reste connectée.
-    cookie.value = normalized;
+    // 3) Réécriture domaine = un seul cookie propre.
+    cookie.value = raw;
 }
 
 export function useAuthTokenCookie() {
@@ -85,7 +99,19 @@ export function useAuthTokenCookie() {
         : { maxAge: 1209600, path: '/' };
 
     const cookie = useCookie<string | null>(AUTH_TOKEN, config);
-    cookie.value = normalizeAuthTokenValue(cookie.value);
+
+    // Ne jamais écrire null tant que le host-only vide n'est pas purgé :
+    // sinon on efface le token domaine valide.
+    if (import.meta.client && domain) {
+        clearHostOnlyAuthTokenCookie();
+        const raw = readAuthTokenFromDocument() ?? normalizeAuthTokenValue(cookie.value);
+        if (cookie.value !== raw) {
+            cookie.value = raw;
+        }
+    }
+    else if (cookie.value === '') {
+        cookie.value = null;
+    }
 
     return cookie;
 }
