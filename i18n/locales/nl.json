@@ -348,12 +348,12 @@
       "zipCodesPreference": "Doelpostcodes voor aankondigingen en de wekelijkse samenvatting. De zone komt overeen met de eerste twee cijfers van de code.",
       "citiesPreference": "Steden gekoppeld aan uw vervangingszoekopdrachten, naast de postcodes.",
       "language": "Interfacetaal. Kies Frans of Nederlands.",
-      "newReplacement": "Onmiddellijke melding (bel en e-mail) wanneer een nieuwe aankondiging overeenkomt met uw zone.",
+      "newReplacement": "Met Infiswap Premium: onmiddellijke melding (bel, e-mail en push) zodra een aankondiging overeenkomt met uw zone. Zonder Premium: dagelijks overzicht rond 18 u.",
       "replacementAccepted": "Melding wanneer een collega uw kandidatuur accepteert of een vervanging met u bevestigt.",
       "digestWeekly": "Elke week vat een e-mail de nieuwe aankondigingen in uw zone samen (postcodes van Voorkeuren). Opt-in: standaard uitgeschakeld.",
       "marketingEmails": "Promotionele InfiSwap-mails en presentatie van partners (NursTech, NursAssur). Nominatieve leads worden alleen met apart toestemming op het contactformulier doorgegeven. Opt-in: standaard uitgeschakeld.",
       "urgentOnly": "Beperkt meldingen tot alleen aankondigingen gemarkeerd als spoed. Andere zone-nieuwigheden worden genegeerd.",
-      "smsUrgent": "SMS voor spoedvervangingen in uw zone. Vereist een geldig mobiel nummer en activering aan platformzijde."
+      "smsUrgent": "SMS voor spoedvervangingen in uw zone (voorbehouden aan Infiswap Premium). Vereist een geldig mobiel nummer en activering aan platformzijde."
     }
   },
   "legal": {
@@ -861,7 +861,7 @@
     "replacementSubtitle": "Snelle toegang tot aanbiedingen",
     "replacementBody": "Zoek eenvoudig beschikbare vervangingsaanbiedingen met onze intelligente zoekmachine.\nFilter aankondigingen op locatie, datum, zorgtype en andere criteria die bij uw behoeften passen.",
     "notifTitle": "Realtime melding",
-    "notifBody": "Ontvang directe waarschuwingen zodra een nieuwe opportuniteit aan uw criteria voldoet. Mis nooit een missie die uw planning kan optimaliseren en uw expertise valoriseren.",
+    "notifBody": "Met Infiswap Premium ontvangt u onmiddellijke waarschuwingen zodra een opportuniteit overeenkomt met uw criteria. Zonder Premium houdt een dagelijks overzicht u op de hoogte.",
     "nurstechLead": "Maak uw professionele webpagina met NURSTECH — zichtbaar op InfiSwap en geoptimaliseerd voor uw toekomstige patiënten.",
     "nurstechBody": "Met NURSTECH krijgt u een duidelijke, professionele webpagina, geoptimaliseerd zodat toekomstige patiënten u makkelijk vinden en snel contact opnemen.",
     "nursassurLead": "Uw beroepsaansprakelijkheid 100% afgestemd op zelfstandige verpleegkundigen — offerte op maat binnen 48u.",

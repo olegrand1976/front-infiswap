@@ -348,12 +348,12 @@
       "zipCodesPreference": "Codes postaux cibles pour les annonces et le résumé hebdomadaire. La zone correspond aux deux premiers chiffres du code.",
       "citiesPreference": "Villes associées à vos recherches de remplacement, en complément des codes postaux.",
       "language": "Langue de l'interface. Choisissez français ou néerlandais.",
-      "newReplacement": "Notification immédiate (cloche et e-mail) lorsqu'une nouvelle annonce correspond à votre zone.",
+      "newReplacement": "Avec Infiswap Premium : notification immédiate (cloche, e-mail et push) dès qu'une annonce correspond à votre zone. Sans Premium : récapitulatif quotidien vers 18 h.",
       "replacementAccepted": "Notification lorsqu'un collègue accepte votre candidature ou confirme un remplacement avec vous.",
       "digestWeekly": "Chaque semaine, un e-mail récapitule les nouvelles annonces publiées dans votre zone (codes postaux des Préférences). Opt-in : désactivé par défaut.",
       "marketingEmails": "Emails promotionnels InfiSwap et présentation de partenaires (NursTech, NursAssur). Les leads nominatifs ne sont transmis au partenaire qu'avec un consentement distinct sur le formulaire de contact. Opt-in : désactivé par défaut.",
       "urgentOnly": "Limite les notifications aux seules annonces marquées urgentes. Les autres nouveautés de zone sont ignorées.",
-      "smsUrgent": "SMS pour les remplacements urgents dans votre zone. Nécessite un numéro de mobile valide et l'activation côté plateforme."
+      "smsUrgent": "SMS pour les remplacements urgents dans votre zone (réservé Infiswap Premium). Nécessite un numéro de mobile valide et l'activation côté plateforme."
     }
   },
   "legal": {
@@ -861,7 +861,7 @@
     "replacementSubtitle": "Accès rapide aux offres",
     "replacementBody": "Recherchez facilement les offres de remplacement disponibles grâce à notre moteur de recherche intelligent.\nFiltrez les annonces par localisation, date, type de soins et autres critères spécifiques à vos besoins.",
     "notifTitle": "Notification en temps réel",
-    "notifBody": "Recevez des alertes instantanées dès qu'une nouvelle opportunité correspond à vos critères. Ne manquez jamais une mission qui pourrait optimiser votre planning et valoriser votre expertise.",
+    "notifBody": "Avec Infiswap Premium, recevez des alertes instantanées dès qu'une nouvelle opportunité correspond à vos critères. Sans Premium, un récapitulatif quotidien vous tient informé(e).",
     "nurstechLead": "Créez votre page web professionnelle avec NURSTECH — visible sur InfiSwap et optimisée pour vos futurs patients.",
     "nurstechBody": "Avec NURSTECH, bénéficiez d'une page web claire, professionnelle et optimisée pour que vos futurs patients vous trouvent facilement et vous contactent rapidement.",
     "nursassurLead": "Votre assurance professionnelle 100% adaptée aux infirmiers libéraux — devis personnalisé sous 48h.",
