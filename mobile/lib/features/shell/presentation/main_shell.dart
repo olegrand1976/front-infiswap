@@ -40,34 +40,26 @@ class MainShell extends ConsumerWidget {
     return Scaffold(
       backgroundColor: colors.background,
       body: _pages[currentIndex],
-      bottomNavigationBar: SafeArea(
-        top: false,
-        minimum: const EdgeInsets.fromLTRB(14, 0, 14, 12),
-        child: SizedBox(
-          height: 78,
-          child: Stack(
-            clipBehavior: Clip.none,
-            alignment: Alignment.bottomCenter,
-            children: [
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: Container(
-                  height: 64,
-                  padding: const EdgeInsets.symmetric(horizontal: 6),
-                  decoration: BoxDecoration(
-                    color: colors.card,
-                    borderRadius: BorderRadius.circular(AppRadii.xl),
-                    border: Border.all(color: colors.border),
-                    boxShadow: [
-                      BoxShadow(
-                        color: colors.shadow,
-                        blurRadius: 24,
-                        offset: const Offset(0, 10),
-                      ),
-                    ],
-                  ),
+      bottomNavigationBar: SizedBox(
+        height: 64 + MediaQuery.paddingOf(context).bottom,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: colors.card,
+                  border: Border(top: BorderSide(color: colors.border)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: colors.shadow,
+                      blurRadius: 16,
+                      offset: const Offset(0, -4),
+                    ),
+                  ],
+                ),
+                child: SafeArea(
+                  top: false,
                   child: Row(
                     children: [
                       Expanded(
@@ -119,14 +111,18 @@ class MainShell extends ConsumerWidget {
                   ),
                 ),
               ),
-              Positioned(
-                bottom: 34,
+            ),
+            Positioned(
+              top: -24,
+              left: 0,
+              right: 0,
+              child: Center(
                 child: _CreateFab(
                   onTap: () => CreateTypeSheet.show(context),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
