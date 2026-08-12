@@ -352,41 +352,42 @@
     "networkTaglineBe": "Le réseau n°1 du remplacement infirmier en Belgique"
   },
   "pricing": {
-    "title": "Des tarifs clairs,",
-    "titleHighlight": "pensés pour votre pratique",
-    "subtitle": "Inscription gratuite pour explorer le réseau, publier et candidater. Boostez une annonce ponctuellement pour gagner en visibilité.",
+    "title": "Le réseau reste",
+    "titleHighlight": "gratuit",
+    "subtitle": "Publier, postuler et échanger ne coûte rien, et ne coûtera jamais rien. Infiswap Premium ajoute trois avantages à celles qui veulent aller plus vite.",
     "discovery": "Découverte",
     "free": "Gratuit",
     "freeAccount": "Compte gratuit · sans carte bancaire",
-    "freeDesc": "Idéal pour explorer InfiSwap et rester informé des remplacements près de chez vous, sans engagement.",
+    "freeDesc": "Tout le réseau, sans quota : publier, postuler, alertes quotidiennes, binômes et carte.",
     "createFree": "Créer un compte gratuit",
     "alreadyRegistered": "Déjà inscrit ?",
-    "optional": "Optionnel",
+    "optional": "À l'acte",
     "boost": "Boost remplacement",
-    "seoTitle": "Tarifs InfiSwap — Gratuit & Boost remplacement",
+    "seoTitle": "Tarifs InfiSwap — Gratuit, Premium & Boost",
     "days": "{n} jours",
     "oneTimeVisibility": "Paiement unique · 3 ou 7 jours de visibilité",
-    "boostDefaultDesc": "Mettez votre annonce en tête des recherches et augmentez votre visibilité auprès des remplaçants disponibles.",
+    "boostDefaultDesc": "Option ponctuelle pour mettre une annonce en tête de liste, en complément du réseau gratuit.",
     "manageReplacements": "Gérer mes remplacements",
     "startFree": "Commencer gratuitement",
     "activableFrom": "Activable depuis « Mes remplacements » sur chaque annonce",
     "howItWorks": "Comment ça marche ?",
     "progressiveTitle": "Un parcours progressif",
-    "progressiveBody": "Créez un compte gratuit pour explorer, publier et postuler. Boostez une annonce dès 2 € (3 jours) si vous voulez plus de visibilité.",
+    "progressiveBody": "Le réseau est gratuit. Passez à Premium pour être alertée en premier, ou boostez une annonce ponctuellement.",
     "secureStripe": "Paiement sécurisé Stripe",
     "madeByPros": "Conçu par des professionnels de santé",
-    "fixedDuration": "Durée fixe, sans abonnement",
+    "fixedDuration": "Premium annulable en un clic",
+    "newBadge": "Nouveau",
     "freeFeatures": {
       "f1": "Rechercher les remplacements disponibles",
       "f2": "Consulter les annonces et missions institution",
-      "f3": "Alertes et notifications personnalisées",
+      "f3": "Alerte email quotidienne + digest hebdomadaire",
       "f4": "Filtres par zone, dates et type de soins",
       "f5": "Aperçu des détails avant de postuler",
       "f6": "Publier et gérer vos remplacements",
       "f7": "Postuler aux annonces qui vous intéressent",
       "f8": "Modifier ou fermer vos publications",
       "f9": "Publier un remplacement urgent",
-      "f10": "Mise en avant en tête de liste"
+      "f10": "Alerte instantanée (réservée à Premium)"
     },
     "boostFeatures": {
       "b1": "Boost 2 : 7 jours à 4,40 € — recommandé",
@@ -395,15 +396,52 @@
       "b4": "Activation en un clic sur vos annonces",
       "b5": "Contrat de remplacement optionnel — 3 €"
     },
+    "pro": {
+      "eyebrow": "Abonnement",
+      "name": "Infiswap Premium",
+      "monthlyPrice": "9,90",
+      "period": "par mois",
+      "yearly": "ou 99 € par an — 2 mois offerts",
+      "desc": "Trois avantages seulement, pour celles qui veulent aller plus vite.",
+      "features": {
+        "p1": "Alerte instantanée — prévenue dès la publication",
+        "p2": "Un boost offert par mois — 7 jours en tête de liste",
+        "p3": "Contrats inclus — illimités, signature et archivage compris",
+        "p4": "Annulable en un clic, sans engagement au mois"
+      },
+      "cta": "Découvrir Infiswap Premium",
+      "note": "Le réseau reste gratuit. Premium n'ajoute que de la vitesse et du confort."
+    },
     "tips": {
       "freeTitle": "Gratuit",
-      "freeText": "Parfait pour surveiller le marché, publier et postuler, sans abonnement.",
+      "freeText": "Publier, postuler et échanger : 0 €, pour toujours.",
       "boostTitle": "Boost dès 2 €",
-      "boostText": "Option ponctuelle (3 ou 7 jours) pour accélérer le remplissage d'une annonce déjà publiée.",
-      "progressiveTitle": "Progressif",
-      "progressiveText": "Commencez gratuitement, boostez une annonce quand vous voulez plus de visibilité."
+      "boostText": "Option ponctuelle (3 ou 7 jours) pour accélérer une annonce.",
+      "progressiveTitle": "Premium",
+      "progressiveText": "Alertée en premier, un boost offert chaque mois, contrats inclus."
     },
-    "seoDescription": "Tarifs InfiSwap : compte gratuit (recherche, alertes, publication et candidatures aux remplacements), boost visibilité dès 2 € (3 jours) ou 4,40 € (7 jours) en tête de liste."
+    "seoDescription": "Tarifs InfiSwap : réseau 100 % gratuit, Infiswap Premium (alertes instantanées, boost offert, contrats inclus) dès 9,90 €/mois, boost ponctuel dès 2 €."
+  },
+  "premiumMarketing": {
+    "badge": "Nouveau · Infiswap Premium",
+    "title": "Le réseau reste gratuit",
+    "subtitle": "Publier, postuler et échanger : toujours 0 €. Premium, c’est la différence de vitesse — alertes, boost et contrats — pour celles qui ne veulent plus attendre.",
+    "cta": "Découvrir Infiswap Premium",
+    "priceNote": "Dès 9,90 € / mois · annulable en un clic",
+    "benefits": {
+      "alert": {
+        "title": "Alerte instantanée",
+        "description": "dès la publication, pas un récap le soir comme en gratuit"
+      },
+      "boost": {
+        "title": "Un boost offert par mois",
+        "description": "7 jours en tête de liste inclus — le gratuit paie le boost à part"
+      },
+      "contract": {
+        "title": "Contrats inclus",
+        "description": "illimités avec signature — le gratuit paie 3 € par contrat"
+      }
+    }
   },
   "contact": {
     "title": "Contactez-nous",
@@ -465,6 +503,12 @@
     "searchTitle": "Chercher un remplacement",
     "searchHeading": "Chercher",
     "searchHeadingStrong": "un remplacement",
+    "searchHelpDesc": "Parcourez les missions disponibles près de chez vous.",
+    "proSearchUpsellTitle": "Infiswap Premium : soyez prévenue avant les autres",
+    "proSearchUpsellDesc": "Les comptes gratuits reçoivent un récap le soir. Avec Premium, l'alerte part dès la publication — vous pouvez candidater en premier.",
+    "proSearchBenefitAlert": "Alerte instantanée à chaque nouvelle mission de votre zone",
+    "proSearchBenefitBoost": "1 boost offert par mois pour mettre votre annonce en tête",
+    "proSearchBenefitContract": "Contrats de remplacement inclus, illimités",
     "myTitle": "Mes remplacements",
     "createTitle": "Créer un remplacement",
     "createHeading": "Créer un",

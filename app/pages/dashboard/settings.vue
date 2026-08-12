@@ -14,31 +14,33 @@
 
         <form class="mt-6 mb-12">
             <div class="flex justify-center sm:justify-start space-x-4 items-center sm:w-96 h-20 sm:h-28 px-1 py-2 rounded-full border border-gray-300">
-                <ProfileLifetimeAccessBadge size="lg">
-                    <ProfileInamiVerifiedBadge size="lg">
-                        <div class="relative">
-                            <SquarePen
-                                class="w-5 text-gray-600 absolute -top-1 -right-2 sm:-right-1 cursor-pointer"
-                                @click="profileDialog = true"
-                            />
-                            <Trash2
-                                v-if="user.profile?.profil_url"
-                                class="w-5 text-primary absolute -bottom-1 -right-2 sm:-right-1 cursor-pointer"
-                                @click="deleteAvatarDialog = true"
-                            />
-                            <img
-                                v-if="user.profile?.profil_url != null"
-                                :src="useRuntimeConfig().public.API_URL + '/storage/' + user.profile?.profil_url"
-                                class="w-16 h-16 sm:w-24 sm:h-24 rounded-full"
-                            >
-                            <img
-                                v-else
-                                src="/images/icons/user-circle.png"
-                                class="w-16 h-16 sm:w-24 sm:h-24 rounded-full opacity-60"
-                            >
-                        </div>
-                    </ProfileInamiVerifiedBadge>
-                </ProfileLifetimeAccessBadge>
+                <ProfilePremiumBadge size="lg">
+                    <ProfileLifetimeAccessBadge size="lg">
+                        <ProfileInamiVerifiedBadge size="lg">
+                            <div class="relative">
+                                <SquarePen
+                                    class="w-5 text-gray-600 absolute -top-1 -right-2 sm:-right-1 cursor-pointer"
+                                    @click="profileDialog = true"
+                                />
+                                <Trash2
+                                    v-if="user.profile?.profil_url"
+                                    class="w-5 text-primary absolute -bottom-1 -right-2 sm:-right-1 cursor-pointer"
+                                    @click="deleteAvatarDialog = true"
+                                />
+                                <img
+                                    v-if="user.profile?.profil_url != null"
+                                    :src="useRuntimeConfig().public.API_URL + '/storage/' + user.profile?.profil_url"
+                                    class="w-16 h-16 sm:w-24 sm:h-24 rounded-full"
+                                >
+                                <img
+                                    v-else
+                                    src="/images/icons/user-circle.png"
+                                    class="w-16 h-16 sm:w-24 sm:h-24 rounded-full opacity-60"
+                                >
+                            </div>
+                        </ProfileInamiVerifiedBadge>
+                    </ProfileLifetimeAccessBadge>
+                </ProfilePremiumBadge>
 
                 <Dialog v-model:open="profileDialog">
                     <DialogContent class="sm:max-w-160">
@@ -1478,6 +1480,44 @@
                         </div>
                     </section>
 
+                    <section class="rounded-lg border border-amber-300/60 bg-amber-50/40 p-6 space-y-4 dark:border-amber-500/30 dark:bg-amber-500/5">
+                        <h3 class="flex items-center gap-3">
+                            <span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-amber-400/15 text-amber-600">
+                                <Crown class="size-5" />
+                            </span>
+                            <span class="text-lg font-secondary">Abonnement Infiswap Premium</span>
+                        </h3>
+                        <p class="text-sm text-muted-foreground">
+                            <template v-if="isProSubscriber">
+                                Votre abonnement est actif. Factures, moyen de paiement et résiliation
+                                se gèrent depuis le portail sécurisé Stripe.
+                            </template>
+                            <template v-else>
+                                Alertes instantanées, un boost offert par mois et contrats inclus.
+                                Le reste du réseau demeure gratuit.
+                            </template>
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <Button
+                                v-if="isProSubscriber"
+                                type="button"
+                                class="min-h-11"
+                                :disabled="proLoading"
+                                @click="openBillingPortal"
+                            >
+                                Gérer mon abonnement
+                            </Button>
+                            <Button
+                                v-else
+                                type="button"
+                                class="min-h-11"
+                                @click="navigateTo('/dashboard/subscriptions')"
+                            >
+                                Découvrir Infiswap Premium
+                            </Button>
+                        </div>
+                    </section>
+
                     <section
                         v-if="user.type != 'institution'"
                         class="mt-4 xl:mt-0 shadow rounded-lg p-6"
@@ -1690,6 +1730,41 @@
 
                     <section class="mt-4 shadow rounded-lg p-6 space-y-4">
                         <h3 class="flex items-center space-x-4">
+                            <Crown class="w-6 text-amber-500" />
+                            <span class="text-lg">Abonnement Infiswap Premium</span>
+                        </h3>
+                        <p class="text-sm text-gray-600">
+                            <template v-if="isProSubscriber">
+                                Votre abonnement est actif. Factures, moyen de paiement et résiliation
+                                se gèrent depuis le portail sécurisé Stripe.
+                            </template>
+                            <template v-else>
+                                Alertes instantanées, un boost offert par mois et contrats inclus.
+                                Le reste du réseau demeure gratuit.
+                            </template>
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-3 sm:justify-end">
+                            <Button
+                                v-if="isProSubscriber"
+                                type="button"
+                                :disabled="proLoading"
+                                @click="openBillingPortal"
+                            >
+                                Gérer mon abonnement
+                            </Button>
+                            <Button
+                                v-else
+                                type="button"
+                                variant="outline"
+                                @click="navigateTo('/dashboard/subscriptions')"
+                            >
+                                Découvrir Infiswap Premium
+                            </Button>
+                        </div>
+                    </section>
+
+                    <section class="mt-4 shadow rounded-lg p-6 space-y-4">
+                        <h3 class="flex items-center space-x-4">
                             <ShieldCheck class="w-6 text-gray-400" />
                             <span class="text-lg">{{ $t('settings.personalData') }}</span>
                         </h3>
@@ -1728,7 +1803,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeft, BellRing, Building2, Calendar, CircleUser, GraduationCap, IdCard, Mail, Map, MapPin, Phone, ShieldCheck, Smartphone, SquarePen, Trash2, UserPlus, Users, Wrench } from 'lucide-vue-next';
+import { ArrowLeft, BellRing, Building2, Calendar, CircleUser, Crown, GraduationCap, IdCard, Mail, Map, MapPin, Phone, ShieldCheck, Smartphone, SquarePen, Trash2, UserPlus, Users, Wrench } from 'lucide-vue-next';
 import { getErrorMessage, goBack } from '~/lib/utils';
 import { useRuntimeConfig } from '#app';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -1757,6 +1832,12 @@ const {
     deleteAvatar,
 } = useAuth();
 const { createPreferences, createNotifPreferences } = useAuth();
+
+const {
+    isPremium: isProSubscriber,
+    loading: proLoading,
+    openBillingPortal,
+} = useProSubscription();
 
 const isExportingData = ref(false);
 

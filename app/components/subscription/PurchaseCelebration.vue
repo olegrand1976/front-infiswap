@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FileCheck, Sparkles } from 'lucide-vue-next';
+import { Crown, FileCheck, Sparkles } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import ReplacementBoostStars from '@/components/replacements/ReplacementBoostStars.vue';
 import type { PurchaseCelebrationVariant } from '~/utils/purchaseCelebration';
@@ -58,6 +58,19 @@ const variantConfig = computed(() => {
                 ],
                 primaryCta: { label: 'Voir les candidatures', to: replacementList },
                 secondaryCta: { label: 'Rester sur l\'annonce', to: replacementDetail },
+            };
+        case 'pro':
+            return {
+                chip: 'Infiswap Premium activé',
+                title: 'Vous ne raterez plus une opportunité',
+                subtitle: 'Alertes instantanées, un boost offert chaque mois, contrats inclus.',
+                tips: [
+                    'Vous êtes prévenue dès la publication d\'un remplacement dans vos zones.',
+                    'Un boost de 7 jours vous est offert chaque mois calendaire.',
+                    'Vos contrats de remplacement sont désormais inclus, signature comprise.',
+                ],
+                primaryCta: { label: 'Voir les remplacements', to: '/dashboard/replacements' },
+                secondaryCta: { label: secondaryLabel, to: secondaryTo },
             };
         case 'contract':
             return {
@@ -166,6 +179,17 @@ onBeforeUnmount(() => {
                 :class="{ 'purchase-celebration-boost-pop': !prefersReducedMotion }"
             >
                 <ReplacementBoostStars size="lg" />
+            </div>
+
+            <div
+                v-else-if="variant === 'pro'"
+                class="flex size-24 sm:size-28 items-center justify-center rounded-full border-4 border-white bg-amber-400/15 shadow-xl ring-2 ring-amber-400/40"
+                :class="{ 'purchase-celebration-boost-pop': !prefersReducedMotion }"
+            >
+                <Crown
+                    class="size-12 sm:size-14 text-amber-500"
+                    aria-hidden="true"
+                />
             </div>
 
             <div

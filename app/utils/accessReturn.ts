@@ -72,7 +72,7 @@ export async function waitForAuthReady(timeoutMs = 5000): Promise<boolean> {
     return authReady.value;
 }
 
-export type StripeProductReturnZone = 'platform' | 'boost' | 'contract' | 'sponsorship';
+export type StripeProductReturnZone = 'platform' | 'boost' | 'contract' | 'sponsorship' | 'pro';
 
 export interface StripeProductReturn {
     zone: StripeProductReturnZone;
@@ -86,6 +86,14 @@ export function parseStripeProductReturn(query: Record<string, unknown>): Stripe
 
     if (!sessionId || !isStripeCheckoutSessionId(sessionId)) {
         return null;
+    }
+
+    if (query.pro === 'success') {
+        return { zone: 'pro', sessionId, outcome: 'success' };
+    }
+
+    if (query.pro === 'cancel') {
+        return { zone: 'pro', sessionId, outcome: 'cancel' };
     }
 
     if (query.sponsorship === 'success') {
@@ -118,6 +126,7 @@ export function stripStripeReturnQuery(query: Record<string, unknown>): Record<s
     delete next.sponsorship;
     delete next.boost;
     delete next.contract;
+    delete next.pro;
 
     return next;
 }
@@ -133,14 +142,26 @@ export function buildLoginRedirectWithStripeReturn(path: string, query: Record<s
     const params = new URLSearchParams();
     params.set('session_id', stripeReturn.sessionId);
 
-    if (stripeReturn.zone === 'sponsorship') {
-        params.set('sponsorship', 'success');
-    }
-    else if (stripeReturn.zone === 'boost') {
-        params.set('boost', stripeReturn.outcome);
-    }
-    else if (stripeReturn.zone === 'contract') {
-        params.set('contract', stripeReturn.outcome);
+    switch (stripeReturn.zone) {
+        case 'sponsorship':
+            params.set('sponsorship', 'success');
+            break;
+        case 'boost':
+            params.set('boost', stripeReturn.outcome);
+            break;
+        case 'contract':
+            params.set('contract', stripeReturn.outcome);
+            break;
+        case 'pro':
+            params.set('pro', stripeReturn.outcome);
+            break;
+        case 'platform':
+            break;
+        default: {
+            const _exhaustive: never = stripeReturn.zone;
+            void _exhaustive;
+            break;
+        }
     }
 
     const separator = path.includes('?') ? '&' : '?';

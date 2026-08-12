@@ -220,6 +220,14 @@
             </NuxtLink>
         </div>
 
+        <SubscriptionProUpsellCallout
+            v-if="showProSearchUpsell"
+            class="mt-4"
+            :title="t('replacements.proSearchUpsellTitle')"
+            :description="t('replacements.proSearchUpsellDesc')"
+            :benefits="proSearchBenefits"
+        />
+
         <Replacement
             v-model:selected-regions="selectedRegions"
             :filters="selectedFilters"
@@ -252,6 +260,8 @@ import { PERPAGE } from '~/lib/constants';
 import { normalizeSelectedFilters } from '~/utils/selectedFilters';
 import { resolveProfileCountryCode } from '~/utils/profileCountry';
 import { useConfirmProfileCountry } from '~/composables/useConfirmProfileCountry';
+
+const { showProSearchUpsell, proSearchBenefits, ensureProStatus } = useProSearchUpsell();
 
 const user = useState<User>('user');
 const {
@@ -286,6 +296,7 @@ onMounted(async () => {
     await ensureProfileCountry();
     syncSelectedCountryFromProfile();
     getMissions(1, PERPAGE, { type: 'nurse' });
+    await ensureProStatus();
 });
 
 watch(

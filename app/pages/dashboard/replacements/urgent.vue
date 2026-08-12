@@ -11,6 +11,15 @@
             </h1>
         </div>
 
+        <SubscriptionProUpsellCallout
+            v-if="showProSearchUpsell"
+            class="mx-4 sm:mx-9"
+            tone="amber"
+            :title="t('replacements.proSearchUpsellTitle')"
+            :description="t('replacements.proSearchUpsellDesc')"
+            :benefits="proSearchBenefits"
+        />
+
         <div class="overflow-x-auto p-4">
             <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
                 <thead class="bg-gray-100">
@@ -132,6 +141,12 @@ const handleInterest = async (replacementId, nurseId) => {
 };
 
 const { t } = useI18n();
+const { showProSearchUpsell, proSearchBenefits, ensureProStatus } = useProSearchUpsell();
+
+onMounted(() => {
+    void ensureProStatus();
+});
+
 useHead({
     title: () => t('replacements.urgentPageTitle'),
 });
