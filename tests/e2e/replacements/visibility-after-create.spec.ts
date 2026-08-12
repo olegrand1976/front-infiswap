@@ -51,7 +51,7 @@ async function fillMinimalCreateForm(page: Page): Promise<void> {
     }
 }
 
-test.describe('Remplacements — visibilité après création', () => {
+test.describe('Remplacements — visibilité après création', { tag: '@p1' }, () => {
     test('UI create → redirect /me → présent ; bandeau Chercher', async ({ page }) => {
         const credentials = replacementE2eCredentials();
         test.skip(!credentials, 'E2E_CREATOR_* / E2E_CANDIDATE_* non configurés');

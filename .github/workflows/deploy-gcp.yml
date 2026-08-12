@@ -171,3 +171,32 @@ jobs:
             echo "| Custom | ${{ needs.resolve-env.outputs.web_public_url }} |"
             echo "| Cloud Run | ${WEB_URL} |"
           } >> "${GITHUB_STEP_SUMMARY}"
+
+  post-e2e-p0:
+    name: E2E Playwright @p0 (auth/payments)
+    needs: [resolve-env, deploy]
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout front
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies & Playwright
+        run: |
+          npm ci --no-audit --no-fund
+          npx playwright install --with-deps chromium
+
+      - name: Run @p0 E2E (auth + payments)
+        env:
+          BASE_URL: ${{ needs.resolve-env.outputs.web_public_url }}
+          API_URL: ${{ needs.resolve-env.outputs.api_public_url }}
+          E2E_LOGIN_EMAIL: ${{ secrets.E2E_LOGIN_EMAIL }}
+          E2E_LOGIN_PASSWORD: ${{ secrets.E2E_LOGIN_PASSWORD }}
+        run: npm run test:e2e:p0

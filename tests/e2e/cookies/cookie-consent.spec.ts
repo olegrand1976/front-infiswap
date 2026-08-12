@@ -25,7 +25,7 @@ async function skipIfBannerMissing(
     return true;
 }
 
-test.describe('Consentement cookies RGPD', () => {
+test.describe('Consentement cookies RGPD', { tag: '@p1' }, () => {
     test.beforeEach(async ({ context, page }) => {
         await context.clearCookies();
         await page.addInitScript((key) => {

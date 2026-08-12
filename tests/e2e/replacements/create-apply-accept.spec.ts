@@ -9,7 +9,7 @@ import {
     replacementE2eCredentials,
 } from '../fixtures/replacement-helpers';
 
-test.describe('Remplacements — création / candidature / acceptation', () => {
+test.describe('Remplacements — création / candidature / acceptation', { tag: '@p1' }, () => {
     test('happy path API create + UI apply + UI accept', async ({ page, context }) => {
         const credentials = replacementE2eCredentials();
         test.skip(!credentials, 'E2E_CREATOR_* / E2E_CANDIDATE_* non configurés');

@@ -1,5 +1,5 @@
 import { expect, type Locator, type Page } from '@playwright/test';
-import type { RegistrationFormData } from './test-data';
+import { AUTH_TOKEN_COOKIE, type RegistrationFormData } from './test-data';
 
 function visibleRegistrationForm(page: Page): Locator {
     return page.locator('form:visible').first();
@@ -24,6 +24,16 @@ export async function seedCookieConsent(page: Page): Promise<void> {
     });
 }
 
+/**
+ * Simule le cookie host-only vide (régression login bounce août 2026).
+ * Doit être appelé avant la navigation vers /login.
+ */
+export async function seedEmptyAuthTokenCookie(page: Page): Promise<void> {
+    await page.addInitScript((cookieName: string) => {
+        document.cookie = `${cookieName}=; path=/; SameSite=Lax`;
+    }, AUTH_TOKEN_COOKIE);
+}
+
 export async function fillLoginForm(page: Page, identifier: string, password: string): Promise<void> {
     await page.getByPlaceholder('Email').first().fill(identifier);
     await page.getByPlaceholder(/Mot de passe|Wachtwoord/).first().fill(password);
@@ -37,6 +47,17 @@ export async function submitLogin(page: Page): Promise<void> {
     }
 
     await page.getByRole('button', { name: /Se connecter|Inloggen/ }).first().click();
+}
+
+/** Déconnexion via le menu compte du layout dashboard (appelle logout() app). */
+export async function logoutViaDashboard(page: Page): Promise<void> {
+    const header = page.locator('header').first();
+    await header.getByRole('button').last().click();
+    await page.getByRole('menuitem', { name: /Déconnexion|Uitloggen/ }).click();
+    await expect(page).toHaveURL((url) => {
+        const path = typeof url === 'string' ? new URL(url).pathname : url.pathname;
+        return path === '/' || path === '';
+    }, { timeout: 15_000 });
 }
 
 export async function fillRegistrationForm(page: Page, data: RegistrationFormData): Promise<void> {
