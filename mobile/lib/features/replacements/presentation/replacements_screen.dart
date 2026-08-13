@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -539,79 +541,178 @@ class _ReplacementCard extends StatelessWidget {
         ? (item.subtitle.isNotEmpty ? item.subtitle : null)
         : descriptionPreview;
 
+    final firstCity = item.cities.isNotEmpty ? item.cities.first : null;
+    final firstZip = item.zipCodes.isNotEmpty ? item.zipCodes.first : null;
+    final locationLead = firstCity != null && firstZip != null
+        ? '$firstCity ($firstZip)'
+        : firstCity ?? firstZip ?? 'CP non précisé';
+    final zoneCount =
+        item.cities.isNotEmpty ? item.cities.length : item.zipCodes.length;
+    final extraZones = zoneCount > 1 ? zoneCount - 1 : 0;
+
+    final firstCareType =
+        item.careTypes.isNotEmpty ? item.careTypes.first : null;
+    final roleLead = item.isMission
+        ? item.title
+        : (firstCareType != null
+            ? '${item.role} · $firstCareType'
+            : item.role);
+    final extraCareTypes =
+        item.careTypes.length > 1 ? item.careTypes.length - 1 : 0;
+    final extraPeriods = item.periods.length > 1 ? item.periods.length - 1 : 0;
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(AppRadii.md),
         child: Container(
-          padding: const EdgeInsets.fromLTRB(14, 13, 14, 12),
           decoration: BoxDecoration(
             color: colors.card,
             borderRadius: BorderRadius.circular(AppRadii.md),
-            border: Border.all(color: colors.divider),
+            border: Border.all(color: colors.border),
             boxShadow: [
               BoxShadow(
                 color: colors.shadow,
-                blurRadius: 16,
-                offset: const Offset(0, 6),
+                blurRadius: 10,
+                offset: const Offset(0, 3),
               ),
             ],
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          clipBehavior: Clip.antiAlias,
+          child: Stack(
             children: [
-              Row(
-                children: [
-                  _TypeBadge(item: item),
-                  const Spacer(),
-                  if (item.isMission)
-                    MissionAvatar(logoUrl: item.institutionLogoUrl, size: 30),
-                ],
-              ),
-              if (item.isBoosted) ...[
-                const SizedBox(height: 6),
-                const _BoostStars(size: 13),
-              ],
-              const SizedBox(height: 8),
-              Text(
-                item.isMission ? item.title : item.role,
-                style: TextStyle(
-                  color: colors.textPrimary,
-                  fontSize: 14.5,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              if (subtitle != null) ...[
-                const SizedBox(height: 2),
-                Text(
-                  subtitle,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: colors.textSecondary, fontSize: 12),
-                ),
-              ],
-              const SizedBox(height: 10),
-              Container(
-                padding: const EdgeInsets.only(top: 9),
-                decoration: BoxDecoration(
-                  border: Border(top: BorderSide(color: colors.divider)),
-                ),
-                child: Row(
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: _MetaRow(
-                        icon: Icons.location_on_outlined,
-                        text: item.zipCodesLabel,
+                    Padding(
+                      padding: item.isUrgent
+                          ? const EdgeInsets.only(right: 34)
+                          : EdgeInsets.zero,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _MetaRow(
+                            icon: Icons.location_on_outlined,
+                            text: locationLead,
+                            trailing: extraZones > 0
+                                ? _CountChip(
+                                    label: extraZones == 1
+                                        ? '+1 commune'
+                                        : '+$extraZones communes',
+                                  )
+                                : null,
+                          ),
+                          const SizedBox(height: 3),
+                          _MetaRow(
+                            icon: Icons.calendar_today_outlined,
+                            text: item.dateLabel,
+                            trailing: extraPeriods > 0
+                                ? _CountChip(
+                                    label: extraPeriods == 1
+                                        ? '+1 période'
+                                        : '+$extraPeriods périodes',
+                                  )
+                                : null,
+                          ),
+                        ],
                       ),
                     ),
-                    Expanded(
-                      child: _MetaRow(
-                        icon: Icons.calendar_today_outlined,
-                        text: item.dateLabel,
-                      ),
+                    if (item.isBoosted) ...[
+                      const SizedBox(height: 4),
+                      const _BoostStars(size: 12),
+                    ],
+                    const SizedBox(height: 6),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _MetaRow(
+                                icon: item.isMission
+                                    ? Icons.school_outlined
+                                    : Icons.medical_services_outlined,
+                                text: roleLead,
+                                emphasize: true,
+                                trailing: !item.isMission && extraCareTypes > 0
+                                    ? _CountChip(
+                                        label: extraCareTypes == 1
+                                            ? '+1 soin'
+                                            : '+$extraCareTypes soins',
+                                      )
+                                    : null,
+                              ),
+                              if (subtitle != null) ...[
+                                const SizedBox(height: 2),
+                                Text(
+                                  subtitle,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: colors.textSecondary,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                        if (item.isMission) ...[
+                          const SizedBox(width: 8),
+                          MissionAvatar(
+                            logoUrl: item.institutionLogoUrl,
+                            name: item.institutionName,
+                            size: 24,
+                          ),
+                        ],
+                      ],
                     ),
                   ],
+                ),
+              ),
+              if (item.isUrgent) const _UrgentRibbon(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Corner ribbon for isUrgent — always coral/white, fixed regardless of
+// theme, same as the rest of the app's urgent styling.
+class _UrgentRibbon extends StatelessWidget {
+  const _UrgentRibbon();
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: 12,
+      right: -34,
+      child: Transform.rotate(
+        angle: math.pi / 4,
+        child: Container(
+          width: 120,
+          alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          color: AppColors.coral,
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.campaign_outlined, size: 12, color: AppColors.onCoral),
+              SizedBox(width: 4),
+              Text(
+                'URGENT',
+                style: TextStyle(
+                  color: AppColors.onCoral,
+                  fontSize: 9,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: .5,
                 ),
               ),
             ],
@@ -622,56 +723,32 @@ class _ReplacementCard extends StatelessWidget {
   }
 }
 
-class _TypeBadge extends StatelessWidget {
-  const _TypeBadge({required this.item});
+// Small "+N" pastille used when a list field (zip codes, care types,
+// periods) has more than one value — lead value stays in the row's main
+// text, the rest is counted here instead of overflowing the card.
+class _CountChip extends StatelessWidget {
+  const _CountChip({required this.label});
 
-  final ReplacementItem item;
+  final String label;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
 
-    final IconData icon;
-    final String label;
-    final Color background;
-    final Color foreground;
-
-    if (item.isMission) {
-      icon = Icons.school_outlined;
-      label = 'Mission';
-      background = AppColors.mission;
-      foreground = AppColors.onMission;
-    } else if (item.isUrgent) {
-      icon = Icons.bolt;
-      label = 'Urgent';
-      background = AppColors.urgent;
-      foreground = AppColors.onUrgent;
-    } else {
-      icon = Icons.calendar_today_outlined;
-      label = 'Classique';
-      background = colors.background;
-      foreground = colors.textSecondary;
-    }
-
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 1.5),
       decoration: BoxDecoration(
-          color: background, borderRadius: BorderRadius.circular(AppRadii.md)),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 12, color: foreground),
-          const SizedBox(width: 4),
-          Text(
-            label,
-            style: TextStyle(
-              color: foreground,
-              fontSize: 10.5,
-              fontWeight: FontWeight.w800,
-              letterSpacing: .2,
-            ),
-          ),
-        ],
+        color: colors.background,
+        border: Border.all(color: colors.border),
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: colors.textSecondary,
+          fontSize: 10,
+          fontWeight: FontWeight.w700,
+        ),
       ),
     );
   }
@@ -681,18 +758,23 @@ class _MetaRow extends StatelessWidget {
   const _MetaRow({
     required this.icon,
     required this.text,
+    this.emphasize = false,
+    this.trailing,
   });
 
   final IconData icon;
   final String text;
+  final bool emphasize;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
+    final color = emphasize ? colors.textPrimary : colors.textSecondary;
 
     return Row(
       children: [
-        Icon(icon, size: 14, color: colors.textSecondary),
+        Icon(icon, size: 14, color: color),
         const SizedBox(width: 6),
         Expanded(
           child: Text(
@@ -700,12 +782,16 @@ class _MetaRow extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
-              color: colors.textSecondary,
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
+              color: color,
+              fontSize: emphasize ? 13 : 12,
+              fontWeight: emphasize ? FontWeight.w500 : FontWeight.w400,
             ),
           ),
         ),
+        if (trailing != null) ...[
+          const SizedBox(width: 6),
+          trailing!,
+        ],
       ],
     );
   }

@@ -1,16 +1,31 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_radii.dart';
 
 class MissionAvatar extends StatelessWidget {
   const MissionAvatar({
     super.key,
     this.logoUrl,
+    this.name,
     this.size = 28,
   });
 
   final String? logoUrl;
+  final String? name;
   final double size;
+
+  static String? _initialsOf(String? rawName) {
+    final trimmed = rawName?.trim();
+    if (trimmed == null || trimmed.isEmpty) {
+      return null;
+    }
+    final parts = trimmed.split(RegExp(r'\s+'));
+    final first = parts.first[0];
+    final last =
+        parts.length > 1 && parts.last.isNotEmpty ? parts.last[0] : '';
+    return (first + last).toUpperCase();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +34,7 @@ class MissionAvatar extends StatelessWidget {
     final colors = context.appColors;
 
     if (!hasLogo) {
-      return _BuildingFallback(size: size);
+      return _fallback(colors);
     }
 
     return ClipOval(
@@ -32,7 +47,7 @@ class MissionAvatar extends StatelessWidget {
           width: size,
           height: size,
           gaplessPlayback: true,
-          errorBuilder: (_, __, ___) => _BuildingFallback(size: size),
+          errorBuilder: (_, __, ___) => _fallback(colors),
           loadingBuilder: (context, child, progress) {
             if (progress == null) {
               return child;
@@ -56,17 +71,45 @@ class MissionAvatar extends StatelessWidget {
       ),
     );
   }
+
+  // Tier 2: no logo but a name — colored initials, same pattern as
+  // candidate avatars (AppColors.avatarPalette, picked by name.hashCode).
+  // Tier 3: no logo and no name — generic building icon.
+  Widget _fallback(AppPalette colors) {
+    final initials = _initialsOf(name);
+    if (initials == null) {
+      return _BuildingFallback(size: size, colors: colors);
+    }
+    const palette = AppColors.avatarPalette;
+    final (bg, fg) = palette[name!.hashCode.abs() % palette.length];
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(AppRadii.md),
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        initials,
+        style: TextStyle(
+          color: fg,
+          fontSize: size * 0.42,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+    );
+  }
 }
 
 class _BuildingFallback extends StatelessWidget {
-  const _BuildingFallback({required this.size});
+  const _BuildingFallback({required this.size, required this.colors});
 
   final double size;
+  final AppPalette colors;
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-
     return Container(
       width: size,
       height: size,
