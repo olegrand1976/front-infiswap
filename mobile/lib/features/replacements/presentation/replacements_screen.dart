@@ -364,15 +364,14 @@ class _HeaderIconButton extends StatelessWidget {
         width: 40,
         height: 40,
         decoration: BoxDecoration(
-          color: colors.card,
-          border: Border.all(color: colors.divider),
+          color: colors.primaryMuted,
           borderRadius: BorderRadius.circular(AppRadii.md),
         ),
         child: Stack(
           clipBehavior: Clip.none,
           alignment: Alignment.center,
           children: [
-            Icon(icon, color: colors.textPrimary, size: 19),
+            Icon(icon, color: colors.primary, size: 19),
             if (active)
               Positioned(
                 top: -3,
@@ -423,15 +422,15 @@ class _TypeTabs extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 14),
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: isOn ? colors.textPrimary : colors.card,
+                color: isOn ? colors.primary : colors.card,
                 border: Border.all(
-                    color: isOn ? colors.textPrimary : colors.divider),
+                    color: isOn ? colors.primary : colors.divider),
                 borderRadius: BorderRadius.circular(AppRadii.md),
               ),
               child: Text(
                 replacementTypeLabels[key]!,
                 style: TextStyle(
-                  color: isOn ? colors.background : colors.textSecondary,
+                  color: isOn ? colors.onPrimary : colors.textSecondary,
                   fontSize: 12.5,
                   fontWeight: FontWeight.w700,
                 ),
