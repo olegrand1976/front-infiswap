@@ -159,7 +159,7 @@
                 <SubscriptionProUpsellCallout
                     v-else
                     title="Inclus dans Infiswap Premium — 1 boost offert chaque mois"
-                    description="Avec les alertes instantanées et les contrats inclus, dès 9,90 €/mois."
+                    description="Avec les alertes instantanées et les contrats inclus, dès 99 €/an."
                 />
 
                 <section

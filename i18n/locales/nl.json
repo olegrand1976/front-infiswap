@@ -509,15 +509,15 @@
     "pro": {
       "eyebrow": "Abonnement",
       "name": "Infiswap Premium",
-      "monthlyPrice": "9,90",
-      "period": "per maand",
-      "yearly": "of 99 € per jaar — 2 maanden gratis",
+      "yearlyPrice": "99",
+      "period": "per jaar",
+      "yearlyNote": "2 maanden gratis — of 8,25 € / maand",
       "desc": "Slechts drie voordelen, voor wie sneller wil gaan.",
       "features": {
         "p1": "Onmiddellijke melding — verwittigd bij publicatie",
         "p2": "Elke maand een boost cadeau — 7 dagen bovenaan",
         "p3": "Contracten inbegrepen — onbeperkt, met ondertekening en archief",
-        "p4": "Opzegbaar met één klik, zonder maandelijkse verbintenis"
+        "p4": "Opzegbaar via het portaal, aan het einde van de betaalde periode"
       },
       "cta": "Ontdek Infiswap Premium",
       "note": "Het netwerk blijft gratis. Premium voegt alleen snelheid en comfort toe."
@@ -530,14 +530,15 @@
       "progressiveTitle": "Premium",
       "progressiveText": "Als eerste verwittigd, elke maand een boost cadeau, contracten inbegrepen."
     },
-    "seoDescription": "Prijzen InfiSwap: 100% gratis netwerk, Infiswap Premium (directe alerts, gratis boost, contracten) vanaf 9,90 €/maand, ponctuele boost vanaf 2 €."
+    "seoDescription": "Prijzen InfiSwap: 100% gratis netwerk, Infiswap Premium (directe alerts, gratis boost, contracten) 99 €/jaar, ponctuele boost vanaf 2 €."
   },
   "premiumMarketing": {
     "badge": "Nieuw · Infiswap Premium",
     "title": "Het netwerk blijft gratis",
     "subtitle": "Publiceren, solliciteren en uitwisselen: altijd 0 €. Premium is het verschil in snelheid — alerts, boost en contracten — voor wie niet meer wil wachten.",
     "cta": "Ontdek Infiswap Premium",
-    "priceNote": "Vanaf 9,90 € / maand · opzegbaar met één klik",
+    "priceNote": "99 € / jaar · 2 maanden gratis",
+    "subscriptionsFooter": "Jaarformule 99 € incl. btw — 2 maanden gratis. Opzegbaar via het beheersportaal; de niet-gebruikte maandelijkse boost wordt niet overgedragen.",
     "benefits": {
       "alert": {
         "title": "Onmiddellijke melding",
