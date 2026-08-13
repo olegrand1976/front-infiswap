@@ -112,6 +112,37 @@ flutter run --dart-define=API_BASE_URL=http://192.168.1.42:8095
 
 ---
 
+## Déploiement staging (Firebase App Distribution)
+
+Construit un APK release pointant vers l'API staging et l'envoie aux testeurs
+(groupe Firebase `staging-testers`) — ils reçoivent un email d'invitation, sans
+passer par le Play Store.
+
+```bash
+cd mobile
+chmod +x deploy_staging.sh scripts/deploy_staging.sh
+
+./deploy_staging.sh
+```
+
+Prérequis : `firebase login` déjà fait sur la machine (compte avec accès au
+projet `infiswap-1c10f`).
+
+Variables surchargeables :
+
+| Variable | Défaut |
+|---|---|
+| `API_BASE_URL` | `https://api-infiswap-staging.ll-it-sc.be` |
+| `STAGING_TESTERS_GROUP` | `staging-testers` |
+| `RELEASE_NOTES` | `Build staging <version> (<commit>) — API: <url>` |
+
+Gérer les testeurs du groupe :
+```bash
+firebase appdistribution:testers:add nouveau@email.com --group-alias staging-testers --project infiswap-1c10f
+```
+
+---
+
 ## HTTP en local (Android)
 
 Pour appeler `http://` (non HTTPS) en développement, Android autorise le cleartext en mode debug par défaut avec Flutter. Si vous avez une erreur réseau sur Android :
