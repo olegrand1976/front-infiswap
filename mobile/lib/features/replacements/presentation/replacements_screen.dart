@@ -58,7 +58,8 @@ class _ReplacementsScreenState extends ConsumerState<ReplacementsScreen> {
       data: (items) => items.length,
       orElse: () => null,
     );
-    final searchSummary = [...params.zipCodes, ...params.cities];
+    final hasActiveSearch =
+        params.zipCodes.isNotEmpty || params.cities.isNotEmpty;
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -72,8 +73,7 @@ class _ReplacementsScreenState extends ConsumerState<ReplacementsScreen> {
                 resultCount: resultCount,
                 country: params.country,
                 hasActiveFilters: params.hasActiveFilters,
-                searchSummary:
-                    searchSummary.isEmpty ? null : searchSummary.join(', '),
+                hasActiveSearch: hasActiveSearch,
                 filterType: params.filterType,
                 onSearchTap: () => ReplacementSearchModal.show(
                   context,
@@ -85,10 +85,6 @@ class _ReplacementsScreenState extends ConsumerState<ReplacementsScreen> {
                       cities: cities,
                     );
                   },
-                ),
-                onClearSearch: () => notifier.applySearch(
-                  zipCodes: const [],
-                  cities: const [],
                 ),
                 onFilterTap: () => ReplacementFiltersModal.show(
                   context,
@@ -271,10 +267,9 @@ class _ListHeader extends StatelessWidget {
     required this.resultCount,
     required this.country,
     required this.hasActiveFilters,
-    required this.searchSummary,
+    required this.hasActiveSearch,
     required this.filterType,
     required this.onSearchTap,
-    required this.onClearSearch,
     required this.onFilterTap,
     required this.onSelectType,
   });
@@ -282,10 +277,9 @@ class _ListHeader extends StatelessWidget {
   final int? resultCount;
   final String country;
   final bool hasActiveFilters;
-  final String? searchSummary;
+  final bool hasActiveSearch;
   final String filterType;
   final VoidCallback onSearchTap;
-  final VoidCallback onClearSearch;
   final VoidCallback onFilterTap;
   final ValueChanged<String> onSelectType;
 
@@ -327,27 +321,36 @@ class _ListHeader extends StatelessWidget {
                 ],
               ),
             ),
-            _FilterButton(
-                hasActiveFilters: hasActiveFilters, onTap: onFilterTap),
+            const SizedBox(width: 8),
+            _HeaderIconButton(
+              icon: Icons.search,
+              active: hasActiveSearch,
+              onTap: onSearchTap,
+            ),
+            const SizedBox(width: 8),
+            _HeaderIconButton(
+              icon: Icons.tune_outlined,
+              active: hasActiveFilters,
+              onTap: onFilterTap,
+            ),
           ],
         ),
         const SizedBox(height: 12),
-        _SearchPill(
-          summary: searchSummary,
-          onTap: onSearchTap,
-          onClear: onClearSearch,
-        ),
-        const SizedBox(height: 10),
         _TypeTabs(selected: filterType, onSelect: onSelectType),
       ],
     );
   }
 }
 
-class _FilterButton extends StatelessWidget {
-  const _FilterButton({required this.hasActiveFilters, required this.onTap});
+class _HeaderIconButton extends StatelessWidget {
+  const _HeaderIconButton({
+    required this.icon,
+    required this.active,
+    required this.onTap,
+  });
 
-  final bool hasActiveFilters;
+  final IconData icon;
+  final bool active;
   final VoidCallback onTap;
 
   @override
@@ -369,8 +372,8 @@ class _FilterButton extends StatelessWidget {
           clipBehavior: Clip.none,
           alignment: Alignment.center,
           children: [
-            Icon(Icons.tune_outlined, color: colors.textPrimary, size: 19),
-            if (hasActiveFilters)
+            Icon(icon, color: colors.textPrimary, size: 19),
+            if (active)
               Positioned(
                 top: -3,
                 right: -3,
@@ -382,77 +385,6 @@ class _FilterButton extends StatelessWidget {
                     shape: BoxShape.circle,
                     border: Border.all(color: colors.background, width: 2),
                   ),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _SearchPill extends StatelessWidget {
-  const _SearchPill({
-    required this.summary,
-    required this.onTap,
-    required this.onClear,
-  });
-
-  final String? summary;
-  final VoidCallback onTap;
-  final VoidCallback onClear;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final isActive = summary != null;
-
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(AppRadii.md),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        decoration: BoxDecoration(
-          color: colors.card,
-          border: Border.all(
-            color: isActive ? colors.primaryOutline : colors.divider,
-            width: isActive ? 1.4 : 1,
-          ),
-          borderRadius: BorderRadius.circular(AppRadii.md),
-          boxShadow: [
-            BoxShadow(
-                color: colors.shadow,
-                blurRadius: 12,
-                offset: const Offset(0, 4)),
-          ],
-        ),
-        child: Row(
-          children: [
-            Icon(Icons.search, size: 18, color: colors.textSecondary),
-            const SizedBox(width: 9),
-            Expanded(
-              child: Text(
-                summary ?? 'Code postal, ville…',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: isActive ? colors.textPrimary : colors.textSecondary,
-                  fontSize: 13.5,
-                  fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-                ),
-              ),
-            ),
-            if (isActive)
-              InkWell(
-                onTap: onClear,
-                borderRadius: BorderRadius.circular(999),
-                child: Container(
-                  width: 20,
-                  height: 20,
-                  decoration: BoxDecoration(
-                      color: colors.background, shape: BoxShape.circle),
-                  child:
-                      Icon(Icons.close, size: 12, color: colors.textSecondary),
                 ),
               ),
           ],
