@@ -137,27 +137,25 @@
 
                 <div
                     v-if="catalogLoading"
-                    class="grid gap-4 md:grid-cols-2"
+                    class="mx-auto grid max-w-md gap-4"
                     aria-busy="true"
                     aria-label="Chargement des formules"
                 >
                     <div
-                        v-for="n in 2"
-                        :key="n"
                         class="h-64 animate-pulse rounded-xl border bg-muted/40 dark:border-gray-700"
                     />
                 </div>
 
                 <div
                     v-else-if="plans.length > 0"
-                    class="grid gap-4 md:grid-cols-2"
+                    class="mx-auto grid max-w-md gap-4"
                 >
                     <SubscriptionProPlanCard
                         v-for="plan in plans"
                         :key="plan.lookup_key"
                         :plan="plan"
                         :benefits="proBenefits"
-                        :highlighted="plan.interval === 'year'"
+                        :highlighted="true"
                         :loading="loading"
                         @subscribe="subscribe(plan)"
                     />
@@ -181,8 +179,7 @@
                 </div>
 
                 <p class="text-center text-xs text-muted-foreground">
-                    Sans engagement de durée sur la formule mensuelle, annulable en un clic.
-                    Prix TTC. Le boost offert non utilisé dans le mois n'est pas reporté.
+                    {{ $t('premiumMarketing.subscriptionsFooter') }}
                 </p>
             </div>
         </div>

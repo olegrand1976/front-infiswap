@@ -509,15 +509,15 @@
     "pro": {
       "eyebrow": "Abonnement",
       "name": "Infiswap Premium",
-      "monthlyPrice": "9,90",
-      "period": "par mois",
-      "yearly": "ou 99 € par an — 2 mois offerts",
+      "yearlyPrice": "99",
+      "period": "par an",
+      "yearlyNote": "2 mois offerts — soit 8,25 € / mois",
       "desc": "Trois avantages seulement, pour celles qui veulent aller plus vite.",
       "features": {
         "p1": "Alerte instantanée — prévenue dès la publication",
         "p2": "Un boost offert par mois — 7 jours en tête de liste",
         "p3": "Contrats inclus — illimités, signature et archivage compris",
-        "p4": "Annulable en un clic, sans engagement au mois"
+        "p4": "Résiliable via le portail, au terme de la période payée"
       },
       "cta": "Découvrir Infiswap Premium",
       "note": "Le réseau reste gratuit. Premium n'ajoute que de la vitesse et du confort."
@@ -530,14 +530,15 @@
       "progressiveTitle": "Premium",
       "progressiveText": "Alertée en premier, un boost offert chaque mois, contrats inclus."
     },
-    "seoDescription": "Tarifs InfiSwap : réseau 100 % gratuit, Infiswap Premium (alertes instantanées, boost offert, contrats inclus) dès 9,90 €/mois, boost ponctuel dès 2 €."
+    "seoDescription": "Tarifs InfiSwap : réseau 100 % gratuit, Infiswap Premium (alertes instantanées, boost offert, contrats inclus) 99 €/an, boost ponctuel dès 2 €."
   },
   "premiumMarketing": {
     "badge": "Nouveau · Infiswap Premium",
     "title": "Le réseau reste gratuit",
     "subtitle": "Publier, postuler et échanger : toujours 0 €. Premium, c’est la différence de vitesse — alertes, boost et contrats — pour celles qui ne veulent plus attendre.",
     "cta": "Découvrir Infiswap Premium",
-    "priceNote": "Dès 9,90 € / mois · annulable en un clic",
+    "priceNote": "99 € / an · 2 mois offerts",
+    "subscriptionsFooter": "Formule annuelle 99 € TTC — 2 mois offerts. Résiliable via le portail de gestion ; le boost offert non utilisé dans le mois n'est pas reporté.",
     "benefits": {
       "alert": {
         "title": "Alerte instantanée",
