@@ -44,6 +44,18 @@
                 <span class="font-semibold text-primary">{{ user.full_name }}</span>
             </h1>
             <p
+                v-if="user.is_premium"
+                class="mb-1 inline-flex items-center justify-center gap-1 text-amber-700"
+                :class="compact ? 'text-[10px]' : 'text-xs'"
+            >
+                <Star
+                    class="fill-amber-400 text-amber-400"
+                    :class="compact ? 'size-3' : 'size-3.5'"
+                    aria-hidden="true"
+                />
+                <span class="font-semibold">{{ $t('premiumMarketing.memberLabel') }}</span>
+            </p>
+            <p
                 class="mb-0 line-clamp-2 font-semibold leading-snug text-muted-foreground"
                 :class="compact ? 'min-h-[1.25rem] text-xs' : 'min-h-[2.75rem] text-base'"
             >
@@ -785,7 +797,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Building2, Calendar, CircleCheck, CircleUser, GraduationCap, IdCard, Inbox, Mail, Phone, Users, XCircle } from 'lucide-vue-next';
+import { Building2, Calendar, CircleCheck, CircleUser, GraduationCap, IdCard, Inbox, Mail, Phone, Star, Users, XCircle } from 'lucide-vue-next';
 import type { User } from '~/lib/types';
 import { useRuntimeConfig } from '#app';
 import { formatRelativeDate } from '@/composables/useDate';

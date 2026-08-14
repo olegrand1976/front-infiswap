@@ -360,7 +360,7 @@ const { benefits: premiumBenefits } = usePremiumMarketing();
 
 const proFeatures = computed(() => [
     ...premiumBenefits.value.map(benefit => benefit.title),
-    t('pricing.pro.features.p4'),
+    t('pricing.pro.features.p5'),
 ]);
 
 const tips = computed(() => [

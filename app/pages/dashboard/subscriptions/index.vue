@@ -224,6 +224,12 @@ const benefitContrasts = computed(() => [
         premium: 'Signature et archivage compris — plus de 3 € par contrat.',
         free: '3 € par contrat de remplacement',
     },
+    {
+        icon: proBenefits.value[3]?.icon,
+        title: 'Mise en valeur du compte',
+        premium: 'Étoile jaune « Membre premium » sur vos annonces et candidatures.',
+        free: 'profil sans distinction Premium',
+    },
 ]);
 
 const {
