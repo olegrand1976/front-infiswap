@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Crown } from 'lucide-vue-next';
+import { Star } from 'lucide-vue-next';
 
 const props = withDefaults(
     defineProps<{
@@ -11,11 +11,14 @@ const props = withDefaults(
     { size: 'sm', active: null },
 );
 
+const { t } = useI18n();
 const { isPremium } = useProSubscription();
 
 const showPremiumBadge = computed(() =>
     props.active === null ? isPremium.value === true : props.active === true,
 );
+
+const memberLabel = computed(() => t('premiumMarketing.memberLabel'));
 
 const badgeClass = computed(() =>
     props.size === 'lg'
@@ -36,14 +39,14 @@ const iconClass = computed(() =>
 
         <span
             v-if="showPremiumBadge"
-            class="absolute z-10 flex items-center justify-center rounded-full border-white bg-primary shadow-md ring-1 ring-primary/40"
+            class="absolute z-10 flex items-center justify-center rounded-full border-white bg-amber-400 shadow-md ring-1 ring-amber-500/40"
             :class="badgeClass"
-            title="Infiswap Premium"
-            aria-label="Infiswap Premium"
+            :title="memberLabel"
+            :aria-label="memberLabel"
         >
-            <Crown
+            <Star
                 :class="iconClass"
-                class="text-primary-foreground drop-shadow-sm"
+                class="fill-amber-50 text-amber-50 drop-shadow-sm"
                 aria-hidden="true"
             />
         </span>

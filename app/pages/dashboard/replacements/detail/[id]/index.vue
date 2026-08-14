@@ -181,9 +181,31 @@
                             <div class="mt-4 space-y-4">
                                 <div
                                     v-if="replacement.can_view_creator_contact"
-                                    class="bg-gray-200 text-sm py-2 rounded px-3"
+                                    class="bg-gray-200 text-sm py-2 rounded px-3 flex flex-wrap items-center gap-2"
                                 >
                                     <span>Nom : {{ replacement.user.full_name }}</span>
+                                    <span
+                                        v-if="replacement.user?.is_premium"
+                                        class="inline-flex items-center gap-1 text-amber-700"
+                                        :title="$t('premiumMarketing.memberLabel')"
+                                    >
+                                        <Star
+                                            class="size-4 fill-amber-400 text-amber-400"
+                                            aria-hidden="true"
+                                        />
+                                        <span class="text-xs font-semibold">{{ $t('premiumMarketing.memberLabel') }}</span>
+                                    </span>
+                                </div>
+                                <div
+                                    v-else-if="replacement.user?.is_premium"
+                                    class="bg-gray-200 text-sm py-2 rounded px-3 inline-flex items-center gap-1 text-amber-700"
+                                    :title="$t('premiumMarketing.memberLabel')"
+                                >
+                                    <Star
+                                        class="size-4 fill-amber-400 text-amber-400"
+                                        aria-hidden="true"
+                                    />
+                                    <span class="text-xs font-semibold">{{ $t('premiumMarketing.memberLabel') }}</span>
                                 </div>
                                 <div
                                     v-if="replacement.can_view_creator_contact"
@@ -444,7 +466,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowRight, Calendar, CircleCheck, Clock, Home, User } from 'lucide-vue-next';
+import { ArrowRight, Calendar, CircleCheck, Clock, Home, Star, User } from 'lucide-vue-next';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '~/components/ui/dialog';
 import ReplacementBoostStars from '~/components/replacements/ReplacementBoostStars.vue';
 import ReplacementDetailBoostBlock from '~/components/replacements/ReplacementDetailBoostBlock.vue';

@@ -79,6 +79,11 @@ const props = defineProps({
         type: String,
         default: 'full',
     },
+    /** true = codes postaux (chiffres + longueur max) ; false = villes (texte libre). */
+    digitsOnly: {
+        type: Boolean,
+        default: true,
+    },
 });
 
 const chipRoundedClass = computed(() => (props.rounded === 'full' ? 'rounded-full' : `rounded-${props.rounded}`));
@@ -150,28 +155,38 @@ const handleBlur = () => {
     }
 };
 const maxLength = computed(() => {
+    if (!props.digitsOnly) {
+        return undefined;
+    }
+
     return user.value?.profile?.country === 'fr' ? 5 : 4;
 });
 
 watch(inputValue, (val) => {
-    // garder uniquement les chiffres
+    if (!props.digitsOnly) {
+        return;
+    }
+
     let clean = val.replace(/\D/g, '');
 
-    // limiter la longueur
     if (clean.length > maxLength.value) {
         clean = clean.slice(0, maxLength.value);
     }
 
-    inputValue.value = clean;
-
-    // if (clean.length === maxLength.value) {
-    //     nextTick(() => addItem());
-    // }
+    if (clean !== val) {
+        inputValue.value = clean;
+    }
 });
 
 const onInput = (event) => {
-    // Récupère la valeur brute du DOM natif
     const raw = event.target?.value ?? inputValue.value;
+
+    if (!props.digitsOnly) {
+        inputValue.value = raw;
+
+        return;
+    }
+
     let clean = raw.replace(/\D/g, '');
 
     if (clean.length > maxLength.value) {
@@ -180,7 +195,6 @@ const onInput = (event) => {
 
     inputValue.value = clean;
 
-    // Force la valeur sur l'input natif directement
     if (event.target) {
         event.target.value = clean;
     }

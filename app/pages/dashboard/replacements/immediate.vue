@@ -125,6 +125,7 @@
                                 :is-mobile="true"
                                 :comma-validation="true"
                                 :no-space-validation="true"
+                                :digits-only="false"
                                 @keydown.enter.prevent
                                 @item-added="onCityAdded"
                             />
@@ -167,6 +168,7 @@
                                 class="w-full"
                                 :comma-validation="true"
                                 :no-space-validation="true"
+                                :digits-only="false"
                                 @keydown.enter.prevent
                                 @item-added="onCityAdded"
                                 @open-proposal="openProposalDialog"
