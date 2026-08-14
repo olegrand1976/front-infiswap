@@ -15,17 +15,35 @@ dist
 .DS_Store
 launch-docker.sh
 .qodo
-android
-ios
-linux
-windows
-macos
-build
-.dart_tool
-.flutter-plugins
-.flutter-plugins-dependencies
-.pub-cache
-.pub
+# Flutter (mobile/) build output — le reste du projet natif (android/, ios/) reste versionné
+mobile/build/
+mobile/.dart_tool/
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies
+mobile/.pub-cache/
+mobile/.pub/
+mobile/linux/
+mobile/windows/
+mobile/macos/
+
+# Android — secrets et artefacts générés seulement
+mobile/android/.gradle/
+mobile/android/gradlew
+mobile/android/gradlew.bat
+mobile/android/local.properties
+mobile/android/key.properties
+mobile/android/**/*.keystore
+mobile/android/**/*.jks
+mobile/android/app/google-services.json
+
+# iOS — secrets et artefacts générés seulement
+mobile/ios/Pods/
+mobile/ios/.symlinks/
+mobile/ios/Flutter/Flutter.podspec
+mobile/ios/Flutter/Generated.xcconfig
+mobile/ios/Flutter/ephemeral/
+mobile/ios/GoogleService-Info.plist
+mobile/ios/**/xcuserdata/
 *.iml
 /test-results/
 /playwright-report/
