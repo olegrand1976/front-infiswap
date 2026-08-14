@@ -17,7 +17,7 @@ fi
 FIREBASE_PROJECT="${FIREBASE_PROJECT:-infiswap-1c10f}"
 APP_ID="${FIREBASE_ANDROID_APP_ID:-1:249150725582:android:b2aaea1b1b0e3894f49f9f}"
 GROUP="${STAGING_TESTERS_GROUP:-staging-testers}"
-API_URL="${API_BASE_URL:-https://api-infiswap-staging.ll-it-sc.be}"
+API_URL="${API_BASE_URL:-https://api-infiswap.ll-it-sc.be}"
 
 VERSION="$(grep '^version:' pubspec.yaml | sed 's/version: *//')"
 COMMIT="$(git rev-parse --short HEAD 2>/dev/null || echo local)"
