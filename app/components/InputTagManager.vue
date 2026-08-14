@@ -51,6 +51,7 @@
 <script setup>
 import { Plus } from 'lucide-vue-next';
 import { InputIcon } from '~/components/ui/input-with-icon';
+import { sanitizeTagInput } from '~/utils/inputTagSanitize';
 
 const user = useState('user');
 
@@ -167,11 +168,10 @@ watch(inputValue, (val) => {
         return;
     }
 
-    let clean = val.replace(/\D/g, '');
-
-    if (clean.length > maxLength.value) {
-        clean = clean.slice(0, maxLength.value);
-    }
+    const clean = sanitizeTagInput(val, {
+        digitsOnly: true,
+        maxLength: maxLength.value,
+    });
 
     if (clean !== val) {
         inputValue.value = clean;
@@ -180,22 +180,14 @@ watch(inputValue, (val) => {
 
 const onInput = (event) => {
     const raw = event.target?.value ?? inputValue.value;
-
-    if (!props.digitsOnly) {
-        inputValue.value = raw;
-
-        return;
-    }
-
-    let clean = raw.replace(/\D/g, '');
-
-    if (clean.length > maxLength.value) {
-        clean = clean.slice(0, maxLength.value);
-    }
+    const clean = sanitizeTagInput(raw, {
+        digitsOnly: props.digitsOnly,
+        maxLength: maxLength.value,
+    });
 
     inputValue.value = clean;
 
-    if (event.target) {
+    if (props.digitsOnly && event.target) {
         event.target.value = clean;
     }
 };
