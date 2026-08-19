@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'create_replacement_payload.dart';
 
 /// Raw, editable snapshot of a posted replacement, as returned by
-/// `GET /replacements/{id}`. Used to prefill [EditReplacementScreen].
+/// `GET /replacements/{id}`. Used to prefill [EditReplacementScreen] (type
+/// `classic`) or `EditImmediateReplacementScreen` (type `immediate`).
 class ReplacementEditData {
   const ReplacementEditData({
     required this.id,
@@ -11,7 +12,10 @@ class ReplacementEditData {
     required this.visibility,
     required this.status,
     required this.type,
+    required this.roleType,
     required this.experienceYears,
+    required this.startDate,
+    required this.endDate,
     required this.patientCount,
     required this.zipCodes,
     required this.cities,
@@ -21,6 +25,8 @@ class ReplacementEditData {
     required this.periods,
     required this.morning,
     required this.evening,
+    required this.detailStartAt,
+    required this.detailEndAt,
   });
 
   final int id;
@@ -28,7 +34,14 @@ class ReplacementEditData {
   final String visibility;
   final String status;
   final String type;
+  final String roleType;
   final Object? experienceYears;
+
+  /// Raw `start_date`/`end_date`, round-tripped unchanged on update so a
+  /// payload that doesn't otherwise touch them (e.g. the immediate one)
+  /// doesn't null them out server-side.
+  final String startDate;
+  final String endDate;
   final String patientCount;
   final List<String> zipCodes;
   final List<String> cities;
@@ -38,6 +51,11 @@ class ReplacementEditData {
   final List<ReplacementPeriodInput> periods;
   final TimeSlotRange morning;
   final TimeSlotRange evening;
+
+  /// Immediate replacements keep their actual time on the first
+  /// `ReplacementDetail` row (`details[0]`), not in `timeSlot`.
+  final String? detailStartAt;
+  final String? detailEndAt;
 
   factory ReplacementEditData.fromJson(Map<String, dynamic> json) {
     final timeSlot = _asMap(_parseMaybeJson(json['timeSlot'])) ??
@@ -71,13 +89,21 @@ class ReplacementEditData {
             ),
           ];
 
+    final rawDetails = json['details'];
+    final firstDetail = rawDetails is List && rawDetails.isNotEmpty
+        ? _asMap(rawDetails.first)
+        : null;
+
     return ReplacementEditData(
       id: int.tryParse(json['id'].toString()) ?? 0,
       userId: int.tryParse(json['user_id'].toString()) ?? 0,
       visibility: json['visibility']?.toString() ?? '',
       status: json['status']?.toString() ?? '',
       type: json['type']?.toString() ?? '',
+      roleType: json['role_type']?.toString() ?? '',
       experienceYears: json['experience_years'],
+      startDate: json['start_date']?.toString() ?? '',
+      endDate: json['end_date']?.toString() ?? '',
       patientCount: json['patient_count']?.toString() ?? '0',
       zipCodes: _normalizeStringList(json['zip_codes']),
       cities: _normalizeStringList(json['cities']),
@@ -97,6 +123,8 @@ class ReplacementEditData {
         endAt: eveningSlot['end_at']?.toString() ??
             eveningSlot['endAt']?.toString(),
       ),
+      detailStartAt: firstDetail?['start_at']?.toString(),
+      detailEndAt: firstDetail?['end_at']?.toString(),
     );
   }
 

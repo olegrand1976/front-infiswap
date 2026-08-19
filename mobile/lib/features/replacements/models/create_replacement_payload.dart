@@ -154,3 +154,58 @@ class UpdateReplacementPayload {
         'comment': comment?.trim() ?? '',
       };
 }
+
+/// Update payload for a `type: immediate` replacement. Unlike the classic
+/// form, its real time lives on the first `ReplacementDetail` row
+/// (`details[0].start_at/end_at`), not `timeSlot.morning/evening` — see
+/// `ReplacementService::updateAgainReplacement` on the API.
+class UpdateImmediateReplacementPayload {
+  const UpdateImmediateReplacementPayload({
+    required this.userId,
+    required this.visibility,
+    required this.status,
+    required this.startDate,
+    required this.endDate,
+    required this.startTime,
+    required this.endTime,
+    required this.patientCount,
+    required this.zipCodes,
+    required this.cities,
+    required this.careTypeIds,
+    required this.country,
+  });
+
+  final int userId;
+  final String visibility;
+  final String status;
+
+  /// Round-tripped unchanged from [ReplacementEditData] — this payload
+  /// doesn't let the user change the day, but omitting these would null
+  /// them out server-side.
+  final String startDate;
+  final String endDate;
+
+  final String startTime;
+  final String endTime;
+  final int patientCount;
+  final List<String> zipCodes;
+  final List<String> cities;
+  final List<int> careTypeIds;
+  final String country;
+
+  Map<String, dynamic> toJson() => {
+        'userId': userId,
+        'visibility': visibility,
+        'status': status,
+        'type': 'immediate',
+        'startDate': startDate,
+        'endDate': endDate,
+        'patientCount': patientCount,
+        'zipCodes': zipCodes,
+        'cities': cities,
+        'careTypes': careTypeIds,
+        'country': country,
+        'timeSlot': {'startAt': startTime, 'endAt': endTime},
+        'details': {'start_at': startTime, 'end_at': endTime},
+      };
+}

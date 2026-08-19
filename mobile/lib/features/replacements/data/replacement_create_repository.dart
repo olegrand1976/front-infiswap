@@ -60,6 +60,18 @@ class ReplacementCreateRepository {
     );
   }
 
+  // Update an existing immediate replacement — same endpoint, different
+  // payload shape (see UpdateImmediateReplacementPayload).
+  Future<void> updateImmediateAgain(
+    int replacementId,
+    UpdateImmediateReplacementPayload payload,
+  ) async {
+    await _api.put<Map<String, dynamic>>(
+      '/replacements/update-again/$replacementId',
+      data: payload.toJson(),
+    );
+  }
+
   // Delete a posted replacement
   Future<void> deleteReplacement(int replacementId) async {
     await _api.delete<void>('/replacements/$replacementId');

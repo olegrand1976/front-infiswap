@@ -9,6 +9,7 @@ import '../../auth/providers/auth_session_provider.dart';
 import '../data/my_replacements_list_notifier.dart';
 import '../data/replacement_create_repository.dart';
 import '../models/replacement_item.dart';
+import 'edit_immediate_replacement_screen.dart';
 import 'edit_replacement_screen.dart';
 import 'replacement_candidates_screen.dart';
 import 'widgets/mission_avatar.dart';
@@ -446,7 +447,9 @@ class _OwnerFooter extends ConsumerWidget {
               onPressed: () async {
                 final updated = await Navigator.of(context).push<bool>(
                   MaterialPageRoute<bool>(
-                    builder: (_) => EditReplacementScreen(item: item),
+                    builder: (_) => item.isUrgent
+                        ? EditImmediateReplacementScreen(item: item)
+                        : EditReplacementScreen(item: item),
                   ),
                 );
                 if (updated == true && context.mounted) {
@@ -473,8 +476,10 @@ class _OwnerFooter extends ConsumerWidget {
               onPressed: () async {
                 final updated = await Navigator.of(context).push<bool>(
                   MaterialPageRoute<bool>(
-                    builder: (_) =>
-                        EditReplacementScreen(item: item, isRepost: true),
+                    builder: (_) => item.isUrgent
+                        ? EditImmediateReplacementScreen(
+                            item: item, isRepost: true)
+                        : EditReplacementScreen(item: item, isRepost: true),
                   ),
                 );
                 if (updated == true && context.mounted) {
