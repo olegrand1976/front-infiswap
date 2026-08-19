@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/api/api_client.dart';
 import '../../../core/api/api_exception.dart';
 import '../../../core/config/app_config.dart';
-import '../models/dashboard_replacements_summary.dart';
 import '../models/replacement_candidate.dart';
 import '../models/replacement_item.dart';
 import '../models/replacement_search_params.dart';
@@ -86,43 +85,6 @@ class ReplacementsRepository {
       '/replacement-responses/$responseId/update-status',
       data: {'status': status},
     );
-  }
-
-  Future<DashboardReplacementsSummary> fetchDashboardSummary() async {
-    final pages = await Future.wait([
-      _fetchMergedPage(_dashboardBody(type: 'other')),
-      _fetchMergedPage(_dashboardBody(type: '')),
-    ]);
-    final replacementsPage = pages[0];
-    final mergedPage = pages[1];
-
-    final boosted =
-        replacementsPage.items.where((item) => item.isBoosted).toList();
-    final missions = mergedPage.items.where((item) => item.isMission).toList();
-    final missionsTotal = mergedPage.total - replacementsPage.total;
-
-    return DashboardReplacementsSummary(
-      boostedReplacements: boosted,
-      recentReplacements: replacementsPage.items,
-      missions: missions,
-      replacementsTotal: replacementsPage.total,
-      missionsTotal: missionsTotal < 0 ? 0 : missionsTotal,
-    );
-  }
-
-  Map<String, dynamic> _dashboardBody({required String type}) {
-    return {
-      'type': type,
-      'filters': {'type': 'all', 'role': 'all', 'status': 'open'},
-      'days': <String>[],
-      'cities': <String>[],
-      'zipCodes': <String>[],
-      'provinces': <String>[],
-      'country': 'be',
-      'page': 1,
-      'perPage': 50,
-      'groupByProvince': false,
-    };
   }
 
   Future<ReplacementSearchPage> _fetchMergedPage(

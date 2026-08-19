@@ -1,19 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../auth/providers/auth_session_provider.dart';
-import '../models/home_dashboard_data.dart';
+import '../models/user_activity_stats.dart';
 import 'home_dashboard_repository.dart';
 
-class HomeDashboardNotifier extends AsyncNotifier<HomeDashboardData> {
+class HomeDashboardNotifier extends AsyncNotifier<UserActivityStats> {
   @override
-  Future<HomeDashboardData> build() async {
-    final userId = _userId;
-    if (userId == null) {
-      throw StateError('Utilisateur non connecté.');
-    }
-
-    final repository = ref.watch(homeDashboardRepositoryProvider);
-    return repository.fetch(userId);
+  Future<UserActivityStats> build() async {
+    _requireUserId();
+    return ref.watch(homeDashboardRepositoryProvider).fetch();
   }
 
   int? get _userId {
@@ -27,19 +22,22 @@ class HomeDashboardNotifier extends AsyncNotifier<HomeDashboardData> {
     return null;
   }
 
+  void _requireUserId() {
+    if (_userId == null) {
+      throw StateError('Utilisateur non connecté.');
+    }
+  }
+
   Future<void> refresh() async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      final userId = _userId;
-      if (userId == null) {
-        throw StateError('Utilisateur non connecté.');
-      }
-      return ref.read(homeDashboardRepositoryProvider).fetch(userId);
+      _requireUserId();
+      return ref.read(homeDashboardRepositoryProvider).fetch();
     });
   }
 }
 
 final homeDashboardProvider =
-    AsyncNotifierProvider<HomeDashboardNotifier, HomeDashboardData>(
+    AsyncNotifierProvider<HomeDashboardNotifier, UserActivityStats>(
   HomeDashboardNotifier.new,
 );

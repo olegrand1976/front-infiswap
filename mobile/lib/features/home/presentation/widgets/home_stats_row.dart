@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radii.dart';
+import '../../../../core/widgets/skeleton_box.dart';
 import '../../models/user_activity_stats.dart';
 
 class HomeStatsRow extends StatelessWidget {
@@ -47,6 +48,30 @@ class HomeStatsRow extends StatelessWidget {
           gradient: const [AppColors.boostGold, Color(0xFFD97706)],
           onDark: true,
         ),
+      ],
+    );
+  }
+}
+
+/// Shown in place of [HomeStatsRow] while the stats request is still in
+/// flight — same 2x2 grid shape so nothing shifts once data arrives.
+class HomeStatsRowSkeleton extends StatelessWidget {
+  const HomeStatsRowSkeleton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.count(
+      crossAxisCount: 2,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      mainAxisSpacing: 10,
+      crossAxisSpacing: 10,
+      childAspectRatio: 1.85,
+      children: const [
+        SkeletonBox(height: double.infinity, radius: AppRadii.md),
+        SkeletonBox(height: double.infinity, radius: AppRadii.md),
+        SkeletonBox(height: double.infinity, radius: AppRadii.md),
+        SkeletonBox(height: double.infinity, radius: AppRadii.md),
       ],
     );
   }

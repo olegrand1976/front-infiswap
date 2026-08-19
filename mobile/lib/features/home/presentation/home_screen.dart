@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/api/api_exception.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_radii.dart';
 import '../../auth/providers/auth_session_provider.dart';
-import '../../replacements/models/dashboard_replacements_summary.dart';
-import '../../replacements/models/replacement_item.dart';
-import '../../replacements/presentation/replacement_detail_screen.dart';
 import '../data/home_dashboard_notifier.dart';
-import 'widgets/home_content_rails.dart';
+import '../models/user_activity_stats.dart';
 import 'widgets/home_header.dart';
 import 'widgets/home_partner_cards.dart';
 import 'widgets/home_quick_actions.dart';
@@ -38,76 +35,50 @@ class HomeScreen extends ConsumerWidget {
       );
     }
 
+    final user = session.user;
+    final referralCode = user['referral_code']?.toString() ?? '';
+    final shareUrl = '${config.webBaseUrl}/register/?referral=$referralCode';
+    final stats = asyncDashboard.valueOrNull;
+    final isLoadingStats = asyncDashboard.isLoading && stats == null;
+    final hasStatsError = asyncDashboard.hasError && stats == null;
+
     return Scaffold(
       backgroundColor: colors.background,
       body: SafeArea(
-        child: asyncDashboard.when(
-          loading: () => Center(
-            child: CircularProgressIndicator(color: colors.primary),
-          ),
-          error: (error, _) => _ErrorState(
-            message: error is ApiException
-                ? error.message
-                : 'Impossible de charger le tableau de bord.',
-            onRetry: notifier.refresh,
-          ),
-          data: (dashboard) {
-            final summary = dashboard.replacements;
-            final user = session.user;
-            final referralCode = user['referral_code']?.toString() ?? '';
-            final shareUrl = '${config.webBaseUrl}/register/?referral=$referralCode';
-
-            void onCardTap(ReplacementItem item) {
-              Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (_) => ReplacementDetailScreen(item: item),
-                ),
-              );
-            }
-
-            return RefreshIndicator(
-              color: colors.primary,
-              onRefresh: notifier.refresh,
-              child: ListView(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-                children: [
-                  HomeHeader(
-                    session: session,
-                    apiBaseUrl: apiBaseUrl,
-                  ),
-                  const SizedBox(height: 20),
-                  const HomeSearchBar(),
-                  const SizedBox(height: 16),
-                  HomeStatsRow(stats: dashboard.stats),
-                  const SizedBox(height: 16),
-                  const HomeQuickActions(),
-                  const SizedBox(height: 16),
-                  HomePartnerCards(
-                    webBaseUrl: config.webBaseUrl,
-                    showNursTech: !_isPartnerActive(user['site']),
-                    showNursAssur: !_isPartnerActive(user['insurance']),
-                  ),
-                  const SizedBox(height: 16),
-                  HomeReferralCard(
-                    referralsCount: dashboard.stats.referralsCount,
-                    shareUrl: shareUrl,
-                  ),
-                  const SizedBox(height: 24),
-                  HomeReplacementsRail(
-                    items: _replacementsRailItems(summary),
-                    total: summary.replacementsTotal,
-                    onCardTap: onCardTap,
-                  ),
-                  const SizedBox(height: 24),
-                  HomeMissionsRail(
-                    items: summary.missions,
-                    total: summary.missionsTotal,
-                    onCardTap: onCardTap,
-                  ),
-                ],
+        child: RefreshIndicator(
+          color: colors.primary,
+          onRefresh: notifier.refresh,
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+            children: [
+              HomeHeader(
+                session: session,
+                apiBaseUrl: apiBaseUrl,
               ),
-            );
-          },
+              const SizedBox(height: 20),
+              const HomeSearchBar(),
+              const SizedBox(height: 16),
+              if (isLoadingStats)
+                const HomeStatsRowSkeleton()
+              else if (hasStatsError)
+                _StatsErrorState(onRetry: notifier.refresh)
+              else
+                HomeStatsRow(stats: stats ?? const UserActivityStats()),
+              const SizedBox(height: 16),
+              const HomeQuickActions(),
+              const SizedBox(height: 16),
+              HomePartnerCards(
+                webBaseUrl: config.webBaseUrl,
+                showNursTech: !_isPartnerActive(user['site']),
+                showNursAssur: !_isPartnerActive(user['insurance']),
+              ),
+              const SizedBox(height: 16),
+              HomeReferralCard(
+                referralsCount: stats?.referralsCount,
+                shareUrl: shareUrl,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -120,61 +91,38 @@ bool _isPartnerActive(Object? flag) {
   return flag == true || flag == 1;
 }
 
-const _replacementsRailTargetCount = 6;
+class _StatsErrorState extends StatelessWidget {
+  const _StatsErrorState({required this.onRetry});
 
-// Boosted first, always — then top up with the most recent open
-// replacements (deduplicated) until the rail has a decent number of cards,
-// since boosted alone is often just one or two items.
-List<ReplacementItem> _replacementsRailItems(
-    DashboardReplacementsSummary summary) {
-  final items = <ReplacementItem>[...summary.boostedReplacements];
-  final seenIds = items.map((item) => item.id).toSet();
-
-  for (final item in summary.recentReplacements) {
-    if (items.length >= _replacementsRailTargetCount) break;
-    if (seenIds.contains(item.id)) continue;
-    items.add(item);
-    seenIds.add(item.id);
-  }
-
-  return items;
-}
-
-class _ErrorState extends StatelessWidget {
-  const _ErrorState({
-    required this.message,
-    required this.onRetry,
-  });
-
-  final String message;
   final VoidCallback onRetry;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
 
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: AppColors.coral),
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colors.card,
+        borderRadius: BorderRadius.circular(AppRadii.md),
+        border: Border.all(color: colors.divider),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              'Statistiques indisponibles.',
+              style: TextStyle(color: colors.textSecondary, fontSize: 13),
             ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: onRetry,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: colors.primary,
-                foregroundColor: colors.onPrimary,
-              ),
-              child: const Text('Réessayer'),
+          ),
+          TextButton(
+            onPressed: onRetry,
+            child: Text(
+              'Réessayer',
+              style: TextStyle(color: colors.primary, fontWeight: FontWeight.w700),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

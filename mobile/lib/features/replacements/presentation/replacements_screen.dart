@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/api/api_exception.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/skeleton_box.dart';
 import '../data/replacements_list_notifier.dart';
 import '../models/replacement_item.dart';
 import '../models/replacement_search_params.dart';
@@ -118,9 +119,7 @@ class _ReplacementsScreenState extends ConsumerState<ReplacementsScreen> {
             if (params.hasAnyActive) const SizedBox(height: 8),
             Expanded(
               child: asyncList.when(
-                loading: () => Center(
-                  child: CircularProgressIndicator(color: colors.primary),
-                ),
+                loading: () => const _ReplacementsListSkeleton(),
                 error: (error, _) => _ErrorState(
                   message: error is ApiException
                       ? error.message
@@ -145,14 +144,7 @@ class _ReplacementsScreenState extends ConsumerState<ReplacementsScreen> {
                       separatorBuilder: (_, __) => const SizedBox(height: 10),
                       itemBuilder: (context, index) {
                         if (index >= items.length) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                color: colors.primary,
-                              ),
-                            ),
-                          );
+                          return const _ReplacementCardSkeleton();
                         }
                         final item = items[index];
                         return _ReplacementCard(
@@ -257,6 +249,54 @@ class _ErrorState extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// Shown while the first page is loading — same list padding/spacing as the
+// real results so nothing shifts once data arrives.
+class _ReplacementsListSkeleton extends StatelessWidget {
+  const _ReplacementsListSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 96),
+      itemCount: 6,
+      separatorBuilder: (_, __) => const SizedBox(height: 10),
+      itemBuilder: (_, __) => const _ReplacementCardSkeleton(),
+    );
+  }
+}
+
+// Mirrors _ReplacementCard's shape: two meta rows, then a role row with an
+// optional subtitle line underneath.
+class _ReplacementCardSkeleton extends StatelessWidget {
+  const _ReplacementCardSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+      decoration: BoxDecoration(
+        color: colors.card,
+        borderRadius: BorderRadius.circular(AppRadii.md),
+        border: Border.all(color: colors.border),
+      ),
+      child: const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SkeletonBox(width: 140, height: 12),
+          SizedBox(height: 8),
+          SkeletonBox(width: 100, height: 12),
+          SizedBox(height: 14),
+          SkeletonBox(width: 160, height: 13),
+          SizedBox(height: 6),
+          SkeletonBox(width: 190, height: 11),
+        ],
       ),
     );
   }
