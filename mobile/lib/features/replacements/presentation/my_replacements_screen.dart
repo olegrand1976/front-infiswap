@@ -22,6 +22,7 @@ class MyReplacementsScreen extends ConsumerStatefulWidget {
 
 class _MyReplacementsScreenState extends ConsumerState<MyReplacementsScreen> {
   final _scrollController = ScrollController();
+  MyReplacementStatus? _filter;
 
   @override
   void initState() {
@@ -118,6 +119,11 @@ class _MyReplacementsScreenState extends ConsumerState<MyReplacementsScreen> {
                   }
 
                   final counts = _countByStatus(items);
+                  final filtered = _filter == null
+                      ? items
+                      : items
+                          .where((item) => myReplacementStatus(item) == _filter)
+                          .toList();
 
                   return RefreshIndicator(
                     color: colors.primary,
@@ -128,22 +134,40 @@ class _MyReplacementsScreenState extends ConsumerState<MyReplacementsScreen> {
                       children: [
                         _StatsStrip(total: items.length, counts: counts),
                         const SizedBox(height: 14),
-                        for (final item in items) ...[
-                          MyReplacementCard(
-                            item: item,
-                            onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute<void>(
-                                  builder: (_) => ReplacementDetailScreen(
-                                    item: item,
-                                    isOwner: true,
+                        _StatusFilterTabs(
+                          total: items.length,
+                          counts: counts,
+                          selected: _filter,
+                          onSelect: (status) => setState(() => _filter = status),
+                        ),
+                        const SizedBox(height: 12),
+                        if (filtered.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 24),
+                            child: Center(
+                              child: Text(
+                                'Aucun remplacement dans ce filtre',
+                                style: TextStyle(color: colors.textSecondary, fontSize: 13),
+                              ),
+                            ),
+                          )
+                        else
+                          for (final item in filtered) ...[
+                            MyReplacementCard(
+                              item: item,
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute<void>(
+                                    builder: (_) => ReplacementDetailScreen(
+                                      item: item,
+                                      isOwner: true,
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
-                          ),
-                          const SizedBox(height: 10),
-                        ],
+                                );
+                              },
+                            ),
+                            const SizedBox(height: 10),
+                          ],
                         if (isLoadingMore) const MyReplacementCardSkeleton(),
                       ],
                     ),
@@ -213,6 +237,106 @@ class _StatsStrip extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _StatusFilterTabs extends StatelessWidget {
+  const _StatusFilterTabs({
+    required this.total,
+    required this.counts,
+    required this.selected,
+    required this.onSelect,
+  });
+
+  final int total;
+  final Map<MyReplacementStatus, int> counts;
+  final MyReplacementStatus? selected;
+  final ValueChanged<MyReplacementStatus?> onSelect;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 30,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        clipBehavior: Clip.none,
+        children: [
+          _FilterTab(
+            label: 'Toutes',
+            count: total,
+            selected: selected == null,
+            onTap: () => onSelect(null),
+          ),
+          const SizedBox(width: 6),
+          _FilterTab(
+            label: 'Ouverts',
+            count: counts[MyReplacementStatus.open] ?? 0,
+            selected: selected == MyReplacementStatus.open,
+            onTap: () => onSelect(MyReplacementStatus.open),
+          ),
+          const SizedBox(width: 6),
+          _FilterTab(
+            label: 'Pourvus',
+            count: counts[MyReplacementStatus.filled] ?? 0,
+            selected: selected == MyReplacementStatus.filled,
+            onTap: () => onSelect(MyReplacementStatus.filled),
+          ),
+          const SizedBox(width: 6),
+          _FilterTab(
+            label: 'Fermés',
+            count: counts[MyReplacementStatus.closed] ?? 0,
+            selected: selected == MyReplacementStatus.closed,
+            onTap: () => onSelect(MyReplacementStatus.closed),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FilterTab extends StatelessWidget {
+  const _FilterTab({
+    required this.label,
+    required this.count,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final int count;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppRadii.md),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: selected ? colors.textPrimary : Colors.transparent,
+            borderRadius: BorderRadius.circular(AppRadii.md),
+            border: Border.all(
+              color: selected ? colors.textPrimary : colors.divider,
+              width: 1.3,
+            ),
+          ),
+          child: Text(
+            '$label $count',
+            style: TextStyle(
+              color: selected ? colors.background : colors.textSecondary,
+              fontSize: 10.5,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
       ),
     );
   }
