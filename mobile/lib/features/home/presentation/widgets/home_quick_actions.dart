@@ -134,6 +134,7 @@ class _QuickActionCard extends StatelessWidget {
               ),
             ),
           ),
+          const SizedBox(height: 10),
           Material(
             color: Colors.transparent,
             child: InkWell(

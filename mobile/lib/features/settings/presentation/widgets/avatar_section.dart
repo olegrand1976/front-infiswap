@@ -37,6 +37,17 @@ class AvatarSection extends StatefulWidget {
 
 class _AvatarSectionState extends State<AvatarSection> {
   bool _isBusy = false;
+  bool _imageFailed = false;
+
+  @override
+  void didUpdateWidget(covariant AvatarSection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialImageUrl != oldWidget.initialImageUrl) {
+      // New URL (new upload, or reverted to none) — give it a fresh try
+      // instead of keeping a stale "failed to load" state.
+      _imageFailed = false;
+    }
+  }
 
   Future<void> _openActions() async {
     final action = await _pickAvatarAction(context, hasPhoto: widget.initialImageUrl != null);
@@ -57,6 +68,7 @@ class _AvatarSectionState extends State<AvatarSection> {
     setState(() => _isBusy = true);
     try {
       await widget.repository.updateAvatar(userId: widget.userId, filePath: picked.path);
+      _evictCachedAvatar();
       await widget.onAvatarChanged();
       if (mounted) showSettingsSuccessSnackBar(context, 'Photo mise à jour');
     } on ApiException catch (error) {
@@ -70,6 +82,7 @@ class _AvatarSectionState extends State<AvatarSection> {
     setState(() => _isBusy = true);
     try {
       await widget.repository.deleteAvatar(userId: widget.userId);
+      _evictCachedAvatar();
       await widget.onAvatarChanged();
       if (mounted) showSettingsSuccessSnackBar(context, 'Photo supprimée');
     } on ApiException catch (error) {
@@ -79,11 +92,22 @@ class _AvatarSectionState extends State<AvatarSection> {
     }
   }
 
+  // Defensive: drop any cached bytes for this URL so a retry after a
+  // failed load, or a backend that ever reuses a path, doesn't keep
+  // showing stale content.
+  void _evictCachedAvatar() {
+    final url = widget.initialImageUrl;
+    if (url != null) {
+      imageCache.evict(NetworkImage(url));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final initial = widget.displayName.isNotEmpty ? widget.displayName[0].toUpperCase() : '?';
     final radius = widget.compact ? 24.0 : 44.0;
+    final hasPhoto = widget.initialImageUrl != null && !_imageFailed;
 
     final avatar = GestureDetector(
       onTap: _isBusy ? null : _openActions,
@@ -93,9 +117,16 @@ class _AvatarSectionState extends State<AvatarSection> {
           CircleAvatar(
             radius: radius,
             backgroundColor: colors.primaryMuted,
-            backgroundImage:
-                widget.initialImageUrl != null ? NetworkImage(widget.initialImageUrl!) : null,
-            child: widget.initialImageUrl == null
+            backgroundImage: hasPhoto ? NetworkImage(widget.initialImageUrl!) : null,
+            // Without this, a failed load (slow storage propagation, bad
+            // URL, network blip) leaves a blank circle with no fallback —
+            // fall back to the initials instead, same as the home header.
+            onBackgroundImageError: hasPhoto
+                ? (error, stackTrace) {
+                    if (mounted) setState(() => _imageFailed = true);
+                  }
+                : null,
+            child: !hasPhoto
                 ? Text(
                     initial,
                     style: TextStyle(
