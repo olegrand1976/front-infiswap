@@ -15,6 +15,7 @@ import '../../replacements/presentation/my_responses_screen.dart';
 import '../../settings/data/settings_repository.dart';
 import '../../settings/presentation/widgets/avatar_section.dart';
 import '../../shell/providers/shell_tab_index_provider.dart';
+import '../../subscription/presentation/premium_screen.dart';
 
 /// No app-bar title here on purpose — the avatar already identifies the
 /// screen, and the menu below mirrors the web sidebar for nurses.
@@ -131,7 +132,7 @@ class ProfileScreen extends ConsumerWidget {
                 icon: Icons.workspace_premium_outlined,
                 color: const Color(0xFFB45309),
                 label: 'Infiswap Premium',
-                onTap: () {},
+                onTap: () => _push(context, const PremiumScreen()),
               ),
               _MenuRow(
                 icon: Icons.settings_outlined,
