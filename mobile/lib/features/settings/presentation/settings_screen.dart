@@ -7,6 +7,7 @@ import '../../../core/config/app_config.dart';
 import '../../../core/location/location_repository.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radii.dart';
+import '../../../core/widgets/skeleton_box.dart';
 import '../../auth/data/auth_repository.dart';
 import '../../auth/providers/auth_session_provider.dart';
 import '../data/settings_repository.dart';
@@ -137,7 +138,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               child: userId == null
                   ? const SizedBox.shrink()
                   : _isLoading
-                      ? const Center(child: CircularProgressIndicator())
+                      ? const _SettingsBodySkeleton()
                       : _errorMessage != null
                           ? _ErrorState(message: _errorMessage!, onRetry: _loadSettings)
                           : _SettingsBody(
@@ -153,6 +154,183 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+// Shown while fetchSettings() is in flight — reuses the real _FieldGrid/
+// _SettingsGroup containers (same card, same dividers) so every section
+// is the exact size of its real counterpart, just with shimmering
+// content instead of text. Row counts match the non-institution case
+// (the common nurse persona) exactly; institution accounts see one row
+// fewer/more once loaded, which is a negligible layout shift.
+class _SettingsBodySkeleton extends StatelessWidget {
+  const _SettingsBodySkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+      children: [
+        const Row(
+          children: [
+            SkeletonBox(width: 48, height: 48, radius: 24),
+            SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SkeletonBox(width: 130, height: 14),
+                  SizedBox(height: 6),
+                  SkeletonBox(width: 170, height: 11),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        // Compte: Nom, Prénom, Date de naissance, Email, N° d'identification,
+        // Téléphone, Sexe, Catégorie pro.
+        const _SectionLabel('Compte'),
+        _FieldGrid(cells: List.generate(8, (_) => const _FieldCellSkeleton())),
+        const SizedBox(height: 24),
+        // Adresse: Rue, Ville, Pays, Pays de travail, Code postal, Complément.
+        const _SectionLabel('Adresse'),
+        _FieldGrid(cells: List.generate(6, (_) => const _FieldCellSkeleton())),
+        const SizedBox(height: 24),
+        // Sécurité: "Mot de passe" row + 2FA toggle row.
+        const _SectionLabel('Sécurité'),
+        const _SettingsGroup(
+          children: [
+            _RowSkeleton(trailing: _RowTrailingSkeleton.chevron),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: _RowSkeleton(
+                trailing: _RowTrailingSkeleton.toggle,
+                padded: false,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 24),
+        // Préférences de zone: ville + code postal, un champ + bouton chacun.
+        const _SectionLabel('Préférences de zone'),
+        const _SettingsGroup(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _ZoneInputRowSkeleton(),
+                  SizedBox(height: 16),
+                  _ZoneInputRowSkeleton(),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 24),
+        // Notifications: 5 toggle rows (see NotificationPreferencesCard).
+        const _SectionLabel('Notifications'),
+        _SettingsGroup(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: List.generate(
+                  5,
+                  (_) => const _RowSkeleton(
+                    trailing: _RowTrailingSkeleton.toggle,
+                    padded: false,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 24),
+        // Compte (suppression): un seul bouton pleine largeur.
+        const _SectionLabel('Compte'),
+        const _SettingsGroup(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: SkeletonBox(height: 46),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+/// Mirrors [_FieldCell]'s exact padding/row shape.
+class _FieldCellSkeleton extends StatelessWidget {
+  const _FieldCellSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 13, vertical: 12),
+      child: Row(
+        children: [
+          SkeletonBox(width: _fieldLabelWidth, height: 11),
+          SizedBox(width: 12),
+          Expanded(child: SkeletonBox(height: 11)),
+        ],
+      ),
+    );
+  }
+}
+
+enum _RowTrailingSkeleton { chevron, toggle }
+
+/// Mirrors [_SettingsRow] (chevron, `padded: true`) or the switch rows in
+/// [TwoFactorSection]/`NotificationPreferencesCard` (`padded: false` —
+/// those already sit inside their own horizontal padding at the call site).
+class _RowSkeleton extends StatelessWidget {
+  const _RowSkeleton({required this.trailing, this.padded = true});
+
+  final _RowTrailingSkeleton trailing;
+  final bool padded;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+
+    return Padding(
+      padding: padded
+          ? const EdgeInsets.symmetric(horizontal: 13, vertical: 11)
+          : const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          const SkeletonBox(width: 150, height: 12),
+          const Spacer(),
+          switch (trailing) {
+            _RowTrailingSkeleton.chevron =>
+              Icon(Icons.chevron_right, size: 18, color: colors.divider),
+            _RowTrailingSkeleton.toggle =>
+              const SkeletonBox(width: 34, height: 18, radius: 999),
+          },
+        ],
+      ),
+    );
+  }
+}
+
+/// Mirrors one text-field-plus-button row in [ZonePreferencesCard].
+class _ZoneInputRowSkeleton extends StatelessWidget {
+  const _ZoneInputRowSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Row(
+      children: [
+        Expanded(child: SkeletonBox(height: 52)),
+        SizedBox(width: 8),
+        SkeletonBox(width: 36, height: 36),
+      ],
     );
   }
 }
