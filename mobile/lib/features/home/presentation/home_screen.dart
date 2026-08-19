@@ -5,10 +5,13 @@ import '../../../core/config/app_config.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radii.dart';
 import '../../auth/providers/auth_session_provider.dart';
+import '../../subscription/data/subscription_repository.dart';
+import '../../subscription/presentation/premium_screen.dart';
 import '../data/home_dashboard_notifier.dart';
 import '../models/user_activity_stats.dart';
 import 'widgets/home_header.dart';
 import 'widgets/home_partner_cards.dart';
+import 'widgets/home_premium_teaser_card.dart';
 import 'widgets/home_quick_actions.dart';
 import 'widgets/home_referral_card.dart';
 import 'widgets/home_search_bar.dart';
@@ -25,6 +28,7 @@ class HomeScreen extends ConsumerWidget {
     final notifier = ref.read(homeDashboardProvider.notifier);
     final config = ref.watch(appConfigProvider);
     final apiBaseUrl = config.apiBaseUrl;
+    final isPremium = ref.watch(proStatusProvider).valueOrNull?.isPremium ?? false;
 
     if (session == null) {
       return Scaffold(
@@ -64,6 +68,14 @@ class HomeScreen extends ConsumerWidget {
                 _StatsErrorState(onRetry: notifier.refresh)
               else
                 HomeStatsRow(stats: stats ?? const UserActivityStats()),
+              if (!isPremium) ...[
+                const SizedBox(height: 16),
+                HomePremiumTeaserCard(
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(builder: (_) => const PremiumScreen()),
+                  ),
+                ),
+              ],
               const SizedBox(height: 16),
               const HomeQuickActions(),
               const SizedBox(height: 16),
