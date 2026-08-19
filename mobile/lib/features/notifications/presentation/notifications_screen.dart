@@ -109,8 +109,11 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
             ),
             Expanded(
               child: asyncList.when(
-                loading: () => Center(
-                  child: CircularProgressIndicator(color: colors.primary),
+                loading: () => ListView.separated(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                  itemCount: 6,
+                  separatorBuilder: (_, __) => const SizedBox(height: 10),
+                  itemBuilder: (_, __) => const NotificationCardSkeleton(),
                 ),
                 error: (error, _) => _ErrorState(
                   message: error is ApiException
@@ -140,14 +143,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                       separatorBuilder: (_, __) => const SizedBox(height: 10),
                       itemBuilder: (context, index) {
                         if (index >= items.length) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                color: colors.primary,
-                              ),
-                            ),
-                          );
+                          return const NotificationCardSkeleton();
                         }
                         final item = items[index];
                         return NotificationCard(

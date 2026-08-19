@@ -2,8 +2,52 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/date_time_format.dart';
+import '../../../../core/widgets/skeleton_box.dart';
 import '../../models/notification_item.dart';
 import '../../../../core/theme/app_radii.dart';
+
+/// Mirrors [NotificationCard]'s shape — shown while the list is loading.
+class NotificationCardSkeleton extends StatelessWidget {
+  const NotificationCardSkeleton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+
+    return Container(
+      padding: const EdgeInsets.all(13),
+      decoration: BoxDecoration(
+        color: colors.card,
+        borderRadius: BorderRadius.circular(AppRadii.md),
+        border: Border.all(color: colors.divider),
+        boxShadow: [
+          BoxShadow(color: colors.shadow, blurRadius: 14, offset: const Offset(0, 6)),
+        ],
+      ),
+      child: const Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SkeletonBox(width: 36, height: 36, radius: 18),
+          SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SkeletonBox(width: 160, height: 12),
+                SizedBox(height: 6),
+                SkeletonBox(width: 210, height: 10),
+                SizedBox(height: 4),
+                SkeletonBox(width: 120, height: 10),
+                SizedBox(height: 7),
+                SkeletonBox(width: 64, height: 9),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 class NotificationCard extends StatelessWidget {
   const NotificationCard({
