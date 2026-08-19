@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/api/api_exception.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/skeleton_box.dart';
+import '../../../core/widgets/stats_strip_skeleton.dart';
 import '../data/my_replacements_list_notifier.dart';
 import '../models/replacement_item.dart';
 import 'replacement_detail_screen.dart';
@@ -96,9 +98,7 @@ class _MyReplacementsScreenState extends ConsumerState<MyReplacementsScreen> {
             ),
             Expanded(
               child: asyncList.when(
-                loading: () => Center(
-                  child: CircularProgressIndicator(color: colors.primary),
-                ),
+                loading: () => const _MyReplacementsListSkeleton(),
                 error: (error, _) => _ErrorState(
                   message: error is ApiException
                       ? error.message
@@ -144,15 +144,7 @@ class _MyReplacementsScreenState extends ConsumerState<MyReplacementsScreen> {
                           ),
                           const SizedBox(height: 10),
                         ],
-                        if (isLoadingMore)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                color: colors.primary,
-                              ),
-                            ),
-                          ),
+                        if (isLoadingMore) const MyReplacementCardSkeleton(),
                       ],
                     ),
                   );
@@ -268,6 +260,81 @@ class _StatDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(width: 1, margin: const EdgeInsets.symmetric(vertical: 2), color: color);
+  }
+}
+
+// Shown while the first page is loading — same padding/spacing as the
+// real list so nothing shifts once data arrives.
+class _MyReplacementsListSkeleton extends StatelessWidget {
+  const _MyReplacementsListSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+      children: const [
+        StatsStripSkeleton(labels: ['TOTAL', 'OUVERTS', 'POURVUS']),
+        SizedBox(height: 14),
+        MyReplacementCardSkeleton(),
+        SizedBox(height: 10),
+        MyReplacementCardSkeleton(),
+        SizedBox(height: 10),
+        MyReplacementCardSkeleton(),
+      ],
+    );
+  }
+}
+
+/// Mirrors [MyReplacementCard]'s shape — used here and by
+/// `MyResponsesScreen` while their lists are loading.
+class MyReplacementCardSkeleton extends StatelessWidget {
+  const MyReplacementCardSkeleton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+
+    return Container(
+      padding: const EdgeInsets.all(13),
+      decoration: BoxDecoration(
+        color: colors.card,
+        borderRadius: BorderRadius.circular(AppRadii.md),
+        border: Border.all(color: colors.divider),
+        boxShadow: [
+          BoxShadow(color: colors.shadow, blurRadius: 14, offset: const Offset(0, 6)),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SkeletonBox(width: 90, height: 13),
+                    SizedBox(height: 8),
+                    SkeletonBox(width: 120, height: 10),
+                    SizedBox(height: 6),
+                    SkeletonBox(width: 100, height: 10),
+                  ],
+                ),
+              ),
+              SizedBox(width: 8),
+              SkeletonBox(width: 54, height: 18, radius: 999),
+            ],
+          ),
+          const SizedBox(height: 9),
+          Container(
+            padding: const EdgeInsets.only(top: 8),
+            decoration: BoxDecoration(border: Border(top: BorderSide(color: colors.divider))),
+            child: const SkeletonBox(width: 90, height: 10),
+          ),
+        ],
+      ),
+    );
   }
 }
 

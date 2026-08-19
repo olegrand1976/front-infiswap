@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/skeleton_box.dart';
 import '../../models/application_item.dart';
 import '../../../../core/theme/app_radii.dart';
 
@@ -151,6 +152,58 @@ class ApplicationCard extends StatelessWidget {
       'déc.',
     ];
     return '${date.day} ${months[date.month - 1]} ${date.year}';
+  }
+}
+
+/// Mirrors [ApplicationCard]'s shape — shown while the list is loading.
+class ApplicationCardSkeleton extends StatelessWidget {
+  const ApplicationCardSkeleton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+
+    return Container(
+      padding: const EdgeInsets.all(13),
+      decoration: BoxDecoration(
+        color: colors.card,
+        borderRadius: BorderRadius.circular(AppRadii.md),
+        border: Border.all(color: colors.divider),
+        boxShadow: [
+          BoxShadow(color: colors.shadow, blurRadius: 14, offset: const Offset(0, 6)),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SkeletonBox(width: 64, height: 16),
+                    SizedBox(height: 8),
+                    SkeletonBox(width: 140, height: 13),
+                    SizedBox(height: 6),
+                    SkeletonBox(width: 110, height: 10),
+                  ],
+                ),
+              ),
+              SizedBox(width: 8),
+              SkeletonBox(width: 60, height: 18, radius: 999),
+            ],
+          ),
+          const SizedBox(height: 9),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            decoration: BoxDecoration(border: Border(top: BorderSide(color: colors.divider))),
+            child: const SkeletonBox(width: 80, height: 10),
+          ),
+        ],
+      ),
+    );
   }
 }
 

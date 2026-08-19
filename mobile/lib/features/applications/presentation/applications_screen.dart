@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/api/api_exception.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/stats_strip_skeleton.dart';
 import '../../replacements/presentation/replacement_detail_screen.dart';
 import '../data/applications_list_notifier.dart';
 import '../models/application_item.dart';
@@ -96,8 +97,17 @@ class _ApplicationsScreenState extends ConsumerState<ApplicationsScreen> {
             ),
             Expanded(
               child: asyncList.when(
-                loading: () => Center(
-                  child: CircularProgressIndicator(color: colors.primary),
+                loading: () => ListView(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                  children: const [
+                    StatsStripSkeleton(labels: ['TOTAL', 'EN ATTENTE', 'CONFIRMÉES']),
+                    SizedBox(height: 14),
+                    ApplicationCardSkeleton(),
+                    SizedBox(height: 10),
+                    ApplicationCardSkeleton(),
+                    SizedBox(height: 10),
+                    ApplicationCardSkeleton(),
+                  ],
                 ),
                 error: (error, _) => _ErrorState(
                   message: error is ApiException
@@ -169,15 +179,7 @@ class _ApplicationsScreenState extends ConsumerState<ApplicationsScreen> {
                             ),
                             const SizedBox(height: 10),
                           ],
-                        if (isLoadingMore)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                color: colors.primary,
-                              ),
-                            ),
-                          ),
+                        if (isLoadingMore) const ApplicationCardSkeleton(),
                       ],
                     ),
                   );

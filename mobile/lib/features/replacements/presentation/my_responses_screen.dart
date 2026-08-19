@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/api/api_exception.dart';
 import '../../../core/theme/app_colors.dart';
 import '../data/my_responses_notifier.dart';
-import 'my_replacements_screen.dart' show MyReplacementCard;
+import 'my_replacements_screen.dart' show MyReplacementCard, MyReplacementCardSkeleton;
 import 'replacement_candidates_screen.dart';
 
 /// Aggregate of every posting of mine that has received at least one
@@ -54,8 +54,15 @@ class MyResponsesScreen extends ConsumerWidget {
             ),
             Expanded(
               child: asyncGroups.when(
-                loading: () => Center(
-                  child: CircularProgressIndicator(color: colors.primary),
+                loading: () => ListView(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                  children: const [
+                    MyReplacementCardSkeleton(),
+                    SizedBox(height: 10),
+                    MyReplacementCardSkeleton(),
+                    SizedBox(height: 10),
+                    MyReplacementCardSkeleton(),
+                  ],
                 ),
                 error: (error, _) => _ErrorState(
                   message: error is ApiException
