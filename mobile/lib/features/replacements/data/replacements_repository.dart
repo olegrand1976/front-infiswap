@@ -87,6 +87,42 @@ class ReplacementsRepository {
     );
   }
 
+  /// All of my postings that have received at least one response — one
+  /// summary card per posting, response count included. Mirrors web's
+  /// `/dashboard/replacements/responses` aggregate view; drilling into a
+  /// posting still goes through [fetchCandidates] via
+  /// `ReplacementCandidatesScreen`.
+  Future<List<ReplacementItem>> fetchMyResponseGroups({
+    required int userId,
+    bool older = false,
+  }) async {
+    final response = await _api.get<Map<String, dynamic>>(
+      '/replacement-responses/nurse/$userId',
+      queryParameters: {'older': older},
+    );
+
+    final data = response.data?['data'];
+    if (data is! List) {
+      return const [];
+    }
+
+    return data
+        .whereType<Map>()
+        .map((entry) {
+          final parent = entry['parent'];
+          if (parent is! Map) {
+            return null;
+          }
+          final parentMap =
+              parent.map((key, value) => MapEntry(key.toString(), value));
+          final responses = entry['responses'];
+          parentMap['response_count'] = responses is List ? responses.length : 0;
+          return ReplacementMapper.fromReplacementJson(parentMap);
+        })
+        .whereType<ReplacementItem>()
+        .toList();
+  }
+
   Future<ReplacementSearchPage> _fetchMergedPage(
     Map<String, dynamic> body,
   ) async {

@@ -11,6 +11,7 @@ import '../../auth/providers/auth_session_provider.dart';
 import '../../replacements/presentation/create_classic_screen.dart';
 import '../../replacements/presentation/create_immediate_screen.dart';
 import '../../replacements/presentation/my_replacements_screen.dart';
+import '../../replacements/presentation/my_responses_screen.dart';
 import '../../settings/data/settings_repository.dart';
 import '../../settings/presentation/widgets/avatar_section.dart';
 import '../../shell/providers/shell_tab_index_provider.dart';
@@ -88,11 +89,11 @@ class ProfileScreen extends ConsumerWidget {
                 label: 'Mes remplacements',
                 onTap: () => _push(context, const MyReplacementsScreen()),
               ),
-              const _MenuRow(
+              _MenuRow(
                 icon: Icons.forum_outlined,
                 color: AppColors.mintDark,
                 label: 'Mes réponses',
-                onTap: null,
+                onTap: () => _push(context, const MyResponsesScreen()),
               ),
               _MenuRow(
                 icon: Icons.send_outlined,

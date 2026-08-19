@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radii.dart';
 import '../../../replacements/presentation/create_classic_screen.dart';
-import '../../../replacements/presentation/my_replacements_screen.dart';
+import '../../../replacements/presentation/my_responses_screen.dart';
 import '../../../shell/providers/shell_tab_index_provider.dart';
 import 'home_decorations.dart';
 
@@ -40,7 +40,7 @@ class HomeQuickActions extends ConsumerWidget {
         cta: 'Consulter',
         color: AppColors.mission,
         onTap: () => Navigator.of(context).push(
-          MaterialPageRoute<void>(builder: (_) => const MyReplacementsScreen()),
+          MaterialPageRoute<void>(builder: (_) => const MyResponsesScreen()),
         ),
       ),
       _QuickAction(

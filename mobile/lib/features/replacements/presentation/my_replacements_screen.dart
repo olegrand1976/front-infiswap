@@ -129,7 +129,7 @@ class _MyReplacementsScreenState extends ConsumerState<MyReplacementsScreen> {
                         _StatsStrip(total: items.length, counts: counts),
                         const SizedBox(height: 14),
                         for (final item in items) ...[
-                          _MyReplacementCard(
+                          MyReplacementCard(
                             item: item,
                             onTap: () {
                               Navigator.of(context).push(
@@ -271,8 +271,10 @@ class _StatDivider extends StatelessWidget {
   }
 }
 
-class _MyReplacementCard extends StatelessWidget {
-  const _MyReplacementCard({required this.item, required this.onTap});
+/// Posting card — status pill, role/zip/date, response count footer. Used
+/// here and by [MyResponsesScreen] for the same underlying data shape.
+class MyReplacementCard extends StatelessWidget {
+  const MyReplacementCard({super.key, required this.item, required this.onTap});
 
   final ReplacementItem item;
   final VoidCallback onTap;
