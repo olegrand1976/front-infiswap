@@ -358,6 +358,7 @@
                         :is-mobile="false"
                         :comma-validation="true"
                         :no-space-validation="true"
+                        :digits-only="false"
                         @keydown.enter.prevent
                     />
                 </div>

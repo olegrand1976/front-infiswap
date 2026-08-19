@@ -464,7 +464,7 @@
   "pricing": {
     "title": "Het netwerk blijft",
     "titleHighlight": "gratis",
-    "subtitle": "Publiceren, solliciteren en uitwisselen kost niets, en zal nooit iets kosten. Infiswap Premium voegt drie voordelen toe voor wie sneller wil gaan.",
+    "subtitle": "Publiceren, solliciteren en uitwisselen kost niets, en zal nooit iets kosten. Infiswap Premium voegt vier voordelen toe voor wie sneller wil gaan.",
     "discovery": "Ontdekking",
     "free": "Gratis",
     "freeAccount": "Gratis account · zonder bankkaart",
@@ -509,15 +509,16 @@
     "pro": {
       "eyebrow": "Abonnement",
       "name": "Infiswap Premium",
-      "monthlyPrice": "9,90",
-      "period": "per maand",
-      "yearly": "of 99 € per jaar — 2 maanden gratis",
-      "desc": "Slechts drie voordelen, voor wie sneller wil gaan.",
+      "yearlyPrice": "99",
+      "period": "per jaar",
+      "yearlyNote": "2 maanden gratis — of 8,25 € / maand",
+      "desc": "Slechts vier voordelen, voor wie sneller wil gaan.",
       "features": {
         "p1": "Onmiddellijke melding — verwittigd bij publicatie",
         "p2": "Elke maand een boost cadeau — 7 dagen bovenaan",
         "p3": "Contracten inbegrepen — onbeperkt, met ondertekening en archief",
-        "p4": "Opzegbaar met één klik, zonder maandelijkse verbintenis"
+        "p4": "Uitgelicht account — gele ster « Premiumlid »",
+        "p5": "Opzegbaar via het portaal, aan het einde van de betaalde periode"
       },
       "cta": "Ontdek Infiswap Premium",
       "note": "Het netwerk blijft gratis. Premium voegt alleen snelheid en comfort toe."
@@ -528,16 +529,18 @@
       "boostTitle": "Boost vanaf 2 €",
       "boostText": "Punctuele optie (3 of 7 dagen) om een aankondiging te versnellen.",
       "progressiveTitle": "Premium",
-      "progressiveText": "Als eerste verwittigd, elke maand een boost cadeau, contracten inbegrepen."
+      "progressiveText": "Als eerste verwittigd, elke maand een boost cadeau, contracten inbegrepen, account uitgelicht."
     },
-    "seoDescription": "Prijzen InfiSwap: 100% gratis netwerk, Infiswap Premium (directe alerts, gratis boost, contracten) vanaf 9,90 €/maand, ponctuele boost vanaf 2 €."
+    "seoDescription": "Prijzen InfiSwap: 100% gratis netwerk, Infiswap Premium (directe alerts, gratis boost, contracten, uitgelicht account) 99 €/jaar, ponctuele boost vanaf 2 €."
   },
   "premiumMarketing": {
     "badge": "Nieuw · Infiswap Premium",
+    "memberLabel": "Premiumlid",
     "title": "Het netwerk blijft gratis",
-    "subtitle": "Publiceren, solliciteren en uitwisselen: altijd 0 €. Premium is het verschil in snelheid — alerts, boost en contracten — voor wie niet meer wil wachten.",
+    "subtitle": "Publiceren, solliciteren en uitwisselen: altijd 0 €. Premium is het verschil in snelheid en zichtbaarheid — alerts, boost, contracten en uitgelicht account — voor wie niet meer wil wachten.",
     "cta": "Ontdek Infiswap Premium",
-    "priceNote": "Vanaf 9,90 € / maand · opzegbaar met één klik",
+    "priceNote": "99 € / jaar · 2 maanden gratis",
+    "subscriptionsFooter": "Jaarformule 99 € incl. btw — 2 maanden gratis. Opzegbaar via het beheersportaal; de niet-gebruikte maandelijkse boost wordt niet overgedragen.",
     "benefits": {
       "alert": {
         "title": "Onmiddellijke melding",
@@ -550,6 +553,10 @@
       "contract": {
         "title": "Contracten inbegrepen",
         "description": "onbeperkt met handtekening — gratis betaalt 3 € per contract"
+      },
+      "visibility": {
+        "title": "Uitgelicht account",
+        "description": "gele ster « Premiumlid » op uw aankondigingen en kandidaturen"
       }
     }
   },

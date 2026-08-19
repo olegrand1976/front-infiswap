@@ -464,7 +464,7 @@
   "pricing": {
     "title": "Le réseau reste",
     "titleHighlight": "gratuit",
-    "subtitle": "Publier, postuler et échanger ne coûte rien, et ne coûtera jamais rien. Infiswap Premium ajoute trois avantages à celles qui veulent aller plus vite.",
+    "subtitle": "Publier, postuler et échanger ne coûte rien, et ne coûtera jamais rien. Infiswap Premium ajoute quatre avantages à celles qui veulent aller plus vite.",
     "discovery": "Découverte",
     "free": "Gratuit",
     "freeAccount": "Compte gratuit · sans carte bancaire",
@@ -509,15 +509,16 @@
     "pro": {
       "eyebrow": "Abonnement",
       "name": "Infiswap Premium",
-      "monthlyPrice": "9,90",
-      "period": "par mois",
-      "yearly": "ou 99 € par an — 2 mois offerts",
-      "desc": "Trois avantages seulement, pour celles qui veulent aller plus vite.",
+      "yearlyPrice": "99",
+      "period": "par an",
+      "yearlyNote": "2 mois offerts — soit 8,25 € / mois",
+      "desc": "Quatre avantages seulement, pour celles qui veulent aller plus vite.",
       "features": {
         "p1": "Alerte instantanée — prévenue dès la publication",
         "p2": "Un boost offert par mois — 7 jours en tête de liste",
         "p3": "Contrats inclus — illimités, signature et archivage compris",
-        "p4": "Annulable en un clic, sans engagement au mois"
+        "p4": "Mise en valeur du compte — étoile jaune « Membre premium »",
+        "p5": "Résiliable via le portail, au terme de la période payée"
       },
       "cta": "Découvrir Infiswap Premium",
       "note": "Le réseau reste gratuit. Premium n'ajoute que de la vitesse et du confort."
@@ -528,16 +529,18 @@
       "boostTitle": "Boost dès 2 €",
       "boostText": "Option ponctuelle (3 ou 7 jours) pour accélérer une annonce.",
       "progressiveTitle": "Premium",
-      "progressiveText": "Alertée en premier, un boost offert chaque mois, contrats inclus."
+      "progressiveText": "Alertée en premier, un boost offert chaque mois, contrats inclus, compte mis en valeur."
     },
-    "seoDescription": "Tarifs InfiSwap : réseau 100 % gratuit, Infiswap Premium (alertes instantanées, boost offert, contrats inclus) dès 9,90 €/mois, boost ponctuel dès 2 €."
+    "seoDescription": "Tarifs InfiSwap : réseau 100 % gratuit, Infiswap Premium (alertes instantanées, boost offert, contrats inclus, mise en valeur) 99 €/an, boost ponctuel dès 2 €."
   },
   "premiumMarketing": {
     "badge": "Nouveau · Infiswap Premium",
+    "memberLabel": "Membre premium",
     "title": "Le réseau reste gratuit",
-    "subtitle": "Publier, postuler et échanger : toujours 0 €. Premium, c’est la différence de vitesse — alertes, boost et contrats — pour celles qui ne veulent plus attendre.",
+    "subtitle": "Publier, postuler et échanger : toujours 0 €. Premium, c’est la différence de vitesse et de visibilité — alertes, boost, contrats et mise en valeur du compte — pour celles qui ne veulent plus attendre.",
     "cta": "Découvrir Infiswap Premium",
-    "priceNote": "Dès 9,90 € / mois · annulable en un clic",
+    "priceNote": "99 € / an · 2 mois offerts",
+    "subscriptionsFooter": "Formule annuelle 99 € TTC — 2 mois offerts. Résiliable via le portail de gestion ; le boost offert non utilisé dans le mois n'est pas reporté.",
     "benefits": {
       "alert": {
         "title": "Alerte instantanée",
@@ -550,6 +553,10 @@
       "contract": {
         "title": "Contrats inclus",
         "description": "illimités avec signature — le gratuit paie 3 € par contrat"
+      },
+      "visibility": {
+        "title": "Mise en valeur du compte",
+        "description": "étoile jaune « Membre premium » sur vos annonces et candidatures"
       }
     }
   },
