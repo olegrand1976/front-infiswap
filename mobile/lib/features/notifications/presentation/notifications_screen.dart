@@ -6,6 +6,10 @@ import '../../../core/theme/app_colors.dart';
 import '../../replacements/data/replacements_repository.dart';
 import '../../replacements/models/replacement_item.dart';
 import '../../replacements/presentation/replacement_detail_screen.dart';
+import '../../settings/data/settings_repository.dart';
+import '../../settings/models/settings_models.dart';
+import '../../settings/presentation/widgets/notification_preferences_card.dart';
+import '../../settings/presentation/widgets/settings_sheet_scaffold.dart';
 import '../data/notifications_list_notifier.dart';
 import '../models/notification_item.dart';
 import 'widgets/notification_card.dart';
@@ -104,6 +108,11 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                         ),
                       ),
                     ),
+                  IconButton(
+                    onPressed: () => _openNotificationSettings(context, ref),
+                    tooltip: 'Préférences de notifications',
+                    icon: Icon(Icons.settings_outlined, color: colors.textSecondary),
+                  ),
                 ],
               ),
             ),
@@ -166,6 +175,54 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
       ),
     );
   }
+}
+
+Future<void> _openNotificationSettings(BuildContext context, WidgetRef ref) async {
+  final repository = ref.read(settingsRepositoryProvider);
+
+  var dialogIsOpen = true;
+  showDialog<void>(
+    context: context,
+    barrierDismissible: false,
+    builder: (_) => const PopScope(
+      canPop: false,
+      child: Center(child: CircularProgressIndicator()),
+    ),
+  ).then((_) => dialogIsOpen = false);
+
+  Map<String, dynamic>? settings;
+  ApiException? error;
+  try {
+    settings = await repository.fetchSettings();
+  } on ApiException catch (e) {
+    error = e;
+  }
+
+  if (dialogIsOpen && context.mounted) {
+    Navigator.of(context).pop();
+  }
+  if (!context.mounted) return;
+
+  if (settings == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(error?.message ?? 'Impossible de charger les préférences.'),
+        backgroundColor: AppColors.coral,
+      ),
+    );
+    return;
+  }
+
+  final rawPrefs = settings['notification'];
+  final prefs = NotificationPreferences.fromJson(
+    rawPrefs is Map ? Map<String, dynamic>.from(rawPrefs) : null,
+  );
+
+  await showSettingsSheet(
+    context: context,
+    title: 'Préférences de notifications',
+    bodyBuilder: (_) => NotificationPreferencesCard(repository: repository, initial: prefs),
+  );
 }
 
 Future<void> _openReplacementIfAny(
