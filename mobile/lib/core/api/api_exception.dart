@@ -54,7 +54,7 @@ class ApiException implements Exception {
         error.type == DioExceptionType.sendTimeout) {
       message = 'Délai de connexion dépassé.';
     } else if (error.type == DioExceptionType.connectionError) {
-      message = 'Erreur serveur';
+      message = 'Erreur de connexion : ${error.error ?? error.message ?? 'inconnue'}';
     }
 
     return ApiException(
