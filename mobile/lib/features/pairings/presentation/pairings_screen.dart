@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/api/api_exception.dart';
 import '../../../core/theme/app_colors.dart';
@@ -161,7 +162,7 @@ class _PairingsScreenState extends ConsumerState<PairingsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+                  padding: const EdgeInsets.fromLTRB(8, 8, 20, 8),
                   child: _Header(
                     resultCount: resultCount,
                     hasActiveSearch: params.hasActiveSearch,
@@ -172,6 +173,7 @@ class _PairingsScreenState extends ConsumerState<PairingsScreen> {
                           builder: (_) => const PairingResponsesScreen()),
                     ),
                     onSelectTab: (tab) => notifier.applyTab(tab),
+                    onClearSearch: notifier.clearSearch,
                   ),
                 ),
                 Expanded(
@@ -276,6 +278,7 @@ class _Header extends StatelessWidget {
     required this.onSearchTap,
     required this.onResponsesTap,
     required this.onSelectTab,
+    required this.onClearSearch,
   });
 
   final int? resultCount;
@@ -284,10 +287,12 @@ class _Header extends StatelessWidget {
   final VoidCallback onSearchTap;
   final VoidCallback onResponsesTap;
   final ValueChanged<PairingTab> onSelectTab;
+  final VoidCallback onClearSearch;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
+    final canPop = Navigator.of(context).canPop();
     final countLabel = resultCount == null
         ? ' '
         : '$resultCount résultat${resultCount == 1 ? '' : 's'}';
@@ -298,6 +303,13 @@ class _Header extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (canPop)
+              IconButton(
+                onPressed: () => context.pop(),
+                icon: Icon(Icons.arrow_back, color: colors.primary),
+              )
+            else
+              const SizedBox(width: 8),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -338,6 +350,10 @@ class _Header extends StatelessWidget {
                 label: 'Mes demandes',
                 selected: tab == PairingTab.mine,
                 onTap: () => onSelectTab(PairingTab.mine)),
+            if (hasActiveSearch) ...[
+              const SizedBox(width: 7),
+              _ResetFilterButton(onTap: onClearSearch),
+            ],
           ],
         ),
       ],
@@ -424,6 +440,33 @@ class _Tab extends StatelessWidget {
             fontWeight: FontWeight.w700,
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _ResetFilterButton extends StatelessWidget {
+  const _ResetFilterButton({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppRadii.md),
+      child: Container(
+        height: 34,
+        width: 34,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: colors.card,
+          border: Border.all(color: colors.divider),
+          borderRadius: BorderRadius.circular(AppRadii.md),
+        ),
+        child: Icon(Icons.close, size: 16, color: colors.textSecondary),
       ),
     );
   }

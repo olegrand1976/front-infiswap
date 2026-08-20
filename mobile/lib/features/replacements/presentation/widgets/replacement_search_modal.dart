@@ -79,8 +79,9 @@ class _ReplacementSearchModalState
     _zipController.clear();
 
     try {
-      final matches =
-          await ref.read(locationRepositoryProvider).getCitiesFromZipCode(value);
+      final matches = await ref
+          .read(locationRepositoryProvider)
+          .getCitiesFromZipCode(value);
       if (matches.isNotEmpty && mounted) {
         setState(() => _cities = {..._cities, ...matches}.toList());
       }
@@ -133,7 +134,8 @@ class _ReplacementSearchModalState
         ),
         decoration: BoxDecoration(
           color: colors.card,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadii.md)),
+          borderRadius:
+              const BorderRadius.vertical(top: Radius.circular(AppRadii.md)),
         ),
         child: SafeArea(
           top: false,
@@ -282,26 +284,15 @@ class _TagInputRow extends StatelessWidget {
     return Row(
       children: [
         Expanded(
+          // No local InputDecoration override — inherits fill/border/padding
+          // from AppTheme.inputDecorationTheme, so it stays in sync with
+          // every other input instead of drifting out of it.
           child: TextField(
             controller: controller,
             keyboardType: keyboardType,
             textInputAction: TextInputAction.done,
             onSubmitted: (_) => onSubmit(),
-            decoration: InputDecoration(
-              hintText: hint,
-              filled: true,
-              fillColor: colors.inputBackground,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(AppRadii.md),
-                borderSide: BorderSide(color: colors.inputBorder),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(AppRadii.md),
-                borderSide: BorderSide(color: colors.inputBorder),
-              ),
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-            ),
+            decoration: InputDecoration(hintText: hint),
           ),
         ),
         const SizedBox(width: 8),

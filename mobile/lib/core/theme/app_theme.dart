@@ -53,7 +53,11 @@ class AppTheme {
         filled: true,
         fillColor: palette.inputBackground,
         isDense: true,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        // 14/12 renders inputs ~44px tall, matching the button theme's
+        // minimumSize below — so a text field next to a button (search bars,
+        // tag inputs) lines up instead of looking shorter.
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         labelStyle: TextStyle(color: palette.textSecondary, fontSize: 12.5),
         hintStyle: TextStyle(color: palette.textSecondary, fontSize: 12.5),
         prefixIconColor: palette.primary,
