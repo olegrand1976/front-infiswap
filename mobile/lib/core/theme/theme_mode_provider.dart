@@ -4,8 +4,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 const _themeModeKey = 'theme_mode';
 
-/// Par défaut : thème du système (Material / OS).
-/// Persiste light / dark / system.
 class ThemeModeNotifier extends StateNotifier<ThemeMode> {
   ThemeModeNotifier(this._storage) : super(ThemeMode.system) {
     _restore();
@@ -37,12 +35,9 @@ class ThemeModeNotifier extends StateNotifier<ThemeMode> {
     await _storage.write(key: _themeModeKey, value: value);
   }
 
-  /// Bascule vers le contraire de ce qui est affiché.
   Future<void> toggleAgainst(Brightness currentBrightness) async {
     await setThemeMode(
-      currentBrightness == Brightness.dark
-          ? ThemeMode.light
-          : ThemeMode.dark,
+      currentBrightness == Brightness.dark ? ThemeMode.light : ThemeMode.dark,
     );
   }
 }

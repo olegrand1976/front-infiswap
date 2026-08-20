@@ -76,7 +76,8 @@ class PushNotificationService {
     }
   }
 
-  Future<String?> getToken() => platformName == null ? Future.value(null) : _messaging.getToken();
+  Future<String?> getToken() =>
+      platformName == null ? Future.value(null) : _messaging.getToken();
 
   Stream<String> get onTokenRefresh => _messaging.onTokenRefresh;
 
@@ -103,8 +104,39 @@ class PushNotificationService {
   }
 
   void _handleTap(String? payload) {
+    final target = _deepLinkTarget(payload);
+    if (target != null) {
+      _ref.read(appRouterProvider).go(target);
+      return;
+    }
+
+    // No detail screen to send this one to (mission.*/partnership.* once
+    // had none — replacement.* and mission.* now do, above) — same fallback
+    // as before: land on the in-app notifications list.
     _ref.read(shellTabIndexProvider.notifier).state = 2;
     _ref.read(appRouterProvider).go('/home');
+  }
+
+  String? _deepLinkTarget(String? payload) {
+    if (payload == null) return null;
+
+    try {
+      final data = jsonDecode(payload) as Map<String, dynamic>;
+      final type = data['type']?.toString();
+      if (type == null) return null;
+
+      if (type.startsWith('replacement.')) {
+        final id = data['replacement_id'];
+        if (id != null) return '/replacements/$id?type=$type';
+      } else if (type.startsWith('mission.')) {
+        final id = data['mission_id'];
+        if (id != null) return '/missions/$id?type=$type';
+      }
+    } catch (_) {
+      // Malformed payload — fall back below.
+    }
+
+    return null;
   }
 }
 

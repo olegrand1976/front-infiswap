@@ -14,8 +14,6 @@ import '../data/notifications_list_notifier.dart';
 import '../models/notification_item.dart';
 import 'widgets/notification_card.dart';
 
-const _ownerNotificationTypes = {'replacement.response', 'replacement.canceled'};
-
 class NotificationsScreen extends ConsumerStatefulWidget {
   const NotificationsScreen({super.key});
 
@@ -111,7 +109,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                   IconButton(
                     onPressed: () => _openNotificationSettings(context, ref),
                     tooltip: 'Préférences de notifications',
-                    icon: Icon(Icons.settings_outlined, color: colors.textSecondary),
+                    icon: Icon(Icons.settings_outlined,
+                        color: colors.textSecondary),
                   ),
                 ],
               ),
@@ -177,7 +176,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
   }
 }
 
-Future<void> _openNotificationSettings(BuildContext context, WidgetRef ref) async {
+Future<void> _openNotificationSettings(
+    BuildContext context, WidgetRef ref) async {
   final repository = ref.read(settingsRepositoryProvider);
 
   var dialogIsOpen = true;
@@ -206,7 +206,8 @@ Future<void> _openNotificationSettings(BuildContext context, WidgetRef ref) asyn
   if (settings == null) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(error?.message ?? 'Impossible de charger les préférences.'),
+        content:
+            Text(error?.message ?? 'Impossible de charger les préférences.'),
         backgroundColor: AppColors.coral,
       ),
     );
@@ -221,7 +222,8 @@ Future<void> _openNotificationSettings(BuildContext context, WidgetRef ref) asyn
   await showSettingsSheet(
     context: context,
     title: 'Préférences de notifications',
-    bodyBuilder: (_) => NotificationPreferencesCard(repository: repository, initial: prefs),
+    bodyBuilder: (_) =>
+        NotificationPreferencesCard(repository: repository, initial: prefs),
   );
 }
 
@@ -233,7 +235,8 @@ Future<void> _openReplacementIfAny(
   if (!item.type.startsWith('replacement.')) return;
 
   final rawId = item.data['replacement_id'];
-  final replacementId = rawId is int ? rawId : int.tryParse(rawId?.toString() ?? '');
+  final replacementId =
+      rawId is int ? rawId : int.tryParse(rawId?.toString() ?? '');
   if (replacementId == null) return;
 
   var dialogIsOpen = true;
@@ -249,7 +252,8 @@ Future<void> _openReplacementIfAny(
   ReplacementItem? replacement;
   ApiException? error;
   try {
-    replacement = await ref.read(replacementsRepositoryProvider).fetchById(replacementId);
+    replacement =
+        await ref.read(replacementsRepositoryProvider).fetchById(replacementId);
   } on ApiException catch (e) {
     error = e;
   }
@@ -264,7 +268,7 @@ Future<void> _openReplacementIfAny(
       MaterialPageRoute<void>(
         builder: (_) => ReplacementDetailScreen(
           item: replacement!,
-          isOwner: _ownerNotificationTypes.contains(item.type),
+          isOwner: isOwnerNotificationType(item.type),
         ),
       ),
     );
@@ -303,7 +307,8 @@ class _EmptyState extends StatelessWidget {
           Text(
             'Vos notifications apparaîtront ici.',
             textAlign: TextAlign.center,
-            style: TextStyle(color: colors.textSecondary, fontSize: 11.5, height: 1.5),
+            style: TextStyle(
+                color: colors.textSecondary, fontSize: 11.5, height: 1.5),
           ),
         ],
       ),

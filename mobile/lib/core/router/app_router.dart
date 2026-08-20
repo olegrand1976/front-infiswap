@@ -9,6 +9,7 @@ import '../../features/auth/presentation/two_factor_screen.dart';
 import '../../features/auth/providers/auth_session_provider.dart';
 import '../../features/pairings/presentation/pairings_screen.dart';
 import '../../features/replacements/presentation/my_replacements_screen.dart';
+import '../../features/replacements/presentation/replacement_deep_link_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/shell/presentation/main_shell.dart';
 import '../../features/splash/presentation/splash_screen.dart';
@@ -79,6 +80,21 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/pairings',
         builder: (context, state) => const PairingsScreen(),
+      ),
+      GoRoute(
+        path: '/replacements/:id',
+        builder: (context, state) => ReplacementDeepLinkScreen(
+          id: int.tryParse(state.pathParameters['id'] ?? '') ?? 0,
+          notificationType: state.uri.queryParameters['type'],
+        ),
+      ),
+      GoRoute(
+        path: '/missions/:id',
+        builder: (context, state) => ReplacementDeepLinkScreen(
+          id: int.tryParse(state.pathParameters['id'] ?? '') ?? 0,
+          isMission: true,
+          notificationType: state.uri.queryParameters['type'],
+        ),
       ),
       GoRoute(
         path: '/settings',

@@ -25,9 +25,8 @@ class NotificationItem {
       data: rawData is Map
           ? rawData.map((key, value) => MapEntry(key.toString(), value))
           : const {},
-      createdAt:
-          DateTime.tryParse(json['created_at']?.toString() ?? '') ??
-              DateTime.now(),
+      createdAt: DateTime.tryParse(json['created_at']?.toString() ?? '') ??
+          DateTime.now(),
       readAt: json['read_at'] != null
           ? DateTime.tryParse(json['read_at'].toString())
           : null,
@@ -81,7 +80,9 @@ NotificationContent notificationContentFor(NotificationItem item) {
     case 'replacement.closed':
       return NotificationContent(
         title: 'Remplacement clôturé',
-        body: has('message') ? field('message') : 'Le remplacement a été clôturé.',
+        body: has('message')
+            ? field('message')
+            : 'Le remplacement a été clôturé.',
       );
     case 'mission.new':
       return NotificationContent(
@@ -106,10 +107,9 @@ NotificationContent notificationContentFor(NotificationItem item) {
         body: 'Votre candidature à la mission a été refusée.',
       );
     case 'partnership.request':
-      return NotificationContent(
-        title: 'Partenariat',
-        body:
-            '${has('partner_name') ? field('partner_name') : 'Un partenaire'} est lié à votre compte.',
+      return const NotificationContent(
+        title: 'Binôme',
+        body: 'Votre demande de binôme a été publiée.',
       );
     default:
       return NotificationContent(
@@ -117,6 +117,15 @@ NotificationContent notificationContentFor(NotificationItem item) {
         body: field('body'),
       );
   }
+}
+
+// Types where the current user is the owner of the replacement (someone
+// applied to / canceled on their own posting) rather than an applicant —
+// drives which footer ReplacementDetailScreen shows. Shared by the in-app
+// notifications list and the push tap deep-link.
+bool isOwnerNotificationType(String type) {
+  const ownerTypes = {'replacement.response', 'replacement.canceled'};
+  return ownerTypes.contains(type);
 }
 
 IconData notificationIconFor(String type) {
