@@ -29,7 +29,9 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
   void _showSnack(String message, {bool isError = true}) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: isError ? AppColors.coral : null),
+      SnackBar(
+          content: Text(message),
+          backgroundColor: isError ? AppColors.coral : null),
     );
   }
 
@@ -81,7 +83,8 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
       final sessionId = params['session_id'];
 
       if (params['status'] == 'success' && sessionId != null) {
-        final active = await repository.confirmProCheckout(sessionId: sessionId);
+        final active =
+            await repository.confirmProCheckout(sessionId: sessionId);
         await ref.read(proStatusProvider.notifier).refresh();
         _showSnack(
           active
@@ -119,7 +122,8 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
       await ref.read(proStatusProvider.notifier).refresh();
     } on PlatformException catch (error) {
       if (error.code != 'CANCELED') {
-        _showSnack(error.message ?? "Impossible d'ouvrir le portail de facturation.");
+        _showSnack(
+            error.message ?? "Impossible d'ouvrir le portail de facturation.");
       }
     } on ApiException catch (error) {
       _showSnack(error.message);
@@ -133,7 +137,8 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
   Future<void> _cancel() async {
     final confirmed = await _confirmDialog(
       title: 'Résilier Infiswap Premium ?',
-      message: "Vous garderez vos avantages jusqu'à la fin de la période en cours.",
+      message:
+          "Vous garderez vos avantages jusqu'à la fin de la période en cours.",
       confirmLabel: 'Résilier',
       confirmColor: AppColors.coral,
     );
@@ -180,11 +185,14 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(false),
-              child: Text('Annuler', style: TextStyle(color: colors.textSecondary)),
+              child: Text('Annuler',
+                  style: TextStyle(color: colors.textSecondary)),
             ),
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(true),
-              child: Text(confirmLabel, style: TextStyle(color: confirmColor, fontWeight: FontWeight.w700)),
+              child: Text(confirmLabel,
+                  style: TextStyle(
+                      color: confirmColor, fontWeight: FontWeight.w700)),
             ),
           ],
         );
@@ -316,7 +324,10 @@ class _ActiveBody extends StatelessWidget {
             child: Center(
               child: Text(
                 "Résilié — actif jusqu'au ${formatDateDmy(endsAt)}",
-                style: TextStyle(color: colors.dangerFg, fontSize: 11.5, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                    color: colors.dangerFg,
+                    fontSize: 11.5,
+                    fontWeight: FontWeight.w600),
               ),
             ),
           )
@@ -334,10 +345,22 @@ class _ActiveBody extends StatelessWidget {
         const _SectionCaption('Ce qui est inclus'),
         _MetaCard(
           rows: [
-            const _MetaRow(icon: Icons.bolt_outlined, iconColor: AppColors.urgent, text: 'Alerte instantanée'),
-            const _MetaRow(icon: Icons.auto_awesome, iconColor: AppColors.boostGold, text: 'Boost 7 jours offert chaque mois'),
-            _MetaRow(icon: Icons.description_outlined, iconColor: colors.textSecondary, text: 'Contrats illimités'),
-            const _MetaRow(icon: Icons.star, iconColor: AppColors.boostGold, text: 'Profil mis en valeur'),
+            const _MetaRow(
+                icon: Icons.bolt_outlined,
+                iconColor: AppColors.urgent,
+                text: 'Alerte instantanée'),
+            const _MetaRow(
+                icon: Icons.auto_awesome,
+                iconColor: AppColors.boostGold,
+                text: 'Boost 7 jours offert chaque mois'),
+            _MetaRow(
+                icon: Icons.description_outlined,
+                iconColor: colors.textSecondary,
+                text: 'Contrats illimités'),
+            const _MetaRow(
+                icon: Icons.star,
+                iconColor: AppColors.boostGold,
+                text: 'Profil mis en valeur'),
           ],
         ),
         const SizedBox(height: 20),
@@ -355,7 +378,8 @@ class _ActiveBody extends StatelessWidget {
                   ? SizedBox(
                       height: 18,
                       width: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2, color: colors.onPrimary),
+                      child: CircularProgressIndicator(
+                          strokeWidth: 2, color: colors.onPrimary),
                     )
                   : const Text('Gérer mon abonnement'),
             ),
@@ -378,7 +402,10 @@ class _ActiveBody extends StatelessWidget {
                 )
               : TextButton(
                   onPressed: busy ? null : onCancel,
-                  child: Text('Résilier', style: TextStyle(color: colors.textSecondary, fontWeight: FontWeight.w600)),
+                  child: Text('Résilier',
+                      style: TextStyle(
+                          color: colors.textSecondary,
+                          fontWeight: FontWeight.w600)),
                 ),
         ),
       ],
@@ -413,7 +440,9 @@ class _UpsellBody extends ConsumerWidget {
     return asyncCatalog.when(
       loading: () => const _PremiumSkeleton(),
       error: (error, _) => _ErrorState(
-        message: error is ApiException ? error.message : 'Formules indisponibles pour le moment.',
+        message: error is ApiException
+            ? error.message
+            : 'Formules indisponibles pour le moment.',
         onRetry: () => ref.invalidate(proCatalogProvider),
       ),
       data: (plans) {
@@ -486,9 +515,12 @@ class _UpsellBody extends ConsumerWidget {
                       ? SizedBox(
                           height: 18,
                           width: 18,
-                          child: CircularProgressIndicator(strokeWidth: 2, color: colors.onPrimary),
+                          child: CircularProgressIndicator(
+                              strokeWidth: 2, color: colors.onPrimary),
                         )
-                      : Text(awaitingWebPayment ? 'Payer maintenant' : "S'abonner"),
+                      : Text(awaitingWebPayment
+                          ? 'Payer maintenant'
+                          : "S'abonner"),
                 ),
               ),
             ),
@@ -531,10 +563,16 @@ class _MetaRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(text, style: TextStyle(color: colors.textPrimary, fontSize: 13, fontWeight: FontWeight.w500)),
+                Text(text,
+                    style: TextStyle(
+                        color: colors.textPrimary,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500)),
                 if (sub != null) ...[
                   const SizedBox(height: 2),
-                  Text(sub!, style: TextStyle(color: colors.textSecondary, fontSize: 11)),
+                  Text(sub!,
+                      style:
+                          TextStyle(color: colors.textSecondary, fontSize: 11)),
                 ],
               ],
             ),
@@ -545,9 +583,6 @@ class _MetaRow extends StatelessWidget {
   }
 }
 
-/// "Hero simple" price block — big centered price, thin rule, boost line.
-/// No button in here: the CTA stays in its usual spot at the bottom of
-/// the screen.
 class _HeroPriceCard extends StatelessWidget {
   const _HeroPriceCard({
     required this.amount,
@@ -572,7 +607,10 @@ class _HeroPriceCard extends StatelessWidget {
         color: colors.card,
         borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(color: colors.border),
-        boxShadow: [BoxShadow(color: colors.shadow, blurRadius: 10, offset: const Offset(0, 3))],
+        boxShadow: [
+          BoxShadow(
+              color: colors.shadow, blurRadius: 10, offset: const Offset(0, 3))
+        ],
       ),
       child: Column(
         children: [
@@ -584,7 +622,7 @@ class _HeroPriceCard extends StatelessWidget {
               Text(
                 amount,
                 style: TextStyle(
-                  color: colors.textPrimary,
+                  color: colors.primary,
                   fontSize: 30,
                   fontWeight: FontWeight.w800,
                   fontFeatures: const [FontFeature.tabularFigures()],
@@ -593,13 +631,17 @@ class _HeroPriceCard extends StatelessWidget {
               const SizedBox(width: 4),
               Text(
                 '/ $cycle',
-                style: TextStyle(color: colors.textSecondary, fontSize: 12.5, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                    color: colors.textSecondary,
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w600),
               ),
             ],
           ),
           if (caption != null) ...[
             const SizedBox(height: 3),
-            Text(caption!, style: TextStyle(color: colors.textSecondary, fontSize: 11)),
+            Text(caption!,
+                style: TextStyle(color: colors.textSecondary, fontSize: 11)),
           ],
           const SizedBox(height: 12),
           Container(width: 36, height: 1, color: colors.divider),
@@ -607,13 +649,18 @@ class _HeroPriceCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.auto_awesome, size: 14, color: AppColors.boostGold),
+              const Icon(Icons.auto_awesome,
+                  size: 14, color: AppColors.boostGold),
               const SizedBox(width: 6),
               Flexible(
                 child: Text(
                   boostText,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: colors.textSecondary, fontSize: 11),
+                  style: TextStyle(
+                    color: colors.textSecondary,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ],
@@ -640,7 +687,10 @@ class _MetaCard extends StatelessWidget {
         color: colors.card,
         borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(color: colors.border),
-        boxShadow: [BoxShadow(color: colors.shadow, blurRadius: 10, offset: const Offset(0, 3))],
+        boxShadow: [
+          BoxShadow(
+              color: colors.shadow, blurRadius: 10, offset: const Offset(0, 3))
+        ],
       ),
       child: Column(mainAxisSize: MainAxisSize.min, children: rows),
     );
@@ -707,7 +757,10 @@ class _SkeletonCard extends StatelessWidget {
         color: colors.card,
         borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(color: colors.border),
-        boxShadow: [BoxShadow(color: colors.shadow, blurRadius: 10, offset: const Offset(0, 3))],
+        boxShadow: [
+          BoxShadow(
+              color: colors.shadow, blurRadius: 10, offset: const Offset(0, 3))
+        ],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -719,7 +772,9 @@ class _SkeletonCard extends StatelessWidget {
                 children: [
                   const SkeletonBox(width: 16, height: 16, radius: 4),
                   const SizedBox(width: 10),
-                  Expanded(child: SkeletonBox(height: 11, width: 120 + (i * 20).toDouble())),
+                  Expanded(
+                      child: SkeletonBox(
+                          height: 11, width: 120 + (i * 20).toDouble())),
                 ],
               ),
             ),
@@ -745,7 +800,9 @@ class _ErrorState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(message, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.coral)),
+            Text(message,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: AppColors.coral)),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: onRetry,
