@@ -51,6 +51,16 @@ class HomeQuickActions extends ConsumerWidget {
         color: const Color(0xFFB45309),
         onTap: () => context.push('/applications'),
       ),
+      _QuickAction(
+        icon: Icons.handshake_outlined,
+        title: 'Binômes',
+        description: 'Trouvez une collègue pour vos tournées.',
+        cta: 'Découvrir',
+        // Not AppColors.mint: this card always draws white text/icon on
+        // `color`, and mint is too light for that contrast.
+        color: AppColors.pairing,
+        onTap: () => context.push('/pairings'),
+      ),
     ];
 
     return GridView.count(

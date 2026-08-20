@@ -116,7 +116,7 @@ class ProfileScreen extends ConsumerWidget {
                 icon: Icons.groups_outlined,
                 color: AppColors.mission,
                 label: 'Binômes',
-                onTap: () {},
+                onTap: () => context.push('/pairings'),
               ),
               _MenuRow(
                 icon: Icons.hub_outlined,
@@ -166,7 +166,8 @@ class ProfileScreen extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(vertical: 9),
                 ),
                 icon: const Icon(Icons.logout, size: 16),
-                label: const Text('Se déconnecter', style: TextStyle(fontSize: 12)),
+                label: const Text('Se déconnecter',
+                    style: TextStyle(fontSize: 12)),
               ),
             ),
           ],

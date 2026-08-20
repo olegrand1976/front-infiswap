@@ -21,6 +21,10 @@ abstract final class AppColors {
 
   static const Color boostGold = Color(0xFFFBBF24);
 
+  static const Color pairing = Color(0xFF2563EB);
+
+  static const Color onPairing = Color(0xFFFFFFFF);
+
   static const Color white = Color(0xFFFFFFFF);
 
   // Partner brand accents (NursTech / NursAssur cards on the home dashboard).
