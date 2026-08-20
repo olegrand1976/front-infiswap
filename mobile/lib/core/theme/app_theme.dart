@@ -82,7 +82,8 @@ class AppTheme {
         style: ElevatedButton.styleFrom(
           backgroundColor: palette.primary,
           foregroundColor: palette.onPrimary,
-          padding: const EdgeInsets.symmetric(vertical: 9),
+          minimumSize: const Size.fromHeight(44),
+          padding: const EdgeInsets.symmetric(vertical: 10),
           textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppRadii.md),
@@ -93,7 +94,19 @@ class AppTheme {
         style: OutlinedButton.styleFrom(
           foregroundColor: palette.textPrimary,
           side: BorderSide(color: palette.border),
-          padding: const EdgeInsets.symmetric(vertical: 9),
+          minimumSize: const Size.fromHeight(44),
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadii.md),
+          ),
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: palette.primary,
+          minimumSize: const Size.fromHeight(44),
+          padding: const EdgeInsets.symmetric(vertical: 10),
           textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppRadii.md),
