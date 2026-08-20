@@ -284,9 +284,6 @@ class _TagInputRow extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          // No local InputDecoration override — inherits fill/border/padding
-          // from AppTheme.inputDecorationTheme, so it stays in sync with
-          // every other input instead of drifting out of it.
           child: TextField(
             controller: controller,
             keyboardType: keyboardType,

@@ -35,9 +35,6 @@ class PairingSearchParams {
     );
   }
 
-  // `type` doesn't filter the in_search/available field on the API side —
-  // it only picks the audience: mine, or everyone else's open requests.
-  // Both types can come back mixed in the same page either way.
   Map<String, dynamic> toQuery() {
     return {
       'zip_code': zipCodes,

@@ -110,9 +110,6 @@ class PushNotificationService {
       return;
     }
 
-    // No detail screen to send this one to (mission.*/partnership.* once
-    // had none — replacement.* and mission.* now do, above) — same fallback
-    // as before: land on the in-app notifications list.
     _ref.read(shellTabIndexProvider.notifier).state = 2;
     _ref.read(appRouterProvider).go('/home');
   }
@@ -132,9 +129,7 @@ class PushNotificationService {
         final id = data['mission_id'];
         if (id != null) return '/missions/$id?type=$type';
       }
-    } catch (_) {
-      // Malformed payload — fall back below.
-    }
+    } catch (_) {}
 
     return null;
   }

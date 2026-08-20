@@ -60,10 +60,6 @@ class _PairingDetailSheetState extends State<PairingDetailSheet> {
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
       child: Container(
-        // The description can run up to 1000 characters (server-validated,
-        // not mobile-validated) — some already do in production. Without a
-        // height cap and a scroll view, that overflows the sheet instead of
-        // scrolling, on every phone size.
         constraints:
             BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * 0.85),
         decoration: BoxDecoration(

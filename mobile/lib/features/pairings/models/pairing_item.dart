@@ -1,6 +1,3 @@
-// Shape matches UserPartnerResource::defaultArray on the API — city, zip
-// code and premium flag only. Identity is never exposed before a response
-// is accepted, so there is no name/avatar field here on purpose.
 enum PairingType { search, available }
 
 PairingType pairingTypeFromApi(String? value) =>

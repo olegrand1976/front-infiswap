@@ -56,8 +56,6 @@ class HomeQuickActions extends ConsumerWidget {
         title: 'Binômes',
         description: 'Trouvez une collègue pour vos tournées.',
         cta: 'Découvrir',
-        // Not AppColors.mint: this card always draws white text/icon on
-        // `color`, and mint is too light for that contrast.
         color: AppColors.pairing,
         onTap: () => context.push('/pairings'),
       ),

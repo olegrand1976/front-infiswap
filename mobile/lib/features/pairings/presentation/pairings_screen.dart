@@ -231,9 +231,6 @@ class _PairingsScreenState extends ConsumerState<PairingsScreen> {
   }
 }
 
-// Same round button as the shell's create FAB (main_shell.dart's
-// _CreateFab) — a stock FloatingActionButton is a M3 rounded square, not
-// a circle, and reads oversized next to the app's other round icon buttons.
 class _CreatePairingFab extends StatelessWidget {
   const _CreatePairingFab({required this.onTap});
 
@@ -488,9 +485,6 @@ class _PairingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    // Reuse the app's existing semantic tokens rather than a new color:
-    // "search" reads with the brand accent, "available" with the success
-    // green already used for positive/open states elsewhere.
     final typeColor =
         item.type == PairingType.available ? colors.successFg : colors.primary;
 

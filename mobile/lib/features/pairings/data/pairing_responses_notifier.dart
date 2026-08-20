@@ -16,10 +16,6 @@ class PairingResponsesNotifier extends AsyncNotifier<List<PairingResponse>> {
     );
   }
 
-  // Accepting or refusing a candidate closes the whole pairing request on
-  // the API side — every other pending candidate under it becomes stale in
-  // the same call. Reflect that locally instead of leaving them "pending"
-  // until the next refresh.
   Future<void> updateStatus(int responseId, String status) async {
     await ref
         .read(pairingsRepositoryProvider)

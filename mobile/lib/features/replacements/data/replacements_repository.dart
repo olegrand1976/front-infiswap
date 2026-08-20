@@ -56,10 +56,6 @@ class ReplacementsRepository {
     );
   }
 
-  // Nurse-facing single-mission lookup — used to deep-link into a mission
-  // from a push notification, where the app only has an id, not an
-  // already-fetched search result. Same merged-search shape as fetchById's
-  // replacement, so it goes through the same mapper.
   Future<ReplacementItem> fetchMissionById(int id) async {
     final response = await _api.get<Map<String, dynamic>>('/missions/$id');
     final data = response.data?['mission'];

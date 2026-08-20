@@ -1,5 +1,3 @@
-// A candidate's reply to one of my own pairing requests. Unlike PairingItem,
-// full identity is shown here — this is data about someone who answered me.
 enum PairingResponseBucket { pending, accepted, closed }
 
 const pairingResponseStatusLabels = <String, String>{
@@ -69,8 +67,6 @@ class PairingResponse {
   }
 
   factory PairingResponse.fromJson(Map<String, dynamic> json) {
-    // Laravel snake_cases relation names on the way out: userPartner() and
-    // interestedUser() become user_partner / interested_user in the JSON.
     final pairing = json['user_partner'] as Map? ?? const {};
     final respondent = json['interested_user'] as Map? ?? const {};
     final profile = respondent['profile'] as Map? ?? const {};

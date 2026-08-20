@@ -119,10 +119,6 @@ NotificationContent notificationContentFor(NotificationItem item) {
   }
 }
 
-// Types where the current user is the owner of the replacement (someone
-// applied to / canceled on their own posting) rather than an applicant —
-// drives which footer ReplacementDetailScreen shows. Shared by the in-app
-// notifications list and the push tap deep-link.
 bool isOwnerNotificationType(String type) {
   const ownerTypes = {'replacement.response', 'replacement.canceled'};
   return ownerTypes.contains(type);

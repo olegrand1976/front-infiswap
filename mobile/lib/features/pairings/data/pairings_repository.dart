@@ -48,9 +48,6 @@ class PairingsRepository {
     return _api.put<void>('/partners/$pairingId', data: {'status': 'closed'});
   }
 
-  // `userInterestedId` is validated by the API (exists:users,id) but never
-  // actually read when saving — it always uses the authenticated user. Any
-  // valid id satisfies validation; sending the caller's own is the honest one.
   Future<void> respond({
     required int pairingId,
     required int currentUserId,

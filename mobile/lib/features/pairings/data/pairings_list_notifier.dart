@@ -52,14 +52,11 @@ class PairingsListNotifier extends AsyncNotifier<List<PairingItem>> {
       _total = page.total;
       state = AsyncData([...current, ...page.items]);
     } catch (_) {
-      // Silent: the user can retry by scrolling again.
     } finally {
       ref.read(pairingsLoadingMoreProvider.notifier).state = false;
     }
   }
 
-  // Called right after a successful respond so the card flips to "answered"
-  // without waiting on a full refresh.
   void markResponded(int pairingId) {
     final current = state.valueOrNull;
     if (current == null) return;

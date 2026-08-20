@@ -9,10 +9,6 @@ import '../data/replacements_repository.dart';
 import '../models/replacement_item.dart';
 import 'replacement_detail_screen.dart';
 
-/// Route target for a push-notification tap — the app only has an id at
-/// this point (cold start or background tap), no pre-loaded search result
-/// like the in-app list has. Fetches, then hands off to the same
-/// ReplacementDetailScreen used everywhere else — one detail UI to maintain.
 class ReplacementDeepLinkScreen extends ConsumerStatefulWidget {
   const ReplacementDeepLinkScreen({
     super.key,
