@@ -46,15 +46,12 @@ class HomeStatsRow extends StatelessWidget {
           value: stats.referralsCount,
           label: 'PARRAINAGES',
           gradient: const [AppColors.boostGold, Color(0xFFD97706)],
-          onDark: true,
         ),
       ],
     );
   }
 }
 
-/// Shown in place of [HomeStatsRow] while the stats request is still in
-/// flight — same 2x2 grid shape so nothing shifts once data arrives.
 class HomeStatsRowSkeleton extends StatelessWidget {
   const HomeStatsRowSkeleton({super.key});
 
@@ -110,18 +107,33 @@ class _StatCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            width: 24,
-            height: 24,
-            decoration: BoxDecoration(
-              color: foreground.withValues(alpha: .18),
-              borderRadius: BorderRadius.circular(AppRadii.md),
-            ),
-            child: Icon(icon, color: foreground, size: 13),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 24,
+                height: 24,
+                decoration: BoxDecoration(
+                  color: foreground.withValues(alpha: .18),
+                  borderRadius: BorderRadius.circular(AppRadii.md),
+                ),
+                child: Icon(icon, color: foreground, size: 13),
+              ),
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: foreground.withValues(alpha: .82),
+                  fontSize: 9,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 7),
-          Center(
-            child: Text(
+          Expanded(
+            child: Center(
+                child: Text(
               value?.toString() ?? '—',
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -130,19 +142,7 @@ class _StatCard extends StatelessWidget {
                 fontWeight: FontWeight.w800,
                 height: 1,
               ),
-            ),
-          ),
-          const SizedBox(height: 3),
-          Center(
-            child: Text(
-              label,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: foreground.withValues(alpha: .82),
-                fontSize: 9,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+            )),
           ),
         ],
       ),
