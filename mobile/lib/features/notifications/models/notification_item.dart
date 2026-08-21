@@ -111,6 +111,12 @@ NotificationContent notificationContentFor(NotificationItem item) {
         title: 'Binôme',
         body: 'Votre demande de binôme a été publiée.',
       );
+    case 'pairing.new_request':
+      return NotificationContent(
+        title: 'Nouvelle demande de binôme',
+        body: 'Une demande de binôme est disponible'
+            '${has('city') ? ' à ${field('city')}' : ''}.',
+      );
     default:
       return NotificationContent(
         title: has('title') ? field('title') : 'Notification',
@@ -128,6 +134,7 @@ IconData notificationIconFor(String type) {
   switch (type) {
     case 'replacement.new':
     case 'mission.new':
+    case 'pairing.new_request':
       return Icons.campaign_outlined;
     case 'replacement.response':
     case 'mission.candidate':
