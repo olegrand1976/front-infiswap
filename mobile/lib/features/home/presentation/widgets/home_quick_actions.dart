@@ -67,7 +67,7 @@ class HomeQuickActions extends ConsumerWidget {
       physics: const NeverScrollableScrollPhysics(),
       mainAxisSpacing: 10,
       crossAxisSpacing: 10,
-      childAspectRatio: 1.4,
+      childAspectRatio: 1.2,
       children:
           actions.map((action) => _QuickActionCard(action: action)).toList(),
     );
@@ -142,7 +142,7 @@ class _QuickActionCard extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           Material(
             color: Colors.transparent,
             child: InkWell(
