@@ -317,6 +317,9 @@ const { data: plansData } = await useAsyncData('pricing-plans', async () => {
     catch {
         return { boosts: { replacement: null, replacement_plans: [] } } satisfies PricingPlansResponse;
     }
+}, {
+    dedupe: 'defer',
+    getCachedData: (key, nuxtApp) => nuxtApp.payload.data[key] ?? nuxtApp.static.data[key],
 });
 
 const boostPlan = computed(() => plansData.value?.boosts?.replacement ?? null);
