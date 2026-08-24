@@ -10,7 +10,12 @@ export const useCareTypes = () => {
     const count = useState<number>('careTypesCount', () => 0);
     const { $toast } = useNuxtApp();
 
-    async function fetchCareTypes() {
+    // Skip refetch if already loaded this session; `force` overrides.
+    async function fetchCareTypes(force = false) {
+        if (!force && careTypes.value.length > 0) {
+            return;
+        }
+
         loading.value = true;
         error.value = null;
 
