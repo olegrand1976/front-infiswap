@@ -1,4 +1,4 @@
-import { BellRing, FileCheck, Sparkles, type LucideIcon } from 'lucide-vue-next';
+import { BellRing, FileCheck, Sparkles, Star, type LucideIcon } from 'lucide-vue-next';
 
 export type PremiumBenefit = {
     icon: LucideIcon;
@@ -25,6 +25,11 @@ export function usePremiumMarketing() {
             icon: FileCheck,
             title: t('premiumMarketing.benefits.contract.title'),
             description: t('premiumMarketing.benefits.contract.description'),
+        },
+        {
+            icon: Star,
+            title: t('premiumMarketing.benefits.visibility.title'),
+            description: t('premiumMarketing.benefits.visibility.description'),
         },
     ]);
 

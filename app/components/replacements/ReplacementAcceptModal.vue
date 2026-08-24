@@ -178,7 +178,7 @@ async function acceptWithContract() {
                     v-if="!isProSubscriber"
                     tone="amber"
                     title="Ne repayez plus jamais vos contrats"
-                    description="Contrats illimités inclus dans Infiswap Premium, dès 9,90 €/mois."
+                    description="Contrats illimités inclus dans Infiswap Premium, dès 99 €/an."
                 />
 
                 <div class="space-y-3">

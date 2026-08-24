@@ -94,7 +94,6 @@ export async function getAuthTokenCookieValue(context: { cookies: () => Promise<
 /** Déconnexion session (contrat useAuth.logout) — le menu UI est masqué par le gate études (overlay z-50). */
 export async function logoutViaDashboard(page: Page): Promise<void> {
     await waitForAuthenticatedDashboard(page);
-    await dismissEducationLevelGateIfOpen(page);
 
     const apiURL = (process.env.API_URL || '').replace(/\/$/, '');
 

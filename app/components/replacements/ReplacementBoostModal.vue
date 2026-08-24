@@ -134,7 +134,10 @@
                                 Boost offert par Infiswap Premium
                             </p>
                             <p class="text-xs text-gray-600 mt-0.5">
-                                <template v-if="freeBoostAvailable">
+                                <template v-if="planLoading || boostCredit == null">
+                                    Vérification de votre crédit mensuel…
+                                </template>
+                                <template v-else-if="freeBoostAvailable">
                                     {{ freeBoostDurationDays }} jours en tête de liste, sans payer, une fois par mois.
                                 </template>
                                 <template v-else>
@@ -156,7 +159,7 @@
                 <SubscriptionProUpsellCallout
                     v-else
                     title="Inclus dans Infiswap Premium — 1 boost offert chaque mois"
-                    description="Avec les alertes instantanées et les contrats inclus, dès 9,90 €/mois."
+                    description="Avec les alertes instantanées et les contrats inclus, dès 99 €/an."
                 />
 
                 <section

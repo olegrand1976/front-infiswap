@@ -51,6 +51,7 @@
 <script setup>
 import { Plus } from 'lucide-vue-next';
 import { InputIcon } from '~/components/ui/input-with-icon';
+import { sanitizeTagInput } from '~/utils/inputTagSanitize';
 
 const user = useState('user');
 
@@ -78,6 +79,11 @@ const props = defineProps({
     rounded: {
         type: String,
         default: 'full',
+    },
+    /** true = codes postaux (chiffres + longueur max) ; false = villes (texte libre). */
+    digitsOnly: {
+        type: Boolean,
+        default: true,
     },
 });
 
@@ -150,38 +156,38 @@ const handleBlur = () => {
     }
 };
 const maxLength = computed(() => {
+    if (!props.digitsOnly) {
+        return undefined;
+    }
+
     return user.value?.profile?.country === 'fr' ? 5 : 4;
 });
 
 watch(inputValue, (val) => {
-    // garder uniquement les chiffres
-    let clean = val.replace(/\D/g, '');
-
-    // limiter la longueur
-    if (clean.length > maxLength.value) {
-        clean = clean.slice(0, maxLength.value);
+    if (!props.digitsOnly) {
+        return;
     }
 
-    inputValue.value = clean;
+    const clean = sanitizeTagInput(val, {
+        digitsOnly: true,
+        maxLength: maxLength.value,
+    });
 
-    // if (clean.length === maxLength.value) {
-    //     nextTick(() => addItem());
-    // }
+    if (clean !== val) {
+        inputValue.value = clean;
+    }
 });
 
 const onInput = (event) => {
-    // Récupère la valeur brute du DOM natif
     const raw = event.target?.value ?? inputValue.value;
-    let clean = raw.replace(/\D/g, '');
-
-    if (clean.length > maxLength.value) {
-        clean = clean.slice(0, maxLength.value);
-    }
+    const clean = sanitizeTagInput(raw, {
+        digitsOnly: props.digitsOnly,
+        maxLength: maxLength.value,
+    });
 
     inputValue.value = clean;
 
-    // Force la valeur sur l'input natif directement
-    if (event.target) {
+    if (props.digitsOnly && event.target) {
         event.target.value = clean;
     }
 };

@@ -106,13 +106,13 @@
                         <div class="lg:min-h-[5.25rem] mb-4">
                             <div class="flex items-end gap-1">
                                 <span class="text-5xl font-bold text-gray-900 tracking-tight leading-none">
-                                    {{ $t('pricing.pro.monthlyPrice') }}
+                                    {{ $t('pricing.pro.yearlyPrice') }}
                                 </span>
                                 <span class="text-2xl font-semibold text-gray-700 mb-1">€</span>
                                 <span class="text-sm text-gray-500 mb-2 ml-1">{{ $t('pricing.pro.period') }}</span>
                             </div>
                             <p class="mt-2 text-sm text-gray-500">
-                                {{ $t('pricing.pro.yearly') }}
+                                {{ $t('pricing.pro.yearlyNote') }}
                             </p>
                         </div>
 
@@ -363,7 +363,7 @@ const { benefits: premiumBenefits } = usePremiumMarketing();
 
 const proFeatures = computed(() => [
     ...premiumBenefits.value.map(benefit => benefit.title),
-    t('pricing.pro.features.p4'),
+    t('pricing.pro.features.p5'),
 ]);
 
 const tips = computed(() => [
