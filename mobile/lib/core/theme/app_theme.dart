@@ -16,7 +16,7 @@ class AppTheme {
       primary: palette.primary,
       onPrimary: palette.onPrimary,
       secondary: palette.secondary,
-      onSecondary: isLight ? AppColors.onMint : AppColors.onCoral,
+      onSecondary: AppColors.onMint,
       surface: palette.background,
       onSurface: palette.textPrimary,
       error: AppColors.coral,
