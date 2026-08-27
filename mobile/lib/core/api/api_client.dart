@@ -16,6 +16,7 @@ class ApiClient {
     OnUnauthorized? onUnauthorized,
   })  : _readToken = readToken,
         _onUnauthorized = onUnauthorized,
+        _healthUrl = '${config.apiBaseUrl}/up',
         _dio = Dio(
           BaseOptions(
             baseUrl: config.apiUrl,
@@ -49,6 +50,15 @@ class ApiClient {
   final Dio _dio;
   final TokenReader _readToken;
   final OnUnauthorized? _onUnauthorized;
+  final String _healthUrl;
+
+  Future<void> warmUp() async {
+    try {
+      await _dio.get<void>(_healthUrl);
+    } catch (_) {
+      // Best-effort ping to wake a cold Cloud Run instance early.
+    }
+  }
 
   Future<Response<T>> get<T>(
     String path, {
@@ -78,11 +88,25 @@ class ApiClient {
     return _request(() => _dio.delete<T>(path, data: data));
   }
 
+  static const _coldStartStatusCodes = {502, 503, 504};
+  static const _coldStartRetryDelays = [
+    Duration(seconds: 2),
+    Duration(seconds: 4),
+  ];
+
   Future<Response<T>> _request<T>(Future<Response<T>> Function() call) async {
-    try {
-      return await call();
-    } on DioException catch (error) {
-      throw ApiException.fromDio(error);
+    for (var attempt = 0; ; attempt++) {
+      try {
+        return await call();
+      } on DioException catch (error) {
+        final isColdStart = _coldStartStatusCodes.contains(
+          error.response?.statusCode,
+        );
+        if (!isColdStart || attempt >= _coldStartRetryDelays.length) {
+          throw ApiException.fromDio(error);
+        }
+        await Future<void>.delayed(_coldStartRetryDelays[attempt]);
+      }
     }
   }
 }

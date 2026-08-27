@@ -186,6 +186,11 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
 });
 
 final authBootstrapProvider = FutureProvider<void>((ref) async {
+  await ref
+      .read(apiClientProvider)
+      .warmUp()
+      .timeout(const Duration(seconds: 5), onTimeout: () {});
+
   final repository = ref.read(authRepositoryProvider);
 
   final session = await repository.restoreSession();
