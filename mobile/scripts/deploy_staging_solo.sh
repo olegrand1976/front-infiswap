@@ -19,25 +19,29 @@ APP_ID="${FIREBASE_ANDROID_APP_ID:-1:249150725582:android:b2aaea1b1b0e3894f49f9f
 GROUP="${STAGING_SOLO_GROUP:-herilalah-solo}"
 API_URL="${API_BASE_URL:-https://api-infiswap.ll-it-sc.be}"
 
-VERSION="$(grep '^version:' pubspec.yaml | sed 's/version: *//')"
+VERSION="$(grep '^version:' pubspec.yaml | sed 's/version: *//' | cut -d+ -f1)"
+BUILD_NUMBER="$(git rev-list --count HEAD 2>/dev/null || echo 1)"
 COMMIT="$(git rev-parse --short HEAD 2>/dev/null || echo local)"
 BUILD_DATE="$(TZ=Europe/Brussels date '+%d/%m/%Y à %H:%M')"
 
 if [[ -n "${RELEASE_NOTES:-}" ]]; then
   NOTES="$RELEASE_NOTES"
 else
-  NOTES="Build de test perso — version $VERSION (commit $COMMIT), généré le $BUILD_DATE. Connecté à l'API staging ($API_URL)."
+  NOTES="Build de test perso — version $VERSION+$BUILD_NUMBER (commit $COMMIT), généré le $BUILD_DATE. Connecté à l'API staging ($API_URL)."
 fi
 
 echo "Déploiement staging InfiSwap (perso)"
-echo "  Version      : $VERSION"
+echo "  Version      : $VERSION+$BUILD_NUMBER"
 echo "  Commit       : $COMMIT"
 echo "  API_BASE_URL : $API_URL"
 echo "  Groupe       : $GROUP"
 echo
 
 flutter pub get
-flutter build apk --release --dart-define=API_BASE_URL="$API_URL"
+flutter build apk --release \
+  --build-name="$VERSION" \
+  --build-number="$BUILD_NUMBER" \
+  --dart-define=API_BASE_URL="$API_URL"
 
 APK="build/app/outputs/flutter-apk/app-release.apk"
 
