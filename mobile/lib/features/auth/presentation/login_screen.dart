@@ -122,18 +122,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 color: AppColors.coral.withValues(alpha: 0.12), size: 180),
           ),
           SafeArea(
-            child: Align(
-              alignment: Alignment.topRight,
-              child: IconButton(
-                tooltip: isDark ? 'Thème clair' : 'Thème sombre',
-                onPressed: () {
-                  ref.read(themeModeProvider.notifier).toggleAgainst(
-                        Theme.of(context).brightness,
-                      );
-                },
-                icon: Icon(
-                  isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
-                  color: colors.textSecondary,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8, right: 12),
+              child: Align(
+                alignment: Alignment.topRight,
+                child: IconButton(
+                  tooltip: isDark ? 'Thème clair' : 'Thème sombre',
+                  onPressed: () {
+                    ref.read(themeModeProvider.notifier).toggleAgainst(
+                          Theme.of(context).brightness,
+                        );
+                  },
+                  icon: Icon(
+                    isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+                    color: colors.textSecondary,
+                  ),
                 ),
               ),
             ),
