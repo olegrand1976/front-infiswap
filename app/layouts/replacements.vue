@@ -1,59 +1,13 @@
 <template>
     <div class="bg-background flex flex-col min-h-screen font-light text-foreground">
-        <header class="bg-background z-50 h-20 flex items-center">
-            <div class="container flex justify-between items-center w-full">
-                <div class="shrink-0">
-                    <LayoutsLogo class="h-10 lg:h-12" />
-                </div>
-
-                <nav class="hidden lg:flex items-center">
-                    <ul class="flex gap-8 text-lg font-semibold tracking-wide">
-                        <li
-                            v-for="(item, index) in navigationItems"
-                            :key="index"
-                            class="relative group"
-                        >
-                            <NuxtLink
-                                :to="item.route"
-                                :class="[
-                                    'transition-colors duration-200 py-2 block text-foreground/70',
-                                    isActiveRoute(item.route) ? 'text-primary' : 'hover:text-primary',
-                                ]"
-                            >
-                                {{ item.label }}
-                            </NuxtLink>
-                            <span
-                                :class="[
-                                    'absolute bottom-0 left-0 w-full h-0.5 bg-primary rounded-sm transition-all duration-200 transform scale-x-0 group-hover:scale-x-100',
-                                    isActiveRoute(item.route) ? 'scale-x-100' : '',
-                                ]"
-                            />
-                        </li>
-                    </ul>
-                </nav>
-
-                <div class="flex items-center gap-3">
-                    <Button
-                        v-if="!isLoggedIn"
-                        href="/register"
-                        class="rounded-md font-bold text-sm gap-2"
-                    >
-                        <User class="w-4 h-4 shrink-0" />
-                        S'inscrire
-                    </Button>
-                    <Button
-                        v-else
-                        href="/dashboard"
-                        class="rounded-md font-bold text-sm"
-                    >
-                        Tableau de bord
-                    </Button>
-                    <LayoutsDropdownLang />
-                </div>
-            </div>
+        <header class="hidden sm:block">
+            <LayoutsHeader />
+        </header>
+        <header class="sm:hidden">
+            <LayoutsHeaderMobile />
         </header>
 
-        <main class="grow pt-20">
+        <main class="grow md:mt-20">
             <slot />
         </main>
 
@@ -248,7 +202,6 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
 import {
     Phone,
     MapPin,
@@ -257,23 +210,10 @@ import {
     Facebook,
     Instagram,
     Linkedin,
-    User,
 } from 'lucide-vue-next';
-import { useAuth } from '~/composables/useAuth';
 import { useNewsletter } from '~/composables/useNewsletter';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
-const { isLoggedIn } = useAuth();
-const route = useRoute();
-const isActiveRoute = (routePath: string) => route.path === routePath;
 const { email, isLoading, subscribeNewsletter } = useNewsletter();
-
-const navigationItems = [
-    { label: 'Accueil', route: '/' },
-    { label: 'Remplacements', route: '/replacements' },
-    { label: 'Contact', route: '/contact' },
-    { label: 'Offre Institution', route: '/offre-institution' },
-    { label: 'Comment ça marche ?', route: '#' },
-];
 </script>

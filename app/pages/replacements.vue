@@ -1,23 +1,13 @@
 <template>
-    <div class="container py-8 md:py-12">
-        <div class="text-center mb-8">
-            <h1 class="text-3xl md:text-4xl font-bold text-foreground tracking-tight mb-2">
-                Remplacements & Missions disponibles
-            </h1>
+    <div class="container pb-8">
+        <div class="text-center my-4">
             <p class="text-muted-foreground font-light text-base md:text-lg">
                 Explorez les opportunités près de chez vous
             </p>
         </div>
 
-        <div class="max-w-4xl mx-auto mb-12">
+        <div class="max-w-2xl mx-auto mb-12">
             <div class="bg-surface rounded-md p-2 shadow-sm border border-border flex flex-col md:flex-row items-center gap-2">
-                <Button
-                    class="w-full md:w-auto rounded-md px-6 py-5 text-sm font-semibold"
-                    type="button"
-                >
-                    Recherche remplacement
-                </Button>
-
                 <div class="w-full flex-1 flex items-center px-3 relative">
                     <Search class="w-4 h-4 text-muted-foreground absolute left-4 pointer-events-none" />
                     <Input
@@ -28,16 +18,17 @@
                 </div>
 
                 <Button
-                    class="w-full md:w-auto rounded-md px-8 py-5 text-sm font-semibold"
+                    class="w-full md:w-auto rounded-md px-8"
                     type="button"
                     @click="handleSearch"
                 >
+                    <Search class="w-4 h-4" />
                     Rechercher
                 </Button>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
+        <div class="grid grid-cols-1 lg:grid-cols-[220px_1fr] xl:grid-cols-[22%_1fr_22%] gap-8 items-start">
             <aside class="bg-surface-overlay rounded-md border border-border p-5">
                 <div class="flex items-center justify-between mb-5 pb-4 border-b border-border">
                     <h2 class="text-base font-bold text-foreground">
@@ -46,12 +37,34 @@
                     <SlidersHorizontal class="w-4 h-4 text-primary cursor-pointer" />
                 </div>
 
-                <div class="flex items-center justify-between mb-5 bg-surface p-3 rounded-md border border-border shadow-xs">
+                <label class="flex items-center justify-between mb-5 bg-surface p-3 rounded-md border border-border shadow-xs cursor-pointer">
                     <span class="text-sm font-medium text-foreground">Top remplacements</span>
                     <Switch
                         id="top-replacements"
                         :checked="filters.topReplacements"
                         @update:checked="filters.topReplacements = $event"
+                    />
+                </label>
+
+                <div class="mb-5">
+                    <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                        Codes postaux
+                    </p>
+                    <Input
+                        v-model="filters.zipCode"
+                        placeholder="Ajouter un code postal"
+                        class="rounded-md text-sm"
+                    />
+                </div>
+
+                <div class="mb-5">
+                    <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                        Ville(s)
+                    </p>
+                    <Input
+                        v-model="filters.city"
+                        placeholder="Ajouter une ville"
+                        class="rounded-md text-sm"
                     />
                 </div>
 
@@ -65,12 +78,10 @@
                             :key="day"
                             class="flex items-center gap-2 p-2.5 bg-surface border border-border rounded-md cursor-pointer hover:bg-surface-subtle select-none transition-colors text-xs font-medium text-foreground"
                         >
-                            <input
-                                v-model="filters.days"
-                                type="checkbox"
-                                :value="day"
-                                class="rounded border-border text-primary h-3.5 w-3.5 accent-primary"
-                            >
+                            <Checkbox
+                                :checked="filters.days.includes(day)"
+                                @update:checked="(v) => toggleDay(day, v === true)"
+                            />
                             {{ day }}
                         </label>
                     </div>
@@ -107,84 +118,24 @@
                     </Select>
                 </div>
 
-                <div class="mb-5">
-                    <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-                        Type
-                    </p>
-                    <div class="flex gap-2">
-                        <button
-                            class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 border rounded-md text-[11px] font-bold transition-all outline-none"
-                            type="button"
-                            :class="filters.type === 'replacement' ? 'border-primary text-primary bg-primary/5' : 'border-border text-muted-foreground bg-surface hover:border-border/70'"
-                            @click="filters.type = 'replacement'"
-                        >
-                            <span
-                                class="w-3.5 h-3.5 rounded-full border flex items-center justify-center shrink-0 transition-all"
-                                :class="filters.type === 'replacement' ? 'border-primary bg-primary' : 'border-border'"
-                            >
-                                <svg
-                                    v-if="filters.type === 'replacement'"
-                                    class="w-2 h-2 fill-white"
-                                    viewBox="0 0 24 24"
-                                ><path
-                                    d="M20 6L9 17l-5-5"
-                                    stroke="white"
-                                    stroke-width="3"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    fill="none"
-                                /></svg>
-                            </span>
-                            Remplacement
-                        </button>
-                        <button
-                            class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 border rounded-md text-[11px] font-bold transition-all outline-none"
-                            type="button"
-                            :class="filters.type === 'mission' ? 'border-success text-success bg-success/5' : 'border-border text-muted-foreground bg-surface hover:border-border/70'"
-                            @click="filters.type = 'mission'"
-                        >
-                            <span
-                                class="w-3.5 h-3.5 rounded-full border flex items-center justify-center shrink-0 transition-all"
-                                :class="filters.type === 'mission' ? 'border-success bg-success' : 'border-border'"
-                            >
-                                <svg
-                                    v-if="filters.type === 'mission'"
-                                    class="w-2 h-2 fill-white"
-                                    viewBox="0 0 24 24"
-                                ><path
-                                    d="M20 6L9 17l-5-5"
-                                    stroke="white"
-                                    stroke-width="3"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    fill="none"
-                                /></svg>
-                            </span>
-                            Mission
-                        </button>
-                    </div>
-                </div>
-
-                <div class="mb-5">
-                    <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-                        Codes postaux
-                    </p>
-                    <Input
-                        v-model="filters.zipCode"
-                        placeholder="Ajouter un code postal"
-                        class="rounded-md text-sm"
-                    />
-                </div>
-
                 <div class="mb-6">
                     <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-                        Ville(s)
+                        Types
                     </p>
-                    <Input
-                        v-model="filters.city"
-                        placeholder="Ajouter une ville"
-                        class="rounded-md text-sm"
-                    />
+                    <label class="flex items-center justify-between mb-2 bg-surface p-3 rounded-md border border-border shadow-xs cursor-pointer">
+                        <span class="text-sm font-medium text-foreground">Remplacements</span>
+                        <Switch
+                            :checked="filters.showReplacements"
+                            @update:checked="filters.showReplacements = $event"
+                        />
+                    </label>
+                    <label class="flex items-center justify-between bg-surface p-3 rounded-md border border-border shadow-xs cursor-pointer">
+                        <span class="text-sm font-medium text-foreground">Missions</span>
+                        <Switch
+                            :checked="filters.showMissions"
+                            @update:checked="filters.showMissions = $event"
+                        />
+                    </label>
                 </div>
 
                 <div class="flex gap-2">
@@ -196,43 +147,23 @@
                     >
                         Réinitialiser
                     </Button>
-                    <Button
-                        class="flex-1 rounded-md text-xs font-semibold"
-                        type="button"
-                        @click="applyFilters"
-                    >
-                        Appliquer
-                    </Button>
                 </div>
             </aside>
 
-            <main class="col-span-1 lg:col-span-3 space-y-10">
+            <main class="space-y-10">
                 <div>
                     <h3 class="text-xl font-extrabold text-foreground flex items-center gap-2 mb-6">
                         <span class="text-primary text-2xl">★</span> À la une
                     </h3>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <div class="bg-surface rounded-md border border-border p-5 flex flex-col justify-between hover:shadow-md transition-all duration-200">
+                        <Card
+                            variant="none"
+                            class="bg-surface p-5 flex flex-col justify-between hover:shadow-xl transition-shadow duration-200"
+                        >
                             <div>
-                                <div class="flex justify-between items-center mb-5">
-                                    <span class="bg-primary text-primary-foreground text-[10px] font-black px-2.5 py-1 rounded-sm uppercase tracking-widest">
-                                        TOP
-                                    </span>
-                                    <span class="border border-primary/25 text-primary text-[10px] font-bold px-2.5 py-1 rounded-sm flex items-center gap-1 bg-primary/5">
-                                        <svg
-                                            class="w-3 h-3"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            stroke-width="2.5"
-                                        ><path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            d="M13 10V3L4 14h7v7l9-11h-7z"
-                                        /></svg>
-                                        Remplacement
-                                    </span>
+                                <div class="flex items-center mb-5">
+                                    <span class="text-primary text-[10px] font-black uppercase tracking-widest">Remplacement</span>
                                 </div>
 
                                 <div class="flex items-start gap-3">
@@ -250,14 +181,16 @@
                                     </div>
                                 </div>
 
-                                <div class="flex gap-5 mt-5 ml-15">
-                                    <div class="flex items-center gap-1.5">
-                                        <span class="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Matin</span>
-                                        <CheckCircle2 class="w-4 h-4 text-success" />
-                                    </div>
-                                    <div class="flex items-center gap-1.5">
-                                        <span class="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Après-midi</span>
-                                        <CheckCircle2 class="w-4 h-4 text-success" />
+                                <div class="flex gap-4 mt-5 ml-15">
+                                    <div
+                                        v-for="slot in ['Matin', 'Après-midi']"
+                                        :key="slot"
+                                        class="flex items-center gap-1.5"
+                                    >
+                                        <span class="w-5 h-5 rounded-full bg-success/15 text-success flex items-center justify-center shrink-0">
+                                            <Check class="w-3 h-3" />
+                                        </span>
+                                        <span class="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{{ slot }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -265,37 +198,27 @@
                             <div class="mt-5 pt-4 border-t border-border flex justify-end">
                                 <Button
                                     variant="outline"
-                                    class="rounded-md text-xs font-bold px-4 h-8 border-primary/30 text-primary hover:bg-primary/5 hover:border-primary"
+                                    class="rounded-md text-xs font-bold px-4 h-8 border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground"
                                     href="#"
                                 >
                                     Voir détails
                                     <ChevronRight class="w-3.5 h-3.5 ml-0.5" />
                                 </Button>
                             </div>
-                        </div>
+                        </Card>
 
-                        <div class="bg-surface rounded-md border border-border p-5 flex flex-col justify-between hover:shadow-md transition-all duration-200">
+                        <Card
+                            variant="none"
+                            class="bg-surface p-5 flex flex-col justify-between hover:shadow-xl transition-shadow duration-200"
+                        >
                             <div>
-                                <div class="flex justify-between items-center mb-5">
-                                    <span class="bg-success text-success-foreground text-[10px] font-black px-2.5 py-1 rounded-sm uppercase tracking-widest flex items-center gap-1">
-                                        <Briefcase class="w-3 h-3" />
-                                        Mission
-                                    </span>
+                                <div class="flex items-center mb-5">
+                                    <span class="text-success text-[10px] font-black uppercase tracking-widest">Mission</span>
                                 </div>
 
                                 <div class="flex items-start gap-3">
                                     <div class="w-12 h-12 rounded-md bg-success/10 flex items-center justify-center shrink-0">
-                                        <svg
-                                            class="w-5 h-5 text-success"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
-                                            stroke-width="2"
-                                        ><path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                                        /></svg>
+                                        <Briefcase class="w-5 h-5 text-success" />
                                     </div>
                                     <div class="space-y-0.5 text-muted-foreground">
                                         <h4 class="text-sm font-bold text-foreground">
@@ -310,14 +233,16 @@
                                     </div>
                                 </div>
 
-                                <div class="flex gap-5 mt-5 ml-15">
-                                    <div class="flex items-center gap-1.5">
-                                        <span class="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Matin</span>
-                                        <CheckCircle2 class="w-4 h-4 text-success" />
-                                    </div>
-                                    <div class="flex items-center gap-1.5">
-                                        <span class="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Après-midi</span>
-                                        <CheckCircle2 class="w-4 h-4 text-success" />
+                                <div class="flex gap-4 mt-5 ml-15">
+                                    <div
+                                        v-for="slot in ['Matin', 'Après-midi']"
+                                        :key="slot"
+                                        class="flex items-center gap-1.5"
+                                    >
+                                        <span class="w-5 h-5 rounded-full bg-success/15 text-success flex items-center justify-center shrink-0">
+                                            <Check class="w-3 h-3" />
+                                        </span>
+                                        <span class="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{{ slot }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -325,14 +250,14 @@
                             <div class="mt-5 pt-4 border-t border-border flex justify-end">
                                 <Button
                                     variant="outline"
-                                    class="rounded-md text-xs font-bold px-4 h-8 border-success/40 text-success hover:bg-success/5 hover:border-success"
+                                    class="rounded-md text-xs font-bold px-4 h-8 border-success/40 text-success hover:bg-success hover:text-success-foreground"
                                     href="#"
                                 >
                                     Postuler
                                     <ChevronRight class="w-3.5 h-3.5 ml-0.5" />
                                 </Button>
                             </div>
-                        </div>
+                        </Card>
                     </div>
                 </div>
 
@@ -359,55 +284,182 @@
                         </div>
                     </div>
 
-                    <div class="space-y-2">
-                        <div
+                    <div class="grid grid-cols-1 gap-5">
+                        <Card
                             v-for="(item, index) in listResults"
                             :key="index"
-                            class="bg-surface hover:bg-surface-subtle rounded-md border border-border px-4 py-3.5 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs cursor-pointer group"
+                            variant="none"
+                            class="relative bg-surface p-5 flex flex-col gap-3 hover:shadow-xl transition-shadow duration-200"
                         >
-                            <div class="flex items-center gap-3 shrink-0 sm:w-1/4">
-                                <div :class="['w-9 h-9 rounded-md flex items-center justify-center shrink-0', item.type === 'replacement' ? 'bg-primary/10' : 'bg-success/10']">
+                            <Badge
+                                v-if="item.isNew"
+                                variant="outline"
+                                class="!h-auto !w-auto absolute top-0 right-4 -translate-y-1/2 rounded-full bg-accent-green text-white text-[10px] font-black px-2.5 py-1 uppercase tracking-widest shadow-md"
+                            >
+                                Nouveau
+                            </Badge>
+
+                            <div class="flex items-center justify-between gap-2 flex-wrap">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span
+                                        v-if="item.type === 'replacement'"
+                                        class="text-primary text-[10px] font-black uppercase tracking-widest"
+                                    >Remplacement</span>
+                                    <span
+                                        v-else
+                                        class="text-success text-[10px] font-black uppercase tracking-widest"
+                                    >Mission</span>
+                                    <Badge
+                                        v-if="item.isUrgent"
+                                        variant="outline"
+                                        class="!h-auto !w-auto rounded-full border border-destructive/25 text-destructive bg-destructive/5 text-[10px] font-black px-2.5 py-1 uppercase tracking-wider"
+                                    >
+                                        Urgent
+                                    </Badge>
+                                    <Badge
+                                        v-if="item.isBoosted"
+                                        variant="outline"
+                                        class="!h-auto !w-auto rounded-full border border-warning/40 text-warning bg-warning/10 text-[10px] font-black px-2.5 py-1 uppercase tracking-wider"
+                                    >
+                                        <Sparkles class="w-2.5 h-2.5" />
+                                        Boosté
+                                    </Badge>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-3">
+                                <div :class="['w-10 h-10 rounded-md flex items-center justify-center shrink-0', item.type === 'replacement' ? 'bg-primary/10' : 'bg-success/10']">
                                     <Calendar
                                         v-if="item.type === 'replacement'"
-                                        class="w-4 h-4 text-primary"
+                                        class="w-4.5 h-4.5 text-primary"
                                     />
                                     <Briefcase
                                         v-else
-                                        class="w-4 h-4 text-success"
+                                        class="w-4.5 h-4.5 text-success"
                                     />
                                 </div>
-                                <span :class="['text-[10px] font-black px-2.5 py-1 rounded-sm border uppercase tracking-wider', item.type === 'replacement' ? 'border-primary/20 text-primary bg-primary/5' : 'border-success/25 text-success bg-success/5']">
-                                    {{ item.type === 'replacement' ? 'Remplacement' : 'Mission' }}
-                                </span>
-                            </div>
-
-                            <div class="text-xs font-bold text-foreground sm:w-[16%]">
-                                {{ item.date }}
-                            </div>
-
-                            <div class="text-xs text-foreground flex items-center gap-1 sm:w-[16%]">
-                                <span class="font-bold">{{ item.zipCode }}</span>
-                                <span class="text-muted-foreground">{{ item.city }}</span>
-                            </div>
-
-                            <div class="text-xs text-muted-foreground sm:w-[22%] font-medium truncate">
-                                {{ item.specialty }}
-                            </div>
-
-                            <div class="flex items-center justify-between md:justify-end gap-5 sm:w-1/5 shrink-0">
-                                <div class="flex gap-3">
-                                    <div class="flex items-center gap-1">
-                                        <span class="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Matin</span>
-                                        <CheckCircle2 class="w-3.5 h-3.5 text-success" />
-                                    </div>
-                                    <div class="flex items-center gap-1">
-                                        <span class="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Midi</span>
-                                        <CheckCircle2 class="w-3.5 h-3.5 text-success" />
+                                <div>
+                                    <h4 class="text-sm font-bold text-foreground font-mono">
+                                        {{ item.date }}
+                                    </h4>
+                                    <div class="flex items-center gap-1.5 text-muted-foreground text-xs mt-0.5">
+                                        <MapPin class="w-3 h-3 shrink-0" />
+                                        {{ item.city }}
                                     </div>
                                 </div>
-                                <ChevronRight class="w-4 h-4 text-border group-hover:text-primary transition-colors" />
                             </div>
-                        </div>
+
+                            <div
+                                v-if="item.institution"
+                                class="flex items-center gap-2 bg-surface-subtle rounded-md px-2.5 py-2"
+                            >
+                                <span class="w-6 h-6 rounded shrink-0 bg-success/20 text-success flex items-center justify-center text-[10px] font-black">
+                                    {{ item.institution.initial }}
+                                </span>
+                                <div class="leading-tight">
+                                    <p class="text-xs font-bold text-foreground">
+                                        {{ item.institution.name }}
+                                    </p>
+                                    <p class="text-[10px] text-muted-foreground">
+                                        {{ item.institution.contract }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-2">
+                                <MapPin class="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
+                                <div class="flex flex-wrap gap-1">
+                                    <Badge
+                                        v-for="zip in visibleTags(item.zipCodes).shown"
+                                        :key="zip"
+                                        variant="outline"
+                                        class="!h-auto !w-auto rounded-full bg-surface-subtle text-foreground border border-border text-[10px] font-semibold px-2 py-0.5"
+                                    >
+                                        {{ zip }}
+                                    </Badge>
+                                    <Badge
+                                        v-if="visibleTags(item.zipCodes).extra > 0"
+                                        variant="outline"
+                                        class="!h-auto !w-auto rounded-full bg-primary/8 text-primary border border-primary/25 text-[10px] font-semibold px-2 py-0.5"
+                                    >
+                                        +{{ visibleTags(item.zipCodes).extra }}
+                                    </Badge>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-2">
+                                <Activity class="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
+                                <div class="flex flex-wrap gap-1">
+                                    <Badge
+                                        v-for="care in visibleTags(item.careTypes).shown"
+                                        :key="care"
+                                        variant="outline"
+                                        class="!h-auto !w-auto rounded-full bg-surface-subtle text-foreground border border-border text-[10px] font-semibold px-2 py-0.5"
+                                    >
+                                        {{ care }}
+                                    </Badge>
+                                    <Badge
+                                        v-if="visibleTags(item.careTypes).extra > 0"
+                                        variant="outline"
+                                        class="!h-auto !w-auto rounded-full bg-primary/8 text-primary border border-primary/25 text-[10px] font-semibold px-2 py-0.5"
+                                    >
+                                        +{{ visibleTags(item.careTypes).extra }}
+                                    </Badge>
+                                </div>
+                            </div>
+
+                            <p
+                                v-if="item.description"
+                                class="text-xs text-muted-foreground italic line-clamp-2"
+                            >
+                                {{ item.description }}
+                            </p>
+
+                            <div class="flex items-center justify-between gap-3 pt-3 border-t border-border mt-auto">
+                                <div class="flex gap-3">
+                                    <div
+                                        v-for="slot in item.slots"
+                                        :key="slot"
+                                        class="flex items-center gap-1"
+                                    >
+                                        <span class="w-5 h-5 rounded-full bg-success/15 text-success flex items-center justify-center shrink-0">
+                                            <Check class="w-3 h-3" />
+                                        </span>
+                                        <span class="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">{{ slot }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center gap-3">
+                                    <span
+                                        v-if="item.patientsPerDay"
+                                        class="flex items-center gap-1 text-xs font-semibold text-muted-foreground"
+                                    >
+                                        <Users class="w-3.5 h-3.5 text-primary" />
+                                        {{ item.patientsPerDay }}/j
+                                    </span>
+                                    <Button
+                                        v-if="item.type === 'replacement'"
+                                        size="sm"
+                                        variant="outline"
+                                        class="rounded-md text-xs font-bold border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground"
+                                        href="#"
+                                    >
+                                        Voir détails
+                                        <ChevronRight class="w-3.5 h-3.5" />
+                                    </Button>
+                                    <Button
+                                        v-else
+                                        size="sm"
+                                        variant="outline"
+                                        class="rounded-md text-xs font-bold border-success/40 text-success hover:bg-success hover:text-success-foreground"
+                                        href="#"
+                                    >
+                                        Postuler
+                                        <ChevronRight class="w-3.5 h-3.5" />
+                                    </Button>
+                                </div>
+                            </div>
+                        </Card>
                     </div>
                 </div>
 
@@ -458,30 +510,65 @@
                         </button>
                     </nav>
                 </div>
+            </main>
 
-                <div class="bg-linear-to-br from-primary/5 to-primary/10 border border-primary/10 rounded-md p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-md bg-primary flex items-center justify-center text-primary-foreground shrink-0 shadow-md shadow-primary/20">
-                            <UserPlus class="w-5 h-5" />
-                        </div>
-                        <div class="space-y-0.5">
-                            <h4 class="text-base md:text-lg font-extrabold text-foreground leading-snug">
-                                <span class="text-primary">Créez un compte gratuit</span> pour postuler aux missions
-                            </h4>
-                            <p class="text-muted-foreground text-sm font-light">
-                                Accédez à toutes les missions, postulez en 1 clic et gérez vos disponibilités.
+            <div class="hidden xl:flex flex-col gap-6 sticky top-6">
+                <div class="bg-surface rounded-md border border-border p-5">
+                    <h2 class="text-sm font-extrabold text-foreground mb-4">
+                        Ça commence bientôt
+                    </h2>
+                    <div class="divide-y divide-border">
+                        <div
+                            v-for="soonItem in soonItems"
+                            :key="soonItem.title"
+                            class="py-3 first:pt-0 last:pb-0 flex flex-col gap-1"
+                        >
+                            <div class="flex items-start justify-between gap-2">
+                                <div class="flex items-center gap-1.5 min-w-0">
+                                    <Calendar
+                                        v-if="soonItem.type === 'replacement'"
+                                        class="w-3.5 h-3.5 text-primary shrink-0"
+                                    />
+                                    <Briefcase
+                                        v-else
+                                        class="w-3.5 h-3.5 text-success shrink-0"
+                                    />
+                                    <span class="text-xs font-bold text-foreground font-mono truncate">{{ soonItem.title }}</span>
+                                </div>
+                                <Badge
+                                    variant="outline"
+                                    class="!h-auto !w-auto shrink-0 rounded-full text-[10px] font-black px-2 py-0.5"
+                                    :class="soonItem.urgency === 'critical' ? 'bg-destructive/12 text-destructive' : soonItem.urgency === 'soon' ? 'bg-warning/20 text-warning' : 'bg-surface-subtle text-muted-foreground'"
+                                >
+                                    {{ soonItem.countdown }}
+                                </Badge>
+                            </div>
+                            <p class="text-xs text-muted-foreground pl-5">
+                                {{ soonItem.meta }}
                             </p>
                         </div>
                     </div>
+                </div>
+
+                <div class="bg-linear-to-br from-primary/5 to-primary/12 border border-primary/15 rounded-md p-6 flex flex-col items-center text-center gap-3">
+                    <div class="w-11 h-11 rounded-md bg-primary flex items-center justify-center text-primary-foreground shrink-0 shadow-md shadow-primary/20">
+                        <UserPlus class="w-5 h-5" />
+                    </div>
+                    <h3 class="text-sm font-extrabold text-foreground leading-snug">
+                        <span class="text-primary">Créez un compte gratuit</span> pour postuler aux missions
+                    </h3>
+                    <p class="text-muted-foreground text-xs font-light">
+                        Accédez à toutes les missions, postulez en 1 clic et gérez vos disponibilités.
+                    </p>
                     <Button
                         href="/register"
-                        class="w-full md:w-auto rounded-md px-6 py-5 text-sm font-bold shadow-lg shadow-primary/15 whitespace-nowrap"
+                        class="w-full rounded-md text-sm font-bold shadow-lg shadow-primary/15"
                     >
                         Créer mon compte gratuitement
                         <ChevronRight class="w-4 h-4" />
                     </Button>
                 </div>
-            </main>
+            </div>
         </div>
     </div>
 </template>
@@ -492,17 +579,23 @@ import {
     SlidersHorizontal,
     Calendar,
     MapPin,
-    CheckCircle2,
+    Check,
     Briefcase,
     Search,
     ChevronRight,
     ArrowLeft,
     ArrowRight,
     UserPlus,
+    Activity,
+    Users,
+    Sparkles,
 } from 'lucide-vue-next';
 import { Switch } from '@/components/ui/switch';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/card';
 import {
     Select,
     SelectContent,
@@ -532,19 +625,97 @@ const filters = reactive({
     topReplacements: true,
     days: [] as string[],
     province: 'Brabant wallon',
-    type: 'replacement',
+    showReplacements: true,
+    showMissions: true,
     zipCode: '',
     city: '',
 });
 
+const toggleDay = (day: string, checked: boolean) => {
+    if (checked) {
+        if (!filters.days.includes(day)) filters.days.push(day);
+        return;
+    }
+    filters.days = filters.days.filter(d => d !== day);
+};
+
 const sortBy = ref('Plus récents');
 const currentPage = ref(1);
 
+// Zip codes / care types can hold anywhere from 1 to 10+ values — only the
+// first 3 are shown, the rest collapse into a "+N" chip (see visibleTags).
 const listResults = ref([
-    { type: 'replacement', date: '03/07 - 15/07/2026', zipCode: '1300', city: 'Wavre', specialty: 'Soins généraux' },
-    { type: 'mission', date: '10/07 - 31/07/2026', zipCode: '1340', city: 'Ottignies', specialty: 'Soins intensifs' },
-    { type: 'replacement', date: '17/07 - 24/07/2026', zipCode: '1301', city: 'Bierges', specialty: 'Gériatrie' },
-    { type: 'mission', date: '01/08 - 30/09/2026', zipCode: '1400', city: 'Nivelles', specialty: 'Pédiatrie' },
+    {
+        type: 'replacement',
+        date: '03/07 → 15/07/2026',
+        city: 'Wavre',
+        zipCodes: ['1300', '1301'],
+        careTypes: ['Soins généraux'],
+        slots: ['Matin', 'Après-midi'],
+        description: 'Remplacement suite à un congé maternité, service de médecine interne, équipe de 6 infirmiers.',
+    },
+    {
+        type: 'mission',
+        date: '10/07 → 31/07/2026',
+        city: 'Liège',
+        zipCodes: ['4000'],
+        careTypes: ['Soins intensifs'],
+        slots: ['Matin'],
+        isBoosted: true,
+        patientsPerDay: 8,
+        institution: { initial: 'CH', name: 'CHU Liège', contract: 'Contrat CDI · Infirmier(e) en soins intensifs' },
+    },
+    {
+        type: 'replacement',
+        date: '17/07 → 24/07/2026',
+        city: 'Bierges +6 autres',
+        zipCodes: ['1301', '1300', '1340', '1341', '1342', '1348', '1367'],
+        careTypes: ['Gériatrie', 'Soins palliatifs', 'Pansements', 'Toilette', 'Aide au repas', 'Kinésithérapie', 'Suivi médical', 'Prise de sang', 'Diabétologie', 'Cardiologie'],
+        slots: ['Matin', 'Après-midi'],
+        isUrgent: true,
+        description: 'Remplacement suite à un arrêt maladie en maison de repos, plusieurs sites, ambiance calme et familiale.',
+    },
+    {
+        type: 'mission',
+        date: '01/08 → 30/09/2026',
+        city: 'Nivelles',
+        zipCodes: ['1400'],
+        careTypes: ['Maternité'],
+        slots: ['Après-midi'],
+        patientsPerDay: 5,
+        institution: { initial: 'CS', name: 'Clinique Saint-Pierre', contract: 'Contrat CDD 6 mois · Sage-femme' },
+    },
+    {
+        type: 'replacement',
+        date: '05/08 → 12/08/2026',
+        city: 'Namur +9 autres',
+        zipCodes: ['5000', '5001', '5002', '5003', '5004', '5010', '5020', '5024', '5030', '5031'],
+        careTypes: ['Pédiatrie', 'Néonatologie', 'Vaccination', 'Suivi de croissance', 'Urgences pédiatriques'],
+        slots: ['Matin', 'Après-midi'],
+        description: 'Service de pédiatrie générale, plusieurs implantations, ambiance familiale et bienveillante.',
+    },
+    {
+        type: 'replacement',
+        date: '20/08 → 27/08/2026',
+        city: 'Arlon',
+        zipCodes: ['6700', '6717', '6721'],
+        careTypes: ['Soins à domicile', 'Pansements', 'Injections'],
+        slots: ['Matin'],
+        isNew: true,
+        description: 'Tournée de soins à domicile, patientèle fidélisée, véhicule non fourni.',
+    },
+]);
+
+const visibleTags = (tags: string[], max = 3) => ({
+    shown: tags.slice(0, max),
+    extra: Math.max(0, tags.length - max),
+});
+
+const soonItems = ref([
+    { type: 'replacement', title: '30/08 → Wavre', meta: 'Soins généraux', countdown: 'J-2', urgency: 'critical' },
+    { type: 'mission', title: '03/09 → Liège', meta: 'CHU Liège · Soins intensifs', countdown: 'J-6', urgency: 'critical' },
+    { type: 'replacement', title: '06/09 → Namur', meta: 'Pédiatrie', countdown: 'J-9', urgency: 'soon' },
+    { type: 'mission', title: '13/09 → Nivelles', meta: 'Clinique Saint-Pierre · Maternité', countdown: 'J-16', urgency: 'calm' },
 ]);
 
 const handleSearch = () => {
@@ -559,7 +730,8 @@ const resetFilters = () => {
     filters.topReplacements = false;
     filters.days = [];
     filters.province = 'Brabant wallon';
-    filters.type = 'replacement';
+    filters.showReplacements = true;
+    filters.showMissions = true;
     filters.zipCode = '';
     filters.city = '';
 };
