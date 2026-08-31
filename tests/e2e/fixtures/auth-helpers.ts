@@ -102,7 +102,7 @@ export async function logoutViaDashboard(page: Page): Promise<void> {
             .split(';')
             .map(part => part.trim())
             .filter(part => part.startsWith(`${cookieName}=`))
-            .map(part => {
+            .map((part) => {
                 try {
                     return decodeURIComponent(part.slice(cookieName.length + 1)).trim();
                 }

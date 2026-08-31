@@ -796,9 +796,7 @@ const toggleDay = (dayValue: number) => {
     }
 };
 
-await getAll(1, 50);
-await getAllTemplates();
-await getAllPools();
+await Promise.all([getAll(1, 50), getAllTemplates(), getAllPools()]);
 
 const { $toast } = useNuxtApp();
 
