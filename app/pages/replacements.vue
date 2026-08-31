@@ -152,7 +152,7 @@
 
             <main class="space-y-10">
                 <div>
-                    <h3 class="text-xl font-extrabold text-foreground flex items-center gap-2 mb-6">
+                    <h3 class="font-secondary text-xl font-extrabold text-foreground flex items-center gap-2 mb-6">
                         <span class="text-primary text-2xl">★</span> À la une
                     </h3>
 
@@ -171,7 +171,7 @@
                                         <Calendar class="w-5 h-5 text-primary" />
                                     </div>
                                     <div class="space-y-1">
-                                        <h4 class="text-sm font-bold text-foreground">
+                                        <h4 class="font-secondary text-sm font-bold text-foreground tabular-nums">
                                             03/07 - 15/07/2026
                                         </h4>
                                         <div class="flex items-center gap-1.5 text-muted-foreground text-xs">
@@ -263,8 +263,8 @@
 
                 <div>
                     <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-5">
-                        <h3 class="text-xl font-extrabold text-foreground">
-                            Tous les résultats <span class="text-primary">(47)</span>
+                        <h3 class="font-secondary text-xl font-extrabold text-foreground">
+                            Tous les résultats <span class="text-primary tabular-nums">(47)</span>
                         </h3>
                         <div class="flex items-center gap-2">
                             <span class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Trier par :</span>
@@ -316,14 +316,16 @@
                                     >
                                         Urgent
                                     </Badge>
-                                    <Badge
+                                    <div
                                         v-if="item.isBoosted"
-                                        variant="outline"
-                                        class="!h-auto !w-auto rounded-full border border-warning/40 text-warning bg-warning/10 text-[10px] font-black px-2.5 py-1 uppercase tracking-wider"
+                                        class="text-warning flex gap-1 mb-1"
                                     >
-                                        <Sparkles class="w-2.5 h-2.5" />
-                                        Boosté
-                                    </Badge>
+                                        <Star class="size-2.5" />
+                                        <Star class="size-2.5" />
+                                        <Star class="size-2.5" />
+                                        <Star class="size-2.5" />
+                                        <Star class="size-2.5" />
+                                    </div>
                                 </div>
                             </div>
 
@@ -339,7 +341,7 @@
                                     />
                                 </div>
                                 <div>
-                                    <h4 class="text-sm font-bold text-foreground font-mono">
+                                    <h4 class="font-primary text-sm font-bold text-foreground tabular-nums">
                                         {{ item.date }}
                                     </h4>
                                     <div class="flex items-center gap-1.5 text-muted-foreground text-xs mt-0.5">
@@ -514,7 +516,7 @@
 
             <div class="hidden xl:flex flex-col gap-6 sticky top-6">
                 <div class="bg-surface rounded-md border border-border p-5">
-                    <h2 class="text-sm font-extrabold text-foreground mb-4">
+                    <h2 class="font-secondary text-sm font-extrabold text-foreground mb-4">
                         Ça commence bientôt
                     </h2>
                     <div class="divide-y divide-border">
@@ -533,7 +535,7 @@
                                         v-else
                                         class="w-3.5 h-3.5 text-success shrink-0"
                                     />
-                                    <span class="text-xs font-bold text-foreground font-mono truncate">{{ soonItem.title }}</span>
+                                    <span class="font-secondary text-xs font-bold text-foreground tabular-nums truncate">{{ soonItem.title }}</span>
                                 </div>
                                 <Badge
                                     variant="outline"
@@ -554,7 +556,7 @@
                     <div class="w-11 h-11 rounded-md bg-primary flex items-center justify-center text-primary-foreground shrink-0 shadow-md shadow-primary/20">
                         <UserPlus class="w-5 h-5" />
                     </div>
-                    <h3 class="text-sm font-extrabold text-foreground leading-snug">
+                    <h3 class="font-secondary text-sm font-extrabold text-foreground leading-snug">
                         <span class="text-primary">Créez un compte gratuit</span> pour postuler aux missions
                     </h3>
                     <p class="text-muted-foreground text-xs font-light">
@@ -562,10 +564,8 @@
                     </p>
                     <Button
                         href="/register"
-                        class="w-full rounded-md text-sm font-bold shadow-lg shadow-primary/15"
                     >
-                        Créer mon compte gratuitement
-                        <ChevronRight class="w-4 h-4" />
+                        Créer mon compte
                     </Button>
                 </div>
             </div>
@@ -588,7 +588,7 @@ import {
     UserPlus,
     Activity,
     Users,
-    Sparkles,
+    Star,
 } from 'lucide-vue-next';
 import { Switch } from '@/components/ui/switch';
 import { Checkbox } from '@/components/ui/checkbox';
