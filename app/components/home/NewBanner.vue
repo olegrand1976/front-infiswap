@@ -15,7 +15,7 @@
 
                 <div class="mt-7 flex flex-wrap gap-3">
                     <Button
-                        :href="localePath('/replacements')"
+                        :href="localePath('/dashboard/replacements')"
                         class="h-auto w-64 gap-2 rounded-lg bg-white px-5.5 py-3.5 text-[13.5px] font-bold text-primary shadow-[0_10px_26px_rgba(0,0,0,.25)] hover:bg-white/90"
                     >
                         <Search class="!size-4" />
