@@ -29,16 +29,16 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-[220px_1fr] xl:grid-cols-[22%_1fr_22%] gap-8 items-start">
-            <aside class="bg-surface-overlay rounded-md border border-border p-5">
-                <div class="flex items-center justify-between mb-5 pb-4 border-b border-border">
-                    <h2 class="text-base font-bold text-foreground">
+            <aside class="bg-primary rounded-md p-5">
+                <div class="flex items-center justify-between mb-5 pb-4 border-b border-primary-foreground/20">
+                    <h2 class="text-base font-bold text-primary-foreground">
                         Filtres
                     </h2>
-                    <SlidersHorizontal class="w-4 h-4 text-primary cursor-pointer" />
+                    <SlidersHorizontal class="w-4 h-4 text-primary-foreground cursor-pointer" />
                 </div>
 
-                <label class="flex items-center justify-between mb-5 bg-surface p-3 rounded-md border border-border shadow-xs cursor-pointer">
-                    <span class="text-sm font-medium text-foreground">Top remplacements</span>
+                <label class="flex items-center justify-between mb-5 p-3 rounded-md cursor-pointer">
+                    <span class="text-sm font-medium text-primary-foreground">Top remplacements</span>
                     <Switch
                         id="top-replacements"
                         :checked="filters.topReplacements"
@@ -47,39 +47,40 @@
                 </label>
 
                 <div class="mb-5">
-                    <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                    <p class="text-xs font-semibold text-primary-foreground/70 uppercase tracking-wider mb-2">
                         Codes postaux
                     </p>
                     <Input
                         v-model="filters.zipCode"
                         placeholder="Ajouter un code postal"
-                        class="rounded-md text-sm"
+                        class="rounded-md text-sm bg-surface"
                     />
                 </div>
 
                 <div class="mb-5">
-                    <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                    <p class="text-xs font-semibold text-primary-foreground/70 uppercase tracking-wider mb-2">
                         Ville(s)
                     </p>
                     <Input
                         v-model="filters.city"
                         placeholder="Ajouter une ville"
-                        class="rounded-md text-sm"
+                        class="rounded-md text-sm bg-surface"
                     />
                 </div>
 
                 <div class="mb-5">
-                    <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                    <p class="text-xs font-semibold text-primary-foreground/70 uppercase tracking-wider mb-3">
                         Jours
                     </p>
                     <div class="grid grid-cols-2 gap-1.5">
                         <label
                             v-for="day in daysOfWeek"
                             :key="day"
-                            class="flex items-center gap-2 p-2.5 bg-surface border border-border rounded-md cursor-pointer hover:bg-surface-subtle select-none transition-colors text-xs font-medium text-foreground"
+                            class="flex items-center gap-2 p-2.5 rounded-md cursor-pointer hover:bg-primary-foreground/10 select-none transition-colors text-xs font-medium text-primary-foreground"
                         >
                             <Checkbox
                                 :checked="filters.days.includes(day)"
+                                class="border-primary-foreground/50 data-[state=checked]:bg-primary-foreground data-[state=checked]:text-primary"
                                 @update:checked="(v) => toggleDay(day, v === true)"
                             />
                             {{ day }}
@@ -88,11 +89,11 @@
                 </div>
 
                 <div class="mb-5">
-                    <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                    <p class="text-xs font-semibold text-primary-foreground/70 uppercase tracking-wider mb-2">
                         Province
                     </p>
                     <Select v-model="filters.province">
-                        <SelectTrigger class="rounded-md w-full text-sm">
+                        <SelectTrigger class="rounded-md w-full text-sm bg-surface">
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent class="rounded-md">
@@ -119,18 +120,18 @@
                 </div>
 
                 <div class="mb-6">
-                    <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                    <p class="text-xs font-semibold text-primary-foreground/70 uppercase tracking-wider mb-2">
                         Types
                     </p>
-                    <label class="flex items-center justify-between mb-2 bg-surface p-3 rounded-md border border-border shadow-xs cursor-pointer">
-                        <span class="text-sm font-medium text-foreground">Remplacements</span>
+                    <label class="flex items-center justify-between mb-2 p-3 rounded-md cursor-pointer">
+                        <span class="text-sm font-medium text-primary-foreground">Remplacements</span>
                         <Switch
                             :checked="filters.showReplacements"
                             @update:checked="filters.showReplacements = $event"
                         />
                     </label>
-                    <label class="flex items-center justify-between bg-surface p-3 rounded-md border border-border shadow-xs cursor-pointer">
-                        <span class="text-sm font-medium text-foreground">Missions</span>
+                    <label class="flex items-center justify-between p-3 rounded-md cursor-pointer">
+                        <span class="text-sm font-medium text-primary-foreground">Missions</span>
                         <Switch
                             :checked="filters.showMissions"
                             @update:checked="filters.showMissions = $event"
@@ -141,7 +142,7 @@
                 <div class="flex gap-2">
                     <Button
                         variant="outline"
-                        class="flex-1 rounded-md text-xs font-semibold"
+                        class="flex-1 rounded-md text-xs font-semibold border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground hover:text-primary"
                         type="button"
                         @click="resetFilters"
                     >
@@ -171,7 +172,7 @@
                                         <Calendar class="w-5 h-5 text-primary" />
                                     </div>
                                     <div class="space-y-1">
-                                        <h4 class="font-secondary text-sm font-bold text-foreground tabular-nums">
+                                        <h4 class="font-primary text-sm font-bold text-foreground tabular-nums">
                                             03/07 - 15/07/2026
                                         </h4>
                                         <div class="flex items-center gap-1.5 text-muted-foreground text-xs">
@@ -535,7 +536,7 @@
                                         v-else
                                         class="w-3.5 h-3.5 text-success shrink-0"
                                     />
-                                    <span class="font-secondary text-xs font-bold text-foreground tabular-nums truncate">{{ soonItem.title }}</span>
+                                    <span class="font-primary text-xs font-bold text-foreground tabular-nums truncate">{{ soonItem.title }}</span>
                                 </div>
                                 <Badge
                                     variant="outline"
@@ -552,18 +553,19 @@
                     </div>
                 </div>
 
-                <div class="bg-linear-to-br from-primary/5 to-primary/12 border border-primary/15 rounded-md p-6 flex flex-col items-center text-center gap-3">
-                    <div class="w-11 h-11 rounded-md bg-primary flex items-center justify-center text-primary-foreground shrink-0 shadow-md shadow-primary/20">
+                <div class="bg-primary rounded-md p-6 flex flex-col items-center text-center gap-3">
+                    <div class="w-11 h-11 rounded-md bg-primary-foreground/15 flex items-center justify-center text-primary-foreground shrink-0">
                         <UserPlus class="w-5 h-5" />
                     </div>
-                    <h3 class="font-secondary text-sm font-extrabold text-foreground leading-snug">
-                        <span class="text-primary">Créez un compte gratuit</span> pour postuler aux missions
+                    <h3 class="font-secondary text-sm font-extrabold text-primary-foreground leading-snug">
+                        Créez un compte gratuit pour postuler aux missions
                     </h3>
-                    <p class="text-muted-foreground text-xs font-light">
+                    <p class="text-primary-foreground/70 text-xs font-light">
                         Accédez à toutes les missions, postulez en 1 clic et gérez vos disponibilités.
                     </p>
                     <Button
                         href="/register"
+                        class="bg-primary-foreground text-primary hover:bg-primary-foreground/90 font-bold"
                     >
                         Créer mon compte
                     </Button>
