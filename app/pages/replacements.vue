@@ -1,5 +1,5 @@
 <template>
-    <div class="container pb-8">
+    <div class="container pb-8 relative">
         <div class="text-center my-4">
             <p class="text-muted-foreground font-light text-base md:text-lg">
                 Explorez les opportunités près de chez vous
@@ -197,14 +197,12 @@
                             </div>
 
                             <div class="mt-5 pt-4 border-t border-border flex justify-end">
-                                <Button
-                                    variant="outline"
-                                    class="rounded-md text-xs font-bold px-4 h-8 border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground"
-                                    href="#"
+                                <NuxtLink
+                                    to="/replacements/101"
+                                    class="inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline"
                                 >
-                                    Voir détails
-                                    <ChevronRight class="w-3.5 h-3.5 ml-0.5" />
-                                </Button>
+                                    Voir plus
+                                </NuxtLink>
                             </div>
                         </Card>
 
@@ -249,14 +247,12 @@
                             </div>
 
                             <div class="mt-5 pt-4 border-t border-border flex justify-end">
-                                <Button
-                                    variant="outline"
-                                    class="rounded-md text-xs font-bold px-4 h-8 border-success/40 text-success hover:bg-success hover:text-success-foreground"
-                                    href="#"
+                                <NuxtLink
+                                    to="/replacements/102"
+                                    class="inline-flex items-center gap-1 text-xs font-bold text-success hover:underline"
                                 >
-                                    Postuler
-                                    <ChevronRight class="w-3.5 h-3.5 ml-0.5" />
-                                </Button>
+                                    Voir plus
+                                </NuxtLink>
                             </div>
                         </Card>
                     </div>
@@ -290,7 +286,7 @@
                             v-for="(item, index) in listResults"
                             :key="index"
                             variant="none"
-                            class="relative bg-surface p-5 flex flex-col gap-3 hover:shadow-xl transition-shadow duration-200"
+                            class="relative bg-surface border rounded-md p-5 flex flex-col gap-3 hover:shadow-xl transition-shadow duration-200"
                         >
                             <Badge
                                 v-if="item.isNew"
@@ -299,36 +295,6 @@
                             >
                                 Nouveau
                             </Badge>
-
-                            <div class="flex items-center justify-between gap-2 flex-wrap">
-                                <div class="flex items-center gap-2 flex-wrap">
-                                    <span
-                                        v-if="item.type === 'replacement'"
-                                        class="text-primary text-[10px] font-black uppercase tracking-widest"
-                                    >Remplacement</span>
-                                    <span
-                                        v-else
-                                        class="text-success text-[10px] font-black uppercase tracking-widest"
-                                    >Mission</span>
-                                    <Badge
-                                        v-if="item.isUrgent"
-                                        variant="outline"
-                                        class="!h-auto !w-auto rounded-full border border-destructive/25 text-destructive bg-destructive/5 text-[10px] font-black px-2.5 py-1 uppercase tracking-wider"
-                                    >
-                                        Urgent
-                                    </Badge>
-                                    <div
-                                        v-if="item.isBoosted"
-                                        class="text-warning flex gap-1 mb-1"
-                                    >
-                                        <Star class="size-2.5" />
-                                        <Star class="size-2.5" />
-                                        <Star class="size-2.5" />
-                                        <Star class="size-2.5" />
-                                        <Star class="size-2.5" />
-                                    </div>
-                                </div>
-                            </div>
 
                             <div class="flex items-start gap-3">
                                 <div :class="['w-10 h-10 rounded-md flex items-center justify-center shrink-0', item.type === 'replacement' ? 'bg-primary/10' : 'bg-success/10']">
@@ -349,6 +315,13 @@
                                         <MapPin class="w-3 h-3 shrink-0" />
                                         {{ item.city }}
                                     </div>
+                                </div>
+                                <div
+                                    v-if="item.isUrgent"
+                                    class="flex flex-col text-destructive items-center gap-0.5 shrink-0 ml-auto"
+                                >
+                                    <ShieldAlert class="size-10" />
+                                    <span class="text-[8px] uppercase font-bold">urgent</span>
                                 </div>
                             </div>
 
@@ -371,44 +344,28 @@
 
                             <div class="flex items-start gap-2">
                                 <MapPin class="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
-                                <div class="flex flex-wrap gap-1">
-                                    <Badge
-                                        v-for="zip in visibleTags(item.zipCodes).shown"
-                                        :key="zip"
-                                        variant="outline"
-                                        class="!h-auto !w-auto rounded-full bg-surface-subtle text-foreground border border-border text-[10px] font-semibold px-2 py-0.5"
-                                    >
-                                        {{ zip }}
-                                    </Badge>
-                                    <Badge
+                                <p class="text-xs font-semibold text-foreground">
+                                    {{ visibleTags(item.zipCodes).shown.join(', ') }}
+                                    <span
                                         v-if="visibleTags(item.zipCodes).extra > 0"
-                                        variant="outline"
-                                        class="!h-auto !w-auto rounded-full bg-primary/8 text-primary border border-primary/25 text-[10px] font-semibold px-2 py-0.5"
+                                        class="text-primary font-bold"
                                     >
                                         +{{ visibleTags(item.zipCodes).extra }}
-                                    </Badge>
-                                </div>
+                                    </span>
+                                </p>
                             </div>
 
                             <div class="flex items-start gap-2">
                                 <Activity class="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
-                                <div class="flex flex-wrap gap-1">
-                                    <Badge
-                                        v-for="care in visibleTags(item.careTypes).shown"
-                                        :key="care"
-                                        variant="outline"
-                                        class="!h-auto !w-auto rounded-full bg-surface-subtle text-foreground border border-border text-[10px] font-semibold px-2 py-0.5"
-                                    >
-                                        {{ care }}
-                                    </Badge>
-                                    <Badge
+                                <p class="text-xs font-semibold text-foreground">
+                                    {{ visibleTags(item.careTypes).shown.join(', ') }}
+                                    <span
                                         v-if="visibleTags(item.careTypes).extra > 0"
-                                        variant="outline"
-                                        class="!h-auto !w-auto rounded-full bg-primary/8 text-primary border border-primary/25 text-[10px] font-semibold px-2 py-0.5"
+                                        class="text-primary font-bold"
                                     >
                                         +{{ visibleTags(item.careTypes).extra }}
-                                    </Badge>
-                                </div>
+                                    </span>
+                                </p>
                             </div>
 
                             <p
@@ -440,26 +397,13 @@
                                         <Users class="w-3.5 h-3.5 text-primary" />
                                         {{ item.patientsPerDay }}/j
                                     </span>
-                                    <Button
-                                        v-if="item.type === 'replacement'"
-                                        size="sm"
-                                        variant="outline"
-                                        class="rounded-md text-xs font-bold border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground"
-                                        href="#"
+                                    <NuxtLink
+                                        :to="`/replacements/${item.id}`"
+                                        class="inline-flex items-center gap-1 text-xs font-bold hover:underline"
+                                        :class="item.type === 'replacement' ? 'text-primary' : 'text-success'"
                                     >
-                                        Voir détails
-                                        <ChevronRight class="w-3.5 h-3.5" />
-                                    </Button>
-                                    <Button
-                                        v-else
-                                        size="sm"
-                                        variant="outline"
-                                        class="rounded-md text-xs font-bold border-success/40 text-success hover:bg-success hover:text-success-foreground"
-                                        href="#"
-                                    >
-                                        Postuler
-                                        <ChevronRight class="w-3.5 h-3.5" />
-                                    </Button>
+                                        Voir plus
+                                    </NuxtLink>
                                 </div>
                             </div>
                         </Card>
@@ -515,7 +459,7 @@
                 </div>
             </main>
 
-            <div class="hidden xl:flex flex-col gap-6 sticky top-6">
+            <div class="hidden xl:flex flex-col gap-6 self-stretch">
                 <div class="bg-surface rounded-md border border-border p-5">
                     <h2 class="font-secondary text-sm font-extrabold text-foreground mb-4">
                         Ça commence bientôt
@@ -553,7 +497,7 @@
                     </div>
                 </div>
 
-                <div class="bg-primary rounded-md p-6 flex flex-col items-center text-center gap-3">
+                <div class="bg-primary rounded-md p-6 flex flex-col items-center text-center gap-3 sticky top-20">
                     <div class="w-11 h-11 rounded-md bg-primary-foreground/15 flex items-center justify-center text-primary-foreground shrink-0">
                         <UserPlus class="w-5 h-5" />
                     </div>
@@ -584,13 +528,12 @@ import {
     Check,
     Briefcase,
     Search,
-    ChevronRight,
     ArrowLeft,
     ArrowRight,
     UserPlus,
     Activity,
     Users,
-    Star,
+    ShieldAlert,
 } from 'lucide-vue-next';
 import { Switch } from '@/components/ui/switch';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -648,6 +591,7 @@ const currentPage = ref(1);
 // first 3 are shown, the rest collapse into a "+N" chip (see visibleTags).
 const listResults = ref([
     {
+        id: 1,
         type: 'replacement',
         date: '03/07 → 15/07/2026',
         city: 'Wavre',
@@ -657,6 +601,7 @@ const listResults = ref([
         description: 'Remplacement suite à un congé maternité, service de médecine interne, équipe de 6 infirmiers.',
     },
     {
+        id: 2,
         type: 'mission',
         date: '10/07 → 31/07/2026',
         city: 'Liège',
@@ -668,6 +613,7 @@ const listResults = ref([
         institution: { initial: 'CH', name: 'CHU Liège', contract: 'Contrat CDI · Infirmier(e) en soins intensifs' },
     },
     {
+        id: 3,
         type: 'replacement',
         date: '17/07 → 24/07/2026',
         city: 'Bierges +6 autres',
@@ -678,6 +624,7 @@ const listResults = ref([
         description: 'Remplacement suite à un arrêt maladie en maison de repos, plusieurs sites, ambiance calme et familiale.',
     },
     {
+        id: 4,
         type: 'mission',
         date: '01/08 → 30/09/2026',
         city: 'Nivelles',
@@ -688,6 +635,7 @@ const listResults = ref([
         institution: { initial: 'CS', name: 'Clinique Saint-Pierre', contract: 'Contrat CDD 6 mois · Sage-femme' },
     },
     {
+        id: 5,
         type: 'replacement',
         date: '05/08 → 12/08/2026',
         city: 'Namur +9 autres',
@@ -697,6 +645,7 @@ const listResults = ref([
         description: 'Service de pédiatrie générale, plusieurs implantations, ambiance familiale et bienveillante.',
     },
     {
+        id: 6,
         type: 'replacement',
         date: '20/08 → 27/08/2026',
         city: 'Arlon',
@@ -722,10 +671,6 @@ const soonItems = ref([
 
 const handleSearch = () => {
     console.log('Search:', searchKeyword.value);
-};
-
-const applyFilters = () => {
-    console.log('Filters:', { ...filters });
 };
 
 const resetFilters = () => {
