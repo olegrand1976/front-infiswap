@@ -28,8 +28,55 @@
             </div>
         </div>
 
+        <div class="lg:hidden flex justify-end mb-4">
+            <Sheet>
+                <SheetTrigger as-child>
+                    <Button
+                        variant="outline"
+                        type="button"
+                        class="relative rounded-md gap-2"
+                    >
+                        <SlidersHorizontal class="w-4 h-4" />
+                        Filtres
+                        <Badge
+                            v-if="hasActiveFilters"
+                            class="!h-5 !w-5 justify-center rounded-full bg-primary p-0 text-[10px] text-primary-foreground absolute -top-2 -right-2"
+                        >
+                            {{ activeFilterCount }}
+                        </Badge>
+                    </Button>
+                </SheetTrigger>
+                <SheetContent
+                    side="right"
+                    class="w-80 max-w-[85vw] overflow-y-auto bg-primary p-5 text-primary-foreground [&>button]:hidden"
+                >
+                    <SheetHeader class="mb-5 flex-row items-center justify-between border-b border-primary-foreground/20 pb-4">
+                        <SheetTitle class="text-primary-foreground">
+                            Filtres
+                        </SheetTitle>
+                        <SheetClose as-child>
+                            <button
+                                type="button"
+                                aria-label="Fermer"
+                                class="text-primary-foreground/80 hover:text-primary-foreground"
+                            >
+                                <X class="w-5 h-5" />
+                            </button>
+                        </SheetClose>
+                    </SheetHeader>
+
+                    <ReplacementsFiltersPanel
+                        v-model:filters="filters"
+                        :days="daysOfWeek"
+                        @toggle-day="toggleDay"
+                        @reset="resetFilters"
+                    />
+                </SheetContent>
+            </Sheet>
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-[220px_1fr] xl:grid-cols-[22%_1fr_22%] gap-8 items-start">
-            <aside class="bg-primary rounded-md p-5">
+            <aside class="hidden lg:block bg-primary rounded-md p-5">
                 <div class="flex items-center justify-between mb-5 pb-4 border-b border-primary-foreground/20">
                     <h2 class="text-base font-bold text-primary-foreground">
                         Filtres
@@ -37,118 +84,12 @@
                     <SlidersHorizontal class="w-4 h-4 text-primary-foreground cursor-pointer" />
                 </div>
 
-                <label class="flex items-center justify-between mb-5 p-3 rounded-md cursor-pointer">
-                    <span class="text-sm font-medium text-primary-foreground">Top remplacements</span>
-                    <Switch
-                        id="top-replacements"
-                        :checked="filters.topReplacements"
-                        @update:checked="filters.topReplacements = $event"
-                    />
-                </label>
-
-                <div class="mb-5">
-                    <p class="text-xs font-semibold text-primary-foreground/70 uppercase tracking-wider mb-2">
-                        Codes postaux
-                    </p>
-                    <Input
-                        v-model="filters.zipCode"
-                        placeholder="Ajouter un code postal"
-                        class="rounded-md text-sm bg-surface"
-                    />
-                </div>
-
-                <div class="mb-5">
-                    <p class="text-xs font-semibold text-primary-foreground/70 uppercase tracking-wider mb-2">
-                        Ville(s)
-                    </p>
-                    <Input
-                        v-model="filters.city"
-                        placeholder="Ajouter une ville"
-                        class="rounded-md text-sm bg-surface"
-                    />
-                </div>
-
-                <div class="mb-5">
-                    <p class="text-xs font-semibold text-primary-foreground/70 uppercase tracking-wider mb-3">
-                        Jours
-                    </p>
-                    <div class="grid grid-cols-2 gap-1.5">
-                        <label
-                            v-for="day in daysOfWeek"
-                            :key="day"
-                            class="flex items-center gap-2 p-2.5 rounded-md cursor-pointer hover:bg-primary-foreground/10 select-none transition-colors text-xs font-medium text-primary-foreground"
-                        >
-                            <Checkbox
-                                :checked="filters.days.includes(day)"
-                                class="border-primary-foreground/50 data-[state=checked]:bg-primary-foreground data-[state=checked]:text-primary"
-                                @update:checked="(v) => toggleDay(day, v === true)"
-                            />
-                            {{ day }}
-                        </label>
-                    </div>
-                </div>
-
-                <div class="mb-5">
-                    <p class="text-xs font-semibold text-primary-foreground/70 uppercase tracking-wider mb-2">
-                        Province
-                    </p>
-                    <Select v-model="filters.province">
-                        <SelectTrigger class="rounded-md w-full text-sm bg-surface">
-                            <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent class="rounded-md">
-                            <SelectItem value="Brabant wallon">
-                                Brabant wallon
-                            </SelectItem>
-                            <SelectItem value="Bruxelles-Capitale">
-                                Bruxelles-Capitale
-                            </SelectItem>
-                            <SelectItem value="Liège">
-                                Liège
-                            </SelectItem>
-                            <SelectItem value="Hainaut">
-                                Hainaut
-                            </SelectItem>
-                            <SelectItem value="Namur">
-                                Namur
-                            </SelectItem>
-                            <SelectItem value="Luxembourg">
-                                Luxembourg
-                            </SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-
-                <div class="mb-6">
-                    <p class="text-xs font-semibold text-primary-foreground/70 uppercase tracking-wider mb-2">
-                        Types
-                    </p>
-                    <label class="flex items-center justify-between mb-2 p-3 rounded-md cursor-pointer">
-                        <span class="text-sm font-medium text-primary-foreground">Remplacements</span>
-                        <Switch
-                            :checked="filters.showReplacements"
-                            @update:checked="filters.showReplacements = $event"
-                        />
-                    </label>
-                    <label class="flex items-center justify-between p-3 rounded-md cursor-pointer">
-                        <span class="text-sm font-medium text-primary-foreground">Missions</span>
-                        <Switch
-                            :checked="filters.showMissions"
-                            @update:checked="filters.showMissions = $event"
-                        />
-                    </label>
-                </div>
-
-                <div class="flex gap-2">
-                    <Button
-                        variant="outline"
-                        class="flex-1 rounded-md text-xs font-semibold border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground hover:text-primary"
-                        type="button"
-                        @click="resetFilters"
-                    >
-                        Réinitialiser
-                    </Button>
-                </div>
+                <ReplacementsFiltersPanel
+                    v-model:filters="filters"
+                    :days="daysOfWeek"
+                    @toggle-day="toggleDay"
+                    @reset="resetFilters"
+                />
             </aside>
 
             <main class="space-y-10">
@@ -520,7 +461,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
+import { ref, reactive, computed } from 'vue';
 import {
     SlidersHorizontal,
     Calendar,
@@ -534,9 +475,8 @@ import {
     Activity,
     Users,
     ShieldAlert,
+    X,
 } from 'lucide-vue-next';
-import { Switch } from '@/components/ui/switch';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -548,6 +488,14 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import {
+    Sheet,
+    SheetClose,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from '@/components/ui/sheet';
 
 useHead({
     title: 'Remplacements & Missions disponibles',
@@ -566,7 +514,7 @@ definePageMeta({
 const searchKeyword = ref('');
 const daysOfWeek = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'];
 
-const filters = reactive({
+const DEFAULT_FILTERS = {
     topReplacements: true,
     days: [] as string[],
     province: 'Brabant wallon',
@@ -574,7 +522,21 @@ const filters = reactive({
     showMissions: true,
     zipCode: '',
     city: '',
+};
+
+const filters = reactive({ ...DEFAULT_FILTERS, days: [] as string[] });
+
+const activeFilterCount = computed(() => {
+    let count = 0;
+    if (filters.topReplacements !== DEFAULT_FILTERS.topReplacements) count++;
+    if (filters.days.length > 0) count++;
+    if (filters.province !== DEFAULT_FILTERS.province) count++;
+    if (!filters.showReplacements || !filters.showMissions) count++;
+    if (filters.zipCode.trim() !== '') count++;
+    if (filters.city.trim() !== '') count++;
+    return count;
 });
+const hasActiveFilters = computed(() => activeFilterCount.value > 0);
 
 const toggleDay = (day: string, checked: boolean) => {
     if (checked) {
@@ -674,13 +636,7 @@ const handleSearch = () => {
 };
 
 const resetFilters = () => {
-    filters.topReplacements = false;
-    filters.days = [];
-    filters.province = 'Brabant wallon';
-    filters.showReplacements = true;
-    filters.showMissions = true;
-    filters.zipCode = '';
-    filters.city = '';
+    Object.assign(filters, DEFAULT_FILTERS, { days: [] as string[] });
 };
 </script>
 
