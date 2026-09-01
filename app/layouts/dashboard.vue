@@ -25,7 +25,7 @@
                     <NuxtLink
                         v-if="isProSubscriber"
                         to="/dashboard/subscriptions"
-                        class="flex shrink-0 items-center gap-1.5 rounded-full border border-primary/40 bg-primary/10 px-2.5 py-1 shadow-sm sm:px-3 sm:py-1.5"
+                        class="hidden shrink-0 items-center gap-1.5 rounded-full border border-primary/40 bg-primary/10 px-2.5 py-1 shadow-sm sm:px-3 sm:py-1.5 lg:flex"
                         title="Abonnement Infiswap Premium actif"
                     >
                         <Crown
@@ -38,7 +38,7 @@
                     </NuxtLink>
                     <div
                         v-if="showNetworkMemberBadge"
-                        class="flex shrink-0 items-center gap-1.5 rounded-full border border-amber-400/70 bg-gradient-to-r from-amber-50 via-yellow-50 to-amber-100 px-2.5 py-1 shadow-sm sm:px-3 sm:py-1.5"
+                        class="hidden shrink-0 items-center gap-1.5 rounded-full border border-amber-400/70 bg-gradient-to-r from-amber-50 via-yellow-50 to-amber-100 px-2.5 py-1 shadow-sm sm:px-3 sm:py-1.5 lg:flex"
                         title="Membre vérifié — InfiSwap"
                     >
                         <Medal
@@ -53,7 +53,7 @@
                         <div class="flex flex-nowrap gap-2 sm:gap-4">
                             <NotificationsNotificationDropdown />
                             <div
-                                class="cursor-pointer"
+                                class="hidden cursor-pointer lg:block"
                                 title="Signaler un problème"
                                 @click="showReportModal = true"
                             >
@@ -62,7 +62,7 @@
                             <DropdownMenu v-if="!isAdmin">
                                 <DropdownMenuTrigger as-child>
                                     <div
-                                        class="relative cursor-pointer"
+                                        class="relative hidden cursor-pointer lg:block"
                                         @click="handleSeen()"
                                     >
                                         <BellOff class="w-5 h-5 text-gray-500 hover:text-gray-700 transition-colors duration-150" />
@@ -165,9 +165,15 @@
                             </DialogContent>
                         </Dialog>
                     </div>
-                    <div class="flex min-w-0 items-center gap-2">
+                    <div class="flex min-w-0 ml-1 items-center gap-2">
+                        <span
+                            class="max-w-[6rem] truncate text-md font-medium lg:hidden"
+                            :title="displayFullName"
+                        >
+                            {{ user?.type == 'institution' ? (user?.institution?.name || 'Institution XXX') : displayShortName }}
+                        </span>
                         <div
-                            class="min-w-0 text-right"
+                            class="hidden min-w-0 text-right lg:block"
                             :title="displayFullName"
                         >
                             <p
@@ -207,7 +213,7 @@
                         >
                             <SelectTrigger
                                 :class="cn(
-                                    'h-8 min-w-[7.5rem] max-w-[10rem] shrink-0 rounded-md border border-input bg-background px-2 text-xs font-semibold shadow-sm focus:ring-2 focus:ring-primary sm:max-w-[12rem]',
+                                    'hidden h-8 min-w-[7.5rem] max-w-[10rem] shrink-0 rounded-md border border-input bg-background px-2 text-xs font-semibold shadow-sm focus:ring-2 focus:ring-primary sm:max-w-[12rem] lg:flex',
                                     isAdmin ? 'text-success' : 'text-primary',
                                 )"
                                 :aria-label="`Type de profil : ${getRole(user?.account_type)}`"
@@ -235,13 +241,16 @@
                                     <ProfilePremiumBadge>
                                         <ProfileLifetimeAccessBadge session-consumer>
                                             <ProfileInamiVerifiedBadge>
-                                                <Avatar v-if="user?.profil_url != null">
+                                                <Avatar
+                                                    v-if="user?.profil_url != null"
+                                                    class="h-8 w-8 lg:h-10 lg:w-10"
+                                                >
                                                     <AvatarImage :src="useRuntimeConfig().public.API_URL + '/storage/' + hasChangedAvatar" />
                                                     <AvatarFallback>{{ user.firstname.slice(1, 1).toUpperCase() + user.lastname.slice(1, 1).toUpperCase() }}</AvatarFallback>
                                                 </Avatar>
                                                 <CircleUser
                                                     v-else
-                                                    class="size-11 text-black/40"
+                                                    class="size-8 text-black/40 lg:size-11"
                                                 />
                                             </ProfileInamiVerifiedBadge>
                                         </ProfileLifetimeAccessBadge>
@@ -250,6 +259,30 @@
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
                                 <DropdownMenuLabel>{{ t('accountMenu.myAccount') }}</DropdownMenuLabel>
+                                <template v-if="isProSubscriber || showNetworkMemberBadge">
+                                    <DropdownMenuItem
+                                        v-if="isProSubscriber"
+                                        as-child
+                                        class="lg:hidden"
+                                    >
+                                        <NuxtLink
+                                            to="/dashboard/subscriptions"
+                                            class="flex items-center gap-2 text-primary"
+                                        >
+                                            <Crown class="size-4" />
+                                            Infiswap Premium actif
+                                        </NuxtLink>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        v-if="showNetworkMemberBadge"
+                                        class="lg:hidden text-amber-700"
+                                        disabled
+                                    >
+                                        <Medal class="size-4" />
+                                        Membre vérifié
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator class="lg:hidden" />
+                                </template>
                                 <template v-if="hasMultipleContexts">
                                     <DropdownMenuSeparator />
                                     <DropdownMenuLabel class="text-xs text-muted-foreground">
@@ -295,6 +328,21 @@
                                     @click="reenableNetworkJourney"
                                 >
                                     {{ t('accountMenu.reenableNetwork') }}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    class="lg:hidden"
+                                    @click="showReportModal = true"
+                                >
+                                    <Frown class="size-4" />
+                                    Signaler un problème
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    v-if="showNotifUI && !isAdmin"
+                                    class="lg:hidden"
+                                    @click="handleSeen(); showDialog = true"
+                                >
+                                    <BellOff class="size-4" />
+                                    Désactiver les notifications
                                 </DropdownMenuItem>
                                 <DropdownMenuItem as-child>
                                     <NuxtLink :to="settingsRoute">{{ t('nav.settings') }}</NuxtLink>
