@@ -93,13 +93,14 @@
             </aside>
 
             <main class="space-y-10">
-                <div>
+                <div v-if="featuredReplacement || featuredMission">
                     <h3 class="font-secondary text-xl font-extrabold text-foreground flex items-center gap-2 mb-6">
                         <span class="text-primary text-2xl">★</span> À la une
                     </h3>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <Card
+                            v-if="featuredReplacement"
                             variant="none"
                             class="bg-surface p-5 flex flex-col justify-between hover:shadow-xl transition-shadow duration-200"
                         >
@@ -114,18 +115,24 @@
                                     </div>
                                     <div class="space-y-1">
                                         <h4 class="font-primary text-sm font-bold text-foreground tabular-nums">
-                                            03/07 - 15/07/2026
+                                            {{ featuredReplacement.date }}
+                                            <span
+                                                v-if="featuredReplacement.periods && featuredReplacement.periods.length > 1"
+                                                class="text-primary"
+                                            >
+                                                +{{ featuredReplacement.periods.length - 1 }} période{{ featuredReplacement.periods.length > 2 ? 's' : '' }}
+                                            </span>
                                         </h4>
                                         <div class="flex items-center gap-1.5 text-muted-foreground text-xs">
                                             <MapPin class="w-3.5 h-3.5 shrink-0" />
-                                            <span>1300 Wavre</span>
+                                            <span>{{ featuredReplacement.city }}</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="flex gap-4 mt-5 ml-15">
                                     <div
-                                        v-for="slot in ['Matin', 'Après-midi']"
+                                        v-for="slot in featuredReplacement.slots"
                                         :key="slot"
                                         class="flex items-center gap-1.5"
                                     >
@@ -139,7 +146,7 @@
 
                             <div class="mt-5 pt-4 border-t border-border flex justify-end">
                                 <NuxtLink
-                                    to="/replacements/101"
+                                    :to="`/replacements/${featuredReplacement.id}?type=replacement`"
                                     class="inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline"
                                 >
                                     Voir plus
@@ -148,6 +155,7 @@
                         </Card>
 
                         <Card
+                            v-if="featuredMission"
                             variant="none"
                             class="bg-surface p-5 flex flex-col justify-between hover:shadow-xl transition-shadow duration-200"
                         >
@@ -162,20 +170,20 @@
                                     </div>
                                     <div class="space-y-0.5 text-muted-foreground">
                                         <h4 class="text-sm font-bold text-foreground">
-                                            CHU Liège
+                                            {{ featuredMission.institution?.name ?? featuredMission.city }}
                                         </h4>
-                                        <p class="text-xs font-semibold text-primary">
-                                            Contrat : CDI
-                                        </p>
-                                        <p class="text-xs">
-                                            Infirmier(e) en soins généraux
+                                        <p
+                                            v-if="featuredMission.institution?.contract"
+                                            class="text-xs font-semibold text-primary"
+                                        >
+                                            {{ featuredMission.institution.contract }}
                                         </p>
                                     </div>
                                 </div>
 
                                 <div class="flex gap-4 mt-5 ml-15">
                                     <div
-                                        v-for="slot in ['Matin', 'Après-midi']"
+                                        v-for="slot in featuredMission.slots"
                                         :key="slot"
                                         class="flex items-center gap-1.5"
                                     >
@@ -189,7 +197,7 @@
 
                             <div class="mt-5 pt-4 border-t border-border flex justify-end">
                                 <NuxtLink
-                                    to="/replacements/102"
+                                    :to="`/replacements/${featuredMission.id}?type=mission`"
                                     class="inline-flex items-center gap-1 text-xs font-bold text-success hover:underline"
                                 >
                                     Voir plus
@@ -202,7 +210,7 @@
                 <div>
                     <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-5">
                         <h3 class="font-secondary text-xl font-extrabold text-foreground">
-                            Tous les résultats <span class="text-primary tabular-nums">(47)</span>
+                            Tous les résultats <span class="text-primary tabular-nums">({{ totalCount }})</span>
                         </h3>
                         <div class="flex items-center gap-2">
                             <span class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Trier par :</span>
@@ -224,8 +232,8 @@
 
                     <div class="grid grid-cols-1 gap-5">
                         <Card
-                            v-for="(item, index) in listResults"
-                            :key="index"
+                            v-for="item in listResults"
+                            :key="`${item.type}-${item.id}`"
                             variant="none"
                             class="relative bg-surface border rounded-md p-5 flex flex-col gap-3 hover:shadow-xl transition-shadow duration-200"
                         >
@@ -251,6 +259,12 @@
                                 <div>
                                     <h4 class="font-primary text-sm font-bold text-foreground tabular-nums">
                                         {{ item.date }}
+                                        <span
+                                            v-if="item.periods && item.periods.length > 1"
+                                            class="text-primary"
+                                        >
+                                            +{{ item.periods.length - 1 }} période{{ item.periods.length > 2 ? 's' : '' }}
+                                        </span>
                                     </h4>
                                     <div class="flex items-center gap-1.5 text-muted-foreground text-xs mt-0.5">
                                         <MapPin class="w-3 h-3 shrink-0" />
@@ -339,7 +353,7 @@
                                         {{ item.patientsPerDay }}/j
                                     </span>
                                     <NuxtLink
-                                        :to="`/replacements/${item.id}`"
+                                        :to="`/replacements/${item.id}?type=${item.type}`"
                                         class="inline-flex items-center gap-1 text-xs font-bold hover:underline"
                                         :class="item.type === 'replacement' ? 'text-primary' : 'text-success'"
                                     >
@@ -351,48 +365,50 @@
                     </div>
                 </div>
 
-                <div class="mt-6 flex justify-center">
+                <div
+                    v-if="lastPage > 1"
+                    class="mt-6 flex justify-center"
+                >
                     <nav class="flex items-center gap-1">
                         <button
-                            class="w-9 h-9 flex items-center justify-center rounded-md border border-border hover:bg-surface-subtle text-muted-foreground transition-colors"
+                            class="w-9 h-9 flex items-center justify-center rounded-md border border-border hover:bg-surface-subtle text-muted-foreground transition-colors disabled:opacity-40 disabled:pointer-events-none"
                             type="button"
+                            :disabled="currentPage <= 1"
+                            @click="goToPage(currentPage - 1)"
                         >
                             <ArrowLeft class="w-3.5 h-3.5" />
                         </button>
 
-                        <button
-                            v-for="p in [1, 2, 3]"
-                            :key="p"
-                            type="button"
-                            :class="[
-                                'w-9 h-9 flex items-center justify-center rounded-md font-bold text-sm transition-colors border',
-                                p === currentPage
-                                    ? 'bg-primary text-primary-foreground border-primary shadow-sm'
-                                    : 'bg-surface text-foreground border-border hover:bg-surface-subtle hover:border-border/70',
-                            ]"
-                            @click="currentPage = p"
+                        <template
+                            v-for="(page, index) in pageItems"
+                            :key="index"
                         >
-                            {{ p }}
-                        </button>
-
-                        <span class="w-9 h-9 flex items-center justify-center text-muted-foreground text-sm">...</span>
+                            <span
+                                v-if="page === 'ellipsis'"
+                                class="w-9 h-9 flex items-center justify-center text-muted-foreground text-sm"
+                            >
+                                ...
+                            </span>
+                            <button
+                                v-else
+                                type="button"
+                                :class="[
+                                    'w-9 h-9 flex items-center justify-center rounded-md font-bold text-sm transition-colors border',
+                                    page === currentPage
+                                        ? 'bg-primary text-primary-foreground border-primary shadow-sm'
+                                        : 'bg-surface text-foreground border-border hover:bg-surface-subtle hover:border-border/70',
+                                ]"
+                                @click="goToPage(page)"
+                            >
+                                {{ page }}
+                            </button>
+                        </template>
 
                         <button
+                            class="w-9 h-9 flex items-center justify-center rounded-md border border-border hover:bg-surface-subtle text-muted-foreground transition-colors disabled:opacity-40 disabled:pointer-events-none"
                             type="button"
-                            :class="[
-                                'w-9 h-9 flex items-center justify-center rounded-md font-bold text-sm transition-colors border',
-                                8 === currentPage
-                                    ? 'bg-primary text-primary-foreground border-primary shadow-sm'
-                                    : 'bg-surface text-foreground border-border hover:bg-surface-subtle',
-                            ]"
-                            @click="currentPage = 8"
-                        >
-                            8
-                        </button>
-
-                        <button
-                            class="w-9 h-9 flex items-center justify-center rounded-md border border-border hover:bg-surface-subtle text-muted-foreground transition-colors"
-                            type="button"
+                            :disabled="currentPage >= lastPage"
+                            @click="goToPage(currentPage + 1)"
                         >
                             <ArrowRight class="w-3.5 h-3.5" />
                         </button>
@@ -401,7 +417,10 @@
             </main>
 
             <div class="hidden xl:flex flex-col gap-6 self-stretch">
-                <div class="bg-surface rounded-md border border-border p-5">
+                <div
+                    v-if="soonItems.length"
+                    class="bg-surface rounded-md border border-border p-5"
+                >
                     <h2 class="font-secondary text-sm font-extrabold text-foreground mb-4">
                         Ça commence bientôt
                     </h2>
@@ -464,7 +483,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed, watch } from 'vue';
+import { useDebounceFn } from '@vueuse/core';
 import {
     SlidersHorizontal,
     Calendar,
@@ -499,9 +519,10 @@ import {
     SheetTitle,
     SheetTrigger,
 } from '@/components/ui/sheet';
-import { replacementListings } from '~/lib/replacements-data';
+import { mapApiRecordToListing } from '~/lib/replacementsApi';
 
 const { isLoggedIn } = useAuth();
+const { $apifetch } = useNuxtApp();
 
 useHead({
     title: 'Remplacements & Missions disponibles',
@@ -519,6 +540,13 @@ definePageMeta({
 
 const searchKeyword = ref('');
 const daysOfWeek = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'];
+const DAY_TO_ENGLISH: Record<string, string> = {
+    Lundi: 'monday',
+    Mardi: 'tuesday',
+    Mercredi: 'wednesday',
+    Jeudi: 'thursday',
+    Vendredi: 'friday',
+};
 
 const DEFAULT_FILTERS = {
     topReplacements: true,
@@ -554,29 +582,138 @@ const toggleDay = (day: string, checked: boolean) => {
 
 const sortBy = ref('Plus récents');
 const currentPage = ref(1);
+const perPage = 10;
+
+function buildSearchPayload() {
+    const cities = filters.city.trim() ? [filters.city.trim()] : [];
+    const zipCodes = filters.zipCode.trim() ? [filters.zipCode.trim()] : [];
+
+    // The single search box doesn't distinguish a zip code from a city name.
+    const keyword = searchKeyword.value.trim();
+    if (keyword) {
+        if (/^\d+$/.test(keyword)) zipCodes.push(keyword);
+        else cities.push(keyword);
+    }
+
+    return {
+        perPage,
+        page: currentPage.value,
+        provinces: [filters.province],
+        cities,
+        zipCodes,
+        days: filters.days.map(day => DAY_TO_ENGLISH[day]).filter(Boolean),
+        filters: { status: 'open' },
+    };
+}
+
+interface SearchMergedResponse {
+    replacements: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        data: any[];
+        total: number;
+        last_page: number;
+    };
+}
+
+const { data: searchResponse, refresh: refreshResults } = await useAsyncData<SearchMergedResponse>(
+    'replacements-search',
+    () => $apifetch('/api/replacements/search/merged', {
+        method: 'POST',
+        body: buildSearchPayload(),
+    }),
+);
 
 // Zip codes / care types can hold anywhere from 1 to 10+ values — only the
 // first 3 are shown, the rest collapse into a "+N" chip (see visibleTags).
-const listResults = ref(replacementListings);
+const mappedResults = computed(() =>
+    (searchResponse.value?.replacements?.data ?? []).map(mapApiRecordToListing),
+);
+
+const listResults = computed(() => {
+    let items = mappedResults.value;
+
+    if (!filters.showReplacements) items = items.filter(item => item.type !== 'replacement');
+    if (!filters.showMissions) items = items.filter(item => item.type !== 'mission');
+    if (filters.topReplacements) {
+        items = [...items].sort((a, b) => Number(b.isBoosted ?? false) - Number(a.isBoosted ?? false));
+    }
+    if (sortBy.value === 'Plus anciens') items = [...items].reverse();
+
+    return items;
+});
+
+const totalCount = computed(() => searchResponse.value?.replacements?.total ?? 0);
+const lastPage = computed(() => Math.max(1, searchResponse.value?.replacements?.last_page ?? 1));
+
+const pageItems = computed(() => {
+    const total = lastPage.value;
+    const current = currentPage.value;
+    const numbers = [...new Set([1, total, current - 1, current, current + 1])]
+        .filter(page => page >= 1 && page <= total)
+        .sort((a, b) => a - b);
+
+    const items: Array<number | 'ellipsis'> = [];
+    numbers.forEach((page, index) => {
+        if (index > 0 && page - numbers[index - 1] > 1) items.push('ellipsis');
+        items.push(page);
+    });
+
+    return items;
+});
+
+function goToPage(page: number) {
+    if (page < 1 || page > lastPage.value) return;
+    currentPage.value = page;
+}
+
+const featuredReplacement = computed(() => mappedResults.value.find(item => item.type === 'replacement'));
+const featuredMission = computed(() => mappedResults.value.find(item => item.type === 'mission'));
+
+const soonItems = computed(() => {
+    const now = Date.now();
+
+    return mappedResults.value
+        .filter(item => item.startDateIso && new Date(item.startDateIso).getTime() >= now)
+        .sort((a, b) => new Date(a.startDateIso!).getTime() - new Date(b.startDateIso!).getTime())
+        .slice(0, 4)
+        .map((item) => {
+            const days = Math.max(0, Math.ceil((new Date(item.startDateIso!).getTime() - now) / 86_400_000));
+
+            return {
+                type: item.type,
+                title: `${item.date} → ${item.city}`,
+                meta: item.institution
+                    ? [item.institution.name, item.careTypes[0]].filter(Boolean).join(' · ')
+                    : (item.careTypes[0] ?? item.city),
+                countdown: `J-${days}`,
+                urgency: days <= 3 ? 'critical' : days <= 10 ? 'soon' : 'calm',
+            };
+        });
+});
 
 const visibleTags = (tags: string[], max = 3) => ({
     shown: tags.slice(0, max),
     extra: Math.max(0, tags.length - max),
 });
 
-const soonItems = ref([
-    { type: 'replacement', title: '30/08 → Wavre', meta: 'Soins généraux', countdown: 'J-2', urgency: 'critical' },
-    { type: 'mission', title: '03/09 → Liège', meta: 'CHU Liège · Soins intensifs', countdown: 'J-6', urgency: 'critical' },
-    { type: 'replacement', title: '06/09 → Namur', meta: 'Pédiatrie', countdown: 'J-9', urgency: 'soon' },
-    { type: 'mission', title: '13/09 → Nivelles', meta: 'Clinique Saint-Pierre · Maternité', countdown: 'J-16', urgency: 'calm' },
-]);
+const debouncedRefresh = useDebounceFn(() => {
+    currentPage.value = 1;
+    refreshResults();
+}, 300);
+
+watch(() => [filters.province, filters.city, filters.zipCode, filters.days.join(',')], debouncedRefresh);
+watch(currentPage, () => refreshResults());
 
 const handleSearch = () => {
-    console.log('Search:', searchKeyword.value);
+    currentPage.value = 1;
+    refreshResults();
 };
 
 const resetFilters = () => {
     Object.assign(filters, DEFAULT_FILTERS, { days: [] as string[] });
+    searchKeyword.value = '';
+    currentPage.value = 1;
+    refreshResults();
 };
 </script>
 
