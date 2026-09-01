@@ -438,7 +438,10 @@
                     </div>
                 </div>
 
-                <div class="bg-primary rounded-md p-6 flex flex-col items-center text-center gap-3 sticky top-20">
+                <div
+                    v-if="!isLoggedIn"
+                    class="bg-primary rounded-md p-6 flex flex-col items-center text-center gap-3 sticky top-20"
+                >
                     <div class="w-11 h-11 rounded-md bg-primary-foreground/15 flex items-center justify-center text-primary-foreground shrink-0">
                         <UserPlus class="w-5 h-5" />
                     </div>
@@ -496,6 +499,9 @@ import {
     SheetTitle,
     SheetTrigger,
 } from '@/components/ui/sheet';
+import { replacementListings } from '~/lib/replacements-data';
+
+const { isLoggedIn } = useAuth();
 
 useHead({
     title: 'Remplacements & Missions disponibles',
@@ -551,73 +557,7 @@ const currentPage = ref(1);
 
 // Zip codes / care types can hold anywhere from 1 to 10+ values — only the
 // first 3 are shown, the rest collapse into a "+N" chip (see visibleTags).
-const listResults = ref([
-    {
-        id: 1,
-        type: 'replacement',
-        date: '03/07 → 15/07/2026',
-        city: 'Wavre',
-        zipCodes: ['1300', '1301'],
-        careTypes: ['Soins généraux'],
-        slots: ['Matin', 'Après-midi'],
-        description: 'Remplacement suite à un congé maternité, service de médecine interne, équipe de 6 infirmiers.',
-    },
-    {
-        id: 2,
-        type: 'mission',
-        date: '10/07 → 31/07/2026',
-        city: 'Liège',
-        zipCodes: ['4000'],
-        careTypes: ['Soins intensifs'],
-        slots: ['Matin'],
-        isBoosted: true,
-        patientsPerDay: 8,
-        institution: { initial: 'CH', name: 'CHU Liège', contract: 'Contrat CDI · Infirmier(e) en soins intensifs' },
-    },
-    {
-        id: 3,
-        type: 'replacement',
-        date: '17/07 → 24/07/2026',
-        city: 'Bierges +6 autres',
-        zipCodes: ['1301', '1300', '1340', '1341', '1342', '1348', '1367'],
-        careTypes: ['Gériatrie', 'Soins palliatifs', 'Pansements', 'Toilette', 'Aide au repas', 'Kinésithérapie', 'Suivi médical', 'Prise de sang', 'Diabétologie', 'Cardiologie'],
-        slots: ['Matin', 'Après-midi'],
-        isUrgent: true,
-        description: 'Remplacement suite à un arrêt maladie en maison de repos, plusieurs sites, ambiance calme et familiale.',
-    },
-    {
-        id: 4,
-        type: 'mission',
-        date: '01/08 → 30/09/2026',
-        city: 'Nivelles',
-        zipCodes: ['1400'],
-        careTypes: ['Maternité'],
-        slots: ['Après-midi'],
-        patientsPerDay: 5,
-        institution: { initial: 'CS', name: 'Clinique Saint-Pierre', contract: 'Contrat CDD 6 mois · Sage-femme' },
-    },
-    {
-        id: 5,
-        type: 'replacement',
-        date: '05/08 → 12/08/2026',
-        city: 'Namur +9 autres',
-        zipCodes: ['5000', '5001', '5002', '5003', '5004', '5010', '5020', '5024', '5030', '5031'],
-        careTypes: ['Pédiatrie', 'Néonatologie', 'Vaccination', 'Suivi de croissance', 'Urgences pédiatriques'],
-        slots: ['Matin', 'Après-midi'],
-        description: 'Service de pédiatrie générale, plusieurs implantations, ambiance familiale et bienveillante.',
-    },
-    {
-        id: 6,
-        type: 'replacement',
-        date: '20/08 → 27/08/2026',
-        city: 'Arlon',
-        zipCodes: ['6700', '6717', '6721'],
-        careTypes: ['Soins à domicile', 'Pansements', 'Injections'],
-        slots: ['Matin'],
-        isNew: true,
-        description: 'Tournée de soins à domicile, patientèle fidélisée, véhicule non fourni.',
-    },
-]);
+const listResults = ref(replacementListings);
 
 const visibleTags = (tags: string[], max = 3) => ({
     shown: tags.slice(0, max),
