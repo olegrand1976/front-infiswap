@@ -108,7 +108,7 @@
                         <span>{{ item.city }}</span>
                     </div>
                     <div
-                        v-if="item.zipCodes.length"
+                        v-if="isLoggedIn && item.zipCodes.length"
                         class="flex items-center gap-2 text-sm text-foreground"
                     >
                         <MapPin class="w-4 h-4 text-primary shrink-0" />
@@ -157,7 +157,7 @@
                 </div>
 
                 <div
-                    v-if="item.institution"
+                    v-if="isLoggedIn && item.institution"
                     class="flex items-center gap-3.5 bg-surface-subtle rounded-md px-4 py-3.5"
                 >
                     <span class="w-10 h-10 rounded-md shrink-0 bg-success/20 text-success flex items-center justify-center text-sm font-black">
@@ -177,11 +177,27 @@
                 </div>
 
                 <p
-                    v-if="item.description"
+                    v-if="isLoggedIn && item.description"
                     class="text-sm text-muted-foreground leading-relaxed"
                 >
                     {{ item.description }}
                 </p>
+
+                <div
+                    v-if="!isLoggedIn && (item.description || item.institution || item.zipCodes.length)"
+                    class="flex flex-wrap items-center justify-between gap-3 rounded-md border border-dashed border-border bg-surface-subtle px-4 py-3.5"
+                >
+                    <div class="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Lock class="w-4 h-4 shrink-0" />
+                        <span>Code postal exact, description complète et établissement visibles après connexion.</span>
+                    </div>
+                    <NuxtLink
+                        :to="loginHref"
+                        class="shrink-0 text-sm font-bold text-primary hover:underline"
+                    >
+                        Voir plus
+                    </NuxtLink>
+                </div>
             </div>
 
             <!-- Nearby -->
@@ -308,7 +324,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { ArrowLeft, ArrowRight, Activity, Briefcase, Calendar, Check, ChevronRight, MapPin, ShieldAlert, UserPlus, Users } from 'lucide-vue-next';
+import { ArrowLeft, ArrowRight, Activity, Briefcase, Calendar, Check, ChevronRight, Lock, MapPin, ShieldAlert, UserPlus, Users } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
@@ -322,6 +338,8 @@ definePageMeta({
 const { isLoggedIn } = useAuth();
 const { $apifetch } = useNuxtApp();
 const route = useRoute();
+
+const loginHref = computed(() => `/login?redirect=${encodeURIComponent(route.fullPath)}`);
 
 const id = computed(() => Number(route.params.id));
 const queryType = computed<'replacement' | 'mission' | null>(() => {
