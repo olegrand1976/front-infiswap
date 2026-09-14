@@ -551,7 +551,7 @@ const DAY_TO_ENGLISH: Record<string, string> = {
 const DEFAULT_FILTERS = {
     topReplacements: true,
     days: [] as string[],
-    province: 'Brabant wallon',
+    province: '',
     showReplacements: true,
     showMissions: true,
     zipCode: '',
@@ -598,7 +598,7 @@ function buildSearchPayload() {
     return {
         perPage,
         page: currentPage.value,
-        provinces: [filters.province],
+        provinces: filters.province ? [filters.province] : [],
         cities,
         zipCodes,
         days: filters.days.map(day => DAY_TO_ENGLISH[day]).filter(Boolean),

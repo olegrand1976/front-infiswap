@@ -92,7 +92,7 @@ const filters = defineModel<ReplacementsFilters>('filters', { required: true });
             </p>
             <Select v-model="filters.province">
                 <SelectTrigger class="rounded-md w-full text-sm bg-surface">
-                    <SelectValue />
+                    <SelectValue placeholder="Toutes les provinces" />
                 </SelectTrigger>
                 <SelectContent class="rounded-md">
                     <SelectItem value="Brabant wallon">
