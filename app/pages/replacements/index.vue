@@ -230,7 +230,36 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 gap-5">
+                    <div
+                        v-if="pending"
+                        class="grid grid-cols-1 gap-5"
+                    >
+                        <Card
+                            v-for="n in 3"
+                            :key="n"
+                            variant="none"
+                            class="bg-surface border rounded-md p-5 flex flex-col gap-3"
+                        >
+                            <div class="flex items-start gap-3">
+                                <Skeleton class="w-10 h-10 rounded-md shrink-0" />
+                                <div class="flex-1 space-y-2">
+                                    <Skeleton class="h-4 w-40" />
+                                    <Skeleton class="h-3 w-24" />
+                                </div>
+                            </div>
+                            <Skeleton class="h-3 w-full" />
+                            <Skeleton class="h-3 w-2/3" />
+                            <div class="flex gap-3 pt-3 border-t border-border">
+                                <Skeleton class="h-4 w-16" />
+                                <Skeleton class="h-4 w-16" />
+                            </div>
+                        </Card>
+                    </div>
+
+                    <div
+                        v-else
+                        class="grid grid-cols-1 gap-5"
+                    >
                         <Card
                             v-for="item in listResults"
                             :key="`${item.type}-${item.id}`"
@@ -504,6 +533,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
     Select,
     SelectContent,
@@ -615,7 +645,7 @@ interface SearchMergedResponse {
     };
 }
 
-const { data: searchResponse, refresh: refreshResults } = await useAsyncData<SearchMergedResponse>(
+const { data: searchResponse, pending, refresh: refreshResults } = await useAsyncData<SearchMergedResponse>(
     'replacements-search',
     () => $apifetch('/api/replacements/search/merged', {
         method: 'POST',
