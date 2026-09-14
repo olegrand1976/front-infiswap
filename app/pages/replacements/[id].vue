@@ -105,7 +105,7 @@
                 <div class="flex flex-col gap-2.5">
                     <div class="flex items-center gap-2 text-muted-foreground text-sm">
                         <MapPin class="w-4 h-4 shrink-0" />
-                        <span>{{ item.city }}</span>
+                        <span>{{ item.city }}<template v-if="item.country">, {{ item.country }}</template></span>
                     </div>
                     <div
                         v-if="isLoggedIn && item.zipCodes.length"

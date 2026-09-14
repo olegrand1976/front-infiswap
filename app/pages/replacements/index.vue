@@ -506,6 +506,31 @@
                         Créer mon compte
                     </Button>
                 </div>
+
+                <div
+                    v-if="showPremiumPromo"
+                    class="bg-primary rounded-md p-6 flex flex-col items-center text-center gap-3 sticky top-20"
+                >
+                    <div class="w-11 h-11 rounded-md bg-primary-foreground/15 flex items-center justify-center text-primary-foreground shrink-0">
+                        <Crown class="w-5 h-5" />
+                    </div>
+                    <span class="text-xs font-bold uppercase tracking-wide text-primary-foreground/80">
+                        {{ premiumBadge }}
+                    </span>
+                    <h3 class="font-secondary text-base font-extrabold text-primary-foreground leading-snug">
+                        {{ premiumTitle }}
+                    </h3>
+                    <p class="text-primary-foreground/70 text-sm font-light">
+                        {{ premiumSubtitle }}
+                    </p>
+                    <NuxtLink
+                        :to="localePath('/dashboard/subscriptions')"
+                        class="inline-flex items-center justify-center rounded-md bg-primary-foreground px-4 py-2 text-sm font-bold text-primary hover:bg-primary-foreground/90"
+                        @click="trackEvent('pro_upsell_click', { source: 'public_replacements' })"
+                    >
+                        {{ premiumCta }}
+                    </NuxtLink>
+                </div>
             </div>
         </div>
     </div>
@@ -527,6 +552,7 @@ import {
     Activity,
     Users,
     ShieldAlert,
+    Crown,
     X,
 } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
@@ -552,6 +578,14 @@ import {
 import { mapApiRecordToListing } from '~/lib/replacementsApi';
 
 const { isLoggedIn } = useAuth();
+const { isPremium: isProSubscriber, fetchStatus: fetchProStatus } = useProSubscription();
+const { badge: premiumBadge, title: premiumTitle, subtitle: premiumSubtitle, cta: premiumCta } = usePremiumMarketing();
+const localePath = useLocalePath();
+const { trackEvent } = useProductAnalytics();
+
+if (isLoggedIn.value) {
+    fetchProStatus();
+}
 const { $apifetch } = useNuxtApp();
 
 useHead({
@@ -719,6 +753,16 @@ const soonItems = computed(() => {
                 urgency: days <= 3 ? 'critical' : days <= 10 ? 'soon' : 'calm',
             };
         });
+});
+
+const showPremiumPromo = computed(() =>
+    isLoggedIn.value && !isProSubscriber.value && soonItems.value.length === 0,
+);
+
+watch(showPremiumPromo, (visible) => {
+    if (visible) {
+        trackEvent('pro_upsell_impression', { source: 'public_replacements' });
+    }
 });
 
 const visibleTags = (tags: string[], max = 3) => ({

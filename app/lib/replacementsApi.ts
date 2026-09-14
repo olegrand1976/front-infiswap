@@ -1,4 +1,5 @@
 import type { ReplacementListing } from '~/lib/replacementsData';
+import { replacementCountryLabel } from '~/lib/replacementCountry';
 
 function parseJson<T>(value: unknown, fallback: T): T {
     if (typeof value !== 'string') {
@@ -71,6 +72,7 @@ export function mapApiRecordToListing(record: any): ReplacementListing {
             date: formatDateRange(record.start_date, record.end_date),
             startDateIso: record.start_date ?? undefined,
             city: institution?.city || 'Lieu à confirmer',
+            country: institution?.country ? replacementCountryLabel(institution.country) : undefined,
             zipCodes: institution?.zip_code ? [institution.zip_code] : [],
             careTypes: [],
             slots: slotsFromMission(record),
@@ -105,6 +107,7 @@ export function mapApiRecordToListing(record: any): ReplacementListing {
         periods: periodRanges.length ? periodRanges : undefined,
         startDateIso: record.start_date ?? earliestPeriodStart ?? undefined,
         city: cities[0] || 'Lieu à confirmer',
+        country: record.country ?? undefined,
         zipCodes,
         careTypes,
         slots: slotsFromTimeSlot(record.timeSlot),
