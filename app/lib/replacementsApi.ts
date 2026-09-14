@@ -72,6 +72,7 @@ export function mapApiRecordToListing(record: any): ReplacementListing {
             date: formatDateRange(record.start_date, record.end_date),
             startDateIso: record.start_date ?? undefined,
             city: institution?.city || 'Lieu à confirmer',
+            cities: institution?.city ? [institution.city] : [],
             country: institution?.country ? replacementCountryLabel(institution.country) : undefined,
             zipCodes: institution?.zip_code ? [institution.zip_code] : [],
             careTypes: [],
@@ -107,7 +108,9 @@ export function mapApiRecordToListing(record: any): ReplacementListing {
         periods: periodRanges.length ? periodRanges : undefined,
         startDateIso: record.start_date ?? earliestPeriodStart ?? undefined,
         city: cities[0] || 'Lieu à confirmer',
-        country: record.country ?? undefined,
+        cities,
+        country: record.country
+            ?? (record.user?.country ? replacementCountryLabel(record.user.country) : undefined),
         zipCodes,
         careTypes,
         slots: slotsFromTimeSlot(record.timeSlot),

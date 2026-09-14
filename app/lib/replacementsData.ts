@@ -14,6 +14,7 @@ export interface ReplacementListing {
     periods?: string[];
     startDateIso?: string;
     city: string;
+    cities: string[];
     country?: string;
     zipCodes: string[];
     careTypes: string[];

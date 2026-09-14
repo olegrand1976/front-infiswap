@@ -297,7 +297,16 @@
                                     </h4>
                                     <div class="flex items-center gap-1.5 text-muted-foreground text-xs mt-0.5">
                                         <MapPin class="w-3 h-3 shrink-0" />
-                                        {{ item.city }}
+                                        <span>
+                                            {{ item.cities.length ? visibleTags(item.cities).shown.join(', ') : 'Lieu à confirmer' }}
+                                            <span
+                                                v-if="visibleTags(item.cities).extra > 0"
+                                                class="text-primary font-bold"
+                                            >
+                                                +{{ visibleTags(item.cities).extra }}
+                                            </span>
+                                            <template v-if="item.country">, {{ item.country }}</template>
+                                        </span>
                                     </div>
                                 </div>
                                 <div
