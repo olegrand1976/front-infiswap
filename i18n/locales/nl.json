@@ -1098,7 +1098,9 @@
       "createdBy": "Aangemaakt door",
       "responsesHeader": "Reacties",
       "responsesCountCell": "{n} reacties"
-    }
+    },
+    "afternoonSlot": "Namiddag",
+    "fullDaySlot": "Hele dag"
   },
   "notifications": {
     "empty": "Geen meldingen",

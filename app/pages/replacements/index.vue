@@ -697,10 +697,18 @@ const { data: searchResponse, pending, refresh: refreshResults } = await useAsyn
     }),
 );
 
+const listingLabels = computed(() => ({
+    placeToConfirm: t('replacements.search.placeToConfirm'),
+    morning: t('replacements.table.colMorning'),
+    afternoon: t('replacements.afternoonSlot'),
+    evening: t('replacements.table.colEvening'),
+    fullDay: t('replacements.fullDaySlot'),
+}));
+
 // Zip codes / care types can hold anywhere from 1 to 10+ values — only the
 // first 3 are shown, the rest collapse into a "+N" chip (see visibleTags).
 const mappedResults = computed(() =>
-    (searchResponse.value?.replacements?.data ?? []).map(mapApiRecordToListing),
+    (searchResponse.value?.replacements?.data ?? []).map(record => mapApiRecordToListing(record, listingLabels.value)),
 );
 
 const listResults = computed(() => {

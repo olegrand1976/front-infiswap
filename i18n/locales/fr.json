@@ -1098,7 +1098,9 @@
       "createdBy": "Créé par",
       "responsesHeader": "Réponses",
       "responsesCountCell": "{n} réponses"
-    }
+    },
+    "afternoonSlot": "Après-midi",
+    "fullDaySlot": "Journée"
   },
   "notifications": {
     "empty": "Aucune notification",

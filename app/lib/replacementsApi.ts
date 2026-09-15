@@ -40,20 +40,36 @@ function formatPeriodRanges(periods: ApiPeriod[]): string[] {
         .map(period => formatDateRange(period.start_date, period.end_date ?? period.start_date));
 }
 
-function slotsFromTimeSlot(raw: unknown): string[] {
+export interface ListingLabels {
+    placeToConfirm: string;
+    morning: string;
+    afternoon: string;
+    evening: string;
+    fullDay: string;
+}
+
+const DEFAULT_LISTING_LABELS: ListingLabels = {
+    placeToConfirm: 'Lieu à confirmer',
+    morning: 'Matin',
+    afternoon: 'Après-midi',
+    evening: 'Soir',
+    fullDay: 'Journée',
+};
+
+function slotsFromTimeSlot(raw: unknown, labels: ListingLabels): string[] {
     const timeSlot = parseJson<Record<string, unknown>>(raw, {});
     const slots: string[] = [];
-    if (timeSlot.morning) slots.push('Matin');
-    if (timeSlot.afternoon) slots.push('Après-midi');
-    if (timeSlot.evening) slots.push('Soir');
+    if (timeSlot.morning) slots.push(labels.morning);
+    if (timeSlot.afternoon) slots.push(labels.afternoon);
+    if (timeSlot.evening) slots.push(labels.evening);
     return slots;
 }
 
-function slotsFromMission(item: Record<string, unknown>): string[] {
+function slotsFromMission(item: Record<string, unknown>, labels: ListingLabels): string[] {
     const slots: string[] = [];
-    if (item.morning_start_at) slots.push('Matin');
-    if (item.afternoon_start_at) slots.push('Après-midi');
-    if (!slots.length && item.time_start_at) slots.push('Journée');
+    if (item.morning_start_at) slots.push(labels.morning);
+    if (item.afternoon_start_at) slots.push(labels.afternoon);
+    if (!slots.length && item.time_start_at) slots.push(labels.fullDay);
     return slots;
 }
 
@@ -62,7 +78,7 @@ function institutionInitial(name?: string | null): string {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function mapApiRecordToListing(record: any): ReplacementListing {
+export function mapApiRecordToListing(record: any, labels: ListingLabels = DEFAULT_LISTING_LABELS): ReplacementListing {
     if (record.record_type === 'mission') {
         const institution = record.institution;
 
@@ -71,12 +87,12 @@ export function mapApiRecordToListing(record: any): ReplacementListing {
             type: 'mission',
             date: formatDateRange(record.start_date, record.end_date),
             startDateIso: record.start_date ?? undefined,
-            city: institution?.city || 'Lieu à confirmer',
+            city: institution?.city || labels.placeToConfirm,
             cities: institution?.city ? [institution.city] : [],
             country: institution?.country ? replacementCountryLabel(institution.country) : undefined,
             zipCodes: institution?.zip_code ? [institution.zip_code] : [],
             careTypes: [],
-            slots: slotsFromMission(record),
+            slots: slotsFromMission(record, labels),
             description: record.description ?? undefined,
             patientsPerDay: undefined,
             institution: institution
@@ -107,13 +123,13 @@ export function mapApiRecordToListing(record: any): ReplacementListing {
         date: periodRanges[0] ?? formatDateRange(record.start_date, record.end_date),
         periods: periodRanges.length ? periodRanges : undefined,
         startDateIso: record.start_date ?? earliestPeriodStart ?? undefined,
-        city: cities[0] || 'Lieu à confirmer',
+        city: cities[0] || labels.placeToConfirm,
         cities,
         country: record.country
             ?? (record.user?.country ? replacementCountryLabel(record.user.country) : undefined),
         zipCodes,
         careTypes,
-        slots: slotsFromTimeSlot(record.timeSlot),
+        slots: slotsFromTimeSlot(record.timeSlot, labels),
         description: record.comment ?? undefined,
         isBoosted: Boolean(record.is_boosted),
         isUrgent: record.type === 'immediate',

@@ -352,6 +352,14 @@ const queryType = computed<'replacement' | 'mission' | null>(() => {
 // The list page always links here with ?type=..., but fall back to trying
 // both endpoints in case of a bare/bookmarked URL — replacement and mission
 // ids come from separate tables and can collide.
+const listingLabels = computed(() => ({
+    placeToConfirm: t('replacements.search.placeToConfirm'),
+    morning: t('replacements.table.colMorning'),
+    afternoon: t('replacements.afternoonSlot'),
+    evening: t('replacements.table.colEvening'),
+    fullDay: t('replacements.fullDaySlot'),
+}));
+
 async function fetchItem(): Promise<ReplacementListing | null> {
     const attempts: Array<'replacement' | 'mission'> = queryType.value ? [queryType.value] : ['replacement', 'mission'];
 
@@ -363,7 +371,7 @@ async function fetchItem(): Promise<ReplacementListing | null> {
             const record = type === 'mission' ? response.mission : response.replacement;
 
             if (record) {
-                return mapApiRecordToListing({ ...record, record_type: type });
+                return mapApiRecordToListing({ ...record, record_type: type }, listingLabels.value);
             }
         }
         catch {
@@ -399,7 +407,7 @@ const nearby = computed(() => {
     const current = item.value;
 
     return (nearbyResponse.value?.replacements?.data ?? [])
-        .map(mapApiRecordToListing)
+        .map(record => mapApiRecordToListing(record, listingLabels.value))
         .filter(listing => !current || listing.id !== current.id || listing.type !== current.type)
         .slice(0, 4);
 });
