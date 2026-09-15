@@ -5,14 +5,14 @@
             class="inline-flex items-center gap-1.5 text-sm font-semibold text-muted-foreground hover:text-primary transition-colors mt-6 mb-4"
         >
             <ArrowLeft class="w-4 h-4" />
-            Retour aux résultats
+            {{ t('replacements.detailPage.backToResults') }}
         </NuxtLink>
 
         <div
             v-if="pending"
             class="max-w-4xl mx-auto py-20 text-center text-muted-foreground"
         >
-            Chargement...
+            {{ t('common.loading') }}
         </div>
 
         <div
@@ -20,13 +20,13 @@
             class="max-w-4xl mx-auto py-20 text-center flex flex-col items-center gap-3"
         >
             <p class="text-lg font-bold text-foreground">
-                Cette offre n'existe plus ou n'est plus disponible.
+                {{ t('replacements.detailPage.offerGoneTitle') }}
             </p>
             <NuxtLink
                 to="/replacements"
                 class="text-primary font-semibold hover:underline"
             >
-                Voir toutes les offres
+                {{ t('replacements.detailPage.seeAllOffers') }}
             </NuxtLink>
         </div>
 
@@ -40,14 +40,14 @@
                     to="/"
                     class="hover:text-primary"
                 >
-                    Accueil
+                    {{ t('replacements.detailPage.breadcrumbHome') }}
                 </NuxtLink>
                 <ChevronRight class="w-3.5 h-3.5" />
                 <NuxtLink
                     to="/replacements"
                     class="hover:text-primary"
                 >
-                    Remplacements &amp; Missions
+                    {{ t('replacements.detailPage.breadcrumbCategory') }}
                 </NuxtLink>
                 <ChevronRight class="w-3.5 h-3.5" />
                 <span class="text-foreground font-medium">{{ item.institution?.name || item.city }}</span>
@@ -61,21 +61,21 @@
                             class="inline-flex items-center rounded-full px-3.5 py-1.5 text-[11px] font-extrabold uppercase tracking-widest"
                             :class="item.type === 'mission' ? 'bg-success/15 text-success' : 'bg-primary/10 text-primary'"
                         >
-                            {{ item.type === 'mission' ? 'Mission' : 'Remplacement' }}
+                            {{ item.type === 'mission' ? t('replacements.typeMissionLabel') : t('replacements.typeReplacementLabel') }}
                         </span>
                         <span
                             v-if="item.isUrgent"
                             class="inline-flex items-center gap-1.5 rounded-full bg-destructive/10 px-3.5 py-1.5 text-[11px] font-extrabold uppercase tracking-widest text-destructive"
                         >
                             <ShieldAlert class="w-3.5 h-3.5" />
-                            Urgent
+                            {{ t('replacements.typeUrgent') }}
                         </span>
                     </div>
                     <Button
                         href="/register"
                         class="rounded-md gap-2 font-bold"
                     >
-                        Postuler {{ item.type === 'mission' ? 'à cette mission' : 'à ce remplacement' }}
+                        {{ item.type === 'mission' ? t('replacements.detailPage.applyToMission') : t('replacements.detailPage.applyToReplacement') }}
                         <ArrowRight class="w-4 h-4" />
                     </Button>
                 </div>
@@ -88,7 +88,7 @@
                         v-if="item.periods && item.periods.length > 1"
                         class="text-xs font-semibold text-muted-foreground uppercase tracking-wide"
                     >
-                        Périodes
+                        {{ t('replacements.detailPage.periodsLabel') }}
                     </p>
                     <div class="flex flex-wrap gap-2">
                         <span
@@ -140,7 +140,7 @@
                         class="flex items-center gap-2 text-sm"
                     >
                         <Users class="w-4.5 h-4.5 text-primary" />
-                        <span>{{ item.patientsPerDay }} patients / jour</span>
+                        <span>{{ t('replacements.detailPage.patientsPerDay', { n: item.patientsPerDay }) }}</span>
                     </div>
                     <div class="flex items-center gap-5">
                         <div
@@ -189,13 +189,13 @@
                 >
                     <div class="flex items-center gap-2 text-sm text-muted-foreground">
                         <Lock class="w-4 h-4 shrink-0" />
-                        <span>Code postal exact, description complète et établissement visibles après connexion.</span>
+                        <span>{{ t('replacements.detailPage.exactZipNote') }}</span>
                     </div>
                     <NuxtLink
                         :to="loginHref"
                         class="shrink-0 text-sm font-bold text-primary hover:underline"
                     >
-                        Voir plus
+                        {{ t('replacements.seeMore') }}
                     </NuxtLink>
                 </div>
             </div>
@@ -206,7 +206,7 @@
                 class="flex flex-col gap-5"
             >
                 <h2 class="font-secondary text-xl font-extrabold text-foreground">
-                    Remplacements et missions aux alentours
+                    {{ t('replacements.detailPage.nearbyHeading') }}
                 </h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                     <Card
@@ -220,14 +220,14 @@
                             variant="outline"
                             class="!h-auto !w-auto absolute top-0 right-4 -translate-y-1/2 rounded-full bg-accent-green text-white text-[10px] font-black px-2.5 py-1 uppercase tracking-widest shadow-md"
                         >
-                            Nouveau
+                            {{ t('replacements.newBadge') }}
                         </Badge>
                         <Badge
                             v-else-if="nearbyItem.isUrgent"
                             variant="outline"
                             class="!h-auto !w-auto absolute top-0 right-4 -translate-y-1/2 rounded-full bg-destructive text-white text-[10px] font-black px-2.5 py-1 uppercase tracking-widest shadow-md"
                         >
-                            Urgent
+                            {{ t('replacements.typeUrgent') }}
                         </Badge>
 
                         <div :class="['w-10 h-10 rounded-md flex items-center justify-center shrink-0', nearbyItem.type === 'replacement' ? 'bg-primary/10' : 'bg-success/10']">
@@ -272,7 +272,7 @@
                             class="inline-flex items-center gap-1 text-xs font-bold hover:underline mt-auto"
                             :class="nearbyItem.type === 'replacement' ? 'text-primary' : 'text-success'"
                         >
-                            Voir plus
+                            {{ t('replacements.seeMore') }}
                         </NuxtLink>
                     </Card>
                 </div>
@@ -289,10 +289,10 @@
                     </span>
                     <div>
                         <h3 class="font-secondary text-lg font-bold text-primary-foreground">
-                            Créez un compte gratuit pour postuler aux missions
+                            {{ t('replacements.freeAccountHeading') }}
                         </h3>
                         <p class="text-primary-foreground/75 text-sm mt-1">
-                            Accédez à toutes les missions, postulez en 1 clic et gérez vos disponibilités.
+                            {{ t('replacements.freeAccountDesc') }}
                         </p>
                     </div>
                 </div>
@@ -300,7 +300,7 @@
                     href="/register"
                     class="bg-primary-foreground text-primary hover:bg-primary-foreground/90 font-bold shrink-0"
                 >
-                    Créer mon compte
+                    {{ t('replacements.createAccountCta') }}
                 </Button>
             </div>
         </div>
@@ -314,7 +314,7 @@
                 href="/register"
                 class="w-full rounded-md gap-2 font-bold justify-center"
             >
-                Postuler {{ item.type === 'mission' ? 'à cette mission' : 'à ce remplacement' }}
+                {{ item.type === 'mission' ? t('replacements.detailPage.applyToMission') : t('replacements.detailPage.applyToReplacement') }}
                 <ArrowRight class="w-4 h-4" />
             </Button>
         </div>
@@ -335,6 +335,7 @@ definePageMeta({
     layout: 'replacements',
 });
 
+const { t } = useI18n();
 const { isLoggedIn } = useAuth();
 const { $apifetch } = useNuxtApp();
 const route = useRoute();
@@ -405,7 +406,10 @@ const nearby = computed(() => {
 
 useHead(() => ({
     title: item.value
-        ? `${item.value.type === 'mission' ? 'Mission' : 'Remplacement'} — ${item.value.city} — InfiSwap`
-        : 'Remplacement — InfiSwap',
+        ? t('replacements.detailPage.pageTitle', {
+                type: item.value.type === 'mission' ? t('replacements.typeMissionLabel') : t('replacements.typeReplacementLabel'),
+                city: item.value.city,
+            })
+        : t('replacements.detailPage.fallbackTitle'),
 }));
 </script>

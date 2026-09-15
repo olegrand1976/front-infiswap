@@ -17,7 +17,7 @@
             <DialogContent class="max-w-[90vw] lg:max-w-4xl">
                 <DialogHeader>
                     <DialogTitle class="text-center">
-                        Détails des remplacements
+                        {{ t('replacements.adminNurseTables.dialogTitle') }}
                     </DialogTitle>
                 </DialogHeader>
 
@@ -29,19 +29,19 @@
                         <thead class="bg-gray-100 sticky top-0">
                             <tr>
                                 <th class="border p-3 text-left min-w-[120px]">
-                                    Codes postaux
+                                    {{ t('replacements.colZip') }}
                                 </th>
                                 <th class="border p-3 text-left min-w-[150px]">
-                                    Ville(s)
+                                    {{ t('replacements.citiesLabelParenS') }}
                                 </th>
                                 <th class="border p-3 text-left min-w-[100px]">
-                                    Du
+                                    {{ t('replacements.adminNurseTables.colFrom') }}
                                 </th>
                                 <th class="border p-3 text-left min-w-[100px]">
-                                    Au
+                                    {{ t('replacements.adminNurseTables.colTo') }}
                                 </th>
                                 <th class="border p-3 text-left w-20">
-                                    Action
+                                    {{ t('replacements.colAction') }}
                                 </th>
                             </tr>
                         </thead>
@@ -67,7 +67,7 @@
                                     <NuxtLink
                                         :to="`/dashboard/admin/replacements/${replacement.id}`"
                                         class="inline-flex items-center justify-center size-8 bg-blue-50 rounded-full hover:bg-blue-100 transition-colors mx-auto"
-                                        title="Voir détails"
+                                        :title="t('replacements.adminNurseTables.seeDetailsTitle')"
                                     >
                                         <Eye class="size-5 text-blue-600" />
                                     </NuxtLink>
@@ -95,6 +95,7 @@ interface NursePostedRow {
     replacements: Replacement[];
 }
 
+const { t } = useI18n();
 const { data, count, nursesPosted } = useReplacements();
 
 const perPage = ref(PERPAGE);
@@ -139,15 +140,15 @@ const openModal = (row: NursePostedRow) => {
 
 const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
-    return isNaN(date.getTime()) ? 'Date invalide' : date.toLocaleDateString();
+    return isNaN(date.getTime()) ? t('replacements.adminNurseTables.invalidDate') : date.toLocaleDateString();
 };
 
-const columns: ColumnDef<NursePostedRow>[] = [
+const columns = computed<ColumnDef<NursePostedRow>[]>(() => [
     {
         accessorKey: 'user.full_name',
         header: () =>
             h(Button, { variant: 'ghost', onClick: () => setSort('user.full_name') }, () => [
-                'Nom',
+                t('replacements.nameColumnLabel'),
                 h(ArrowUpDown, { class: 'w-4 h-4 ml-2' }),
             ]),
         cell: info => h('div', { class: 'py-2 ml-3' }, [h(UsersName, { user: info.row.original.user })]),
@@ -156,7 +157,7 @@ const columns: ColumnDef<NursePostedRow>[] = [
         accessorKey: 'user.email',
         header: () =>
             h(Button, { variant: 'ghost', onClick: () => setSort('user.email') }, () => [
-                'Email',
+                t('replacements.emailColumnLabel'),
                 h(ArrowUpDown, { class: 'w-4 h-4 ml-2' }),
             ]),
         cell: info => h('div', { class: 'py-2' }, info.getValue() as string),
@@ -165,7 +166,7 @@ const columns: ColumnDef<NursePostedRow>[] = [
         accessorKey: 'user.phone_number',
         header: () =>
             h(Button, { variant: 'ghost', onClick: () => setSort('user.phone_number') }, () => [
-                'Téléphone',
+                t('replacements.phoneColumnLabel'),
                 h(ArrowUpDown, { class: 'w-4 h-4 ml-2' }),
             ]),
         cell: info => h('div', { class: 'py-2' }, info.getValue() as string),
@@ -179,7 +180,7 @@ const columns: ColumnDef<NursePostedRow>[] = [
                     onClick: () => setSort('total_posted'),
                     class: 'flex items-center justify-center gap-1',
                 }, () => [
-                    'Nb. remplacements postés',
+                    t('replacements.adminNurseTables.postedCountHeader'),
                     h(ArrowUpDown, { class: 'w-4 h-4' }),
                 ]),
             ]),
@@ -193,12 +194,12 @@ const columns: ColumnDef<NursePostedRow>[] = [
                         class: 'text-blue-600 hover:underline',
                         onClick: () => openModal(row),
                     },
-                    `${val ?? 0} posté(s)`,
+                    t('replacements.adminNurseTables.postedCountCell', { n: val ?? 0 }),
                 ),
             ]);
         },
     },
-];
+]);
 
 onMounted(() => {
     refresh(page.value);

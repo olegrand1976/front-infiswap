@@ -5,22 +5,22 @@
                 <thead>
                     <tr class="bg-gray-100 text-left">
                         <th class="px-4 py-2 border-b">
-                            Type
+                            {{ t('replacements.filterType') }}
                         </th>
                         <th class="px-4 py-2 border-b">
-                            Nom
+                            {{ t('replacements.nameColumnLabel') }}
                         </th>
                         <th class="px-4 py-2 border-b">
-                            Email
+                            {{ t('replacements.emailColumnLabel') }}
                         </th>
                         <th class="px-4 py-2 border-b">
-                            Téléphone
+                            {{ t('replacements.phoneColumnLabel') }}
                         </th>
                         <th class="px-4 py-2 border-b">
-                            Statut
+                            {{ t('replacements.filterStatus') }}
                         </th>
                         <th class="px-4 py-2 border-b">
-                            Actions
+                            {{ t('replacements.actionsLabel') }}
                         </th>
                     </tr>
                 </thead>
@@ -31,7 +31,7 @@
                         class="hover:bg-gray-50"
                     >
                         <td class="px-4 py-2 border-b text-sm text-gray-600">
-                            {{ item.respondent?.type === 'institution' ? 'Institution' : 'Soignant' }}
+                            {{ item.respondent?.type === 'institution' ? t('replacements.institutionLabel') : t('replacements.nurseInterest.caregiverType') }}
                         </td>
                         <td class="px-4 py-2 border-b">
                             <template v-if="item.respondent?.type === 'institution'">
@@ -64,7 +64,7 @@
                                 class="text-blue-600 hover:underline"
                                 @click="openModal(item.respondent)"
                             >
-                                Voir détail
+                                {{ t('replacements.seeDetailCta') }}
                             </button>
                             <span
                                 v-else
@@ -103,16 +103,18 @@ defineProps<{
     responses: ReplacementResponse[];
 }>();
 
+const { t } = useI18n();
+
 const traduireStatut = (statut: string) => {
     switch (statut) {
         case 'pending':
-            return 'En cours';
+            return t('replacements.nurseInterest.statusInProgress');
         case 'confirmed':
-            return 'Accepté';
+            return t('replacements.accepted');
         case 'canceled':
-            return 'Annulé';
+            return t('replacements.statusCancelled');
         case 'refused':
-            return 'Refusé';
+            return t('replacements.refused');
         default:
             return statut;
     }

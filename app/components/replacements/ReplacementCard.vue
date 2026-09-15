@@ -4,7 +4,7 @@
             v-if="isNew"
             class="absolute -top-2 left-2 z-10 bg-primarytech text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-sm tracking-wide uppercase"
         >
-            New
+            {{ t('replacements.newBadge') }}
         </div>
 
         <div class="flex justify-between items-start gap-2">
@@ -54,7 +54,7 @@
             <div class="flex flex-col h-full min-h-[5.5rem] bg-gray-50/50 rounded-lg p-2">
                 <p class="font-medium text-gray-700 mb-1 flex items-center gap-1.5 text-xs shrink-0">
                     <span class="text-base">📅</span>
-                    <span>Périodes</span>
+                    <span>{{ t('replacements.periodsLabel') }}</span>
                 </p>
                 <p
                     class="text-gray-600 text-xs flex-1"
@@ -68,14 +68,14 @@
                     class="text-primary text-xs font-medium mt-1 text-left hover:underline shrink-0"
                     @click="expanded.periods = !expanded.periods"
                 >
-                    {{ expanded.periods ? 'Voir moins' : 'Voir plus' }}
+                    {{ expanded.periods ? t('replacements.seeLess') : t('replacements.seeMore') }}
                 </button>
             </div>
 
             <div class="flex flex-col h-full min-h-[5.5rem] bg-gray-50/50 rounded-lg p-2">
                 <p class="font-medium text-gray-700 mb-1 flex items-center gap-1.5 text-xs shrink-0">
                     <span class="text-base">📮</span>
-                    <span>C . P</span>
+                    <span>{{ t('replacements.card.zipAbbrev') }}</span>
                 </p>
                 <p
                     class="text-gray-600 text-xs flex-1"
@@ -89,14 +89,14 @@
                     class="text-primary text-xs font-medium mt-1 text-left hover:underline shrink-0"
                     @click="expanded.zipCodes = !expanded.zipCodes"
                 >
-                    {{ expanded.zipCodes ? 'Voir moins' : 'Voir plus' }}
+                    {{ expanded.zipCodes ? t('replacements.seeLess') : t('replacements.seeMore') }}
                 </button>
             </div>
 
             <div class="flex flex-col h-full min-h-[5.5rem] bg-gray-50/50 rounded-lg p-2">
                 <p class="font-medium text-gray-700 mb-1 flex items-center gap-1.5 text-xs shrink-0">
                     <span class="text-base">🏙️</span>
-                    <span>Villes</span>
+                    <span>{{ t('replacements.colCities') }}</span>
                 </p>
                 <p
                     class="text-gray-600 text-xs flex-1"
@@ -110,14 +110,14 @@
                     class="text-primary text-xs font-medium mt-1 text-left hover:underline shrink-0"
                     @click="expanded.cities = !expanded.cities"
                 >
-                    {{ expanded.cities ? 'Voir moins' : 'Voir plus' }}
+                    {{ expanded.cities ? t('replacements.seeLess') : t('replacements.seeMore') }}
                 </button>
             </div>
 
             <div class="flex flex-col h-full min-h-[5.5rem] bg-gray-50/50 rounded-lg p-2">
                 <p class="font-medium text-gray-700 mb-1 flex items-center gap-1.5 text-xs shrink-0">
                     <span class="text-base">🩺</span>
-                    <span>Soins</span>
+                    <span>{{ t('replacements.card.careTypesLabel') }}</span>
                 </p>
                 <p
                     class="text-gray-600 text-xs flex-1"
@@ -131,7 +131,7 @@
                     class="text-primary text-xs font-medium mt-1 text-left hover:underline shrink-0"
                     @click="expanded.careTypes = !expanded.careTypes"
                 >
-                    {{ expanded.careTypes ? 'Voir moins' : 'Voir plus' }}
+                    {{ expanded.careTypes ? t('replacements.seeLess') : t('replacements.seeMore') }}
                 </button>
             </div>
         </div>
@@ -141,7 +141,7 @@
             class="min-h-[2.75rem] bg-gray-50/50 rounded-lg p-2"
         >
             <p class="font-medium text-gray-700 mb-1 text-xs shrink-0">
-                Description
+                {{ t('replacements.description') }}
             </p>
             <p
                 class="text-xs text-gray-600"
@@ -155,7 +155,7 @@
                 class="text-primary text-xs font-medium mt-1 hover:underline"
                 @click="expanded.comment = !expanded.comment"
             >
-                {{ expanded.comment ? 'Voir moins' : 'Voir plus' }}
+                {{ expanded.comment ? t('replacements.seeLess') : t('replacements.seeMore') }}
             </button>
         </div>
 
@@ -179,7 +179,7 @@
                     class="flex items-center gap-1 shrink-0"
                 >
                     <Users class="w-3.5 h-3.5 text-primary" />
-                    <span>{{ replacement.patient_count }} patient(s)/jour</span>
+                    <span>{{ t('replacements.card.patientsPerDay', { n: replacement.patient_count }) }}</span>
                 </div>
             </div>
 
@@ -199,7 +199,7 @@
                         :href="`/dashboard/replacements/detail/${replacement.id}`"
                         class="shrink-0 gap-1.5"
                     >
-                        <span>Voir détail</span>
+                        <span>{{ t('replacements.seeDetailCta') }}</span>
                         <ChevronRight class="w-3.5 h-3.5" />
                     </Button>
                 </div>
@@ -233,7 +233,7 @@
                             class="w-48"
                         >
                             <DropdownMenuLabel class="text-gray-400 font-semibold px-2 py-1.5">
-                                Actions
+                                {{ t('replacements.actionsLabel') }}
                             </DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem as-child>
@@ -242,7 +242,7 @@
                                     class="flex items-center gap-2 text-sm cursor-pointer"
                                 >
                                     <Eye class="w-4 h-4 text-gray-500" />
-                                    <span>Voir le détail</span>
+                                    <span>{{ t('replacements.card.seeDetailMenuItem') }}</span>
                                 </NuxtLink>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
@@ -251,7 +251,7 @@
                                 @click="emit('open-edit', props.rawReplacement ?? replacement)"
                             >
                                 <SquarePen class="w-4 h-4 text-gray-500" />
-                                <span>Modifier</span>
+                                <span>{{ t('common.edit') }}</span>
                             </DropdownMenuItem>
                             <template v-if="canClose">
                                 <DropdownMenuSeparator />
@@ -260,7 +260,7 @@
                                     @click="closeDialog = true"
                                 >
                                     <Lock class="w-4 h-4" />
-                                    <span>Fermer</span>
+                                    <span>{{ t('common.close') }}</span>
                                 </DropdownMenuItem>
                             </template>
                         </DropdownMenuContent>
@@ -278,9 +278,9 @@
         <Dialog v-model:open="closeDialog">
             <DialogContent class="sm:max-w-lg overflow-y-auto">
                 <DialogHeader>
-                    <DialogTitle>Fermer le remplacement</DialogTitle>
+                    <DialogTitle>{{ t('replacements.closeReplacementTitle') }}</DialogTitle>
                     <DialogDescription class="mt-3 mb-6">
-                        Êtes-vous sûr de vouloir fermer ce remplacement ? Cette action est irréversible.
+                        {{ t('replacements.card.closeDialogDesc') }}
                     </DialogDescription>
                 </DialogHeader>
                 <div class="mt-4 sm:mt-8 flex justify-center sm:justify-end space-x-6 items-center">
@@ -289,7 +289,7 @@
                         class="bg-gray-200 hover:bg-gray-300 px-8"
                         @click="closeDialog = false"
                     >
-                        Non
+                        {{ t('replacements.no') }}
                     </Button>
                     <Button
                         variant="default"
@@ -297,8 +297,8 @@
                         :disabled="isClosing"
                         @click="handleCloseReplacement"
                     >
-                        <span v-if="isClosing">Fermeture...</span>
-                        <span v-else>Oui, fermer</span>
+                        <span v-if="isClosing">{{ t('replacements.card.closing') }}</span>
+                        <span v-else>{{ t('replacements.card.yesClose') }}</span>
                     </Button>
                 </div>
             </DialogContent>
@@ -375,6 +375,7 @@ const emit = defineEmits<{
     (e: 'closed' | 'boost-cancelled'): void;
     (e: 'open-edit', replacement: Replacement): void;
 }>();
+const { t } = useI18n();
 const { updateReplacement } = useReplacements();
 const { canBoostReplacement } = useReplacementBoost();
 
@@ -450,7 +451,7 @@ const handleCloseReplacement = async (): Promise<void> => {
         const payload = { ...props.replacement, status: 'closed' };
         const response = await updateReplacement(payload);
         if (response) {
-            toast(response.message ?? 'Remplacement fermé avec succès.');
+            toast(response.message ?? t('replacements.card.closeSuccess'));
             closeDialog.value = false;
             localClosed.value = true;
             emit('closed');
@@ -458,7 +459,7 @@ const handleCloseReplacement = async (): Promise<void> => {
     }
     catch (error) {
         console.error(error);
-        toast.error('Une erreur est survenue.');
+        toast.error(t('common.error'));
     }
     finally {
         isClosing.value = false;
@@ -473,7 +474,7 @@ const formatDate = (dateString: string) => {
 
 const periods = computed(() => {
     if (!props.replacement.periods || props.replacement.periods.length === 0) {
-        return ['Aucune période définie'];
+        return [t('replacements.card.noPeriods')];
     }
     return props.replacement.periods.map((period) => {
         const start = formatDate(period.start_date);
@@ -486,7 +487,7 @@ const periodsText = computed(() => periods.value.join(' · '));
 
 const cities = computed(() => {
     if (!props.replacement.cities || props.replacement.cities.length === 0) {
-        return ['Aucune ville'];
+        return [t('replacements.card.noCity')];
     }
     return props.replacement.cities;
 });
@@ -495,7 +496,7 @@ const citiesText = computed(() => cities.value.join(' · '));
 
 const zipCodes = computed(() => {
     if (!props.replacement.zip_codes || props.replacement.zip_codes.length === 0) {
-        return ['Aucun code postal'];
+        return [t('replacements.card.noZip')];
     }
     return props.replacement.zip_codes;
 });
@@ -504,7 +505,7 @@ const zipCodesText = computed(() => zipCodes.value.join(' · '));
 
 const careTypes = computed(() => {
     if (!props.replacement.care_types || props.replacement.care_types.length === 0) {
-        return ['Aucun type de soin'];
+        return [t('replacements.card.noCareType')];
     }
     return props.replacement.care_types.map(ct => ct.name);
 });
@@ -516,14 +517,14 @@ const timeSlotsText = computed(() => {
     const timeSlot = props.replacement.time_slot;
 
     if (timeSlot?.morning?.start_at && timeSlot?.morning?.end_at) {
-        slots.push('Matin');
+        slots.push(t('replacements.table.colMorning'));
     }
     if (timeSlot?.evening?.start_at && timeSlot?.evening?.end_at) {
-        slots.push('Soir');
+        slots.push(t('replacements.table.colEvening'));
     }
 
     if (slots.length === 0) {
-        return 'Horaires non définis';
+        return t('replacements.card.noSchedule');
     }
 
     return slots.join(' & ');
@@ -536,25 +537,25 @@ const isUrgent = computed(() => {
 });
 
 const statusText = computed(() => {
-    if (isClosed.value) return 'Fermé';
-    if (isUrgent.value) return 'Urgent';
+    if (isClosed.value) return t('replacements.statusClosedFilter');
+    if (isUrgent.value) return t('replacements.typeUrgent');
 
     const status = props.replacement.status?.toLowerCase();
     switch (status) {
         case 'available':
         case 'disponible':
         case 'open':
-            return 'Disponible';
+            return t('replacements.statusAvailable');
         case 'pending':
         case 'en attente':
-            return 'En attente';
+            return t('replacements.statusPending');
         case 'filled':
         case 'pourvu':
-            return 'Pourvu';
+            return t('replacements.statusFilled');
         case 'closed':
-            return 'Fermé';
+            return t('replacements.statusClosedFilter');
         default:
-            return 'Disponible';
+            return t('replacements.statusAvailable');
     }
 });
 
@@ -585,9 +586,9 @@ const replacementTypeLabel = computed(() => {
     const type = props.replacement.replacement_type;
     if (!type) return '';
     const labels: Record<string, string> = {
-        nurse: 'Infirmier(ère)',
-        caregiver: 'Aide soignant(e)',
-        midwife: 'Sage-femme',
+        nurse: t('replacements.roleNurse'),
+        caregiver: t('replacements.roleAide'),
+        midwife: t('replacements.roleMidwife'),
     };
     return labels[type] || type;
 });

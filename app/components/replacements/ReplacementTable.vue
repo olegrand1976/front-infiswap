@@ -5,54 +5,54 @@
                 <TableHeader class="w-full">
                     <TableRow :class="['min-w-0 gap-2 grid rounded-t-lg border-none', gridClass]">
                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
-                            Jour
+                            {{ t('replacements.table.colDay') }}
                         </TableHead>
                         <TableHead class="bg-primary w-full grid grid-cols-3 justify-center items-center text-white text-xs">
                             <div class="text-center">
-                                Matin
+                                {{ t('replacements.table.colMorning') }}
                             </div>
                             <div class="text-center">
-                                Midi
+                                {{ t('replacements.table.colNoon') }}
                             </div>
                             <div class="text-center">
-                                Soir
+                                {{ t('replacements.table.colEvening') }}
                             </div>
                         </TableHead>
                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
-                            Codes postaux
+                            {{ t('replacements.colZip') }}
                         </TableHead>
                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
-                            Ville(s)
+                            {{ t('replacements.citiesLabelParenS') }}
                         </TableHead>
                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
-                            Types de soins
+                            {{ t('replacements.careTypesHeading') }}
                         </TableHead>
                         <TableHead
                             v-if="type === 'groups'"
                             class="bg-primary w-full flex justify-center items-center text-white text-xs"
                         >
-                            Créateur
+                            {{ t('replacements.creatorLabel') }}
                         </TableHead>
                         <TableHead
                             v-if="type === 'groups'"
                             class="bg-primary w-full flex justify-center items-center text-white text-xs"
                         >
-                            Groupe
+                            {{ t('replacements.table.colGroup') }}
                         </TableHead>
                         <TableHead
                             v-if="type === ''"
                             class="bg-primary w-full flex justify-center items-center text-white text-xs"
                         >
-                            Catégorie
+                            {{ t('replacements.table.colCategory') }}
                         </TableHead>
                         <TableHead
                             v-if="type === ''"
                             class="bg-primary w-full flex justify-center items-center text-white text-xs"
                         >
-                            Institution
+                            {{ t('replacements.institutionLabel') }}
                         </TableHead>
                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
-                            Action
+                            {{ t('replacements.colAction') }}
                         </TableHead>
                     </TableRow>
                 </TableHeader>
@@ -68,7 +68,7 @@
                         v-else-if="replacements.length === 0"
                         class="text-center text-gray-500 py-8"
                     >
-                        Aucun résultat n'est trouvé
+                        {{ t('replacements.noResults') }}
                     </div>
 
                     <template v-else>
@@ -82,14 +82,14 @@
                                 :class="[cn('text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-0.5 rounded-br-sm animate-pulse shadow-md',
                                             { 'bg-primary text-white': r.type === 'immediate' && !hasConfirmedSubstitute(r) && r.status === 'open' })]"
                             >
-                                URGENT
+                                {{ t('replacements.urgentBadge') }}
                             </div>
                             <div
                                 v-if="isClosed(r)"
                                 :class="['text-xs absolute z-10 text-[0.7rem] font-bold px-2 py-0.5 rounded-br-sm shadow-md bg-gray-600 text-white',
                                          isUrgentReplacement(r) && hasConfirmedSubstitute(r) ? '-top-1 left-15' : '-top-1 left-0']"
                             >
-                                FERMÉ
+                                {{ t('replacements.closedBadgeAllCaps') }}
                             </div>
 
                             <div
@@ -99,7 +99,7 @@
                                     isUrgentReplacement(r) || isClosed(r) ? 'top-8 left-20' : 'top-8 left-4',
                                 ]"
                             >
-                                NEW
+                                {{ t('replacements.newBadge') }}
                             </div>
                             <TableCell :class="[cn('flex flex-col justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]', { 'flex-col': r.periods.length > 0 })]">
                                 <template v-if="r.periods.length > 0">
@@ -111,7 +111,7 @@
                                         <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
                                             <span>{{ formatDate(period.start_date) }}</span>
                                         </div>
-                                        <span class="flex items-center">au</span>
+                                        <span class="flex items-center">{{ t('replacements.to') }}</span>
                                         <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
                                             <span>{{ formatDate(period.end_date) }}</span>
                                         </div>
@@ -120,14 +120,14 @@
                                         class="mt-1 text-xs font-semibold text-primary cursor-pointer"
                                         @click="emit('show-periods', r.periods)"
                                     >
-                                        Voir tout
+                                        {{ t('replacements.viewAll') }}
                                     </div>
                                 </template>
                                 <template v-else>
                                     <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
                                         <span>{{ formatDate(r.start_date) }}</span>
                                     </div>
-                                    <span class="flex items-center">au</span>
+                                    <span class="flex items-center">{{ t('replacements.to') }}</span>
                                     <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
                                         <span>{{ formatDate(r.end_date) }}</span>
                                     </div>
@@ -306,7 +306,7 @@
                                                     class="flex items-center space-x-2 text-sm"
                                                 >
                                                     <Eye class="h-4 w-4" />
-                                                    <span>Voir</span>
+                                                    <span>{{ t('replacements.table.menuView') }}</span>
                                                 </NuxtLink>
                                             </DropdownMenuItem>
                                             <DropdownMenuItem
@@ -314,7 +314,7 @@
                                                 @click="emit('open-edit', r)"
                                             >
                                                 <SquarePen class="h-4 w-4" />
-                                                <span>Modifier</span>
+                                                <span>{{ t('common.edit') }}</span>
                                             </DropdownMenuItem>
                                             <DropdownMenuItem
                                                 v-if="currentUserId === r.user_id && !hasConfirmedSubstitute(r)"
@@ -322,7 +322,7 @@
                                                 @click="emit('select-replacement', r)"
                                             >
                                                 <X class="h-4 w-4" />
-                                                <span>Fermer</span>
+                                                <span>{{ t('common.close') }}</span>
                                             </DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
@@ -360,16 +360,16 @@
                 <TableHeader class="w-full">
                     <TableRow class="grid grid-cols-3 overflow-x-hidden gap-1 rounded-t-lg border-none">
                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
-                            Date
+                            {{ t('replacements.colDate') }}
                         </TableHead>
                         <TableHead
                             v-if="type === 'me'"
                             class="bg-primary w-full flex justify-center items-center text-white text-xs"
                         >
-                            Localité
+                            {{ t('replacements.table.colLocality') }}
                         </TableHead>
                         <TableHead class="bg-primary w-full flex justify-center items-center text-white text-xs">
-                            Action
+                            {{ t('replacements.colAction') }}
                         </TableHead>
                     </TableRow>
                 </TableHeader>
@@ -385,7 +385,7 @@
                         v-else-if="replacements.length === 0"
                         class="text-center text-gray-500 py-8"
                     >
-                        Aucun résultat n'est trouvé
+                        {{ t('replacements.noResults') }}
                     </div>
 
                     <template v-else>
@@ -399,14 +399,14 @@
                                 :class="[cn('text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-0.5 rounded-br-sm animate-pulse shadow-md',
                                             { 'bg-primary text-white': r.type === 'immediate' && !hasConfirmedSubstitute(r) && r.status === 'open' })]"
                             >
-                                URGENT
+                                {{ t('replacements.urgentBadge') }}
                             </div>
                             <div
                                 v-if="isClosed(r)"
                                 :class="['text-xs absolute z-10 text-[0.7rem] font-bold px-2 py-0.5 rounded-br-sm shadow-md bg-yellow-400 text-red-600',
                                          isUrgentReplacement(r) && hasConfirmedSubstitute(r) ? '-top-1 left-15' : '-top-1 left-0']"
                             >
-                                FERMÉ
+                                {{ t('replacements.closedBadgeAllCaps') }}
                             </div>
 
                             <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
@@ -419,7 +419,7 @@
                                         <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
                                             <span>{{ formatDate(period.start_date) }}</span>
                                         </div>
-                                        <span class="flex items-center">au</span>
+                                        <span class="flex items-center">{{ t('replacements.to') }}</span>
                                         <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
                                             <span>{{ formatDate(period.end_date) }}</span>
                                         </div>
@@ -428,14 +428,14 @@
                                         class="mt-1 text-xs font-semibold text-primary cursor-pointer"
                                         @click="emit('show-periods', r.periods)"
                                     >
-                                        Voir tout
+                                        {{ t('replacements.viewAll') }}
                                     </div>
                                 </template>
                                 <template v-else-if="r.start_date !== r.end_date && r.start_date != null && r.end_date != null">
                                     <div class="flex h-6 py-1 px-2 mb-1 rounded bg-[#E4E7F4] justify-center items-center">
                                         <span>{{ formatDate(r.start_date) }}</span>
                                     </div>
-                                    <span class="text-xs mb-1">au</span>
+                                    <span class="text-xs mb-1">{{ t('replacements.to') }}</span>
                                     <div class="flex h-6 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
                                         <span>{{ formatDate(r.end_date) }}</span>
                                     </div>
@@ -505,7 +505,7 @@
                                                     class="flex items-center space-x-2 text-sm"
                                                 >
                                                     <Eye class="h-4 w-4" />
-                                                    <span>Voir</span>
+                                                    <span>{{ t('replacements.table.menuView') }}</span>
                                                 </NuxtLink>
                                             </DropdownMenuItem>
                                             <DropdownMenuItem
@@ -513,7 +513,7 @@
                                                 @click="emit('open-edit', r)"
                                             >
                                                 <SquarePen class="h-4 w-4" />
-                                                <span>Modifier</span>
+                                                <span>{{ t('common.edit') }}</span>
                                             </DropdownMenuItem>
                                             <DropdownMenuItem
                                                 v-if="currentUserId === r.user_id && !hasConfirmedSubstitute(r)"
@@ -521,7 +521,7 @@
                                                 @click="emit('select-replacement', r)"
                                             >
                                                 <X class="h-4 w-4" />
-                                                <span>Fermer</span>
+                                                <span>{{ t('common.close') }}</span>
                                             </DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
@@ -563,9 +563,9 @@
         <Dialog v-model:open="closeReplacementDialog">
             <DialogContent class="sm:max-w-lg overflow-y-auto">
                 <DialogHeader>
-                    <DialogTitle>Fermer le remplacement</DialogTitle>
+                    <DialogTitle>{{ t('replacements.closeReplacementTitle') }}</DialogTitle>
                     <DialogDescription class="mt-3 mb-6">
-                        Etes-vous sur de vouloir fermer ce remplacement ?
+                        {{ t('replacements.table.closeDialogDesc') }}
                     </DialogDescription>
                 </DialogHeader>
                 <div class="mt-4 sm:mt-8 flex justify-center sm:justify-end space-x-6 items-center">
@@ -574,14 +574,14 @@
                         class="bg-gray-200 hover:bg-gray-300 px-8"
                         @click="closeReplacementDialog = false"
                     >
-                        Non
+                        {{ t('replacements.no') }}
                     </Button>
                     <Button
                         variant="default"
                         class="px-8"
                         @click="() => { emit('close-replacement', pendingCloseReplacement); closeReplacementDialog = false; }"
                     >
-                        Oui
+                        {{ t('replacements.yes') }}
                     </Button>
                 </div>
             </DialogContent>
@@ -604,6 +604,7 @@ import { getPeriodsFromTimeSlot } from '~/lib/utils';
 import { isReplacementActivelyBoosted } from '~/lib/replacementBoost';
 import type { Replacement } from '~/lib/types';
 
+const { t } = useI18n();
 const { canBoostReplacement } = useReplacementBoost();
 
 const boostModalOpen = ref(false);
@@ -673,11 +674,11 @@ const gridColsByType: Record<string, string> = {
 };
 const gridClass = computed(() => gridColsByType[props.type] ?? 'grid-cols-8');
 
-const roles: Record<string, string> = {
-    nurse: 'Infirmier(e)',
-    caregiver: 'Aide soignant(e)',
-    midwife: 'Sage-femme',
-};
+const roles = computed<Record<string, string>>(() => ({
+    nurse: t('replacements.roleNurse'),
+    caregiver: t('replacements.roleAide'),
+    midwife: t('replacements.roleMidwife'),
+}));
 
 const formatDate = (isoString: string) => {
     if (!isoString) return '';

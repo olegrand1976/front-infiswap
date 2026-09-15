@@ -4,14 +4,14 @@
             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6">
                 <div>
                     <h2 class="text-2xl font-semibold text-gray-800">
-                        Personnes notifiées
+                        {{ t('replacements.notified.heading') }}
                     </h2>
                     <p class="text-gray-500 text-sm">
-                        Voici les personnes notifiées pour ce remplacement.
+                        {{ t('replacements.notified.subheading') }}
                     </p>
                 </div>
                 <div class="mt-2 sm:mt-0 text-sm text-gray-600">
-                    Total : <span class="font-semibold text-primary">{{ filteredUsers.length }} personne{{ filteredUsers.length > 1 ? 's' : '' }}</span>
+                    <span class="font-semibold text-primary">{{ t('replacements.notified.totalLabel', { n: filteredUsers.length }, filteredUsers.length) }}</span>
                 </div>
             </div>
 
@@ -20,7 +20,7 @@
                     v-model="searchQuery"
                     :icon="CircleUser"
                     type="text"
-                    placeholder="Rechercher nom ou prénom..."
+                    :placeholder="t('replacements.notified.searchPlaceholder')"
                     rounded="md"
                 />
             </div>
@@ -42,7 +42,7 @@
                             </div>
                         </div>
                         <div class="mt-1 sm:mt-0 text-sm text-gray-600">
-                            Code postal :
+                            {{ t('replacements.zipLabel') }}
                             <span class="font-medium">{{ user.profile?.zip_code ?? '—' }}</span>
                         </div>
                     </li>
@@ -56,7 +56,7 @@
                         class="px-5 py-2 border border-primary rounded-lg text-sm text-primary hover:bg-gray-100 transition"
                         @click="toggleShowAllNurses"
                     >
-                        {{ showAll ? 'Voir moins' : `Voir plus (+${remainingUsersCount})` }}
+                        {{ showAll ? t('replacements.seeLess') : t('replacements.seeMoreCount', { n: remainingUsersCount }) }}
                     </button>
                 </div>
             </div>
@@ -65,7 +65,7 @@
                 v-else
                 class="mt-10 text-center text-gray-400 italic"
             >
-                Aucune personne trouvée pour cette recherche.
+                {{ t('replacements.notified.noResultsForSearch') }}
             </div>
         </div>
     </div>
@@ -77,6 +77,8 @@ import { CircleUser } from 'lucide-vue-next';
 import type { Replacement, User } from '~/lib/types';
 
 const props = defineProps<{ replacement?: Replacement | null }>();
+
+const { t } = useI18n();
 
 const getInitialValue = (replacement: Replacement | null | undefined = props.replacement) => ({
     id: replacement?.id ?? null,

@@ -31,12 +31,25 @@ const emit = defineEmits<{
 }>();
 
 const filters = defineModel<ReplacementsFilters>('filters', { required: true });
+
+const { t } = useI18n();
+
+/** Les valeurs de `days` restent en français (identifiants internes) ; seul l'affichage est traduit. */
+const DAY_KEYS: Record<string, string> = {
+    Lundi: 'dayMonday',
+    Mardi: 'dayTuesday',
+    Mercredi: 'dayWednesday',
+    Jeudi: 'dayThursday',
+    Vendredi: 'dayFriday',
+};
+
+const dayLabel = (day: string) => t(`replacements.${DAY_KEYS[day] ?? 'dayMonday'}`);
 </script>
 
 <template>
     <div>
         <label class="flex items-center justify-between mb-5 p-3 rounded-md cursor-pointer">
-            <span class="text-sm font-medium text-primary-foreground">Top remplacements</span>
+            <span class="text-sm font-medium text-primary-foreground">{{ t('replacements.filtersPanel.topReplacements') }}</span>
             <Switch
                 id="top-replacements"
                 :checked="filters.topReplacements"
@@ -46,29 +59,29 @@ const filters = defineModel<ReplacementsFilters>('filters', { required: true });
 
         <div class="mb-5">
             <p class="text-xs font-semibold text-primary-foreground/70 uppercase tracking-wider mb-2">
-                Codes postaux
+                {{ t('replacements.colZip') }}
             </p>
             <Input
                 v-model="filters.zipCode"
-                placeholder="Ajouter un code postal"
+                :placeholder="t('replacements.filtersPanel.addZipPlaceholder')"
                 class="rounded-md text-sm bg-surface"
             />
         </div>
 
         <div class="mb-5">
             <p class="text-xs font-semibold text-primary-foreground/70 uppercase tracking-wider mb-2">
-                Ville(s)
+                {{ t('replacements.citiesLabelParenS') }}
             </p>
             <Input
                 v-model="filters.city"
-                placeholder="Ajouter une ville"
+                :placeholder="t('replacements.filtersPanel.addCityPlaceholder')"
                 class="rounded-md text-sm bg-surface"
             />
         </div>
 
         <div class="mb-5">
             <p class="text-xs font-semibold text-primary-foreground/70 uppercase tracking-wider mb-3">
-                Jours
+                {{ t('replacements.daysLabel') }}
             </p>
             <div class="grid grid-cols-2 gap-1.5">
                 <label
@@ -81,37 +94,37 @@ const filters = defineModel<ReplacementsFilters>('filters', { required: true });
                         class="border-primary-foreground/50 data-[state=checked]:bg-primary-foreground data-[state=checked]:text-primary"
                         @update:checked="(v) => emit('toggle-day', day, v === true)"
                     />
-                    {{ day }}
+                    {{ dayLabel(day) }}
                 </label>
             </div>
         </div>
 
         <div class="mb-5">
             <p class="text-xs font-semibold text-primary-foreground/70 uppercase tracking-wider mb-2">
-                Province
+                {{ t('replacements.filtersPanel.provinceLabel') }}
             </p>
             <Select v-model="filters.province">
                 <SelectTrigger class="rounded-md w-full text-sm bg-surface">
-                    <SelectValue placeholder="Toutes les provinces" />
+                    <SelectValue :placeholder="t('replacements.filtersPanel.provincePlaceholder')" />
                 </SelectTrigger>
                 <SelectContent class="rounded-md">
                     <SelectItem value="Brabant wallon">
-                        Brabant wallon
+                        {{ t('replacements.filtersPanel.provinceBrabantWallon') }}
                     </SelectItem>
                     <SelectItem value="Bruxelles-Capitale">
-                        Bruxelles-Capitale
+                        {{ t('replacements.filtersPanel.provinceBrussels') }}
                     </SelectItem>
                     <SelectItem value="Liège">
-                        Liège
+                        {{ t('replacements.filtersPanel.provinceLiege') }}
                     </SelectItem>
                     <SelectItem value="Hainaut">
-                        Hainaut
+                        {{ t('replacements.filtersPanel.provinceHainaut') }}
                     </SelectItem>
                     <SelectItem value="Namur">
-                        Namur
+                        {{ t('replacements.filtersPanel.provinceNamur') }}
                     </SelectItem>
                     <SelectItem value="Luxembourg">
-                        Luxembourg
+                        {{ t('replacements.filtersPanel.provinceLuxembourg') }}
                     </SelectItem>
                 </SelectContent>
             </Select>
@@ -119,17 +132,17 @@ const filters = defineModel<ReplacementsFilters>('filters', { required: true });
 
         <div class="mb-6">
             <p class="text-xs font-semibold text-primary-foreground/70 uppercase tracking-wider mb-2">
-                Types
+                {{ t('replacements.filtersPanel.typesLabel') }}
             </p>
             <label class="flex items-center justify-between mb-2 p-3 rounded-md cursor-pointer">
-                <span class="text-sm font-medium text-primary-foreground">Remplacements</span>
+                <span class="text-sm font-medium text-primary-foreground">{{ t('replacements.filtersPanel.replacementsToggle') }}</span>
                 <Switch
                     :checked="filters.showReplacements"
                     @update:checked="filters.showReplacements = $event"
                 />
             </label>
             <label class="flex items-center justify-between p-3 rounded-md cursor-pointer">
-                <span class="text-sm font-medium text-primary-foreground">Missions</span>
+                <span class="text-sm font-medium text-primary-foreground">{{ t('replacements.filtersPanel.missionsToggle') }}</span>
                 <Switch
                     :checked="filters.showMissions"
                     @update:checked="filters.showMissions = $event"
@@ -144,7 +157,7 @@ const filters = defineModel<ReplacementsFilters>('filters', { required: true });
                 type="button"
                 @click="emit('reset')"
             >
-                Réinitialiser
+                {{ t('replacements.resetFilters') }}
             </Button>
         </div>
     </div>

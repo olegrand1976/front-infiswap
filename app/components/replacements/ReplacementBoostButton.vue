@@ -3,8 +3,8 @@
         type="button"
         :variant="isLight ? 'outline' : 'default'"
         :class="buttonClass"
-        title="Booster ce remplacement"
-        :aria-label="showPrice ? 'Booster ce remplacement — 2 €' : 'Booster ce remplacement'"
+        :title="titleText"
+        :aria-label="titleText"
         @click.stop="emit('boost')"
     >
         <Rocket
@@ -29,9 +29,15 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{ boost: [] }>();
 
+const { t } = useI18n();
+
 const isLight = computed(() => props.variant === 'detail');
 
-const label = computed(() => (props.showPrice ? 'Booster — dès 2 €' : 'Booster'));
+const titleText = computed(() =>
+    props.showPrice ? t('replacements.boostButton.titleWithPrice', { price: '2 €' }) : t('replacements.boostThisReplacement'),
+);
+
+const label = computed(() => (props.showPrice ? t('replacements.boostButton.labelWithPrice', { price: '2 €' }) : t('replacements.boostButton.label')));
 
 const buttonClass = computed(() => {
     if (props.variant === 'detail') {

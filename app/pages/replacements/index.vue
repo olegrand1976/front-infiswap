@@ -2,7 +2,7 @@
     <div class="container pb-8 relative">
         <div class="text-center my-4">
             <p class="text-muted-foreground font-light text-base md:text-lg">
-                Explorez les opportunités près de chez vous
+                {{ t('replacements.search.exploreSubtitle') }}
             </p>
         </div>
 
@@ -12,7 +12,7 @@
                     <Search class="w-4 h-4 text-muted-foreground absolute left-4 pointer-events-none" />
                     <Input
                         v-model="searchKeyword"
-                        placeholder="Code postal, ville, jour..."
+                        :placeholder="t('replacements.search.searchPlaceholder')"
                         class="pl-9 border-0 shadow-none focus-visible:ring-0 bg-transparent"
                     />
                 </div>
@@ -23,7 +23,7 @@
                     @click="handleSearch"
                 >
                     <Search class="w-4 h-4" />
-                    Rechercher
+                    {{ t('common.search') }}
                 </Button>
             </div>
         </div>
@@ -37,7 +37,7 @@
                         class="relative rounded-md gap-2"
                     >
                         <SlidersHorizontal class="w-4 h-4" />
-                        Filtres
+                        {{ t('replacements.filtersTitle') }}
                         <Badge
                             v-if="hasActiveFilters"
                             class="!h-5 !w-5 justify-center rounded-full bg-primary p-0 text-[10px] text-primary-foreground absolute -top-2 -right-2"
@@ -52,12 +52,12 @@
                 >
                     <SheetHeader class="mb-5 flex-row items-center justify-between border-b border-primary-foreground/20 pb-4">
                         <SheetTitle class="text-primary-foreground">
-                            Filtres
+                            {{ t('replacements.filtersTitle') }}
                         </SheetTitle>
                         <SheetClose as-child>
                             <button
                                 type="button"
-                                aria-label="Fermer"
+                                :aria-label="t('common.close')"
                                 class="text-primary-foreground/80 hover:text-primary-foreground"
                             >
                                 <X class="w-5 h-5" />
@@ -79,7 +79,7 @@
             <aside class="hidden lg:block bg-primary rounded-md p-5">
                 <div class="flex items-center justify-between mb-5 pb-4 border-b border-primary-foreground/20">
                     <h2 class="text-base font-bold text-primary-foreground">
-                        Filtres
+                        {{ t('replacements.filtersTitle') }}
                     </h2>
                     <SlidersHorizontal class="w-4 h-4 text-primary-foreground cursor-pointer" />
                 </div>
@@ -95,7 +95,7 @@
             <main class="space-y-10">
                 <div v-if="featuredReplacement || featuredMission">
                     <h3 class="font-secondary text-xl font-extrabold text-foreground flex items-center gap-2 mb-6">
-                        <span class="text-primary text-2xl">★</span> À la une
+                        <span class="text-primary text-2xl">★</span> {{ t('replacements.search.featuredHeading') }}
                     </h3>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -106,7 +106,7 @@
                         >
                             <div>
                                 <div class="flex items-center mb-5">
-                                    <span class="text-primary text-[10px] font-black uppercase tracking-widest">Remplacement</span>
+                                    <span class="text-primary text-[10px] font-black uppercase tracking-widest">{{ t('replacements.typeReplacementLabel') }}</span>
                                 </div>
 
                                 <div class="flex items-start gap-3">
@@ -120,7 +120,7 @@
                                                 v-if="featuredReplacement.periods && featuredReplacement.periods.length > 1"
                                                 class="text-primary"
                                             >
-                                                +{{ featuredReplacement.periods.length - 1 }} période{{ featuredReplacement.periods.length > 2 ? 's' : '' }}
+                                                {{ t('replacements.extraPeriods', { n: featuredReplacement.periods.length - 1 }, featuredReplacement.periods.length - 1) }}
                                             </span>
                                         </h4>
                                         <div class="flex items-center gap-1.5 text-muted-foreground text-xs">
@@ -149,7 +149,7 @@
                                     :to="`/replacements/${featuredReplacement.id}?type=replacement`"
                                     class="inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline"
                                 >
-                                    Voir plus
+                                    {{ t('replacements.seeMore') }}
                                 </NuxtLink>
                             </div>
                         </Card>
@@ -161,7 +161,7 @@
                         >
                             <div>
                                 <div class="flex items-center mb-5">
-                                    <span class="text-success text-[10px] font-black uppercase tracking-widest">Mission</span>
+                                    <span class="text-success text-[10px] font-black uppercase tracking-widest">{{ t('replacements.typeMissionLabel') }}</span>
                                 </div>
 
                                 <div class="flex items-start gap-3">
@@ -200,7 +200,7 @@
                                     :to="`/replacements/${featuredMission.id}?type=mission`"
                                     class="inline-flex items-center gap-1 text-xs font-bold text-success hover:underline"
                                 >
-                                    Voir plus
+                                    {{ t('replacements.seeMore') }}
                                 </NuxtLink>
                             </div>
                         </Card>
@@ -210,20 +210,20 @@
                 <div>
                     <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-5">
                         <h3 class="font-secondary text-xl font-extrabold text-foreground">
-                            Tous les résultats <span class="text-primary tabular-nums">({{ totalCount }})</span>
+                            {{ t('replacements.search.resultsHeading') }} <span class="text-primary tabular-nums">({{ totalCount }})</span>
                         </h3>
                         <div class="flex items-center gap-2">
-                            <span class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Trier par :</span>
+                            <span class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{{ t('replacements.search.sortLabel') }}</span>
                             <Select v-model="sortBy">
                                 <SelectTrigger class="rounded-md h-8 text-xs font-semibold w-36">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent class="rounded-md">
                                     <SelectItem value="Plus récents">
-                                        Plus récents
+                                        {{ t('replacements.search.sortRecent') }}
                                     </SelectItem>
                                     <SelectItem value="Plus anciens">
-                                        Plus anciens
+                                        {{ t('replacements.search.sortOldest') }}
                                     </SelectItem>
                                 </SelectContent>
                             </Select>
@@ -271,7 +271,7 @@
                                 variant="outline"
                                 class="!h-auto !w-auto absolute top-0 right-4 -translate-y-1/2 rounded-full bg-accent-green text-white text-[10px] font-black px-2.5 py-1 uppercase tracking-widest shadow-md"
                             >
-                                Nouveau
+                                {{ t('replacements.newBadge') }}
                             </Badge>
 
                             <div class="flex items-start gap-3">
@@ -292,13 +292,13 @@
                                             v-if="item.periods && item.periods.length > 1"
                                             class="text-primary"
                                         >
-                                            +{{ item.periods.length - 1 }} période{{ item.periods.length > 2 ? 's' : '' }}
+                                            {{ t('replacements.extraPeriods', { n: item.periods.length - 1 }, item.periods.length - 1) }}
                                         </span>
                                     </h4>
                                     <div class="flex items-center gap-1.5 text-muted-foreground text-xs mt-0.5">
                                         <MapPin class="w-3 h-3 shrink-0" />
                                         <span>
-                                            {{ item.cities.length ? visibleTags(item.cities).shown.join(', ') : 'Lieu à confirmer' }}
+                                            {{ item.cities.length ? visibleTags(item.cities).shown.join(', ') : t('replacements.search.placeToConfirm') }}
                                             <span
                                                 v-if="visibleTags(item.cities).extra > 0"
                                                 class="text-primary font-bold"
@@ -314,7 +314,7 @@
                                     class="flex flex-col text-destructive items-center gap-0.5 shrink-0 ml-auto"
                                 >
                                     <ShieldAlert class="size-10" />
-                                    <span class="text-[8px] uppercase font-bold">urgent</span>
+                                    <span class="text-[8px] uppercase font-bold">{{ t('replacements.typeUrgent') }}</span>
                                 </div>
                             </div>
 
@@ -395,7 +395,7 @@
                                         class="inline-flex items-center gap-1 text-xs font-bold hover:underline"
                                         :class="item.type === 'replacement' ? 'text-primary' : 'text-success'"
                                     >
-                                        Voir plus
+                                        {{ t('replacements.seeMore') }}
                                     </NuxtLink>
                                 </div>
                             </div>
@@ -460,7 +460,7 @@
                     class="bg-surface rounded-md border border-border p-5"
                 >
                     <h2 class="font-secondary text-sm font-extrabold text-foreground mb-4">
-                        Ça commence bientôt
+                        {{ t('replacements.search.soonHeading') }}
                     </h2>
                     <div class="divide-y divide-border">
                         <div
@@ -503,16 +503,16 @@
                         <UserPlus class="w-5 h-5" />
                     </div>
                     <h3 class="font-secondary text-sm font-extrabold text-primary-foreground leading-snug">
-                        Créez un compte gratuit pour postuler aux missions
+                        {{ t('replacements.freeAccountHeading') }}
                     </h3>
                     <p class="text-primary-foreground/70 text-xs font-light">
-                        Accédez à toutes les missions, postulez en 1 clic et gérez vos disponibilités.
+                        {{ t('replacements.freeAccountDesc') }}
                     </p>
                     <Button
                         href="/register"
                         class="bg-primary-foreground text-primary hover:bg-primary-foreground/90 font-bold"
                     >
-                        Créer mon compte
+                        {{ t('replacements.createAccountCta') }}
                     </Button>
                 </div>
 
@@ -586,6 +586,7 @@ import {
 } from '@/components/ui/sheet';
 import { mapApiRecordToListing } from '~/lib/replacementsApi';
 
+const { t } = useI18n();
 const { isLoggedIn } = useAuth();
 const { isPremium: isProSubscriber, fetchStatus: fetchProStatus } = useProSubscription();
 const { badge: premiumBadge, title: premiumTitle, subtitle: premiumSubtitle, cta: premiumCta } = usePremiumMarketing();
@@ -597,15 +598,15 @@ if (isLoggedIn.value) {
 }
 const { $apifetch } = useNuxtApp();
 
-useHead({
-    title: 'Remplacements & Missions disponibles',
+useHead(() => ({
+    title: t('replacements.search.pageTitle'),
     meta: [
         {
             name: 'description',
-            content: 'Découvrez les dernières offres de remplacements et missions disponibles pour les infirmières et infirmiers. Filtrez par région, date et spécialité.',
+            content: t('replacements.search.metaDescription'),
         },
     ],
-});
+}));
 
 definePageMeta({
     layout: 'replacements',

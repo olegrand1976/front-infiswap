@@ -10,7 +10,7 @@
                 class="mt-1 text-xs text-primary font-semibold cursor-pointer"
                 @click="dialogOpen = true"
             >
-                Voir tout
+                {{ t('replacements.viewAll') }}
             </div>
         </template>
         <template v-else>
@@ -21,11 +21,11 @@
             <DialogContent class="max-w-md">
                 <DialogHeader>
                     <DialogTitle class="text-base font-semibold text-primary">
-                        Détails des horaires
+                        {{ t('replacements.formatTimePeriod.dialogTitle') }}
                     </DialogTitle>
                 </DialogHeader>
                 <div class="mt-3 grid grid-cols-2 text-sm font-semibold text-gray-700">
-                    <span>Début</span><span>Fin</span>
+                    <span>{{ t('replacements.start') }}</span><span>{{ t('replacements.end') }}</span>
                 </div>
                 <div
                     v-for="(slot, index) in slots"
@@ -45,6 +45,8 @@
 const props = defineProps<{
     replacement: any;
 }>();
+
+const { t } = useI18n();
 
 const dialogOpen = ref(false);
 

@@ -6,7 +6,7 @@
             class="flex justify-center gap-2 items-center text-sm"
         >
             <span>{{ formatDate(period.start_date) }}</span>
-            <span class="flex items-center">au</span>
+            <span class="flex items-center">{{ t('replacements.to') }}</span>
             <span>{{ formatDate(period.end_date) }}</span>
         </div>
         <div
@@ -14,7 +14,7 @@
             class="mt-1 text-center text-xs font-semibold text-primary cursor-pointer"
             @click="handleShowPeriods(replacement.periods)"
         >
-            Voir tout
+            {{ t('replacements.viewAll') }}
         </div>
     </template>
     <template v-else>
@@ -22,7 +22,7 @@
             class="flex justify-center gap-2 items-center text-sm"
         >
             <span>{{ formatDate(replacement.start_date) }}</span>
-            <span class="flex items-center">au</span>
+            <span class="flex items-center">{{ t('replacements.to') }}</span>
             <span>{{ formatDate(replacement.end_date) }}</span>
         </div>
     </template>
@@ -30,15 +30,15 @@
         <DialogContent class="max-w-md">
             <DialogHeader>
                 <DialogTitle class="text-base font-semibold text-primary">
-                    Période de remplacement
+                    {{ t('replacements.periodOfReplacement') }}
                 </DialogTitle>
             </DialogHeader>
             <div class="mt-3 text-sm grid grid-cols-2 items-center font-semibold text-gray-700">
                 <h5>
-                    Date de début
+                    {{ t('replacements.startDate') }}
                 </h5>
                 <h5>
-                    Date de fin
+                    {{ t('replacements.endDate') }}
                 </h5>
             </div>
             <div
@@ -65,6 +65,9 @@ import type { Replacement } from '~/lib/types';
 defineProps<{
     replacement: Replacement;
 }>();
+
+const { t } = useI18n();
+
 const formatDate = (isoString) => {
     const date = new Date(isoString);
     const day = String(date.getDate()).padStart(2, '0');

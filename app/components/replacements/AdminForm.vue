@@ -3,10 +3,10 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 lg:gap-8">
             <div class="lg:p-4 pb-6">
                 <h1 class="font-semibold text-gray-600">
-                    Remplacement
+                    {{ t('replacements.typeReplacementLabel') }}
                 </h1>
                 <p class="mt-2 text-md text-gray-500">
-                    Informations liées au remplacement
+                    {{ t('replacements.adminForm.subheading') }}
                 </p>
 
                 <div class="mt-6 bg-gray-50 p-6 rounded-lg border border-gray-200 shadow-md">
@@ -25,31 +25,31 @@
                         </div>
 
                         <h2 class="font-semibold text-gray-600 text-lg">
-                            Informations sur le créateur
+                            {{ t('replacements.adminForm.creatorInfoHeading') }}
                         </h2>
 
                         <div class="text-sm text-gray-500 space-y-1 sm:space-y-2">
                             <p>
-                                <strong class="text-gray-700">Nom complet :</strong>
+                                <strong class="text-gray-700">{{ t('replacements.adminForm.fullNameLabel') }}</strong>
                                 {{ form.userOwnerFullName }}
                             </p>
                             <p>
-                                <strong class="text-gray-700">Email :</strong>
+                                <strong class="text-gray-700">{{ t('replacements.adminForm.emailLabel') }}</strong>
                                 {{ form.userOwnerEmail }}
                             </p>
                             <p>
-                                <strong class="text-gray-700">Téléphone :</strong>
+                                <strong class="text-gray-700">{{ t('replacements.phoneLabel') }}</strong>
                                 {{ form.userOwnerPhoneNumber }}
                             </p>
                         </div>
                     </div>
                     <p class="mt-4 text-sm text-gray-700 items-center text-center">
-                        <strong class="text-gray-700">Nombre de personnes intéressées :</strong>
+                        <strong class="text-gray-700">{{ t('replacements.adminForm.interestedCountLabel') }}</strong>
                         <NuxtLink
                             :to="`/dashboard/admin/replacements/interest/${form.id}`"
                             class="ml-2 flex items-center justify-center gap-1 text-primary hover:underline font-bold"
                         >
-                            {{ form.responseCount }} personne<span v-if="form.responseCount > 1">s</span>
+                            {{ t('replacements.adminForm.personCount', { n: form.responseCount }, form.responseCount) }}
                             <Eye
                                 v-if="form.responseCount>0"
                                 class="size-4"
@@ -65,7 +65,7 @@
                             @click.prevent="handleOpenReleaseConfirmation"
                         >
                             <RefreshCw class="mr-2" />
-                            <span>Ré-ouvrir le remplacement</span>
+                            <span>{{ t('replacements.adminForm.reopenTitle') }}</span>
                         </Button>
                     </div>
                 </div>
@@ -75,7 +75,7 @@
                     class="mt-6 bg-white p-6 rounded-xl border border-gray-200 shadow-md"
                 >
                     <h3 class="text-lg font-bold text-center text-gray-800 mb-4 tracking-wide">
-                        Liste des personnes notifiées
+                        {{ t('replacements.adminForm.notifiedListHeading') }}
                     </h3>
 
                     <ul class="divide-y divide-gray-100 text-sm">
@@ -88,8 +88,8 @@
                                 <UsersName :user="user" />
                             </div>
                             <div class="text-gray-500 text-xs mt-1">
-                                <span class="font-medium text-gray-600">Email :</span> {{ user.email }}<br>
-                                <span class="font-medium text-gray-600">Code postal :</span> {{ user.profile.zip_code ?? '—' }}
+                                <span class="font-medium text-gray-600">{{ t('replacements.adminForm.emailLabel') }}</span> {{ user.email }}<br>
+                                <span class="font-medium text-gray-600">{{ t('replacements.zipLabel') }}</span> {{ user.profile.zip_code ?? '—' }}
                             </div>
                         </li>
                     </ul>
@@ -99,7 +99,7 @@
                         class="mt-3 text-sm text-blue-600 hover:text-blue-800 font-medium"
                         @click="showAllNurses"
                     >
-                        Voir plus (+{{ remainingUsersCount }})
+                        {{ t('replacements.seeMoreCount', { n: remainingUsersCount }) }}
                     </button>
                 </div>
             </div>
@@ -107,7 +107,7 @@
             <div class="col-span-3 lg:col-span-2 bg-white p-4 rounded-md flex flex-col gap-4">
                 <template v-if="form.type === 'classic' && form.periods.length > 0">
                     <p class="text-gray-500 text-sm font-medium">
-                        Périodes
+                        {{ t('replacements.periodsLabel') }}
                     </p>
                     <div
                         v-for="(period, index) in form.periods"
@@ -120,7 +120,7 @@
                                 type="date"
                                 class="w-full h-10 bg-gray-200 rounded-lg border-none px-3"
                             />
-                            <span class="mx-2">au</span>
+                            <span class="mx-2">{{ t('replacements.to') }}</span>
                             <InputIcon
                                 v-model="period.end_date"
                                 type="date"
@@ -139,13 +139,13 @@
                         class="text-xs text-primary underline"
                         @click="form.periods.push({ start_date: '', end_date: '' })"
                     >
-                        + Ajouter une période
+                        {{ t('replacements.adminForm.addPeriodBtn') }}
                     </button>
                 </template>
                 <template v-else>
                     <div class="flex flex-col gap-1 w-full">
                         <p class="text-gray-500 text-sm font-medium">
-                            Date de début
+                            {{ t('replacements.startDate') }}
                         </p>
                         <InputIcon
                             v-model="form.startDate"
@@ -155,7 +155,7 @@
                     </div>
                     <div class="flex flex-col gap-1 w-full">
                         <p class="text-gray-500 text-sm font-medium">
-                            Date de fin
+                            {{ t('replacements.endDate') }}
                         </p>
                         <InputIcon
                             v-model="form.endDate"
@@ -169,28 +169,28 @@
                     <div class="grid grid-cols-2 gap-4">
                         <template v-if="form.timeSlot.morning || form.timeSlot.evening">
                             <div>
-                                <span>Matin - Heure de début</span>
+                                <span>{{ t('replacements.adminForm.morningStart') }}</span>
                                 <InputTime
                                     v-model="form.timeSlot.morning.startAt"
                                     input-class="rounded-lg"
                                 />
                             </div>
                             <div>
-                                <span>Matin - Heure de fin</span>
+                                <span>{{ t('replacements.adminForm.morningEnd') }}</span>
                                 <InputTime
                                     v-model="form.timeSlot.morning.endAt"
                                     input-class="rounded-lg"
                                 />
                             </div>
                             <div>
-                                <span>Soir - Heure de début</span>
+                                <span>{{ t('replacements.adminForm.eveningStart') }}</span>
                                 <InputTime
                                     v-model="form.timeSlot.evening.startAt"
                                     input-class="rounded-lg"
                                 />
                             </div>
                             <div>
-                                <span>Soir - Heure de fin</span>
+                                <span>{{ t('replacements.adminForm.eveningEnd') }}</span>
                                 <InputTime
                                     v-model="form.timeSlot.evening.endAt"
                                     input-class="rounded-lg"
@@ -199,7 +199,7 @@
                         </template>
                         <template v-else>
                             <div>
-                                <span>Heure de début</span>
+                                <span>{{ t('replacements.adminForm.startTime') }}</span>
                                 <InputTime
                                     v-if="form.details.length > 0 && form.details[0].start_at"
                                     v-model="form.details[0].start_at"
@@ -212,7 +212,7 @@
                                 />
                             </div>
                             <div>
-                                <span>Heure de fin</span>
+                                <span>{{ t('replacements.adminForm.endTime') }}</span>
                                 <InputTime
                                     v-if="form.details.length > 0 && form.details[0].end_at"
                                     v-model="form.details[0].end_at"
@@ -231,7 +231,7 @@
                 <div v-else>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <span>Heure de début</span>
+                            <span>{{ t('replacements.adminForm.startTime') }}</span>
                             <InputTime
                                 v-if="form.details.length > 0 && form.details[0].start_at"
                                 v-model="form.details[0].start_at"
@@ -239,7 +239,7 @@
                             />
                         </div>
                         <div>
-                            <span>Heure de fin</span>
+                            <span>{{ t('replacements.adminForm.endTime') }}</span>
                             <InputTime
                                 v-if="form.details.length > 0 && form.details[0].end_at"
                                 v-model="form.details[0].end_at"
@@ -252,13 +252,13 @@
                 <div>
                     <Select
                         v-model="form.visibility"
-                        label="Visibilité"
+                        :label="t('replacements.adminForm.visibilityLabel')"
                     >
                         <SelectTrigger
                             position="right"
                             class="rounded-md"
                         >
-                            <SelectValue placeholder="Séléctionner..." />
+                            <SelectValue :placeholder="t('replacements.select')" />
                         </SelectTrigger>
                         <SelectContent class="border border-none">
                             <SelectGroup>
@@ -277,13 +277,13 @@
                 <div>
                     <Select
                         v-model="form.status"
-                        label="Status"
+                        :label="t('replacements.filterStatus')"
                     >
                         <SelectTrigger
                             position="right"
                             class="rounded-md"
                         >
-                            <SelectValue placeholder="Séléctionner..." />
+                            <SelectValue :placeholder="t('replacements.select')" />
                         </SelectTrigger>
                         <SelectContent class="border border-none">
                             <SelectGroup>
@@ -302,13 +302,13 @@
                 <div>
                     <Select
                         v-model="form.type"
-                        label="Type"
+                        :label="t('replacements.filterType')"
                     >
                         <SelectTrigger
                             position="right"
                             class="rounded-md"
                         >
-                            <SelectValue placeholder="Séléctionner..." />
+                            <SelectValue :placeholder="t('replacements.select')" />
                         </SelectTrigger>
                         <SelectContent class="border border-none">
                             <SelectGroup>
@@ -328,14 +328,14 @@
                     <InputIcon
                         v-model="form.patientCount"
                         rounded="md"
-                        label="Nombre de patients"
+                        :label="t('replacements.adminForm.patientCountLabel')"
                         type="number"
                     />
                 </div>
 
                 <div class="flex flex-col gap-2 w-full">
                     <label class="text-gray-600 text-sm font-medium">
-                        Codes postaux
+                        {{ t('replacements.colZip') }}
                     </label>
                     <InputTagManager
                         v-model="form.zipCodes"
@@ -349,11 +349,11 @@
 
                 <div class="flex flex-col gap-2 w-full">
                     <label class="text-gray-600 text-sm font-medium">
-                        Villes
+                        {{ t('replacements.colCities') }}
                     </label>
                     <InputTagManager
                         v-model="form.cities"
-                        placeholder="Anvers, Bruges, Gand"
+                        :placeholder="t('replacements.adminForm.citiesPlaceholder')"
                         class="pt-3 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         :is-mobile="false"
                         :comma-validation="true"
@@ -366,7 +366,7 @@
                 <ReplacementsCountrySelect v-model="form.country" />
 
                 <div class="flex flex-col gap-2">
-                    <h5>Type de soin</h5>
+                    <h5>{{ t('replacements.adminForm.careTypeHeading') }}</h5>
                     <Select
                         v-model="form.careTypes"
                         multiple
@@ -381,7 +381,7 @@
                                 </template>
                                 <template v-else>
                                     <span class="text-black/60">
-                                        Sélectionner un type de soin
+                                        {{ t('replacements.selectCareType') }}
                                     </span>
                                 </template>
                             </SelectValue>
@@ -418,27 +418,27 @@
                 class="rounded-md w-52"
                 :in-progress="inProgress"
             >
-                {{ props.replacement ? 'Sauvegarder' : 'Créer un remplacement' }}
+                {{ props.replacement ? t('replacements.adminForm.save') : t('replacements.createTitle') }}
             </Button>
         </div>
 
         <AlertDialog :open="openReleaseModal">
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>Ré-ouvrir le remplacement</AlertDialogTitle>
+                    <AlertDialogTitle>{{ t('replacements.adminForm.reopenTitle') }}</AlertDialogTitle>
                     <AlertDialogDescription>
-                        Cela définira toutes les réponses liées à ce remplacement comme étant en attente. Cette action est irréversible.
+                        {{ t('replacements.adminForm.reopenDialogDesc') }}
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel @click.prevent="handleCloseReleaseConfirmation">
-                        Annuler
+                        {{ t('common.cancel') }}
                     </AlertDialogCancel>
                     <AlertDialogAction
                         class="rounded"
                         @click.prevent="handleRelease(replacement)"
                     >
-                        Valider
+                        {{ t('replacements.adminForm.validate') }}
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
@@ -457,6 +457,7 @@ const props = defineProps<{
     replacement?: Replacement | null;
 }>();
 
+const { t } = useI18n();
 const { isAdmin } = useAuth();
 const { careTypes, fetchCareTypes } = useCareTypes();
 const { updateAgainReplacement, updateReplacement } = useReplacements();
@@ -592,7 +593,7 @@ const { submit, inProgress } = useSubmit(async () => {
 }, {
     onSuccess: () => {
         $toast({
-            description: isEditMode.value ? 'Remplacement mis à jour avec succès' : 'Remplacement créé avec succès',
+            description: isEditMode.value ? t('replacements.adminForm.updateSuccess') : t('replacements.adminForm.createSuccess2'),
         });
     },
 });
@@ -636,49 +637,49 @@ function resetForm(replacement?: Replacement | null) {
     Object.assign(form, getInitialValue(replacement));
 }
 
-const type = [
+const type = computed(() => [
     {
         value: 'classic',
-        label: 'Classique',
-        name: 'Classique',
+        label: t('replacements.typeClassic'),
+        name: t('replacements.typeClassic'),
     },
     {
         value: 'immediate',
-        label: 'Urgent',
-        name: 'Urgent',
+        label: t('replacements.typeUrgent'),
+        name: t('replacements.typeUrgent'),
     },
-];
+]);
 
-const status = [
+const status = computed(() => [
     {
         value: 'open',
-        label: 'Ouvert',
-        name: 'Ouvert',
+        label: t('replacements.statusOpenFilter'),
+        name: t('replacements.statusOpenFilter'),
     },
     {
         value: 'closed',
-        label: 'Fermé',
-        name: 'Fermé',
+        label: t('replacements.statusClosedFilter'),
+        name: t('replacements.statusClosedFilter'),
     },
-];
+]);
 
-const visibility = [
+const visibility = computed(() => [
     {
         value: 'public',
-        label: 'Publique',
-        name: 'Publique',
+        label: t('replacements.adminForm.visibilityPublic'),
+        name: t('replacements.adminForm.visibilityPublic'),
     },
     {
         value: 'group',
-        label: 'Groupe',
-        name: 'Groupe',
+        label: t('replacements.adminForm.visibilityGroup'),
+        name: t('replacements.adminForm.visibilityGroup'),
     },
     {
         value: 'friends',
-        label: 'Amis',
-        name: 'Amis',
+        label: t('replacements.adminForm.visibilityFriends'),
+        name: t('replacements.adminForm.visibilityFriends'),
     },
-];
+]);
 
 watch(
     () => props.replacement,

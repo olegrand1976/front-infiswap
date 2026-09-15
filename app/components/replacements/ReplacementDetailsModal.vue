@@ -19,6 +19,7 @@ interface Props {
 const props = defineProps<Props>();
 const emit = defineEmits<{ 'update:open': [value: boolean] }>();
 
+const { t } = useI18n();
 const { showReplacement } = useReplacements();
 const replacement = ref<any>(null);
 const pending = ref(false);
@@ -33,7 +34,7 @@ watch(() => props.open, async (isOpen) => {
             replacement.value = data.replacement;
         }
         catch (e) {
-            error.value = e?.message || 'Erreur inconnue';
+            error.value = e?.message || t('replacements.detailsModal.unknownError');
         }
         finally {
             pending.value = false;
@@ -126,9 +127,9 @@ const formatPhone = (num?: string) =>
         <DialogContent class="max-w-4xl h-[500px] flex flex-col">
             <DialogHeader>
                 <DialogTitle class="text-2xl font-semibold">
-                    Détails du remplacement
+                    {{ t('replacements.detailsModal.title') }}
                 </DialogTitle>
-                <DialogDescription>Informations complètes et structurées</DialogDescription>
+                <DialogDescription>{{ t('replacements.detailsModal.subtitle') }}</DialogDescription>
             </DialogHeader>
 
             <div class="overflow-y-auto flex-1 pt-4">
@@ -154,7 +155,7 @@ const formatPhone = (num?: string) =>
                             v-if="replacement.type === 'immediate'"
                             class="bg-red-100 text-red-800 font-semibold text-sm px-5 py-2 rounded-md shadow-sm"
                         >
-                            URGENT
+                            {{ t('replacements.urgentBadge') }}
                         </div>
 
                         <div
@@ -164,7 +165,7 @@ const formatPhone = (num?: string) =>
                                     ? 'bg-green-100 text-green-800'
                                     : 'bg-gray-200 text-gray-700']"
                         >
-                            {{ replacement.status === 'open' ? 'Ouvert' : 'Fermé' }}
+                            {{ replacement.status === 'open' ? t('replacements.statusOpenFilter') : t('replacements.statusClosedFilter') }}
                         </div>
                     </div>
 
@@ -174,16 +175,16 @@ const formatPhone = (num?: string) =>
                     >
                         <TabsList class="grid grid-cols-4 gap-2">
                             <TabsTrigger value="infos">
-                                Infos principales
+                                {{ t('replacements.detailsModal.tabInfos') }}
                             </TabsTrigger>
                             <TabsTrigger value="users">
-                                Utilisateurs
+                                {{ t('replacements.detailsModal.tabUsers') }}
                             </TabsTrigger>
                             <TabsTrigger value="localisation">
-                                Localisation
+                                {{ t('replacements.detailsModal.tabLocalisation') }}
                             </TabsTrigger>
                             <TabsTrigger value="desc">
-                                Description
+                                {{ t('replacements.detailsModal.tabDesc') }}
                             </TabsTrigger>
                         </TabsList>
 
@@ -191,7 +192,7 @@ const formatPhone = (num?: string) =>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="p-4 border rounded-lg shadow-sm bg-gray-50">
                                     <h3 class="text-sm font-semibold text-muted-foreground">
-                                        Période
+                                        {{ t('replacements.period') }}
                                     </h3>
                                     <div class="mt-2 space-y-2">
                                         <p
@@ -212,14 +213,14 @@ const formatPhone = (num?: string) =>
                                                 v-if="parsedTimeSlots.morning && parsedTimeSlots.morning.start_at && parsedTimeSlots.morning.end_at"
                                                 class="block bg-gray-100 text-gray-800 px-3 py-1 rounded-md font-medium mb-1"
                                             >
-                                                Matin : {{ parsedTimeSlots.morning.start_at }} - {{ parsedTimeSlots.morning.end_at }}
+                                                {{ t('replacements.morning') }} {{ parsedTimeSlots.morning.start_at }} - {{ parsedTimeSlots.morning.end_at }}
                                             </div>
 
                                             <div
                                                 v-if="parsedTimeSlots.evening && parsedTimeSlots.evening.start_at && parsedTimeSlots.evening.end_at"
                                                 class="block bg-gray-100 text-gray-800 px-3 py-1 rounded-md font-medium"
                                             >
-                                                Soir : {{ parsedTimeSlots.evening.start_at }} - {{ parsedTimeSlots.evening.end_at }}
+                                                {{ t('replacements.evening') }} {{ parsedTimeSlots.evening.start_at }} - {{ parsedTimeSlots.evening.end_at }}
                                             </div>
                                         </template>
 
@@ -227,7 +228,7 @@ const formatPhone = (num?: string) =>
                                             v-else-if="parsedTimeSlots.type === 'single'"
                                             class="inline-block bg-gray-100 text-gray-800 px-3 py-1 rounded-md font-medium"
                                         >
-                                            Heure : {{ parsedTimeSlots.single.start_at }} - {{ parsedTimeSlots.single.end_at }}
+                                            {{ t('replacements.detailsModal.singleTime', { start: parsedTimeSlots.single.start_at, end: parsedTimeSlots.single.end_at }) }}
                                         </div>
 
                                         <div
@@ -247,7 +248,7 @@ const formatPhone = (num?: string) =>
 
                                 <div class="p-4 border rounded-lg shadow-sm bg-gray-50">
                                     <h3 class="text-sm font-semibold text-muted-foreground">
-                                        Types de soins
+                                        {{ t('replacements.careTypesHeading') }}
                                     </h3>
                                     <div class="mt-2 flex flex-wrap gap-2">
                                         <span
@@ -266,7 +267,7 @@ const formatPhone = (num?: string) =>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="p-4 border rounded-lg shadow-sm bg-gray-50">
                                     <h3 class="text-sm font-semibold text-muted-foreground">
-                                        Créateur
+                                        {{ t('replacements.creatorLabel') }}
                                     </h3>
                                     <p class="font-medium mt-2">
                                         {{ replacement.user_full_name }}
@@ -281,7 +282,7 @@ const formatPhone = (num?: string) =>
 
                                 <div class="p-4 border rounded-lg shadow-sm bg-gray-50">
                                     <h3 class="text-sm font-semibold text-muted-foreground">
-                                        Remplaçant
+                                        {{ t('replacements.detailsModal.substituteHeading') }}
                                     </h3>
                                     <p
                                         v-if="replacement.substitute_user"
@@ -294,7 +295,7 @@ const formatPhone = (num?: string) =>
                                         v-else
                                         class="italic text-muted-foreground mt-2"
                                     >
-                                        Aucun remplaçant
+                                        {{ t('replacements.detailsModal.noSubstitute') }}
                                     </p>
                                 </div>
                             </div>
@@ -307,7 +308,7 @@ const formatPhone = (num?: string) =>
                                     class="p-4 border rounded-lg shadow-sm bg-gray-50"
                                 >
                                     <h3 class="text-sm font-semibold text-muted-foreground">
-                                        Notifiés ({{ replacement.matching_users.length }})
+                                        {{ t('replacements.detailsModal.notifiedCount', { n: replacement.matching_users.length }) }}
                                     </h3>
                                     <div class="max-h-40 overflow-y-auto mt-2 space-y-1">
                                         <p
@@ -322,7 +323,7 @@ const formatPhone = (num?: string) =>
 
                                 <div class="p-4 border rounded-lg shadow-sm bg-gray-50 flex flex-col justify-center items-start">
                                     <h3 class="text-sm font-semibold text-muted-foreground">
-                                        Intéressés
+                                        {{ t('replacements.interestedPeople') }}
                                     </h3>
                                     <p class="text-2xl font-bold text-primary mt-2">
                                         {{ replacement.response_count }}
@@ -335,7 +336,7 @@ const formatPhone = (num?: string) =>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="p-4 border rounded-lg shadow-sm bg-gray-50">
                                     <h3 class="text-sm font-semibold text-muted-foreground">
-                                        Codes Postaux
+                                        {{ t('replacements.colZip') }}
                                     </h3>
                                     <p class="mt-1 text-base">
                                         {{ postalInfo.zipCodes }}
@@ -343,7 +344,7 @@ const formatPhone = (num?: string) =>
                                 </div>
                                 <div class="p-4 border rounded-lg shadow-sm bg-gray-50">
                                     <h3 class="text-sm font-semibold text-muted-foreground">
-                                        Villes
+                                        {{ t('replacements.colCities') }}
                                     </h3>
                                     <p class="mt-1 text-base capitalize">
                                         {{ postalInfo.cities }}
@@ -356,10 +357,10 @@ const formatPhone = (num?: string) =>
                             <div class="grid grid-cols-1 gap-6">
                                 <div class="p-4 border rounded-lg shadow-sm bg-gray-50">
                                     <h3 class="text-sm font-semibold text-muted-foreground">
-                                        Description
+                                        {{ t('replacements.description') }}
                                     </h3>
                                     <p class="mt-2 text-base whitespace-pre-wrap text-gray-800">
-                                        {{ replacement.comment || 'Aucune description fournie' }}
+                                        {{ replacement.comment || t('replacements.detailsModal.noDescription') }}
                                     </p>
                                 </div>
                             </div>

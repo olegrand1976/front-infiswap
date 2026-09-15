@@ -21,12 +21,12 @@
                     </div>
                     <div>
                         <DialogTitle class="text-xl font-bold text-white">
-                            {{ isActiveMode ? 'Remplacement boosté' : 'Booster ce remplacement' }}
+                            {{ isActiveMode ? t('replacements.boostedTitle') : t('replacements.boostThisReplacement') }}
                         </DialogTitle>
                         <DialogDescription class="text-amber-50/90 mt-1 text-sm">
                             {{ isActiveMode
-                                ? 'Prolongez la visibilité ou consultez la fin de votre mise en avant'
-                                : 'Mettez votre remplacement en tête de liste' }}
+                                ? t('replacements.boostModal.descActive')
+                                : t('replacements.boostModal.descInactive') }}
                         </DialogDescription>
                     </div>
                 </div>
@@ -35,14 +35,14 @@
             <div class="px-6 py-5 space-y-5 max-h-[70vh] overflow-y-auto">
                 <section class="rounded-xl border border-gray-100 bg-gray-50/80 p-4 space-y-3">
                     <h3 class="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                        Votre remplacement
+                        {{ t('replacements.boostModal.yourReplacement') }}
                     </h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                         <div class="flex items-start gap-2">
                             <Calendar class="w-4 h-4 text-primary shrink-0 mt-0.5" />
                             <div>
                                 <p class="text-gray-500 text-xs">
-                                    Période
+                                    {{ t('replacements.period') }}
                                 </p>
                                 <p class="font-medium text-gray-800">
                                     {{ periodLabel }}
@@ -56,7 +56,7 @@
                             <MapPin class="w-4 h-4 text-primary shrink-0 mt-0.5" />
                             <div>
                                 <p class="text-gray-500 text-xs">
-                                    Localité
+                                    {{ t('replacements.localityLabel') }}
                                 </p>
                                 <p class="font-medium text-gray-800 line-clamp-2">
                                     {{ citiesLabel }}
@@ -70,7 +70,7 @@
                             <Hash class="w-4 h-4 text-primary shrink-0 mt-0.5" />
                             <div>
                                 <p class="text-gray-500 text-xs">
-                                    Codes postaux
+                                    {{ t('replacements.colZip') }}
                                 </p>
                                 <p class="font-medium text-gray-800 line-clamp-2">
                                     {{ zipLabel }}
@@ -82,7 +82,7 @@
 
                 <section class="space-y-3">
                     <h3 class="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                        Avantages du boost
+                        {{ t('replacements.boostModal.advantagesHeading') }}
                     </h3>
                     <ul class="space-y-2.5">
                         <li
@@ -115,7 +115,7 @@
                     <ReplacementBoostStars size="lg" />
                     <div>
                         <p class="font-semibold text-green-800 text-sm">
-                            Boost actif
+                            {{ t('replacements.boostModal.boostActiveLabel') }}
                         </p>
                         <p class="text-xs text-green-700 mt-0.5">
                             {{ boostedUntilLabel }}
@@ -131,17 +131,17 @@
                         <Crown class="w-5 h-5 text-primary shrink-0 mt-0.5" />
                         <div>
                             <p class="font-semibold text-sm text-gray-800">
-                                Boost offert par Infiswap Premium
+                                {{ t('replacements.boostModal.premiumBoostTitle') }}
                             </p>
                             <p class="text-xs text-gray-600 mt-0.5">
                                 <template v-if="planLoading || boostCredit == null">
-                                    Vérification de votre crédit mensuel…
+                                    {{ t('replacements.boostModal.checkingCredit') }}
                                 </template>
                                 <template v-else-if="freeBoostAvailable">
-                                    {{ freeBoostDurationDays }} jours en tête de liste, sans payer, une fois par mois.
+                                    {{ t('replacements.boostModal.freeBoostAvailableText', { n: freeBoostDurationDays }) }}
                                 </template>
                                 <template v-else>
-                                    Déjà utilisé ce mois-ci. Prochain crédit le {{ nextFreeBoostLabel }}.
+                                    {{ t('replacements.boostModal.alreadyUsedText', { date: nextFreeBoostLabel }) }}
                                 </template>
                             </p>
                         </div>
@@ -152,14 +152,14 @@
                         :in-progress="claimingFreeBoost"
                         @click="useFreeBoost"
                     >
-                        Utiliser mon boost offert
+                        {{ t('replacements.boostModal.useFreeBoostCta') }}
                     </Button>
                 </section>
 
                 <SubscriptionProUpsellCallout
                     v-else
-                    title="Inclus dans Infiswap Premium — 1 boost offert chaque mois"
-                    description="Avec les alertes instantanées et les contrats inclus, dès 99 €/an."
+                    :title="t('replacements.boostModal.upsellTitle')"
+                    :description="t('replacements.boostModal.upsellDesc')"
                 />
 
                 <section
@@ -167,7 +167,7 @@
                     class="space-y-3"
                 >
                     <h3 class="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                        {{ isActiveMode ? 'Prolonger la mise en avant' : 'Choisir une durée' }}
+                        {{ isActiveMode ? t('replacements.boostModal.chooseDurationActive') : t('replacements.boostModal.chooseDurationInactive') }}
                     </h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <button
@@ -184,10 +184,10 @@
                                 v-if="plan.duration_days !== boost1DurationDays"
                                 class="absolute -top-2 right-2 rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white"
                             >
-                                Recommandé
+                                {{ t('replacements.boostModal.recommendedBadge') }}
                             </span>
                             <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                                Boost {{ plan.duration_days === boost1DurationDays ? '1' : '2' }} · {{ plan.duration_days }} jours
+                                {{ t('replacements.boostModal.planLabel', { num: plan.duration_days === boost1DurationDays ? '1' : '2', days: plan.duration_days }) }}
                             </p>
                             <p class="text-xl font-bold text-amber-700 mt-1">
                                 {{ plan.label }}
@@ -196,13 +196,13 @@
                                 v-if="plan.duration_days !== boost1DurationDays"
                                 class="text-xs text-gray-500 mt-1"
                             >
-                                Meilleur rapport visibilité/prix
+                                {{ t('replacements.boostModal.bestValueNote') }}
                             </p>
                             <p
                                 v-else
                                 class="text-xs text-gray-500 mt-1"
                             >
-                                Option rapide — 3 jours
+                                {{ t('replacements.boostModal.quickOptionNote') }}
                             </p>
                             <p
                                 v-if="plan.description"
@@ -218,7 +218,7 @@
                     v-if="sortedBoostPlans.length === 0 && !planLoading"
                     class="text-sm text-center text-gray-500 py-2"
                 >
-                    L'option boost n'est pas disponible pour le moment.
+                    {{ t('replacements.boostModal.noBoostAvailable') }}
                 </p>
             </div>
 
@@ -228,7 +228,7 @@
                     class="sm:flex-1 rounded-xl"
                     @click="open = false"
                 >
-                    {{ isActiveMode ? 'Fermer' : 'Annuler' }}
+                    {{ isActiveMode ? t('common.close') : t('common.cancel') }}
                 </Button>
 
                 <Button
@@ -238,7 +238,7 @@
                     @click="confirmBoost"
                 >
                     <Rocket class="w-4 h-4 mr-2" />
-                    {{ isActiveMode ? 'Prolonger' : 'Booster' }} — {{ selectedPlan.label }}
+                    {{ isActiveMode ? t('replacements.boostModal.extendCta') : t('replacements.boostModal.boostCta') }} — {{ selectedPlan.label }}
                 </Button>
 
                 <Button
@@ -248,7 +248,7 @@
                     :in-progress="canceling"
                     @click="handleCancel"
                 >
-                    Annuler le boost
+                    {{ t('replacements.boostModal.cancelBoostBtn') }}
                 </Button>
             </div>
         </DialogContent>
@@ -275,6 +275,7 @@ const emit = defineEmits<{
     boosted: [];
 }>();
 
+const { t } = useI18n();
 const { $toast } = useNuxtApp();
 const { boostReplacement, cancelBoost } = useSubscription();
 const { boostPlans, fetchBoostPlans } = useReplacementBoost();
@@ -361,23 +362,23 @@ watch(open, async (isOpen) => {
     }
 });
 
-const advantages = [
+const advantages = computed(() => [
     {
         icon: TrendingUp,
-        title: 'En haut de la liste',
-        description: 'Votre remplacement apparaît en premier dans les recherches.',
+        title: t('replacements.boostModal.advantage1Title'),
+        description: t('replacements.boostModal.advantage1Desc'),
     },
     {
         icon: Eye,
-        title: 'Vite vu par les utilisateurs',
-        description: 'Maximum de visibilité dès l\'ouverture des listes.',
+        title: t('replacements.boostModal.advantage2Title'),
+        description: t('replacements.boostModal.advantage2Desc'),
     },
     {
         icon: MessageCircle,
-        title: 'Réponses plus rapides',
-        description: 'Les remplaçants vous contactent plus vite grâce à la position en tête.',
+        title: t('replacements.boostModal.advantage3Title'),
+        description: t('replacements.boostModal.advantage3Desc'),
     },
-];
+]);
 
 const parseList = (value: unknown): string[] => {
     if (!value) return [];
@@ -427,9 +428,9 @@ const zipLabel = computed(() => {
 const boostedUntilLabel = computed(() => {
     const until = props.replacement?.boosted_until;
     if (!until) {
-        return 'Votre annonce bénéficie d\'une visibilité maximale.';
+        return t('replacements.maxVisibilityText');
     }
-    return `Actif jusqu'au ${formatDate(until)}. Un nouvel achat prolonge la durée.`;
+    return t('replacements.boostModal.boostedUntilWithDate', { date: formatDate(until) });
 });
 
 /** Annulation manuelle : abonnement Stripe legacy uniquement. */
@@ -460,7 +461,7 @@ const confirmBoost = async () => {
         }
         $toast({
             variant: 'destructive',
-            description: 'Impossible d\'ouvrir la page de paiement.',
+            description: t('replacements.paymentPageError'),
         });
     }
     finally {

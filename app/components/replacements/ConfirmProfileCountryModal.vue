@@ -22,10 +22,10 @@
                 id="confirm-profile-country-title"
                 class="text-xl sm:text-2xl font-extrabold text-slate-900 text-center"
             >
-                Confirmez votre pays
+                {{ t('replacements.confirmCountry.title') }}
             </h2>
             <p class="text-sm text-slate-500 text-center mt-2 mb-6">
-                Indiquez où vous exercez pour publier et voir les remplacements de votre zone.
+                {{ t('replacements.confirmCountry.subtitle') }}
             </p>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <button
@@ -47,10 +47,10 @@
                 :disabled="pending"
                 @click="onDismiss"
             >
-                Plus tard
+                {{ t('replacements.confirmCountry.later') }}
             </button>
             <p class="mt-2 text-center text-xs text-slate-400">
-                Sans pays, les listes restent vides et la publication est bloquée.
+                {{ t('replacements.confirmCountry.footNote') }}
             </p>
         </div>
     </div>
@@ -63,6 +63,8 @@ import type { ReplacementCountryCode } from '~/lib/replacementCountry';
 defineProps<{
     pending?: boolean;
 }>();
+
+const { t } = useI18n();
 
 const emit = defineEmits<{
     select: [country: ReplacementCountryCode];
