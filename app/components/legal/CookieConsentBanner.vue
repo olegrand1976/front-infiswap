@@ -11,18 +11,18 @@
                 id="cookie-consent-title"
                 class="text-base font-semibold text-gray-900 sm:text-lg"
             >
-                {{ $t('cookies.title') }}
+                {{ t('cookies.title') }}
             </h2>
             <p
                 id="cookie-consent-desc"
                 class="mt-2 text-sm text-gray-600"
             >
-                {{ $t('cookies.description') }}
+                {{ t('cookies.description') }}
                 <NuxtLink
                     :to="localePath('/privacy-security')"
                     class="text-primary underline"
                 >
-                    {{ $t('cookies.privacyLink') }}
+                    {{ t('cookies.privacyLink') }}
                 </NuxtLink>
             </p>
 
@@ -37,7 +37,7 @@
                         disabled
                         class="mt-1"
                     >
-                    <span>{{ $t('cookies.necessary') }}</span>
+                    <span>{{ t('cookies.necessary') }}</span>
                 </label>
                 <label class="flex items-start gap-2">
                     <input
@@ -45,7 +45,7 @@
                         type="checkbox"
                         class="mt-1"
                     >
-                    <span>{{ $t('cookies.analytics') }}</span>
+                    <span>{{ t('cookies.analytics') }}</span>
                 </label>
                 <label class="flex items-start gap-2">
                     <input
@@ -53,7 +53,7 @@
                         type="checkbox"
                         class="mt-1"
                     >
-                    <span>{{ $t('cookies.marketing') }}</span>
+                    <span>{{ t('cookies.marketing') }}</span>
                 </label>
             </div>
 
@@ -64,7 +64,7 @@
                     class="order-3 sm:order-1"
                     @click="showDetails = !showDetails"
                 >
-                    {{ showDetails ? $t('cookies.hide') : $t('cookies.customize') }}
+                    {{ showDetails ? t('cookies.hide') : t('cookies.customize') }}
                 </Button>
                 <Button
                     type="button"
@@ -72,7 +72,7 @@
                     class="order-2"
                     @click="rejectNonEssential"
                 >
-                    {{ $t('cookies.refuse') }}
+                    {{ t('cookies.refuse') }}
                 </Button>
                 <Button
                     v-if="showDetails"
@@ -81,14 +81,14 @@
                     class="order-1 sm:order-3"
                     @click="save({ analytics, marketing })"
                 >
-                    {{ $t('cookies.save') }}
+                    {{ t('cookies.save') }}
                 </Button>
                 <Button
                     type="button"
                     class="order-1 sm:order-4"
                     @click="acceptAll"
                 >
-                    {{ $t('cookies.acceptAll') }}
+                    {{ t('cookies.acceptAll') }}
                 </Button>
             </div>
         </div>
@@ -107,6 +107,7 @@ const {
     init,
 } = useCookieConsent();
 
+const { t } = useI18n();
 const localePath = useLocalePath();
 const showDetails = ref(false);
 const analytics = ref(false);

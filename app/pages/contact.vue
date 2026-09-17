@@ -9,13 +9,13 @@
             <div class="relative mx-auto max-w-xl">
                 <span class="mb-5 inline-flex items-center gap-1.5 rounded-full border border-input bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-primary shadow-sm">
                     <MessageCircle class="size-3.5" />
-                    {{ $t('contact.heroEyebrow') }}
+                    {{ t('contact.heroEyebrow') }}
                 </span>
                 <h1 class="font-secondary text-3xl font-semibold text-dark lg:text-4xl">
-                    {{ $t('contact.heroTitlePrefix') }} <span class="text-primary">{{ $t('contact.heroTitleHighlight') }}</span>
+                    {{ t('contact.heroTitlePrefix') }} <span class="text-primary">{{ t('contact.heroTitleHighlight') }}</span>
                 </h1>
                 <p class="mx-auto mt-3.5 max-w-md text-sm text-gray-500 lg:text-base">
-                    {{ $t('contact.heroSubtitle') }}
+                    {{ t('contact.heroSubtitle') }}
                 </p>
                 <div class="mt-5 flex flex-wrap justify-center gap-2">
                     <span
@@ -33,10 +33,10 @@
             <div class="mx-auto grid max-w-5xl overflow-hidden rounded-lg border border-input bg-white shadow-xl lg:grid-cols-[1.3fr_1fr]">
                 <div class="p-8 lg:p-11">
                     <h2 class="font-secondary text-xl font-semibold text-dark">
-                        {{ $t('contact.formTitle') }}
+                        {{ t('contact.formTitle') }}
                     </h2>
                     <p class="mt-1 mb-6 text-sm text-gray-500">
-                        {{ $t('contact.formSubtitle') }}
+                        {{ t('contact.formSubtitle') }}
                     </p>
 
                     <form
@@ -46,13 +46,13 @@
                         <div class="grid gap-4 sm:grid-cols-2">
                             <div class="flex flex-col gap-1.5">
                                 <label class="text-sm font-medium text-gray-700">
-                                    {{ $t('contact.namePlaceholder') }}
+                                    {{ t('contact.namePlaceholder') }}
                                 </label>
                                 <InputIcon
                                     v-model="formData.name"
                                     :icon="CircleUser"
                                     rounded="md"
-                                    :placeholder="$t('contact.namePlaceholder')"
+                                    :placeholder="t('contact.namePlaceholder')"
                                     :errors="validationErrors.name"
                                     @blur="validateField('name')"
                                     @input="validateField('name')"
@@ -61,13 +61,13 @@
 
                             <div class="flex flex-col gap-1.5">
                                 <label class="text-sm font-medium text-gray-700">
-                                    {{ $t('auth.email') }}
+                                    {{ t('auth.email') }}
                                 </label>
                                 <InputIcon
                                     v-model="formData.email"
                                     :icon="Mail"
                                     rounded="md"
-                                    :placeholder="$t('auth.email')"
+                                    :placeholder="t('auth.email')"
                                     :errors="validationErrors.email"
                                     @blur="validateField('email')"
                                     @input="validateField('email')"
@@ -77,14 +77,14 @@
 
                         <div class="mt-4 flex flex-col gap-1.5">
                             <label class="text-sm font-medium text-gray-700">
-                                {{ $t('contact.phonePlaceholder') }}
-                                <span class="text-xs font-normal text-muted-foreground">({{ $t('pricing.optional') }})</span>
+                                {{ t('contact.phonePlaceholder') }}
+                                <span class="text-xs font-normal text-muted-foreground">({{ t('pricing.optional') }})</span>
                             </label>
                             <InputIcon
                                 v-model="formData.phoneNumber"
                                 :icon="Phone"
                                 rounded="md"
-                                :placeholder="$t('contact.phonePlaceholder')"
+                                :placeholder="t('contact.phonePlaceholder')"
                                 :errors="validationErrors.phoneNumber"
                                 @blur="validateField('phoneNumber')"
                                 @input="validateField('phoneNumber')"
@@ -93,11 +93,11 @@
 
                         <div class="mt-4 flex flex-col gap-1.5">
                             <label class="text-sm font-medium text-gray-700">
-                                {{ $t('contact.message') }}
+                                {{ t('contact.message') }}
                             </label>
                             <Textarea
                                 v-model="formData.message"
-                                :placeholder="$t('contact.messagePlaceholder')"
+                                :placeholder="t('contact.messagePlaceholder')"
                                 class="min-h-24 rounded-md border-input"
                             />
                         </div>
@@ -107,7 +107,7 @@
                             class="mt-6 w-full font-bold"
                             :in-progress="inProgress"
                         >
-                            {{ $t('contact.send') }}
+                            {{ t('contact.send') }}
                             <Send class="size-4" />
                         </Button>
                     </form>
@@ -115,10 +115,10 @@
 
                 <div class="flex flex-col bg-primary p-8 lg:p-10">
                     <h3 class="font-secondary text-lg font-semibold text-white">
-                        {{ $t('contact.infoTitle') }}
+                        {{ t('contact.infoTitle') }}
                     </h3>
                     <p class="mt-1 mb-5 text-xs text-gray-400">
-                        {{ $t('contact.infoSubtitle') }}
+                        {{ t('contact.infoSubtitle') }}
                     </p>
 
                     <div class="flex flex-col">
@@ -130,7 +130,7 @@
                                 <Phone class="size-4" />
                             </span>
                             <span>
-                                <span class="block text-[11px] font-bold uppercase tracking-wide text-gray-400">{{ $t('contact.phone') }}</span>
+                                <span class="block text-[11px] font-bold uppercase tracking-wide text-gray-400">{{ t('contact.phone') }}</span>
                                 <span class="text-sm font-semibold text-white">0478 02 33 77</span>
                             </span>
                         </a>
@@ -153,7 +153,7 @@
                                 <MapPin class="size-4" />
                             </span>
                             <span>
-                                <span class="block text-[11px] font-bold uppercase tracking-wide text-gray-400">{{ $t('contact.address') }}</span>
+                                <span class="block text-[11px] font-bold uppercase tracking-wide text-gray-400">{{ t('contact.address') }}</span>
                                 <span class="text-sm font-medium text-white">Rue de la Résistance 92/A, 7131 Waudrez</span>
                             </span>
                         </div>
@@ -168,7 +168,7 @@
                                 <Globe class="size-4" />
                             </span>
                             <span>
-                                <span class="block text-[11px] font-bold uppercase tracking-wide text-gray-400">{{ $t('contact.site') }}</span>
+                                <span class="block text-[11px] font-bold uppercase tracking-wide text-gray-400">{{ t('contact.site') }}</span>
                                 <span class="text-sm font-semibold text-white">ll-it-sc.be</span>
                             </span>
                         </a>
@@ -176,7 +176,7 @@
 
                     <div class="mt-auto flex items-center gap-2 pt-5 text-xs text-white">
                         <span class="size-1.5 shrink-0 rounded-full bg-success" />
-                        {{ $t('contact.trustResponseTime') }}
+                        {{ t('contact.trustResponseTime') }}
                     </div>
                 </div>
             </div>

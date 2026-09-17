@@ -9,7 +9,7 @@
                 v-if="locale === 'nl'"
                 class="container md:mx-8 lg:mx-16 mx-auto mb-6 text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-lg p-4"
             >
-                {{ $t('legal.noticeBody') }}
+                {{ t('legal.noticeBody') }}
             </p>
             <div class="container md:mx-8 lg:mx-16 mx-auto font-light mb-4 text-sm text-gray-500">
                 Dernière mise à jour : 24 juillet 2026.

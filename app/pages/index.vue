@@ -16,7 +16,7 @@
             class="lg:hidden fixed bottom-20 right-0 z-40 bg-primary text-white rounded-l-full shadow-lg px-4 py-3 flex items-center gap-2 transition-all duration-300 hover:scale-105 hover:shadow-xl"
         >
             <UserPlus class="w-5 h-5" />
-            <span class="text-sm font-semibold">{{ $t('home.ctaRegister') }}</span>
+            <span class="text-sm font-semibold">{{ t('home.ctaRegister') }}</span>
         </NuxtLink>
     </div>
 </template>

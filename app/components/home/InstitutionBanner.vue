@@ -10,7 +10,7 @@
                     <Building2 class="size-6.5 text-white" />
                 </span>
                 <h2 class="mx-auto max-w-96 whitespace-pre-line font-secondary text-[32px] font-semibold leading-tight text-white [text-shadow:0_2px_12px_rgba(0,0,0,.25)] lg:mx-0">
-                    {{ $t('home.institution.titleDesktop') }}
+                    {{ t('home.institution.titleDesktop') }}
                 </h2>
 
                 <div class="w-full mt-4 max-w-96 flex flex-col items-center gap-3.5 lg:items-start">
@@ -19,14 +19,14 @@
                         class="h-auto text-left w-[90%] gap-2.5 whitespace-pre-line rounded-lg bg-white p-4 text-left text-[13.5px] font-bold leading-[1.32] text-primary shadow-[0_14px_32px_rgba(0,0,0,.3)] hover:bg-white/90"
                     >
                         <UserPlus class="!size-4.5 shrink-0" />
-                        {{ $t('home.institution.ctaStaff') }}
+                        {{ t('home.institution.ctaStaff') }}
                     </Button>
                     <Button
                         :href="localePath('/offre-institution')"
                         class="h-auto w-[90%] gap-2.5 whitespace-pre-line rounded-lg border-[1.5px] border-white/55 bg-white/16 px-6 py-[15px] text-left text-[13.5px] font-bold leading-[1.32] text-white shadow-[0_10px_26px_rgba(0,0,0,.2)] backdrop-blur-md hover:bg-white/25"
                     >
                         <HeartHandshake class="!size-4.5 shrink-0" />
-                        {{ $t('home.institution.ctaContinuity') }}
+                        {{ t('home.institution.ctaContinuity') }}
                     </Button>
                 </div>
             </div>
@@ -34,7 +34,7 @@
             <div class="flex justify-center lg:justify-end">
                 <LayoutsAppImage
                     src="/home/nurse_with_elder.png"
-                    :alt="$t('home.institution.alt')"
+                    :alt="t('home.institution.alt')"
                     class="institution-banner__photo w-full max-w-[560px] object-contain"
                 />
             </div>
@@ -45,6 +45,7 @@
 <script setup lang="ts">
 import { Building2, HeartHandshake, UserPlus } from 'lucide-vue-next';
 
+const { t } = useI18n();
 const localePath = useLocalePath();
 </script>
 

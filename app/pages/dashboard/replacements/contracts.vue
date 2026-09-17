@@ -3,16 +3,16 @@
         <div class="mt-6 flex items-center gap-2">
             <ArrowLeft
                 class="size-5 cursor-pointer hover:text-primary"
-                :title="$t('common.back')"
+                :title="t('common.back')"
                 @click="goBack"
             />
             <h1 class="text-primary font-bold">
-                {{ $t('replacements.contractsHeading') }}
+                {{ t('replacements.contractsHeading') }}
             </h1>
         </div>
 
         <p class="text-sm text-muted-foreground">
-            {{ $t('replacements.contractsHint') }}
+            {{ t('replacements.contractsHint') }}
         </p>
 
         <div

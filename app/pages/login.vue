@@ -46,10 +46,10 @@
                 <div class="w-full max-w-md container">
                     <div class="mb-5 text-center">
                         <h1 class="font-secondary text-2xl font-semibold text-dark">
-                            {{ $t('auth.signInHeading') }}
+                            {{ t('auth.signInHeading') }}
                         </h1>
                         <p class="mt-2 text-sm text-gray-500">
-                            {{ $t('auth.signInSubtitle') }}
+                            {{ t('auth.signInSubtitle') }}
                         </p>
                     </div>
 
@@ -73,8 +73,8 @@
                                     :icon="Lock"
                                     type="password"
                                     rounded="md"
-                                    :label="$t('auth.password')"
-                                    :placeholder="$t('auth.password')"
+                                    :label="t('auth.password')"
+                                    :placeholder="t('auth.password')"
                                     class="text-sm w-full"
                                 />
                             </div>
@@ -91,7 +91,7 @@
                                     class="transition-transform group-active:scale-90"
                                 />
                                 <span class="font-sans font-light text-primary leading-none">
-                                    {{ $t('auth.rememberMe') }}
+                                    {{ t('auth.rememberMe') }}
                                 </span>
                             </label>
 
@@ -99,7 +99,7 @@
                                 :to="localePath('/password/reset-password')"
                                 class="relative w-fit text-primary after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-right after:scale-x-0 after:bg-primary after:transition-transform after:duration-300 after:ease-out hover:after:origin-left hover:after:scale-x-100"
                             >
-                                *{{ $t('auth.forgotPassword') }}
+                                *{{ t('auth.forgotPassword') }}
                             </NuxtLink>
                         </div>
 
@@ -114,7 +114,7 @@
                                     class="w-4"
                                 />
                                 <span>
-                                    {{ $t('auth.signInGoogle') }}
+                                    {{ t('auth.signInGoogle') }}
                                 </span>
                             </Button> -->
                             <Button
@@ -123,7 +123,7 @@
                                 :in-progress="inProgress"
                                 data-testid="login-submit"
                             >
-                                {{ $t('auth.signIn') }}
+                                {{ t('auth.signIn') }}
                             </Button>
                         </div>
                     </form>
@@ -131,12 +131,12 @@
 
                 <div class="shrink-0 text-xs text-center mt-4">
                     <p>
-                        {{ $t('auth.noAccountYet') }}
+                        {{ t('auth.noAccountYet') }}
                         <NuxtLink
                             :to="localePath('/register')"
                             class="font-bold text-primary underline"
                         >
-                            {{ $t('auth.signUp') }}
+                            {{ t('auth.signUp') }}
                         </NuxtLink>
                     </p>
                 </div>
@@ -151,10 +151,10 @@
             <div class="flex flex-col justify-center items-center px-6 grow">
                 <div class="mb-6 text-center">
                     <h1 class="font-secondary text-xl font-semibold text-dark">
-                        {{ $t('auth.signInHeading') }}
+                        {{ t('auth.signInHeading') }}
                     </h1>
                     <p class="mt-1.5 text-xs text-gray-500">
-                        {{ $t('auth.signInSubtitle') }}
+                        {{ t('auth.signInSubtitle') }}
                     </p>
                 </div>
 
@@ -181,8 +181,8 @@
                                 :icon="Lock"
                                 type="password"
                                 rounded="md"
-                                :label="$t('auth.password')"
-                                :placeholder="$t('auth.password')"
+                                :label="t('auth.password')"
+                                :placeholder="t('auth.password')"
                                 class="text-sm w-full"
                             />
                         </div>
@@ -198,13 +198,13 @@
                                 v-model:checked="credentials.remember"
                                 class="transition-transform group-active:scale-90"
                             />
-                            <span class="font-light text-primary leading-none">{{ $t('auth.rememberMe') }}</span>
+                            <span class="font-light text-primary leading-none">{{ t('auth.rememberMe') }}</span>
                         </label>
 
                         <NuxtLink
                             :to="localePath('/password/reset-password')"
                             class="relative w-fit text-primary after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-right after:scale-x-0 after:bg-primary after:transition-transform after:duration-300 after:ease-out hover:after:origin-left hover:after:scale-x-100"
-                        >*{{ $t('auth.forgotPassword') }}</NuxtLink>
+                        >*{{ t('auth.forgotPassword') }}</NuxtLink>
                     </div>
 
                     <div class="flex flex-col justify-center items-center mx-auto mt-12 space-y-7">
@@ -217,7 +217,7 @@
                                 alt="Google"
                                 class="w-4"
                             />
-                            <span>{{ $t('auth.signInGoogle') }}</span>
+                            <span>{{ t('auth.signInGoogle') }}</span>
                         </Button> -->
                         <Button
                             class="w-80"
@@ -225,7 +225,7 @@
                             :in-progress="inProgress"
                             data-testid="login-submit"
                         >
-                            {{ $t('auth.signIn') }}
+                            {{ t('auth.signIn') }}
                         </Button>
                     </div>
                 </form>
@@ -233,11 +233,11 @@
 
             <div class="text-xs text-center mt-4 mb-8">
                 <p>
-                    {{ $t('auth.noAccountYet') }}
+                    {{ t('auth.noAccountYet') }}
                     <NuxtLink
                         :to="localePath('/register')"
                         class="font-bold text-primary underline"
-                    >{{ $t('auth.signUp') }}</NuxtLink>
+                    >{{ t('auth.signUp') }}</NuxtLink>
                 </p>
             </div>
 

@@ -11,31 +11,31 @@
                 >
                     <div class="lg:hidden text-center mb-8">
                         <h2 class="text-primary text-4xl font-semibold">
-                            {{ $t('about.title') }}
+                            {{ t('about.title') }}
                         </h2>
                     </div>
                     <div class="lg:space-y-6 space-y-8 order-2 lg:order-1 relative z-30">
                         <h3
                             class="text-primary md:text-3xl text-2xl text-center md:text-left"
                         >
-                            {{ $t('about.lead') }}
+                            {{ t('about.lead') }}
                         </h3>
                         <p>
-                            {{ $t('about.p1') }}
+                            {{ t('about.p1') }}
                         </p>
-                        <p>{{ $t('about.p2') }}</p>
-                        <p>{{ $t('about.p3') }}</p>
+                        <p>{{ t('about.p2') }}</p>
+                        <p>{{ t('about.p3') }}</p>
                         <Button
                             :href="localePath('/register')"
                             class="w-44 mx-auto lg:mx-0 mt-8 flex justify-center items-center font-bold"
                         >
-                            {{ $t('about.ctaRegister') }}
+                            {{ t('about.ctaRegister') }}
                         </Button>
                     </div>
                     <div class="order-1 lg:order-2 flex justify-center lg:justify-end">
                         <LayoutsAppImage
                             src="/home/woman_infirmier.png"
-                            :alt="$t('about.altNurseElder')"
+                            :alt="t('about.altNurseElder')"
                             class="w-full max-w-2xs lg:max-w-none z-20"
                         />
                     </div>
@@ -66,34 +66,34 @@
                 <div>
                     <LayoutsAppImage
                         src="/home/black_infirmier.png"
-                        :alt="$t('about.altNurseYoung')"
+                        :alt="t('about.altNurseYoung')"
                         class="w-full"
                     />
                 </div>
 
                 <div class="space-y-6">
                     <h3 class="text-xl md:text-3xl text-primary text-center md:text-left">
-                        {{ $t('about.platformTitleLead') }} <strong>{{ $t('about.platformTitleStrong') }}</strong>
+                        {{ t('about.platformTitleLead') }} <strong>{{ t('about.platformTitleStrong') }}</strong>
                     </h3>
                     <p>
-                        {{ $t('about.platformBody') }}
+                        {{ t('about.platformBody') }}
                     </p>
                     <div>
                         <h5 class="font-semibold">
-                            {{ $t('about.taglineLabel') }}
+                            {{ t('about.taglineLabel') }}
                             <span class="text-primary">
-                                {{ $t('about.tagline') }}
+                                {{ t('about.tagline') }}
                             </span>
                         </h5>
                         <p>
-                            {{ $t('about.taglineBody') }}
+                            {{ t('about.taglineBody') }}
                         </p>
                     </div>
                     <Button
                         :href="localePath('/register')"
                         class="w-44 mx-auto lg:mx-0 mt-8 flex justify-center items-center font-bold"
                     >
-                        {{ $t('about.ctaRegister') }}
+                        {{ t('about.ctaRegister') }}
                     </Button>
                 </div>
             </div>

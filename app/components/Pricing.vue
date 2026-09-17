@@ -8,11 +8,11 @@
         <div class="relative container px-4 sm:px-6 pt-8 lg:py-20 max-w-6xl mx-auto flex-1 flex flex-col">
             <div class="text-center max-w-2xl mx-auto mb-14 lg:mb-16">
                 <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
-                    {{ $t('pricing.title') }}<br>
-                    <span class="text-primary">{{ $t('pricing.titleHighlight') }}</span>
+                    {{ t('pricing.title') }}<br>
+                    <span class="text-primary">{{ t('pricing.titleHighlight') }}</span>
                 </h1>
                 <p class="mt-5 text-gray-600 text-base lg:text-lg leading-relaxed">
-                    {{ $t('pricing.subtitle') }}
+                    {{ t('pricing.subtitle') }}
                 </p>
             </div>
 
@@ -26,10 +26,10 @@
                             </div>
                             <div>
                                 <p class="text-xs font-semibold uppercase tracking-wide text-success">
-                                    {{ $t('pricing.discovery') }}
+                                    {{ t('pricing.discovery') }}
                                 </p>
                                 <h2 class="text-xl font-bold text-gray-900">
-                                    {{ $t('pricing.free') }}
+                                    {{ t('pricing.free') }}
                                 </h2>
                             </div>
                         </div>
@@ -40,12 +40,12 @@
                                 <span class="text-2xl font-semibold text-gray-700 mb-1">€</span>
                             </div>
                             <p class="mt-2 text-sm text-gray-500">
-                                {{ $t('pricing.freeAccount') }}
+                                {{ t('pricing.freeAccount') }}
                             </p>
                         </div>
 
                         <p class="text-gray-600 text-sm leading-relaxed mb-6 lg:min-h-[4.5rem]">
-                            {{ $t('pricing.freeDesc') }}
+                            {{ t('pricing.freeDesc') }}
                         </p>
 
                         <ul class="space-y-3 mb-8 flex-1">
@@ -72,20 +72,20 @@
                             class="w-full font-semibold border-success/40 text-success hover:text-success/80 hover:bg-success/5 h-11"
                             :href="localePath('/register')"
                         >
-                            {{ $t('pricing.createFree') }}
+                            {{ t('pricing.createFree') }}
                         </Button>
                         <p class="text-center text-xs text-gray-400 mt-3">
-                            {{ $t('pricing.alreadyRegistered') }} <NuxtLink
+                            {{ t('pricing.alreadyRegistered') }} <NuxtLink
                                 :to="localePath('/login')"
                                 class="text-primary hover:underline"
-                            >{{ $t('auth.signIn') }}</NuxtLink>
+                            >{{ t('auth.signIn') }}</NuxtLink>
                         </p>
                     </div>
                 </article>
 
                 <article class="relative flex flex-col rounded-xl border-2 border-primary/40 bg-white shadow-xl shadow-primary/15 overflow-hidden transition-transform duration-300 hover:-translate-y-1">
                     <div class="absolute right-3 top-3 z-10 rounded-full bg-primary px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-primary-foreground">
-                        {{ $t('pricing.newBadge') }}
+                        {{ t('pricing.newBadge') }}
                     </div>
                     <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-primary/80 via-primary to-primary/60" />
                     <div class="p-7 lg:p-8 flex flex-col flex-1">
@@ -95,10 +95,10 @@
                             </div>
                             <div>
                                 <p class="text-xs font-semibold uppercase tracking-wide text-primary">
-                                    {{ $t('pricing.pro.eyebrow') }}
+                                    {{ t('pricing.pro.eyebrow') }}
                                 </p>
                                 <h2 class="text-xl font-bold text-gray-900">
-                                    {{ $t('pricing.pro.name') }}
+                                    {{ t('pricing.pro.name') }}
                                 </h2>
                             </div>
                         </div>
@@ -106,18 +106,18 @@
                         <div class="lg:min-h-[5.25rem] mb-4">
                             <div class="flex items-end gap-1">
                                 <span class="text-5xl font-bold text-gray-900 tracking-tight leading-none">
-                                    {{ $t('pricing.pro.yearlyPrice') }}
+                                    {{ t('pricing.pro.yearlyPrice') }}
                                 </span>
                                 <span class="text-2xl font-semibold text-gray-700 mb-1">€</span>
-                                <span class="text-sm text-gray-500 mb-2 ml-1">{{ $t('pricing.pro.period') }}</span>
+                                <span class="text-sm text-gray-500 mb-2 ml-1">{{ t('pricing.pro.period') }}</span>
                             </div>
                             <p class="mt-2 text-sm text-gray-500">
-                                {{ $t('pricing.pro.yearlyNote') }}
+                                {{ t('pricing.pro.yearlyNote') }}
                             </p>
                         </div>
 
                         <p class="text-gray-600 text-sm leading-relaxed mb-6 lg:min-h-[4.5rem]">
-                            {{ $t('pricing.pro.desc') }}
+                            {{ t('pricing.pro.desc') }}
                         </p>
 
                         <ul class="space-y-3 mb-8 flex-1">
@@ -135,10 +135,10 @@
                             class="w-full font-semibold h-11"
                             @click="handleProCta"
                         >
-                            {{ $t('pricing.pro.cta') }}
+                            {{ t('pricing.pro.cta') }}
                         </Button>
                         <p class="text-center text-xs text-gray-400 mt-3">
-                            {{ $t('pricing.pro.note') }}
+                            {{ t('pricing.pro.note') }}
                         </p>
                     </div>
                 </article>
@@ -152,10 +152,10 @@
                             </div>
                             <div>
                                 <p class="text-xs font-semibold uppercase tracking-wide text-amber-600">
-                                    {{ $t('pricing.optional') }}
+                                    {{ t('pricing.optional') }}
                                 </p>
                                 <h2 class="text-xl font-bold text-gray-900">
-                                    {{ $t('pricing.boost') }}
+                                    {{ t('pricing.boost') }}
                                 </h2>
                             </div>
                         </div>
@@ -170,7 +170,7 @@
                                     :key="plan.id"
                                     class="flex items-baseline justify-between gap-3"
                                 >
-                                    <span class="text-sm text-gray-600">{{ $t('pricing.days', { n: plan.duration_days }) }}</span>
+                                    <span class="text-sm text-gray-600">{{ t('pricing.days', { n: plan.duration_days }) }}</span>
                                     <span class="text-2xl font-bold text-gray-900">{{ formatAmount(plan.amount) }} €</span>
                                 </div>
                             </div>
@@ -183,7 +183,7 @@
                                 </div>
                             </template>
                             <p class="mt-2 text-sm text-gray-500">
-                                {{ $t('pricing.oneTimeVisibility') }}
+                                {{ t('pricing.oneTimeVisibility') }}
                             </p>
                         </div>
 
@@ -207,10 +207,10 @@
                             class="w-full font-semibold border-amber-300 text-amber-800 rounded hover:text-amber-800/60 hover:bg-amber-50 h-11"
                             @click="handleBoostCta"
                         >
-                            {{ user ? $t('pricing.manageReplacements') : $t('pricing.startFree') }}
+                            {{ user ? t('pricing.manageReplacements') : t('pricing.startFree') }}
                         </Button>
                         <p class="text-center text-xs text-gray-400 mt-3">
-                            {{ $t('pricing.activableFrom') }}
+                            {{ t('pricing.activableFrom') }}
                         </p>
                     </div>
                 </article>
@@ -218,22 +218,22 @@
 
             <div class="mt-12 lg:hidden max-w-xl mx-auto">
                 <h3 class="text-center text-lg font-semibold text-gray-800 mb-4">
-                    {{ $t('pricing.howItWorks') }}
+                    {{ t('pricing.howItWorks') }}
                 </h3>
                 <div class="rounded-2xl border border-gray-100 bg-white/80 p-5 shadow-sm text-center">
                     <Search class="w-6 h-6 text-primary mx-auto mb-3" />
                     <p class="font-semibold text-sm text-gray-800">
-                        {{ $t('pricing.progressiveTitle') }}
+                        {{ t('pricing.progressiveTitle') }}
                     </p>
                     <p class="text-xs text-gray-500 mt-2 leading-relaxed">
-                        {{ $t('pricing.progressiveBody') }}
+                        {{ t('pricing.progressiveBody') }}
                     </p>
                 </div>
             </div>
 
             <div class="mt-16 lg:mt-20 max-w-4xl mx-auto hidden lg:block">
                 <h3 class="text-center text-lg font-semibold text-gray-800 mb-8">
-                    {{ $t('pricing.howItWorks') }}
+                    {{ t('pricing.howItWorks') }}
                 </h3>
                 <div class="grid grid-cols-3 gap-4 text-center">
                     <div
@@ -258,15 +258,15 @@
             <div class="mt-10 lg:mt-14 flex flex-col sm:flex-row flex-wrap justify-center gap-4 sm:gap-6 text-sm text-gray-500 px-2">
                 <span class="flex items-center gap-2">
                     <ShieldCheck class="w-4 h-4 text-success" />
-                    {{ $t('pricing.secureStripe') }}
+                    {{ t('pricing.secureStripe') }}
                 </span>
                 <span class="flex items-center gap-2">
                     <HeartHandshake class="w-4 h-4 text-primary" />
-                    {{ $t('pricing.madeByPros') }}
+                    {{ t('pricing.madeByPros') }}
                 </span>
                 <span class="flex items-center gap-2">
                     <Zap class="w-4 h-4 text-amber-500" />
-                    {{ $t('pricing.fixedDuration') }}
+                    {{ t('pricing.fixedDuration') }}
                 </span>
             </div>
         </div>

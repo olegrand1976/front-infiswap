@@ -29,10 +29,10 @@
                                 <KeyRound class="size-5" />
                             </div>
                             <h1 class="font-secondary text-2xl font-semibold text-dark">
-                                {{ $t('auth.newPasswordTitle') }}
+                                {{ t('auth.newPasswordTitle') }}
                             </h1>
                             <p class="mt-2 text-sm text-gray-500">
-                                {{ $t('auth.newPasswordHint') }}
+                                {{ t('auth.newPasswordHint') }}
                             </p>
                         </div>
 
@@ -42,28 +42,28 @@
                         >
                             <div class="flex flex-col gap-1.5">
                                 <label class="text-sm font-medium text-gray-700">
-                                    {{ $t('auth.newPasswordLabel') }}
+                                    {{ t('auth.newPasswordLabel') }}
                                 </label>
                                 <InputIcon
                                     v-model="formData.password"
                                     :icon="Lock"
                                     type="password"
                                     rounded="md"
-                                    :placeholder="$t('auth.password')"
+                                    :placeholder="t('auth.password')"
                                     class="text-sm w-full"
                                 />
                             </div>
 
                             <div class="flex flex-col gap-1.5">
                                 <label class="text-sm font-medium text-gray-700">
-                                    {{ $t('auth.confirmNewPassword') }}
+                                    {{ t('auth.confirmNewPassword') }}
                                 </label>
                                 <InputIcon
                                     v-model="formData.passwordConfirm"
                                     :icon="Lock"
                                     type="password"
                                     rounded="md"
-                                    :placeholder="$t('auth.passwordConfirmPlaceholder')"
+                                    :placeholder="t('auth.passwordConfirmPlaceholder')"
                                     class="text-sm w-full"
                                 />
                             </div>
@@ -92,7 +92,7 @@
                                 class="mt-2 w-full font-bold"
                                 :in-progress="isSubmitting"
                             >
-                                {{ $t('common.save') }}
+                                {{ t('common.save') }}
                             </Button>
                         </form>
                     </template>
@@ -105,16 +105,16 @@
                             <ShieldCheck class="size-7 text-success" />
                         </div>
                         <h1 class="font-secondary text-xl font-semibold text-dark mb-2">
-                            {{ $t('auth.passwordSaved') }}
+                            {{ t('auth.passwordSaved') }}
                         </h1>
                         <p class="text-sm text-gray-500 mb-6">
-                            {{ $t('auth.newPasswordSuccessHint') }}
+                            {{ t('auth.newPasswordSuccessHint') }}
                         </p>
                         <Button
                             class="w-full max-w-64 mx-auto font-bold"
                             @click="navigateTo(localePath('/login'))"
                         >
-                            {{ $t('auth.backToLogin') }}
+                            {{ t('auth.backToLogin') }}
                             <ArrowRight class="size-4" />
                         </Button>
                     </div>
@@ -134,10 +134,10 @@
                             <KeyRound class="size-4.5" />
                         </div>
                         <h1 class="font-secondary text-xl font-semibold text-dark">
-                            {{ $t('auth.newPasswordTitle') }}
+                            {{ t('auth.newPasswordTitle') }}
                         </h1>
                         <p class="mt-1.5 text-xs text-gray-500 px-4">
-                            {{ $t('auth.newPasswordHint') }}
+                            {{ t('auth.newPasswordHint') }}
                         </p>
                     </div>
 
@@ -147,28 +147,28 @@
                     >
                         <div class="flex flex-col gap-1.5">
                             <label class="text-sm font-medium text-gray-700">
-                                {{ $t('auth.newPasswordLabel') }}
+                                {{ t('auth.newPasswordLabel') }}
                             </label>
                             <InputIcon
                                 v-model="formData.password"
                                 :icon="Lock"
                                 type="password"
                                 rounded="md"
-                                :placeholder="$t('auth.password')"
+                                :placeholder="t('auth.password')"
                                 class="text-sm w-full"
                             />
                         </div>
 
                         <div class="flex flex-col gap-1.5">
                             <label class="text-sm font-medium text-gray-700">
-                                {{ $t('auth.confirmNewPassword') }}
+                                {{ t('auth.confirmNewPassword') }}
                             </label>
                             <InputIcon
                                 v-model="formData.passwordConfirm"
                                 :icon="Lock"
                                 type="password"
                                 rounded="md"
-                                :placeholder="$t('auth.passwordConfirmPlaceholder')"
+                                :placeholder="t('auth.passwordConfirmPlaceholder')"
                                 class="text-sm w-full"
                             />
                         </div>
@@ -197,7 +197,7 @@
                             class="mt-2 w-full font-bold"
                             :in-progress="isSubmitting"
                         >
-                            {{ $t('common.save') }}
+                            {{ t('common.save') }}
                         </Button>
                     </form>
                 </template>
@@ -210,16 +210,16 @@
                         <ShieldCheck class="size-7 text-success" />
                     </div>
                     <h1 class="font-secondary text-xl font-semibold text-dark mb-2">
-                        {{ $t('auth.passwordSaved') }}
+                        {{ t('auth.passwordSaved') }}
                     </h1>
                     <p class="text-sm text-gray-500 mb-6">
-                        {{ $t('auth.newPasswordSuccessHint') }}
+                        {{ t('auth.newPasswordSuccessHint') }}
                     </p>
                     <Button
                         class="w-full font-bold"
                         @click="navigateTo(localePath('/login'))"
                     >
-                        {{ $t('auth.backToLogin') }}
+                        {{ t('auth.backToLogin') }}
                         <ArrowRight class="size-4" />
                     </Button>
                 </div>

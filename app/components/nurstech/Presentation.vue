@@ -16,17 +16,17 @@
                 </div>
                 <div class="text-center md:text-left h-full flex flex-col justify-between gap-2">
                     <p class="text-gray-600 text-sm leading-relaxed">
-                        {{ $t('home.partners.nurstechDesc') }}
+                        {{ t('home.partners.nurstechDesc') }}
                     </p>
 
                     <div class="flex flex-wrap justify-center md:justify-start gap-2">
                         <NuxtLink
                             :to="`${localePath('/nurstech-by-infiswap')}#information-form`"
-                            :title="$t('partnerPromo.ctaNurstechDevis')"
+                            :title="t('partnerPromo.ctaNurstechDevis')"
                             class="px-4 py-1.5 border border-primarytech text-primarytech rounded-md text-sm font-medium transition duration-200 hover:bg-primarytech hover:text-white hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-primarytech"
                             @click="onDiscover('nurstech')"
                         >
-                            {{ $t('partnerPromo.ctaNurstechDevis') }}
+                            {{ t('partnerPromo.ctaNurstechDevis') }}
                         </NuxtLink>
 
                         <button
@@ -34,7 +34,7 @@
                             class="px-4 py-1.5 border border-primarytech text-primarytech rounded-md text-sm font-medium transition duration-200 hover:bg-primarytech hover:text-white hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-primarytech"
                             @click="onContact('nurstech')"
                         >
-                            {{ $t('partnerPromo.ctaNurstechCallback') }}
+                            {{ t('partnerPromo.ctaNurstechCallback') }}
                         </button>
                     </div>
                 </div>
@@ -49,17 +49,17 @@
                 </div>
                 <div class="text-center md:text-left h-full flex flex-col justify-between gap-2">
                     <p class="text-gray-600 text-sm leading-relaxed">
-                        {{ $t('home.partners.nursassurDesc') }}
+                        {{ t('home.partners.nursassurDesc') }}
                     </p>
 
                     <div class="flex flex-wrap justify-center md:justify-start gap-2">
                         <NuxtLink
                             :to="`${localePath('/nursassur-by-infiswap')}#quote`"
-                            :title="$t('partnerPromo.ctaNursassurOffer')"
+                            :title="t('partnerPromo.ctaNursassurOffer')"
                             class="px-4 py-1.5 border border-primaryassur text-primaryassur rounded-md text-sm font-medium transition duration-200 hover:bg-primaryassur hover:text-white hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-primaryassur"
                             @click="onDiscover('nursassur')"
                         >
-                            {{ $t('partnerPromo.ctaNursassurOffer') }}
+                            {{ t('partnerPromo.ctaNursassurOffer') }}
                         </NuxtLink>
 
                         <button
@@ -67,7 +67,7 @@
                             class="px-4 py-1.5 border border-primaryassur text-primaryassur rounded-md text-sm font-medium transition duration-200 hover:bg-primaryassur hover:text-white hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-primaryassur"
                             @click="onContact('nursassur')"
                         >
-                            {{ $t('partnerPromo.ctaNursassurAdvisor') }}
+                            {{ t('partnerPromo.ctaNursassurAdvisor') }}
                         </button>
                     </div>
                 </div>
@@ -93,6 +93,7 @@ import type { PartnerProduct } from '~/utils/partnerServices';
 import { isPartnerProductActive } from '~/utils/partnerServices';
 import type { User } from '~/lib/types';
 
+const { t } = useI18n();
 const localePath = useLocalePath();
 const user = useState<User | null>('user');
 const showNursTech = ref(false);

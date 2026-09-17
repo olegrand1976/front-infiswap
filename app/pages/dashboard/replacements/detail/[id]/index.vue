@@ -8,7 +8,7 @@
                 <ReplacementBoostStars size="md" />
                 <div class="flex-1">
                     <p class="font-bold text-amber-900 text-sm sm:text-base">
-                        {{ $t('replacements.published') }}
+                        {{ t('replacements.published') }}
                     </p>
                     <p class="text-xs text-amber-800/80 mt-0.5">
                         Boost 2 — 7 j à 4,40 € recommandé (Boost 1 — 3 j à 2 € disponible).
@@ -50,19 +50,19 @@
                     class="text-sm w-auto"
                     @click="goBack"
                 >
-                    <span class="text-xs">{{ $t('common.back') }}</span>
+                    <span class="text-xs">{{ t('common.back') }}</span>
                 </Button>
 
                 <div class="mt-20 sm:mt-0 flex flex-col space-y-6 sm:space-y-0 sm:flex-row w-full sm:w-auto sm:items-center sm:space-x-8">
                     <h4 class="font-semibold text-sm sm:text-primary sm:ml-4 xl:ml-0">
-                        {{ $t('replacements.period') }}
+                        {{ t('replacements.period') }}
                     </h4>
                     <div v-if="periods && periods.length > 0">
                         <Button
                             class="text-sm w-40 sm:w-auto bg-primary text-white"
                             @click="periodDialog = true"
                         >
-                            <span class="text-xs">{{ $t('replacements.seePeriods') }}</span>
+                            <span class="text-xs">{{ t('replacements.seePeriods') }}</span>
                         </Button>
                     </div>
                     <div
@@ -70,7 +70,7 @@
                         class="flex flex-col sm:flex-row sm:gap-10 space-y-4 sm:space-y-0"
                     >
                         <div class="flex justify-between items-center sm:justify-start sm:space-x-5 rounded-full bg-primary sm:w-40">
-                            <span class="text-xs text-white ms-3">{{ $t('replacements.start') }}</span>
+                            <span class="text-xs text-white ms-3">{{ t('replacements.start') }}</span>
                             <div class="flex justify-center items-center text-primary rounded-full border-2 border-primary bg-white shadow w-40">
                                 <Calendar class="w-4 h-4 ml-1 text-primary" />
                                 <Input
@@ -82,7 +82,7 @@
                             </div>
                         </div>
                         <div class="flex justify-between items-center sm:justify-start sm:space-x-5 rounded-full bg-primary sm:w-40">
-                            <span class="text-xs text-white ms-3">{{ $t('replacements.end') }}</span>
+                            <span class="text-xs text-white ms-3">{{ t('replacements.end') }}</span>
                             <div class="flex justify-center items-center text-primary rounded-full border-2 border-primary bg-white shadow w-40">
                                 <Calendar class="w-4 h-4 ml-1 text-primary" />
                                 <Input
@@ -106,11 +106,11 @@
                         <span
                             v-if="replacement.response_count < 2"
                             class="text-sm text-white text-nowrap ml-3"
-                        >{{ $t('replacements.interestedOne') }}</span>
+                        >{{ t('replacements.interestedOne') }}</span>
                         <span
                             v-else
                             class="text-sm font-semibold text-white text-nowrap ml-3"
-                        >{{ $t('replacements.interestedMany') }}</span>
+                        >{{ t('replacements.interestedMany') }}</span>
                     </div>
                     <div class="bg-white h-full flex items-center justify-center shadow w-72 rounded-full">
                         <div
@@ -124,7 +124,7 @@
                     <Button
                         :href="`/dashboard/replacements/detail/${replacement.id}/list`"
                     >
-                        <span class="text-sm font-semibold">{{ $t('replacements.seeList') }}</span>
+                        <span class="text-sm font-semibold">{{ t('replacements.seeList') }}</span>
                     </Button>
                 </div>
             </div>
@@ -134,15 +134,15 @@
             <DialogContent class="max-w-md">
                 <DialogHeader>
                     <DialogTitle class="text-xl font-semibold text-primary">
-                        {{ $t('replacements.periodOfReplacement') }}
+                        {{ t('replacements.periodOfReplacement') }}
                     </DialogTitle>
                 </DialogHeader>
                 <div class="mt-3 text-sm grid grid-cols-2 items-center font-semibold text-gray-700">
                     <h5>
-                        {{ $t('replacements.startDate') }}
+                        {{ t('replacements.startDate') }}
                     </h5>
                     <h5>
-                        {{ $t('replacements.endDate') }}
+                        {{ t('replacements.endDate') }}
                     </h5>
                 </div>
                 <div
@@ -187,39 +187,39 @@
                                     <span
                                         v-if="replacement.user?.is_premium"
                                         class="inline-flex items-center gap-1 text-amber-700"
-                                        :title="$t('premiumMarketing.memberLabel')"
+                                        :title="t('premiumMarketing.memberLabel')"
                                     >
                                         <Star
                                             class="size-4 fill-amber-400 text-amber-400"
                                             aria-hidden="true"
                                         />
-                                        <span class="text-xs font-semibold">{{ $t('premiumMarketing.memberLabel') }}</span>
+                                        <span class="text-xs font-semibold">{{ t('premiumMarketing.memberLabel') }}</span>
                                     </span>
                                 </div>
                                 <div
                                     v-else-if="replacement.user?.is_premium"
                                     class="bg-gray-200 text-sm py-2 rounded px-3 inline-flex items-center gap-1 text-amber-700"
-                                    :title="$t('premiumMarketing.memberLabel')"
+                                    :title="t('premiumMarketing.memberLabel')"
                                 >
                                     <Star
                                         class="size-4 fill-amber-400 text-amber-400"
                                         aria-hidden="true"
                                     />
-                                    <span class="text-xs font-semibold">{{ $t('premiumMarketing.memberLabel') }}</span>
+                                    <span class="text-xs font-semibold">{{ t('premiumMarketing.memberLabel') }}</span>
                                 </div>
                                 <div
                                     v-if="replacement.can_view_creator_contact"
                                     class="bg-gray-200 text-sm py-2 rounded px-3"
                                 >
-                                    <span>{{ $t('replacements.phoneLabel') }} {{ replacement.user.phone_number }}</span>
+                                    <span>{{ t('replacements.phoneLabel') }} {{ replacement.user.phone_number }}</span>
                                 </div>
                                 <div
                                     v-if="!replacement.can_view_creator_contact && (replacement.user?.zip_code || replacement.user?.city)"
                                     class="bg-gray-200 text-sm py-2 rounded px-3"
                                 >
-                                    <span v-if="replacement.user?.zip_code">{{ $t('replacements.zipLabel') }} {{ replacement.user.zip_code }}</span>
+                                    <span v-if="replacement.user?.zip_code">{{ t('replacements.zipLabel') }} {{ replacement.user.zip_code }}</span>
                                     <span v-if="replacement.user?.zip_code && replacement.user?.city"> — </span>
-                                    <span v-if="replacement.user?.city">{{ $t('replacements.cityLabel') }} {{ replacement.user.city }}</span>
+                                    <span v-if="replacement.user?.city">{{ t('replacements.cityLabel') }} {{ replacement.user.city }}</span>
                                 </div>
                             </div>
                         </div>
@@ -252,7 +252,7 @@
                         <div class="mt-8">
                             <div class="h-10 flex bg-primary rounded justify-center items-center">
                                 <h4 class="text-white text-sm text-center">
-                                    {{ $t('replacements.roleSought') }}
+                                    {{ t('replacements.roleSought') }}
                                 </h4>
                             </div>
                             <div class="mt-4 space-y-4">
@@ -272,14 +272,14 @@
                                 <div class="bg-white text-xs flex space-x-3 items-center h-9 w-full border border-primary rounded-full">
                                     <div class="bg-primary h-9 text-white flex justify-start px-2 items-center rounded-full w-32">
                                         <Home class="w-5 h-5" />
-                                        <span>{{ $t('replacements.colZip') }}</span>
+                                        <span>{{ t('replacements.colZip') }}</span>
                                     </div>
                                     <span>{{ group.zipCodes }}</span>
                                 </div>
                                 <div class="bg-white text-xs flex space-x-3 items-center h-9 w-full border border-primary rounded-full">
                                     <div class="bg-primary h-9 text-white flex justify-start px-2 items-center rounded-full w-32">
                                         <Home class="w-5 h-5" />
-                                        <span>{{ $t('replacements.colCities') }}</span>
+                                        <span>{{ t('replacements.colCities') }}</span>
                                     </div>
                                     <span>{{ group.cities }}</span>
                                 </div>
@@ -288,7 +288,7 @@
                                 <div class="bg-white text-xs flex items-start space-x-3 min-h-[60px] w-full border border-primary rounded-2xl p-2">
                                     <div class="bg-primary text-white flex justify-start px-3 items-center rounded-full min-w-[140px] h-10 shrink-0">
                                         <Home class="w-5 h-5 mr-2" />
-                                        <span>{{ $t('replacements.colZip') }}</span>
+                                        <span>{{ t('replacements.colZip') }}</span>
                                     </div>
 
                                     <div class="flex-1 text-gray-700 break-words whitespace-normal leading-5 py-1">
@@ -299,7 +299,7 @@
                                 <div class="bg-white text-xs flex items-start space-x-3 min-h-[60px] w-full border border-primary rounded-2xl p-2">
                                     <div class="bg-primary text-white flex justify-start px-3 items-center rounded-full min-w-[140px] h-10 shrink-0">
                                         <Home class="w-5 h-5 mr-2" />
-                                        <span>{{ $t('replacements.colCities') }}</span>
+                                        <span>{{ t('replacements.colCities') }}</span>
                                     </div>
 
                                     <div class="flex-1 text-gray-700 break-words whitespace-normal leading-5 py-1">
@@ -315,7 +315,7 @@
                         >
                             <div class="h-10 flex bg-primary rounded justify-center items-center">
                                 <h4 class="text-white text-sm text-center">
-                                    {{ $t('replacements.description') }}
+                                    {{ t('replacements.description') }}
                                 </h4>
                             </div>
                             <div class="py-4 px-3 space-y-3">
@@ -349,7 +349,7 @@
                         :disabled="isDisabled || inProgress || identifierSaving"
                         :in-progress="inProgress || identifierSaving"
                     >
-                        {{ $t('replacements.imInterested') }}
+                        {{ t('replacements.imInterested') }}
                     </Button>
                 </Form>
 
@@ -358,7 +358,7 @@
                     class="flex items-center gap-2 text-success font-semibold"
                 >
                     <CircleCheck class="w-6 h-6" />
-                    <span>{{ $t('replacements.responseSent') }}</span>
+                    <span>{{ t('replacements.responseSent') }}</span>
                 </div>
 
                 <div
@@ -370,7 +370,7 @@
                         class="bg-primary text-white rounded-xl px-6 py-2 shadow hover:bg-primary/90 transition"
                         @click="openAssignModal"
                     >
-                        {{ $t('replacements.assignSubstitute') }}
+                        {{ t('replacements.assignSubstitute') }}
                     </Button>
                 </div>
             </div>
@@ -380,7 +380,7 @@
             <DialogContent class="bg-white p-6 rounded-xl max-w-md w-full shadow-xl">
                 <DialogHeader class="text-lg font-semibold mb-4">
                     <DialogTitle>
-                        {{ $t('replacements.assignSubstitute') }}
+                        {{ t('replacements.assignSubstitute') }}
                     </DialogTitle>
                 </DialogHeader>
 
@@ -415,7 +415,7 @@
                         variant="secondary"
                         @click="isAssignModalOpen = false"
                     >
-                        {{ $t('common.close') }}
+                        {{ t('common.close') }}
                     </Button>
                 </div>
             </DialogContent>
@@ -432,7 +432,7 @@
         <Dialog v-model:open="inamiPromptOpen">
             <DialogContent class="sm:max-w-md">
                 <DialogHeader>
-                    <DialogTitle>{{ $t('replacements.inamiNumber') }}</DialogTitle>
+                    <DialogTitle>{{ t('replacements.inamiNumber') }}</DialogTitle>
                     <DialogDescription>
                         Votre numéro INAMI n'est pas renseigné. Vous pouvez le saisir maintenant (optionnel) ou indiquer que vous ne l'avez pas à disposition.
                     </DialogDescription>
@@ -440,7 +440,7 @@
                 <div class="space-y-4 py-2">
                     <Input
                         v-model="inamiDraft"
-                        :placeholder="$t('replacements.inamiNumber')"
+                        :placeholder="t('replacements.inamiNumber')"
                         inputmode="numeric"
                     />
                     <div class="flex flex-col gap-2 sm:flex-row sm:justify-end">
@@ -449,14 +449,14 @@
                             :disabled="identifierSaving"
                             @click="confirmInamiUnavailable"
                         >
-                            {{ $t('replacements.notAvailable') }}
+                            {{ t('replacements.notAvailable') }}
                         </Button>
                         <Button
                             :disabled="identifierSaving"
                             :in-progress="identifierSaving"
                             @click="confirmInamiNumber"
                         >
-                            {{ $t('replacements.continue') }}
+                            {{ t('replacements.continue') }}
                         </Button>
                     </div>
                 </div>

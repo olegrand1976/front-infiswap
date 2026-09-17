@@ -7,10 +7,10 @@
         <div class="relative z-10 mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-6 py-11 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:px-8 lg:py-16">
             <div>
                 <h1 class="font-secondary text-[32px] font-semibold leading-[1.1] text-white lg:text-[42px]">
-                    {{ $t('home.hero.titlePrefix') }} <em class="not-italic text-success">{{ $t('home.hero.titleHighlight') }}</em>
+                    {{ t('home.hero.titlePrefix') }} <em class="not-italic text-success">{{ t('home.hero.titleHighlight') }}</em>
                 </h1>
                 <p class="mt-4 max-w-md text-[15px] text-white/78">
-                    {{ $t('home.hero.lead') }}
+                    {{ t('home.hero.lead') }}
                 </p>
 
                 <div class="mt-7 flex flex-wrap gap-3">
@@ -19,14 +19,14 @@
                         class="h-auto w-64 gap-2 rounded-lg bg-white px-5.5 py-3.5 text-[13.5px] font-bold text-primary shadow-[0_10px_26px_rgba(0,0,0,.25)] hover:bg-white/90"
                     >
                         <Search class="!size-4" />
-                        {{ $t('home.hero.ctaSearch') }}
+                        {{ t('home.hero.ctaSearch') }}
                     </Button>
                     <Button
                         :href="localePath('/register')"
                         class="h-auto  w-64 gap-2 rounded-lg border border-white/30 bg-white/8 px-5.5 py-3.5 text-[13.5px] font-semibold text-white backdrop-blur-md hover:bg-white/15"
                     >
                         <UserPlus class="!size-4" />
-                        {{ $t('home.hero.ctaPublish') }}
+                        {{ t('home.hero.ctaPublish') }}
                     </Button>
                 </div>
 
@@ -39,7 +39,7 @@
                         />
                     </div>
                     <p class="text-xs text-white/75">
-                        <b class="font-bold text-white">{{ formattedMembers }}+</b> {{ $t('home.hero.trustText') }}
+                        <b class="font-bold text-white">{{ formattedMembers }}+</b> {{ t('home.hero.trustText') }}
                     </p>
                 </div>
             </div>
@@ -56,7 +56,7 @@
                             <Phone class="size-4" />
                         </span>
                         <span>
-                            <span class="block text-[8px] font-semibold text-gray-400 sm:text-[10px]">{{ $t('home.hero.callLabel') }}</span>
+                            <span class="block text-[8px] font-semibold text-gray-400 sm:text-[10px]">{{ t('home.hero.callLabel') }}</span>
                             <span class="block text-[10px] font-bold text-foreground sm:text-[13px]">(+32) 478 02 33 77</span>
                         </span>
                     </a>
@@ -66,7 +66,7 @@
                             <UserPlus class="size-3 sm:size-4" />
                         </span>
                         <span>
-                            <span class="block text-[8px] font-semibold text-gray-400 sm:text-[10px]">{{ $t('home.hero.activeMembersLabel') }}</span>
+                            <span class="block text-[8px] font-semibold text-gray-400 sm:text-[10px]">{{ t('home.hero.activeMembersLabel') }}</span>
                             <span class="block text-[10px] font-bold text-success sm:text-[13px]">{{ formattedMembers }}+</span>
                         </span>
                     </div>
@@ -79,6 +79,7 @@
 <script setup lang="ts">
 import { Phone, Search, UserPlus } from 'lucide-vue-next';
 
+const { t } = useI18n();
 const localePath = useLocalePath();
 const { getKpiValue, fetchStats } = usePlatformStats();
 

@@ -36,10 +36,10 @@ const { points, loading, error, isEmpty } = usePublicNursesMapData(countryCode);
                     id="home-nurses-map-title"
                     class="font-secondary text-[26px] font-semibold text-foreground sm:text-[28px]"
                 >
-                    {{ $t('home.map.title') }}
+                    {{ t('home.map.title') }}
                 </h2>
                 <p class="mt-2.5 text-sm leading-relaxed text-muted-foreground">
-                    {{ $t('home.map.body') }}
+                    {{ t('home.map.body') }}
                 </p>
             </div>
 
@@ -49,7 +49,7 @@ const { points, loading, error, isEmpty } = usePublicNursesMapData(countryCode);
                         v-if="loading"
                         class="absolute inset-0 z-10 animate-pulse bg-muted/60"
                         aria-busy="true"
-                        :aria-label="$t('home.map.loading')"
+                        :aria-label="t('home.map.loading')"
                     />
                     <div
                         v-else-if="error"
@@ -61,7 +61,7 @@ const { points, loading, error, isEmpty } = usePublicNursesMapData(countryCode);
                         v-else-if="isEmpty"
                         class="absolute inset-0 z-10 flex items-center justify-center bg-muted/40 px-6 text-center text-sm text-muted-foreground"
                     >
-                        {{ $t('home.map.empty') }}
+                        {{ t('home.map.empty') }}
                     </div>
                     <ClientOnly v-else>
                         <NursesResidenceMap
@@ -85,7 +85,7 @@ const { points, loading, error, isEmpty } = usePublicNursesMapData(countryCode);
                         class="inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-[9px] bg-primary px-5 py-3 text-[13.5px] font-bold text-primary-foreground shadow-[0_10px_24px_oklch(0.5921_0.1935_15.63_/_0.28)] transition hover:scale-[1.02]"
                     >
                         <UserPlus class="size-4" />
-                        {{ $t('home.map.joinCta') }}
+                        {{ t('home.map.joinCta') }}
                     </NuxtLink>
                 </div>
             </div>

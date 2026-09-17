@@ -3,16 +3,16 @@
         <div class="mt-6 flex items-center gap-2 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
             <ArrowLeftIcon
                 class="size-5 cursor-pointer hover:text-primary"
-                :title="$t('common.back')"
+                :title="t('common.back')"
                 @click="goBack"
             />
             <h1 class="py-3 text-primary">
-                {{ $t('replacements.appliedHeading') }} <strong>{{ $t('replacements.appliedHeadingStrong') }}</strong>
+                {{ t('replacements.appliedHeading') }} <strong>{{ t('replacements.appliedHeadingStrong') }}</strong>
             </h1>
         </div>
         <template v-if="!listApply || listApply.length === 0">
             <p class="text-black/50 mt-16 text-center">
-                {{ $t('replacements.empty') }}
+                {{ t('replacements.empty') }}
             </p>
         </template>
         <template v-else>
@@ -25,16 +25,16 @@
                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-2">
                         <div>
                             <p class="text-gray-800 text-lg font-medium leading-snug">
-                                {{ $t('replacements.replacementFrom') }}
+                                {{ t('replacements.replacementFrom') }}
                                 <span class="text-primary">{{ formatDate(item.replacement.start_date) }}</span>
-                                {{ $t('replacements.to') }}
+                                {{ t('replacements.to') }}
                                 <span class="text-primary">{{ formatDate(item.replacement.end_date) }}</span>
                             </p>
                             <p
                                 v-if="item.replacement.type === 'immediate'"
                                 class="text-sm sm:text-base bg-primary text-white font-bold mt-3 px-3 py-1 rounded inline-block leading-snug"
                             >
-                                <span class="capitalize">{{ $t('replacements.urgentBadge') }}</span>
+                                <span class="capitalize">{{ t('replacements.urgentBadge') }}</span>
                             </p>
                         </div>
 
