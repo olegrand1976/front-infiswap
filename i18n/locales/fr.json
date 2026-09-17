@@ -866,6 +866,8 @@
       "sortRecent": "Plus récents",
       "sortOldest": "Plus anciens",
       "resultsHeading": "Tous les résultats",
+      "noResultsHeading": "Aucun résultat trouvé",
+      "noResultsDescription": "Essayez de modifier votre recherche ou vos filtres.",
       "placeToConfirm": "Lieu à confirmer",
       "soonHeading": "Ça commence bientôt",
       "pageTitle": "Remplacements & Missions disponibles",

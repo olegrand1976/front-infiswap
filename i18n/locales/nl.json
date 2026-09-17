@@ -866,6 +866,8 @@
       "sortRecent": "Meest recent",
       "sortOldest": "Oudste eerst",
       "resultsHeading": "Alle resultaten",
+      "noResultsHeading": "Geen resultaten gevonden",
+      "noResultsDescription": "Probeer uw zoekopdracht of filters aan te passen.",
       "placeToConfirm": "Locatie te bevestigen",
       "soonHeading": "Begint binnenkort",
       "pageTitle": "Beschikbare vervangingen & opdrachten",

@@ -257,6 +257,19 @@
                     </div>
 
                     <div
+                        v-else-if="listResults.length === 0"
+                        class="flex flex-col items-center justify-center gap-3 rounded-md border border-dashed border-border bg-surface py-16 text-center"
+                    >
+                        <SearchX class="w-8 h-8 text-muted-foreground" />
+                        <h4 class="font-secondary text-sm font-extrabold text-foreground">
+                            {{ t('replacements.search.noResultsHeading') }}
+                        </h4>
+                        <p class="text-xs text-muted-foreground max-w-xs">
+                            {{ t('replacements.search.noResultsDescription') }}
+                        </p>
+                    </div>
+
+                    <div
                         v-else
                         class="grid grid-cols-1 gap-5"
                     >
@@ -555,6 +568,7 @@ import {
     Check,
     Briefcase,
     Search,
+    SearchX,
     ArrowLeft,
     ArrowRight,
     UserPlus,
