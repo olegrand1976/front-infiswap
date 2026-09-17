@@ -127,7 +127,6 @@ const buildFilterParams = (extra = {}) => {
     return params;
 };
 const selectedUser = ref<User>(null);
-const { $toast } = useNuxtApp();
 const option = ref({ ...initialFilter });
 const sort = reactive({
     order: 'DESC',

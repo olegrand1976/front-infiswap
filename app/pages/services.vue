@@ -34,7 +34,7 @@
                             <Button
                                 href="#nos-services"
                                 variant="outline"
-                                >
+                            >
                                 {{ t('services.learnMore') }}
                             </Button>
                         </div>
@@ -244,7 +244,7 @@
                         <h3 class="font-secondary text-2xl font-semibold mt-3 whitespace-pre-line">
                             {{ t('services.adminTitle') }}
                             <span class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                                 ({{ t('services.comingSoon') }})
+                                ({{ t('services.comingSoon') }})
                             </span>
                         </h3>
                         <p class="mt-3 text-muted-foreground">

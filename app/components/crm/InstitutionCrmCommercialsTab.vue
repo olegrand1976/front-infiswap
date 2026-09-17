@@ -126,7 +126,7 @@
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem
-                                    v-for="grade in grades"
+                                    v-for="grade in props.grades"
                                     :key="grade.id ?? grade.slug"
                                     :value="String(grade.id ?? '')"
                                     :disabled="!grade.id"

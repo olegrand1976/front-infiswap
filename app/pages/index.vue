@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { Phone, UserPlus } from 'lucide-vue-next';
+import { UserPlus } from 'lucide-vue-next';
 import { useAuth } from '~/composables/useAuth';
 
 const { isLoggedIn } = useAuth();
