@@ -8,6 +8,7 @@ import '../../../core/theme/app_radii.dart';
 import '../../../core/theme/theme_mode_provider.dart';
 import '../../auth/data/auth_repository.dart';
 import '../../auth/providers/auth_session_provider.dart';
+import '../../network/presentation/network_screen.dart';
 import '../../replacements/presentation/create_classic_screen.dart';
 import '../../replacements/presentation/create_immediate_screen.dart';
 import '../../replacements/presentation/my_replacements_screen.dart';
@@ -122,7 +123,7 @@ class ProfileScreen extends ConsumerWidget {
                 icon: Icons.hub_outlined,
                 color: colors.secondary,
                 label: 'Mon réseau',
-                onTap: () {},
+                onTap: () => _push(context, const NetworkScreen()),
               ),
             ]),
             const SizedBox(height: 20),
