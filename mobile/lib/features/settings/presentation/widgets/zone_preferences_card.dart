@@ -107,6 +107,74 @@ class _ZonePreferencesCardState extends State<ZonePreferencesCard> {
     }
   }
 
+  Future<bool> _saveZones(List<String> cities, List<String> zipCodes) async {
+    final previousCities = _cities;
+    final previousZipCodes = _zipCodes;
+    setState(() {
+      _cities = cities;
+      _zipCodes = zipCodes;
+      _isSaving = true;
+    });
+    try {
+      await widget.repository
+          .addZonePreferences(cities: cities, zipCodes: zipCodes);
+      return true;
+    } on ApiException catch (error) {
+      if (mounted) {
+        setState(() {
+          _cities = previousCities;
+          _zipCodes = previousZipCodes;
+        });
+        showSettingsErrorSnackBar(context, error.message);
+      }
+      return false;
+    } finally {
+      if (mounted) setState(() => _isSaving = false);
+    }
+  }
+
+  Future<void> _remove({required bool city, required String value}) async {
+    if (_isSaving) return;
+    final list = city ? _cities : _zipCodes;
+    final index = list.indexOf(value);
+    if (index < 0) return;
+
+    final next = [...list]..removeAt(index);
+    final saved = await _saveZones(
+      city ? next : _cities,
+      city ? _zipCodes : next,
+    );
+    if (!saved || !mounted) return;
+
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.hideCurrentSnackBar();
+    messenger.showSnackBar(
+      SnackBar(
+        content: Text('$value retiré'),
+        duration: const Duration(seconds: 4),
+        action: SnackBarAction(
+          label: 'Annuler',
+          onPressed: () => _restore(city: city, value: value, index: index),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _restore({
+    required bool city,
+    required String value,
+    required int index,
+  }) async {
+    if (!mounted) return;
+    final list = city ? _cities : _zipCodes;
+    if (list.contains(value)) return;
+    final next = [...list]..insert(index.clamp(0, list.length), value);
+    await _saveZones(
+      city ? next : _cities,
+      city ? _zipCodes : next,
+    );
+  }
+
   Future<void> _openAiBoost() async {
     final seeds = {
       if (widget.seedZipCode.trim().isNotEmpty) widget.seedZipCode.trim(),
@@ -197,7 +265,14 @@ class _ZonePreferencesCardState extends State<ZonePreferencesCard> {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: [for (final city in _cities) Chip(label: Text(city))],
+            children: [
+              for (final city in _cities)
+                Chip(
+                  label: Text(city),
+                  onDeleted: () => _remove(city: true, value: city),
+                  deleteButtonTooltipMessage: 'Retirer $city',
+                ),
+            ],
           ),
         ],
         const SizedBox(height: 16),
@@ -233,7 +308,14 @@ class _ZonePreferencesCardState extends State<ZonePreferencesCard> {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: [for (final zip in _zipCodes) Chip(label: Text(zip))],
+            children: [
+              for (final zip in _zipCodes)
+                Chip(
+                  label: Text(zip),
+                  onDeleted: () => _remove(city: false, value: zip),
+                  deleteButtonTooltipMessage: 'Retirer $zip',
+                ),
+            ],
           ),
         ],
       ],

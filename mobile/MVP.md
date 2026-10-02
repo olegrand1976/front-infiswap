@@ -23,4 +23,3 @@ Chat (maquette statique côté web, backend à faire)
 
 Divers :
 - signaler un problème
-- graphique de l'accueil
