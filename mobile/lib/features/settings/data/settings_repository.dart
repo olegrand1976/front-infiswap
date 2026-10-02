@@ -113,6 +113,30 @@ class SettingsRepository {
     );
   }
 
+  Future<void> updateEducationLevel({
+    required int userId,
+    required String? educationLevel,
+  }) {
+    return _api.put<Map<String, dynamic>>(
+      '/users/$userId/education-level',
+      data: {'educationLevel': educationLevel},
+    );
+  }
+
+  Future<void> updateLanguage(String language) {
+    return _api.post<Map<String, dynamic>>(
+      '/users/settings',
+      data: {'key': 'language', 'value': language},
+    );
+  }
+
+  Future<Map<String, dynamic>> exportPersonalData(int userId) async {
+    final response =
+        await _api.get<Map<String, dynamic>>('/users/$userId/data-export');
+    final data = response.data?['data'];
+    return data is Map ? data.cast<String, dynamic>() : <String, dynamic>{};
+  }
+
   Future<void> updateNotificationPreferences(NotificationPreferences prefs) {
     return _api.post<Map<String, dynamic>>(
       '/users/settings/notification',

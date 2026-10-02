@@ -3,6 +3,7 @@ class NotificationPreferences {
     required this.newReplacement,
     required this.replacementAccepted,
     required this.digestWeekly,
+    required this.marketingEmails,
     required this.urgentOnly,
     required this.smsUrgent,
   });
@@ -18,6 +19,7 @@ class NotificationPreferences {
       newReplacement: readBool('new_replacement', true),
       replacementAccepted: readBool('replacement_accepted', true),
       digestWeekly: readBool('digest_weekly', true),
+      marketingEmails: readBool('marketing_emails', false),
       urgentOnly: readBool('urgent_only', false),
       smsUrgent: readBool('sms_urgent', false),
     );
@@ -26,6 +28,7 @@ class NotificationPreferences {
   final bool newReplacement;
   final bool replacementAccepted;
   final bool digestWeekly;
+  final bool marketingEmails;
   final bool urgentOnly;
   final bool smsUrgent;
 
@@ -33,6 +36,7 @@ class NotificationPreferences {
     bool? newReplacement,
     bool? replacementAccepted,
     bool? digestWeekly,
+    bool? marketingEmails,
     bool? urgentOnly,
     bool? smsUrgent,
   }) {
@@ -40,6 +44,7 @@ class NotificationPreferences {
       newReplacement: newReplacement ?? this.newReplacement,
       replacementAccepted: replacementAccepted ?? this.replacementAccepted,
       digestWeekly: digestWeekly ?? this.digestWeekly,
+      marketingEmails: marketingEmails ?? this.marketingEmails,
       urgentOnly: urgentOnly ?? this.urgentOnly,
       smsUrgent: smsUrgent ?? this.smsUrgent,
     );
@@ -49,6 +54,7 @@ class NotificationPreferences {
         'new_replacement': newReplacement,
         'replacement_accepted': replacementAccepted,
         'digest_weekly': digestWeekly,
+        'marketing_emails': marketingEmails,
         'urgent_only': urgentOnly,
         'sms_urgent': smsUrgent,
       };
@@ -90,6 +96,7 @@ class PersonalInfoData {
     required this.phoneNumber,
     required this.gender,
     required this.professionalCategory,
+    required this.educationLevel,
   });
 
   factory PersonalInfoData.fromUser(Map<String, dynamic> user) {
@@ -104,6 +111,7 @@ class PersonalInfoData {
       phoneNumber: user['phone_number']?.toString(),
       gender: user['gender']?.toString(),
       professionalCategory: user['professional_category']?.toString(),
+      educationLevel: user['education_level']?.toString(),
     );
   }
 
@@ -121,6 +129,7 @@ class PersonalInfoData {
   String? phoneNumber;
   String? gender;
   String? professionalCategory;
+  String? educationLevel;
 }
 
 class AddressData {

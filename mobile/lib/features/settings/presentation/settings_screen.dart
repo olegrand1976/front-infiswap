@@ -14,6 +14,7 @@ import '../data/settings_repository.dart';
 import '../models/settings_models.dart';
 import 'widgets/avatar_section.dart';
 import 'widgets/change_password_sheet.dart';
+import 'widgets/data_export_section.dart';
 import 'widgets/delete_account_section.dart';
 import 'widgets/edit_text_field_sheet.dart';
 import 'widgets/notification_preferences_card.dart';
@@ -37,6 +38,26 @@ const _professionalCategoryLabels = {
   'salaried': 'Salarié(e)',
   'independent': 'Indépendant(e)',
 };
+
+const _educationLevelOptions = <(String, String)>[
+  ('a1', 'Gradué (A1)'),
+  ('a2', 'Brevet (A2)'),
+];
+const _educationLevelLabels = {
+  'a1': 'Gradué (A1)',
+  'a2': 'Brevet (A2)',
+};
+
+const _languageOptions = <(String, String)>[
+  ('fr', 'Français'),
+  ('nl', 'Nederlands'),
+];
+const _languageLabels = {'fr': 'Français', 'nl': 'Nederlands'};
+
+String _zoneCountry(AddressData address) {
+  final value = (address.country.isNotEmpty ? address.country : address.workingAt ?? '').toLowerCase();
+  return value == 'fr' || value == 'france' ? 'fr' : 'be';
+}
 
 const _countryOptions = <(String, String)>[
   ('be', 'Belgique'),
@@ -149,6 +170,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               apiBaseUrl: config.apiBaseUrl,
                               settings: _settings ?? const {},
                               onUserChanged: _refreshUser,
+                              onSettingChanged: (key, value) =>
+                                  setState(() => _settings = {...?_settings, key: value}),
                             ),
             ),
           ],
@@ -344,6 +367,7 @@ class _SettingsBody extends ConsumerWidget {
     required this.apiBaseUrl,
     required this.settings,
     required this.onUserChanged,
+    required this.onSettingChanged,
   });
 
   final SettingsRepository repository;
@@ -353,6 +377,7 @@ class _SettingsBody extends ConsumerWidget {
   final String apiBaseUrl;
   final Map<String, dynamic> settings;
   final Future<void> Function() onUserChanged;
+  final void Function(String key, Object value) onSettingChanged;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -361,6 +386,7 @@ class _SettingsBody extends ConsumerWidget {
     final notificationPrefs = NotificationPreferences.fromJson(
       settings['notification'] is Map ? Map<String, dynamic>.from(settings['notification']) : null,
     );
+    final language = settings['language'] is String ? settings['language'] as String : 'fr';
     final zonePrefs = ReplacementZonePreferences.fromJson(
       settings['replacement'] is Map ? Map<String, dynamic>.from(settings['replacement']) : null,
     );
@@ -386,6 +412,7 @@ class _SettingsBody extends ConsumerWidget {
           subtitle: personalInfo.email,
           onAvatarChanged: onUserChanged,
           compact: true,
+          inamiVerified: user['inami_cobrha_enabled'] == true && user['identifier_verified'] == true,
         ),
         const SizedBox(height: 20),
         const _SectionLabel('Compte'),
@@ -510,6 +537,21 @@ class _SettingsBody extends ConsumerWidget {
                 onSave: (value) async {
                   personalInfo.professionalCategory = value;
                   await saveInformation();
+                },
+              ),
+            ),
+          if (!isInstitution)
+            _FieldCell(
+              label: "Niveau d'études",
+              value: _educationLevelLabels[personalInfo.educationLevel] ?? '-',
+              onTap: () => _editSelectRow<String>(
+                context: context,
+                title: "Niveau d'études",
+                options: _educationLevelOptions,
+                initial: personalInfo.educationLevel,
+                onSave: (value) async {
+                  await repository.updateEducationLevel(userId: userId, educationLevel: value);
+                  await onUserChanged();
                 },
               ),
             ),
@@ -652,6 +694,26 @@ class _SettingsBody extends ConsumerWidget {
                 repository: repository,
                 locationRepository: ref.read(locationRepositoryProvider),
                 initial: zonePrefs,
+                seedZipCode: address.zipCode,
+                country: _zoneCountry(address),
+              ),
+            ),
+          ]),
+          const SizedBox(height: 24),
+          const _SectionLabel('Préférences'),
+          _FieldGrid(cells: [
+            _FieldCell(
+              label: 'Langue',
+              value: _languageLabels[language] ?? 'Français',
+              onTap: () => _editSelectRow<String>(
+                context: context,
+                title: 'Langue',
+                options: _languageOptions,
+                initial: language,
+                onSave: (value) async {
+                  await repository.updateLanguage(value);
+                  onSettingChanged('language', value);
+                },
               ),
             ),
           ]),
@@ -664,6 +726,14 @@ class _SettingsBody extends ConsumerWidget {
             ),
           ]),
         ],
+        const SizedBox(height: 24),
+        const _SectionLabel('Données personnelles'),
+        _SettingsGroup(children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: DataExportSection(repository: repository, userId: userId),
+          ),
+        ]),
         const SizedBox(height: 24),
         const _SectionLabel('Compte'),
         _SettingsGroup(children: [

@@ -75,6 +75,12 @@ class _NotificationPreferencesCardState
           onChanged: (v) => _update(_prefs.copyWith(digestWeekly: v)),
         ),
         _NotificationSwitchTile(
+          title: 'Emails marketing & partenaires',
+          value: _prefs.marketingEmails,
+          enabled: !_isSaving,
+          onChanged: (v) => _update(_prefs.copyWith(marketingEmails: v)),
+        ),
+        _NotificationSwitchTile(
           title: 'Urgences uniquement',
           value: _prefs.urgentOnly,
           enabled: !_isSaving,

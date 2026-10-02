@@ -22,6 +22,30 @@ class LocationRepository {
     );
     return (response.data ?? const []).whereType<String>().toList();
   }
+
+  Future<List<(String, String)>> getNearbyLocalities({
+    required String zipCode,
+    required String country,
+    List<String> excludeZipCodes = const [],
+    List<String> excludeCities = const [],
+  }) async {
+    final response = await _api.get<List<dynamic>>(
+      '/location/nearby',
+      queryParameters: {
+        'code': zipCode,
+        'radius': 5,
+        'country': country,
+        if (excludeZipCodes.isNotEmpty)
+          'exclude_zip_codes': excludeZipCodes.join(','),
+        if (excludeCities.isNotEmpty) 'exclude_cities': excludeCities.join(','),
+      },
+    );
+    return [
+      for (final item in response.data ?? const [])
+        if (item is List && item.length >= 2)
+          (item[0].toString(), item[1].toString()),
+    ];
+  }
 }
 
 final locationRepositoryProvider = Provider<LocationRepository>((ref) {

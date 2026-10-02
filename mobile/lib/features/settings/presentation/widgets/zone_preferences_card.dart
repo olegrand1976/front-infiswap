@@ -5,6 +5,7 @@ import '../../../../core/location/location_repository.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/settings_repository.dart';
 import '../../models/settings_models.dart';
+import 'ai_boost_sheet.dart';
 import 'settings_sheet_scaffold.dart';
 
 class ZonePreferencesCard extends StatefulWidget {
@@ -13,11 +14,15 @@ class ZonePreferencesCard extends StatefulWidget {
     required this.repository,
     required this.locationRepository,
     required this.initial,
+    required this.seedZipCode,
+    required this.country,
   });
 
   final SettingsRepository repository;
   final LocationRepository locationRepository;
   final ReplacementZonePreferences initial;
+  final String seedZipCode;
+  final String country;
 
   @override
   State<ZonePreferencesCard> createState() => _ZonePreferencesCardState();
@@ -102,6 +107,45 @@ class _ZonePreferencesCardState extends State<ZonePreferencesCard> {
     }
   }
 
+  Future<void> _openAiBoost() async {
+    final seeds = {
+      if (widget.seedZipCode.trim().isNotEmpty) widget.seedZipCode.trim(),
+      for (final zip in _zipCodes.reversed) zip.trim(),
+    }.where((zip) => zip.isNotEmpty).take(5).toList();
+    if (seeds.isEmpty) {
+      showSettingsErrorSnackBar(
+          context, 'Ajoutez d’abord un code postal pour obtenir des suggestions.');
+      return;
+    }
+
+    final picked = await showAiBoostSheet(
+      context: context,
+      locationRepository: widget.locationRepository,
+      seedZipCodes: seeds,
+      country: widget.country,
+      excludeZipCodes: _zipCodes,
+      excludeCities: _cities,
+    );
+    if (picked == null || picked.isEmpty || !mounted) return;
+
+    final nextZipCodes = {..._zipCodes, for (final p in picked) p.$1}.toList();
+    final nextCities = {..._cities, for (final p in picked) p.$2}.toList();
+
+    setState(() => _isSaving = true);
+    try {
+      await widget.repository
+          .addZonePreferences(cities: nextCities, zipCodes: nextZipCodes);
+      setState(() {
+        _zipCodes = nextZipCodes;
+        _cities = nextCities;
+      });
+    } on ApiException catch (error) {
+      if (mounted) showSettingsErrorSnackBar(context, error.message);
+    } finally {
+      if (mounted) setState(() => _isSaving = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
@@ -109,6 +153,19 @@ class _ZonePreferencesCardState extends State<ZonePreferencesCard> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        OutlinedButton.icon(
+          onPressed: _isSaving ? null : _openAiBoost,
+          icon: Icon(Icons.auto_awesome_outlined, size: 16, color: colors.primary),
+          label: Text(
+            'Boost IA — suggérer des zones',
+            style: TextStyle(color: colors.primary, fontWeight: FontWeight.w800),
+          ),
+          style: OutlinedButton.styleFrom(
+            minimumSize: const Size.fromHeight(44),
+            side: BorderSide(color: colors.primaryOutline),
+          ),
+        ),
+        const SizedBox(height: 16),
         Row(
           children: [
             Expanded(

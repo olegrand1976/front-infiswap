@@ -17,6 +17,7 @@ class AvatarSection extends StatefulWidget {
     required this.subtitle,
     required this.onAvatarChanged,
     this.compact = false,
+    this.inamiVerified = false,
   });
 
   final SettingsRepository repository;
@@ -30,6 +31,8 @@ class AvatarSection extends StatefulWidget {
   /// where the avatar is a secondary header (e.g. Settings), not the
   /// screen's main focus (e.g. Profile).
   final bool compact;
+
+  final bool inamiVerified;
 
   @override
   State<AvatarSection> createState() => _AvatarSectionState();
@@ -188,6 +191,7 @@ class _AvatarSectionState extends State<AvatarSection> {
                   style:
                       TextStyle(color: colors.textPrimary, fontSize: 14.5, fontWeight: FontWeight.w700),
                 ),
+                if (widget.inamiVerified) const _InamiVerifiedLabel(),
                 Text(
                   widget.subtitle,
                   style: TextStyle(color: colors.textSecondary, fontSize: 11),
@@ -207,12 +211,37 @@ class _AvatarSectionState extends State<AvatarSection> {
           widget.displayName,
           style: TextStyle(color: colors.textPrimary, fontSize: 16, fontWeight: FontWeight.w700),
         ),
+        if (widget.inamiVerified) const _InamiVerifiedLabel(),
         const SizedBox(height: 2),
         Text(
           widget.subtitle,
           style: TextStyle(color: colors.textSecondary, fontSize: 13),
         ),
       ],
+    );
+  }
+}
+
+class _InamiVerifiedLabel extends StatelessWidget {
+  const _InamiVerifiedLabel();
+
+  @override
+  Widget build(BuildContext context) {
+    final color = context.appColors.successFg;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.verified_outlined, size: 14, color: color),
+          const SizedBox(width: 4),
+          Text(
+            'INAMI vérifié',
+            style: TextStyle(color: color, fontSize: 11.5, fontWeight: FontWeight.w700),
+          ),
+        ],
+      ),
     );
   }
 }
