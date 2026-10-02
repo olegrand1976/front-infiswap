@@ -1,12 +1,7 @@
-Replacement tasks : 
-relaunch creator
-
 notification (real-time)
 
 Mon réseau :
 - inviter une infirmière pas encore inscrite (formulaire complet de group/create-user, ou lien d'invitation)
-- lancer api/tests/Feature/Group/GroupAssignTest.php
-- supprimer le groupe de test "fgdhfhhhf"
 
 Carte des infirmières (/dashboard/nurses-map) : entrée du profil non branchée
 

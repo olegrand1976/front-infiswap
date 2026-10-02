@@ -8,6 +8,8 @@ import '../../../core/theme/app_radii.dart';
 import '../../../core/theme/theme_mode_provider.dart';
 import '../../auth/data/auth_repository.dart';
 import '../../auth/providers/auth_session_provider.dart';
+import '../../google_review/data/google_review_repository.dart';
+import '../../google_review/presentation/google_review_menu_row.dart';
 import '../../network/presentation/network_screen.dart';
 import '../../replacements/presentation/create_classic_screen.dart';
 import '../../replacements/presentation/create_immediate_screen.dart';
@@ -141,6 +143,7 @@ class ProfileScreen extends ConsumerWidget {
                 label: 'Paramètres',
                 onTap: () => context.push('/settings'),
               ),
+              if (!hasLeftGoogleReview(user)) const GoogleReviewMenuRow(),
             ]),
             const SizedBox(height: 20),
             const _GroupLabel('Apparence'),
