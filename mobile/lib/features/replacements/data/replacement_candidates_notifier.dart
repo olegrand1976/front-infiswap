@@ -1,13 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/utils/async_value_refreshing.dart';
+import '../../auth/providers/auth_session_provider.dart';
 import '../models/replacement_candidate.dart';
 import 'replacements_repository.dart';
 
 class ReplacementCandidatesNotifier
-    extends FamilyAsyncNotifier<List<ReplacementCandidate>, int> {
+    extends AutoDisposeFamilyAsyncNotifier<List<ReplacementCandidate>, int> {
   @override
   Future<List<ReplacementCandidate>> build(int replacementId) async {
+    ref.watch(authSessionProvider.select((s) => s?.user['id']));
     return ref
         .watch(replacementsRepositoryProvider)
         .fetchCandidates(replacementId);
@@ -48,7 +50,7 @@ class ReplacementCandidatesNotifier
   }
 }
 
-final replacementCandidatesProvider = AsyncNotifierProvider.family<
-    ReplacementCandidatesNotifier, List<ReplacementCandidate>, int>(
+final replacementCandidatesProvider = AsyncNotifierProvider.autoDispose
+    .family<ReplacementCandidatesNotifier, List<ReplacementCandidate>, int>(
   ReplacementCandidatesNotifier.new,
 );
