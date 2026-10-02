@@ -30,7 +30,6 @@ Inscription et mot de passe oublié en natif (ouvrent le site aujourd'hui)
 Chat (maquette statique côté web, backend à faire)
 
 Divers :
-- lien avis Google
 - signaler un problème
 - pages légales
 - graphique de l'accueil

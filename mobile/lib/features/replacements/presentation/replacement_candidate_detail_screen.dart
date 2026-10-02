@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/api/api_exception.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../google_review/presentation/google_review_sheet.dart';
 import '../data/replacement_candidates_notifier.dart';
 import '../models/replacement_candidate.dart';
 import '../models/replacement_item.dart';
@@ -74,6 +75,9 @@ class ReplacementCandidateDetailScreen extends ConsumerWidget {
       await ref
           .read(replacementCandidatesProvider(_replacementId).notifier)
           .updateStatus(target.responseId, status);
+      if (status == 'confirmed' && context.mounted) {
+        await showGoogleReviewSheetIfNeeded(context, ref, GoogleReviewSource.replacementAccepted);
+      }
     } on ApiException catch (error) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.message)));
