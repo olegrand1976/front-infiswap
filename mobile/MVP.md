@@ -17,19 +17,10 @@ Missions institution :
 
 Remplacements urgents à proximité (/dashboard/replacements/urgent + upsell Pro)
 
-Paramètres manquants :
-- INAMI + badge vérifié
-- niveau d'études
-- langue
-- emails marketing
-- AI boost
-- export des données personnelles
-
 Inscription et mot de passe oublié en natif (ouvrent le site aujourd'hui)
 
 Chat (maquette statique côté web, backend à faire)
 
 Divers :
 - signaler un problème
-- pages légales
 - graphique de l'accueil

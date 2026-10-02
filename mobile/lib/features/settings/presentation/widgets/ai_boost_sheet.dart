@@ -122,6 +122,7 @@ class _AiBoostBodyState extends State<_AiBoostBody> {
                 ),
               ),
               TextButton(
+                style: TextButton.styleFrom(minimumSize: const Size(0, 44)),
                 onPressed: () => setState(() {
                   if (allSelected) {
                     _selected.clear();
