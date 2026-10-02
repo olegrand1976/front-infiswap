@@ -30,8 +30,6 @@ class NetworkRepository {
         .toList();
   }
 
-  /// [query] filters by zip code when numeric, by first/last name otherwise —
-  /// the web page exposes both as separate fields.
   Future<NetworkMembersPage> fetchMembers({
     required int groupId,
     required int page,

@@ -9,7 +9,6 @@ final myNetworkGroupsProvider =
   return ref.watch(networkRepositoryProvider).fetchMyGroups();
 });
 
-/// `null` means "first group" — the screen resolves it once groups load.
 final selectedNetworkGroupIdProvider =
     StateProvider.autoDispose<int?>((ref) => null);
 

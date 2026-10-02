@@ -16,7 +16,6 @@ import 'widgets/network_member_sheet.dart';
 
 final _emailPattern = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
 
-/// Mirrors `/dashboard/group` on the web ("Mon espace groupement").
 class NetworkScreen extends ConsumerStatefulWidget {
   const NetworkScreen({super.key});
 
@@ -119,10 +118,7 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen> {
       if (mounted) _showMessage('Personne assignée avec succès.');
     } on ApiException catch (error) {
       if (!mounted) return;
-      // Business rule violations surface as bare 500s from the API.
-      _showMessage((error.statusCode ?? 0) >= 500
-          ? 'Impossible d’ajouter cette personne au groupe.'
-          : error.message);
+      _showMessage(error.message);
     }
   }
 
@@ -176,11 +172,14 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _GroupTabs(
-                            groups: groups,
-                            selectedId: selectedGroup.id,
-                            onSelect: _selectGroup,
-                          ),
+                          if (groups.length > 1)
+                            _GroupTabs(
+                              groups: groups,
+                              selectedId: selectedGroup.id,
+                              onSelect: _selectGroup,
+                            )
+                          else
+                            _SingleGroupInfo(group: selectedGroup),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
                             child: TextField(
@@ -276,6 +275,53 @@ class _Header extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _SingleGroupInfo extends StatelessWidget {
+  const _SingleGroupInfo({required this.group});
+
+  final NetworkGroup group;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        children: [
+          Icon(Icons.hub_outlined, size: 16, color: colors.textSecondary),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              group.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  color: colors.textPrimary,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+            decoration: BoxDecoration(
+              color: colors.primaryMuted,
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: Text(
+              group.isAdmin ? 'Administrateur' : 'Membre',
+              style: TextStyle(
+                  color: colors.primary,
+                  fontSize: 10.5,
+                  fontWeight: FontWeight.w800),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

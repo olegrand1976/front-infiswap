@@ -1,4 +1,3 @@
-/// A group the current nurse belongs to (`GET /groups/me`).
 class NetworkGroup {
   const NetworkGroup({
     required this.id,
@@ -8,8 +7,6 @@ class NetworkGroup {
 
   final int id;
   final String name;
-
-  /// Group admins can add members — mirrors `isAdminGroup` on the web.
   final bool isAdmin;
 
   factory NetworkGroup.fromJson(Map<String, dynamic> json) {
