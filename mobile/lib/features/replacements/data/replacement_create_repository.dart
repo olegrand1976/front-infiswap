@@ -82,6 +82,11 @@ class ReplacementCreateRepository {
     await _api
         .put<Map<String, dynamic>>('/replacements/$replacementId/release');
   }
+
+  Future<void> relaunchInterested(int replacementId) async {
+    await _api.post<Map<String, dynamic>>(
+        '/replacements/$replacementId/relaunch-interested');
+  }
 }
 
 final replacementCreateRepositoryProvider =

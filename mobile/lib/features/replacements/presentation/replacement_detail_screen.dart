@@ -391,6 +391,63 @@ class _OwnerFooter extends ConsumerWidget {
     }
   }
 
+  Future<void> _relaunchInterested(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        final dialogColors = dialogContext.appColors;
+        return AlertDialog(
+          backgroundColor: dialogColors.card,
+          title: Text('Relancer les infirmières ?',
+              style: TextStyle(color: dialogColors.textPrimary)),
+          content: Text(
+            'Un email sera renvoyé aux infirmières de la zone. Vous pouvez relancer une fois toutes les 24 heures.',
+            style: TextStyle(color: dialogColors.textSecondary),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: Text('Annuler',
+                  style: TextStyle(color: dialogColors.textSecondary)),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: Text('Relancer',
+                  style: TextStyle(
+                      color: dialogColors.primary,
+                      fontWeight: FontWeight.w700)),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed != true || !context.mounted) {
+      return;
+    }
+
+    try {
+      await ref
+          .read(replacementCreateRepositoryProvider)
+          .relaunchInterested(int.parse(item.id));
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Relance envoyée aux infirmières')),
+      );
+    } on ApiException catch (error) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(error.message), backgroundColor: AppColors.coral),
+      );
+    } catch (_) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Une erreur est survenue.')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.appColors;
@@ -459,6 +516,25 @@ class _OwnerFooter extends ConsumerWidget {
               icon: Icon(Icons.edit_outlined, color: colors.primary, size: 18),
               label: Text(
                 "Modifier l'annonce",
+                style: TextStyle(
+                    color: colors.primary, fontWeight: FontWeight.w700),
+              ),
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: colors.primaryOutline),
+              ),
+            ),
+          ),
+        ],
+        if (status == MyReplacementStatus.open && !item.isMission) ...[
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () => _relaunchInterested(context, ref),
+              icon: Icon(Icons.campaign_outlined,
+                  color: colors.primary, size: 18),
+              label: Text(
+                'Relancer les infirmières',
                 style: TextStyle(
                     color: colors.primary, fontWeight: FontWeight.w700),
               ),
@@ -771,7 +847,8 @@ class _MissionHeader extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 12),
-              _MetaLine(icon: Icons.calendar_today_outlined, text: item.dateLabel),
+              _MetaLine(
+                  icon: Icons.calendar_today_outlined, text: item.dateLabel),
             ],
           ),
         ),
@@ -805,7 +882,6 @@ class _MetaLine extends StatelessWidget {
     );
   }
 }
-
 
 class _PeriodsCard extends StatelessWidget {
   const _PeriodsCard({required this.periods});
@@ -1079,7 +1155,6 @@ class _InfoCard extends StatelessWidget {
     );
   }
 }
-
 
 class _BoostStars extends StatelessWidget {
   const _BoostStars();
