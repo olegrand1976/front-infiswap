@@ -11,8 +11,15 @@ import '../../replacements/presentation/replacements_screen.dart';
 import '../../replacements/presentation/widgets/create_type_sheet.dart';
 import '../providers/shell_tab_index_provider.dart';
 
-class MainShell extends ConsumerWidget {
+class MainShell extends ConsumerStatefulWidget {
   const MainShell({super.key});
+
+  @override
+  ConsumerState<MainShell> createState() => _MainShellState();
+}
+
+class _MainShellState extends ConsumerState<MainShell> {
+  final Set<int> _visited = {};
 
   static const List<Widget> _pages = [
     HomeScreen(),
@@ -22,9 +29,10 @@ class MainShell extends ConsumerWidget {
   ];
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final colors = context.appColors;
     final currentIndex = ref.watch(shellTabIndexProvider);
+    _visited.add(currentIndex);
     final unreadCount = ref.watch(unreadNotificationCountProvider).maybeWhen(
           data: (count) => count,
           orElse: () => 0,
@@ -39,7 +47,13 @@ class MainShell extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      body: _pages[currentIndex],
+      body: IndexedStack(
+        index: currentIndex,
+        children: [
+          for (var i = 0; i < _pages.length; i++)
+            _visited.contains(i) ? _pages[i] : const SizedBox.shrink(),
+        ],
+      ),
       bottomNavigationBar: SizedBox(
         height: 64 + MediaQuery.paddingOf(context).bottom,
         child: Stack(

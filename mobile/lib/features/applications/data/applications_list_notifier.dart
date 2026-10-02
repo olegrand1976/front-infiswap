@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/utils/async_value_refreshing.dart';
 import '../../auth/providers/auth_session_provider.dart';
 import '../models/application_item.dart';
 import 'applications_repository.dart';
@@ -16,6 +17,7 @@ class ApplicationsListNotifier extends AsyncNotifier<List<ApplicationItem>> {
 
   @override
   Future<List<ApplicationItem>> build() async {
+    ref.watch(authSessionProvider.select((s) => s?.user['id']));
     final userId = _userId;
     if (userId == null) {
       throw StateError('Utilisateur non connecté.');
@@ -23,7 +25,8 @@ class ApplicationsListNotifier extends AsyncNotifier<List<ApplicationItem>> {
 
     _page = 1;
     final repository = ref.watch(applicationsRepositoryProvider);
-    final page = await repository.fetchApplied(userId, page: 1, perPage: _perPage);
+    final page =
+        await repository.fetchApplied(userId, page: 1, perPage: _perPage);
     _hasMore = page.items.length < page.total;
     return page.items;
   }
@@ -42,7 +45,7 @@ class ApplicationsListNotifier extends AsyncNotifier<List<ApplicationItem>> {
   Future<void> refresh() async {
     _page = 1;
     _hasMore = true;
-    state = const AsyncLoading();
+    state = state.refreshing;
     state = await AsyncValue.guard(() async {
       final userId = _userId;
       if (userId == null) {

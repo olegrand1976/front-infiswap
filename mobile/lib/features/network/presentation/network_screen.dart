@@ -27,6 +27,7 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen> {
   final _scrollController = ScrollController();
   final _searchController = TextEditingController();
   Timer? _debounce;
+  int? _syncedGroupId;
 
   @override
   void initState() {
@@ -69,7 +70,6 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen> {
 
   void _selectGroup(int groupId) {
     _debounce?.cancel();
-    _searchController.clear();
     ref.read(selectedNetworkGroupIdProvider.notifier).state = groupId;
   }
 
@@ -133,6 +133,11 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen> {
     final selectedGroup = selectedId == null
         ? null
         : groups.firstWhere((g) => g.id == selectedId);
+    if (selectedGroup != null && _syncedGroupId != selectedGroup.id) {
+      _syncedGroupId = selectedGroup.id;
+      _searchController.text =
+          ref.read(networkMembersProvider(selectedGroup.id).notifier).query;
+    }
 
     return Scaffold(
       backgroundColor: colors.background,

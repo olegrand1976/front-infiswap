@@ -1,22 +1,22 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/utils/async_value_refreshing.dart';
+import '../../auth/providers/auth_session_provider.dart';
 import '../models/network_group.dart';
 import '../models/network_member.dart';
 import 'network_repository.dart';
 
-final myNetworkGroupsProvider =
-    FutureProvider.autoDispose<List<NetworkGroup>>((ref) {
+final myNetworkGroupsProvider = FutureProvider<List<NetworkGroup>>((ref) {
+  ref.watch(authSessionProvider.select((s) => s?.user['id']));
   return ref.watch(networkRepositoryProvider).fetchMyGroups();
 });
 
-final selectedNetworkGroupIdProvider =
-    StateProvider.autoDispose<int?>((ref) => null);
+final selectedNetworkGroupIdProvider = StateProvider<int?>((ref) => null);
 
-final networkMembersLoadingMoreProvider =
-    StateProvider.autoDispose<bool>((ref) => false);
+final networkMembersLoadingMoreProvider = StateProvider<bool>((ref) => false);
 
 class NetworkMembersNotifier
-    extends AutoDisposeFamilyAsyncNotifier<List<NetworkMember>, int> {
+    extends FamilyAsyncNotifier<List<NetworkMember>, int> {
   String _query = '';
   int _page = 1;
   int _total = 0;
@@ -27,6 +27,7 @@ class NetworkMembersNotifier
 
   @override
   Future<List<NetworkMember>> build(int groupId) async {
+    ref.watch(authSessionProvider.select((s) => s?.user['id']));
     _page = 1;
     final page = await ref
         .watch(networkRepositoryProvider)
@@ -41,7 +42,7 @@ class NetworkMembersNotifier
     return _reload();
   }
 
-  Future<void> refresh() => _reload();
+  Future<void> refresh() => _reload(keepPrevious: true);
 
   Future<void> loadMore() async {
     final current = state.valueOrNull;
@@ -65,9 +66,9 @@ class NetworkMembersNotifier
     }
   }
 
-  Future<void> _reload() async {
+  Future<void> _reload({bool keepPrevious = false}) async {
     _page = 1;
-    state = const AsyncLoading();
+    state = keepPrevious ? state.refreshing : const AsyncLoading();
     state = await AsyncValue.guard(() async {
       final page = await ref
           .read(networkRepositoryProvider)
@@ -78,7 +79,7 @@ class NetworkMembersNotifier
   }
 }
 
-final networkMembersProvider = AsyncNotifierProvider.autoDispose
-    .family<NetworkMembersNotifier, List<NetworkMember>, int>(
+final networkMembersProvider = AsyncNotifierProvider.family<
+    NetworkMembersNotifier, List<NetworkMember>, int>(
   NetworkMembersNotifier.new,
 );

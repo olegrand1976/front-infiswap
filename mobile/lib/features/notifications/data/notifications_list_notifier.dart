@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/utils/async_value_refreshing.dart';
 import '../../auth/providers/auth_session_provider.dart';
 import '../models/notification_item.dart';
 import 'notifications_repository.dart';
@@ -16,7 +17,7 @@ class NotificationsListNotifier extends AsyncNotifier<List<NotificationItem>> {
 
   @override
   Future<List<NotificationItem>> build() async {
-    if (ref.watch(authSessionProvider) == null) {
+    if (ref.watch(authSessionProvider.select((s) => s?.user['id'])) == null) {
       throw StateError('Utilisateur non connecté.');
     }
 
@@ -30,7 +31,7 @@ class NotificationsListNotifier extends AsyncNotifier<List<NotificationItem>> {
   Future<void> refresh() async {
     _page = 1;
     _hasMore = true;
-    state = const AsyncLoading();
+    state = state.refreshing;
     state = await AsyncValue.guard(() async {
       final page = await ref
           .read(notificationsRepositoryProvider)
@@ -116,7 +117,7 @@ final notificationsListProvider =
 
 // Total unread count, backing the bottom-nav Notifications badge.
 final unreadNotificationCountProvider = FutureProvider.autoDispose<int>((ref) {
-  if (ref.watch(authSessionProvider) == null) {
+  if (ref.watch(authSessionProvider.select((s) => s?.user['id'])) == null) {
     return 0;
   }
   return ref.watch(notificationsRepositoryProvider).unreadCount();
@@ -124,7 +125,7 @@ final unreadNotificationCountProvider = FutureProvider.autoDispose<int>((ref) {
 
 // Unread "new replacement" count, backing the bottom-nav Remplacements badge.
 final newReplacementsCountProvider = FutureProvider.autoDispose<int>((ref) {
-  if (ref.watch(authSessionProvider) == null) {
+  if (ref.watch(authSessionProvider.select((s) => s?.user['id'])) == null) {
     return 0;
   }
   return ref

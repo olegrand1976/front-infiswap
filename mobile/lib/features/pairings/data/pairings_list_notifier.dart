@@ -1,5 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/utils/async_value_refreshing.dart';
+import '../../auth/providers/auth_session_provider.dart';
+
 import '../models/pairing_item.dart';
 import '../models/pairing_search_params.dart';
 import 'pairings_repository.dart';
@@ -15,6 +18,7 @@ class PairingsListNotifier extends AsyncNotifier<List<PairingItem>> {
 
   @override
   Future<List<PairingItem>> build() async {
+    ref.watch(authSessionProvider.select((s) => s?.user['id']));
     _params = _params.copyWith(page: 1);
     final page = await ref.watch(pairingsRepositoryProvider).fetchList(_params);
     _total = page.total;
@@ -35,7 +39,7 @@ class PairingsListNotifier extends AsyncNotifier<List<PairingItem>> {
   Future<void> clearSearch() =>
       _reload(_params.copyWith(zipCodes: [], cities: [], page: 1));
 
-  Future<void> refresh() => _reload(_params);
+  Future<void> refresh() => _reload(_params, keepPrevious: true);
 
   Future<void> loadMore() async {
     final current = state.valueOrNull;
@@ -66,9 +70,12 @@ class PairingsListNotifier extends AsyncNotifier<List<PairingItem>> {
     ]);
   }
 
-  Future<void> _reload(PairingSearchParams params) async {
+  Future<void> _reload(
+    PairingSearchParams params, {
+    bool keepPrevious = false,
+  }) async {
     _params = params;
-    state = const AsyncLoading();
+    state = keepPrevious ? state.refreshing : const AsyncLoading();
     state = await AsyncValue.guard(() async {
       final page =
           await ref.read(pairingsRepositoryProvider).fetchList(_params);

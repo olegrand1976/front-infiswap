@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/utils/async_value_refreshing.dart';
 import '../../auth/providers/auth_session_provider.dart';
 import '../models/replacement_item.dart';
 import 'replacements_repository.dart';
@@ -9,6 +10,7 @@ import 'replacements_repository.dart';
 class MyResponsesNotifier extends AsyncNotifier<List<ReplacementItem>> {
   @override
   Future<List<ReplacementItem>> build() async {
+    ref.watch(authSessionProvider.select((s) => s?.user['id']));
     final userId = _requireUserId();
     return ref.watch(replacementsRepositoryProvider).fetchMyResponseGroups(
           userId: userId,
@@ -35,7 +37,7 @@ class MyResponsesNotifier extends AsyncNotifier<List<ReplacementItem>> {
   }
 
   Future<void> refresh() async {
-    state = const AsyncLoading();
+    state = state.refreshing;
     state = await AsyncValue.guard(() async {
       final userId = _requireUserId();
       return ref

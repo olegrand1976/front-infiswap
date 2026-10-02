@@ -11,6 +11,7 @@ import '../../../core/widgets/skeleton_box.dart';
 import '../../auth/data/auth_repository.dart';
 import '../../auth/providers/auth_session_provider.dart';
 import '../data/settings_repository.dart';
+import '../data/user_settings_notifier.dart';
 import '../models/settings_models.dart';
 import 'widgets/avatar_section.dart';
 import 'widgets/change_password_sheet.dart';
@@ -78,37 +79,18 @@ class SettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
-  Map<String, dynamic>? _settings;
-  bool _isLoading = true;
-  String? _errorMessage;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadSettings();
-  }
-
-  Future<void> _loadSettings() async {
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
-    try {
-      final repository = ref.read(settingsRepositoryProvider);
-      final settings = await repository.fetchSettings();
-      if (mounted) setState(() => _settings = settings);
-    } on ApiException catch (error) {
-      if (mounted) setState(() => _errorMessage = error.message);
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
-    }
-  }
-
   Future<void> _refreshUser() async {
     final session = ref.read(authSessionProvider);
     if (session == null) return;
     final user = await ref.read(authRepositoryProvider).fetchCurrentUser();
     ref.read(authSessionProvider.notifier).state = session.copyWithUser(user);
+  }
+
+  Future<void> _refreshAll() async {
+    await Future.wait([
+      ref.read(userSettingsProvider.notifier).refresh(),
+      _refreshUser(),
+    ]);
   }
 
   @override
@@ -117,6 +99,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final session = ref.watch(authSessionProvider);
     final config = ref.watch(appConfigProvider);
     final repository = ref.read(settingsRepositoryProvider);
+    final asyncSettings = ref.watch(userSettingsProvider);
     final canPop = Navigator.of(context).canPop();
 
     if (session == null) {
@@ -158,21 +141,29 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             Expanded(
               child: userId == null
                   ? const SizedBox.shrink()
-                  : _isLoading
-                      ? const _SettingsBodySkeleton()
-                      : _errorMessage != null
-                          ? _ErrorState(message: _errorMessage!, onRetry: _loadSettings)
-                          : _SettingsBody(
-                              repository: repository,
-                              userId: userId,
-                              user: user,
-                              isInstitution: isInstitution,
-                              apiBaseUrl: config.apiBaseUrl,
-                              settings: _settings ?? const {},
-                              onUserChanged: _refreshUser,
-                              onSettingChanged: (key, value) =>
-                                  setState(() => _settings = {...?_settings, key: value}),
-                            ),
+                  : asyncSettings.when(
+                      loading: () => const _SettingsBodySkeleton(),
+                      error: (error, _) => _ErrorState(
+                        message: error is ApiException
+                            ? error.message
+                            : 'Impossible de charger les paramètres.',
+                        onRetry: () => ref.read(userSettingsProvider.notifier).refresh(),
+                      ),
+                      data: (settings) => RefreshIndicator(
+                        color: colors.primary,
+                        onRefresh: _refreshAll,
+                        child: _SettingsBody(
+                          repository: repository,
+                          userId: userId,
+                          user: user,
+                          isInstitution: isInstitution,
+                          apiBaseUrl: config.apiBaseUrl,
+                          settings: settings,
+                          onUserChanged: _refreshUser,
+                          onSettingChanged: ref.read(userSettingsProvider.notifier).setValue,
+                        ),
+                      ),
+                    ),
             ),
           ],
         ),
@@ -696,6 +687,11 @@ class _SettingsBody extends ConsumerWidget {
                 initial: zonePrefs,
                 seedZipCode: address.zipCode,
                 country: _zoneCountry(address),
+                onSaved: (cities, zipCodes) => onSettingChanged('replacement', {
+                  ...?(settings['replacement'] as Map?)?.cast<String, dynamic>(),
+                  'cities': cities,
+                  'zip_codes': zipCodes,
+                }),
               ),
             ),
           ]),
@@ -722,7 +718,14 @@ class _SettingsBody extends ConsumerWidget {
           _SettingsGroup(children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: NotificationPreferencesCard(repository: repository, initial: notificationPrefs),
+              child: NotificationPreferencesCard(
+                repository: repository,
+                initial: notificationPrefs,
+                onSaved: (prefs) => onSettingChanged('notification', {
+                  ...?(settings['notification'] as Map?)?.cast<String, dynamic>(),
+                  ...prefs.toJson(),
+                }),
+              ),
             ),
           ]),
         ],

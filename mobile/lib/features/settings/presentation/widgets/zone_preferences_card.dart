@@ -16,6 +16,7 @@ class ZonePreferencesCard extends StatefulWidget {
     required this.initial,
     required this.seedZipCode,
     required this.country,
+    this.onSaved,
   });
 
   final SettingsRepository repository;
@@ -23,6 +24,7 @@ class ZonePreferencesCard extends StatefulWidget {
   final ReplacementZonePreferences initial;
   final String seedZipCode;
   final String country;
+  final void Function(List<String> cities, List<String> zipCodes)? onSaved;
 
   @override
   State<ZonePreferencesCard> createState() => _ZonePreferencesCardState();
@@ -58,7 +60,8 @@ class _ZonePreferencesCardState extends State<ZonePreferencesCard> {
       final nextCities = [..._cities, value];
       var nextZipCodes = _zipCodes;
       try {
-        final matches = await widget.locationRepository.getZipCodesFromCity(value);
+        final matches =
+            await widget.locationRepository.getZipCodesFromCity(value);
         if (matches.isNotEmpty) {
           nextZipCodes = {..._zipCodes, ...matches}.toList();
         }
@@ -66,6 +69,7 @@ class _ZonePreferencesCardState extends State<ZonePreferencesCard> {
 
       await widget.repository
           .addZonePreferences(cities: nextCities, zipCodes: nextZipCodes);
+      widget.onSaved?.call(nextCities, nextZipCodes);
       setState(() {
         _cities = nextCities;
         _zipCodes = nextZipCodes;
@@ -87,7 +91,8 @@ class _ZonePreferencesCardState extends State<ZonePreferencesCard> {
       final nextZipCodes = [..._zipCodes, value];
       var nextCities = _cities;
       try {
-        final matches = await widget.locationRepository.getCitiesFromZipCode(value);
+        final matches =
+            await widget.locationRepository.getCitiesFromZipCode(value);
         if (matches.isNotEmpty) {
           nextCities = {..._cities, ...matches}.toList();
         }
@@ -95,6 +100,7 @@ class _ZonePreferencesCardState extends State<ZonePreferencesCard> {
 
       await widget.repository
           .addZonePreferences(cities: nextCities, zipCodes: nextZipCodes);
+      widget.onSaved?.call(nextCities, nextZipCodes);
       setState(() {
         _zipCodes = nextZipCodes;
         _cities = nextCities;
@@ -118,6 +124,7 @@ class _ZonePreferencesCardState extends State<ZonePreferencesCard> {
     try {
       await widget.repository
           .addZonePreferences(cities: cities, zipCodes: zipCodes);
+      widget.onSaved?.call(cities, zipCodes);
       return true;
     } on ApiException catch (error) {
       if (mounted) {
@@ -181,8 +188,8 @@ class _ZonePreferencesCardState extends State<ZonePreferencesCard> {
       for (final zip in _zipCodes.reversed) zip.trim(),
     }.where((zip) => zip.isNotEmpty).take(5).toList();
     if (seeds.isEmpty) {
-      showSettingsErrorSnackBar(
-          context, 'Ajoutez d’abord un code postal pour obtenir des suggestions.');
+      showSettingsErrorSnackBar(context,
+          'Ajoutez d’abord un code postal pour obtenir des suggestions.');
       return;
     }
 
@@ -203,6 +210,7 @@ class _ZonePreferencesCardState extends State<ZonePreferencesCard> {
     try {
       await widget.repository
           .addZonePreferences(cities: nextCities, zipCodes: nextZipCodes);
+      widget.onSaved?.call(nextCities, nextZipCodes);
       setState(() {
         _zipCodes = nextZipCodes;
         _cities = nextCities;
@@ -223,10 +231,12 @@ class _ZonePreferencesCardState extends State<ZonePreferencesCard> {
       children: [
         OutlinedButton.icon(
           onPressed: _isSaving ? null : _openAiBoost,
-          icon: Icon(Icons.auto_awesome_outlined, size: 16, color: colors.primary),
+          icon: Icon(Icons.auto_awesome_outlined,
+              size: 16, color: colors.primary),
           label: Text(
             'Boost IA — suggérer des zones',
-            style: TextStyle(color: colors.primary, fontWeight: FontWeight.w800),
+            style:
+                TextStyle(color: colors.primary, fontWeight: FontWeight.w800),
           ),
           style: OutlinedButton.styleFrom(
             minimumSize: const Size.fromHeight(44),

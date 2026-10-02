@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/utils/async_value_refreshing.dart';
 import '../models/replacement_candidate.dart';
 import 'replacements_repository.dart';
 
@@ -13,7 +14,7 @@ class ReplacementCandidatesNotifier
   }
 
   Future<void> refresh() async {
-    state = const AsyncLoading();
+    state = state.refreshing;
     state = await AsyncValue.guard(() {
       return ref.read(replacementsRepositoryProvider).fetchCandidates(arg);
     });

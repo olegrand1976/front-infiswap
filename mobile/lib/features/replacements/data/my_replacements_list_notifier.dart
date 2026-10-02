@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/utils/async_value_refreshing.dart';
 import '../../auth/providers/auth_session_provider.dart';
 import '../models/replacement_item.dart';
 import 'replacements_repository.dart';
@@ -16,7 +17,7 @@ class MyReplacementsListNotifier extends AsyncNotifier<List<ReplacementItem>> {
 
   @override
   Future<List<ReplacementItem>> build() async {
-    if (ref.watch(authSessionProvider) == null) {
+    if (ref.watch(authSessionProvider.select((s) => s?.user['id'])) == null) {
       throw StateError('Utilisateur non connecté.');
     }
     _page = 1;
@@ -29,7 +30,7 @@ class MyReplacementsListNotifier extends AsyncNotifier<List<ReplacementItem>> {
   Future<void> refresh() async {
     _page = 1;
     _hasMore = true;
-    state = const AsyncLoading();
+    state = state.refreshing;
     state = await AsyncValue.guard(() async {
       final page = await ref
           .read(replacementsRepositoryProvider)

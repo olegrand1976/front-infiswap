@@ -1,16 +1,20 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/utils/async_value_refreshing.dart';
+import '../../auth/providers/auth_session_provider.dart';
+
 import '../models/pairing_response.dart';
 import 'pairings_repository.dart';
 
 class PairingResponsesNotifier extends AsyncNotifier<List<PairingResponse>> {
   @override
   Future<List<PairingResponse>> build() {
+    ref.watch(authSessionProvider.select((s) => s?.user['id']));
     return ref.watch(pairingsRepositoryProvider).fetchMyResponses();
   }
 
   Future<void> refresh() async {
-    state = const AsyncLoading();
+    state = state.refreshing;
     state = await AsyncValue.guard(
       () => ref.read(pairingsRepositoryProvider).fetchMyResponses(),
     );

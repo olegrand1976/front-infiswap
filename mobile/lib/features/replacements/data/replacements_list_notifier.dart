@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/utils/async_value_refreshing.dart';
 import '../models/replacement_item.dart';
 import '../models/replacement_search_params.dart';
 import 'replacements_repository.dart';
@@ -23,10 +24,13 @@ class ReplacementsListNotifier extends AsyncNotifier<List<ReplacementItem>> {
     return page.items;
   }
 
-  Future<void> applyParams(ReplacementSearchParams params) async {
+  Future<void> applyParams(
+    ReplacementSearchParams params, {
+    bool keepPrevious = false,
+  }) async {
     _params = params.copyWith(page: 1);
     _hasMore = true;
-    state = const AsyncLoading();
+    state = keepPrevious ? state.refreshing : const AsyncLoading();
     state = await AsyncValue.guard(() async {
       final page = await ref
           .read(replacementsRepositoryProvider)
@@ -134,7 +138,7 @@ class ReplacementsListNotifier extends AsyncNotifier<List<ReplacementItem>> {
     );
   }
 
-  Future<void> refresh() => applyParams(_params);
+  Future<void> refresh() => applyParams(_params, keepPrevious: true);
 }
 
 final replacementsListProvider =

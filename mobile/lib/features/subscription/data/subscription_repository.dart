@@ -2,6 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/api/api_client.dart';
 import '../../../core/api/api_exception.dart';
+import '../../../core/utils/async_value_refreshing.dart';
+import '../../auth/providers/auth_session_provider.dart';
 import '../models/access_plan.dart';
 import '../models/boost_plan.dart';
 import '../models/pro_plan.dart';
@@ -76,19 +78,22 @@ class SubscriptionRepository {
   }
 
   Future<ProSubscriptionStatus> fetchProStatus() async {
-    final response = await _api.get<Map<String, dynamic>>('/subscription/pro/status');
+    final response =
+        await _api.get<Map<String, dynamic>>('/subscription/pro/status');
     return ProSubscriptionStatus.fromJson(response.data ?? const {});
   }
 
   Future<List<ProPlan>> fetchProCatalog() async {
-    final response = await _api.get<Map<String, dynamic>>('/subscription/pro/catalog');
+    final response =
+        await _api.get<Map<String, dynamic>>('/subscription/pro/catalog');
     final plans = response.data?['plans'];
     if (plans is! List) {
       return const [];
     }
     return plans
         .whereType<Map>()
-        .map((plan) => ProPlan.fromJson(plan.map((key, value) => MapEntry(key.toString(), value))))
+        .map((plan) => ProPlan.fromJson(
+            plan.map((key, value) => MapEntry(key.toString(), value))))
         .toList();
   }
 
@@ -145,26 +150,30 @@ final subscriptionRepositoryProvider = Provider<SubscriptionRepository>((ref) {
   return SubscriptionRepository(apiClient: ref.watch(apiClientProvider));
 });
 
-final accessPlanProvider = FutureProvider.autoDispose((ref) {
+final accessPlanProvider = FutureProvider((ref) {
+  ref.watch(authSessionProvider.select((s) => s?.user['id']));
   return ref.watch(subscriptionRepositoryProvider).fetchAccessPlan();
 });
 
-final replacementBoostPlansProvider = FutureProvider.autoDispose((ref) {
+final replacementBoostPlansProvider = FutureProvider((ref) {
+  ref.watch(authSessionProvider.select((s) => s?.user['id']));
   return ref.watch(subscriptionRepositoryProvider).fetchReplacementBoostPlans();
 });
 
-final proCatalogProvider = FutureProvider.autoDispose((ref) {
+final proCatalogProvider = FutureProvider((ref) {
+  ref.watch(authSessionProvider.select((s) => s?.user['id']));
   return ref.watch(subscriptionRepositoryProvider).fetchProCatalog();
 });
 
-class ProStatusNotifier extends AutoDisposeAsyncNotifier<ProSubscriptionStatus> {
+class ProStatusNotifier extends AsyncNotifier<ProSubscriptionStatus> {
   @override
   Future<ProSubscriptionStatus> build() {
+    ref.watch(authSessionProvider.select((s) => s?.user['id']));
     return ref.watch(subscriptionRepositoryProvider).fetchProStatus();
   }
 
   Future<void> refresh() async {
-    state = const AsyncLoading();
+    state = state.refreshing;
     state = await AsyncValue.guard(
       () => ref.read(subscriptionRepositoryProvider).fetchProStatus(),
     );
@@ -172,6 +181,6 @@ class ProStatusNotifier extends AutoDisposeAsyncNotifier<ProSubscriptionStatus> 
 }
 
 final proStatusProvider =
-    AsyncNotifierProvider.autoDispose<ProStatusNotifier, ProSubscriptionStatus>(
+    AsyncNotifierProvider<ProStatusNotifier, ProSubscriptionStatus>(
   ProStatusNotifier.new,
 );

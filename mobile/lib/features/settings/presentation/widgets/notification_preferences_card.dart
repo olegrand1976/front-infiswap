@@ -11,10 +11,12 @@ class NotificationPreferencesCard extends StatefulWidget {
     super.key,
     required this.repository,
     required this.initial,
+    this.onSaved,
   });
 
   final SettingsRepository repository;
   final NotificationPreferences initial;
+  final ValueChanged<NotificationPreferences>? onSaved;
 
   @override
   State<NotificationPreferencesCard> createState() =>
@@ -41,6 +43,7 @@ class _NotificationPreferencesCardState
 
     try {
       await widget.repository.updateNotificationPreferences(next);
+      widget.onSaved?.call(next);
     } on ApiException catch (error) {
       if (mounted) {
         setState(() => _prefs = previous);
