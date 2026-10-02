@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/utils/async_value_refreshing.dart';
+import '../../auth/providers/auth_session_provider.dart';
 import '../models/replacement_item.dart';
 import '../models/replacement_search_params.dart';
 import 'replacements_repository.dart';
@@ -10,12 +11,22 @@ final replacementsLoadingMoreProvider = StateProvider<bool>((ref) => false);
 class ReplacementsListNotifier extends AsyncNotifier<List<ReplacementItem>> {
   ReplacementSearchParams _params = ReplacementSearchParams.defaults;
   bool _hasMore = true;
+  Object? _userId;
 
   ReplacementSearchParams get params => _params;
   bool get hasMore => _hasMore;
 
   @override
   Future<List<ReplacementItem>> build() async {
+    final userId = ref.watch(authSessionProvider.select((s) => s?.user['id']));
+    if (userId != _userId) {
+      _userId = userId;
+      _params = ReplacementSearchParams.defaults;
+    }
+    if (userId == null) {
+      _hasMore = false;
+      return const [];
+    }
     _params = _params.copyWith(page: 1);
     final page = await ref
         .watch(replacementsRepositoryProvider)
