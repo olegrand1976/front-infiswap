@@ -1138,7 +1138,6 @@ import {
     getOffreInstitutionNetworkProfilesLabel,
     getOffreInstitutionJaumanaBelgiumOnlyLabel,
     interpolateOffreInstitutionContent,
-    OFFRE_INSTITUTION_JAUMANA_BELGIUM_ONLY_LABEL,
 } from '~/lib/offreInstitutionContent';
 import {
     formatInstitutionDiyMonthlyLabel,

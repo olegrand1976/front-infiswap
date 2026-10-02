@@ -1,6 +1,6 @@
 <template>
     <NuxtLoadingIndicator />
-    <NuxtLayout class="overflow-x-hidden">
+    <NuxtLayout class="overflow-x-clip">
         <NuxtPage />
     </NuxtLayout>
     <LegalCookieConsentBanner />

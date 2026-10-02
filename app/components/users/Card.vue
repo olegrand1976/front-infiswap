@@ -53,7 +53,7 @@
                     :class="compact ? 'size-3' : 'size-3.5'"
                     aria-hidden="true"
                 />
-                <span class="font-semibold">{{ $t('premiumMarketing.memberLabel') }}</span>
+                <span class="font-semibold">{{ t('premiumMarketing.memberLabel') }}</span>
             </p>
             <p
                 class="mb-0 line-clamp-2 font-semibold leading-snug text-muted-foreground"
@@ -803,6 +803,7 @@ import { useRuntimeConfig } from '#app';
 import { formatRelativeDate } from '@/composables/useDate';
 import { educationLevelLabel, hasRealIdentifier } from '~/utils/educationLevel';
 
+const { t } = useI18n();
 const { isAdmin, isCollaborator } = useAuth();
 const activeTab = ref('information');
 const tradeTab = ref('call');

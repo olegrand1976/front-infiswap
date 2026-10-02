@@ -1479,7 +1479,6 @@ function canCreateInstitutionSubscription(institution: CrmInstitution): boolean 
 function institutionSubscriptionLabel(institution: CrmInstitution): string {
     const subscription = institution.subscription;
     const status = subscription?.status;
-    const formula = subscription?.formula;
 
     if (canCreateInstitutionSubscription(institution)) {
         return 'Créer bon de commande';

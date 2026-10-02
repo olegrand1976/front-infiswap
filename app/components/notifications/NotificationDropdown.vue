@@ -25,7 +25,7 @@
             <div class="p-4 border-b">
                 <div class="flex items-center justify-between">
                     <h3 class="font-semibold text-gray-900">
-                        {{ $t('notifications.title') }}
+                        {{ t('notifications.title') }}
                     </h3>
                     <div class="flex gap-2">
                         <Button
@@ -35,7 +35,7 @@
                             class="text-xs"
                             @click="handleMarkAllAsRead"
                         >
-                            {{ $t('notifications.markAllRead') }}
+                            {{ t('notifications.markAllRead') }}
                         </Button>
                     </div>
                 </div>
@@ -43,7 +43,7 @@
 
             <div v-if="loading">
                 <div class="p-4 text-center text-gray-500">
-                    {{ $t('notifications.loading') }}
+                    {{ t('notifications.loading') }}
                 </div>
             </div>
 
@@ -52,7 +52,7 @@
                 class="p-8 text-center text-gray-500"
             >
                 <BellRing class="w-12 h-12 mx-auto mb-2 text-gray-300" />
-                <p>{{ $t('notifications.empty') }}</p>
+                <p>{{ t('notifications.empty') }}</p>
             </div>
 
             <div v-else>
@@ -130,7 +130,7 @@
                     class="w-full text-sm justify-start text-gray-500"
                     @click="handleOpenSettings"
                 >
-                    {{ $t('notifications.notifSettings') }}
+                    {{ t('notifications.notifSettings') }}
                 </Button>
             </div>
         </DropdownMenuContent>

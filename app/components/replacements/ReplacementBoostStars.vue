@@ -9,8 +9,8 @@
                 ? 'p-0 bg-transparent border-0 shadow-none hover:opacity-80 focus:outline-none'
                 : 'rounded-lg px-2 py-1.5 transition-transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400',
         ]"
-        :title="title"
-        :aria-label="title"
+        :title="titleText"
+        :aria-label="titleText"
         @click.stop="emit('click')"
     >
         <Star
@@ -23,9 +23,9 @@
         v-else
         class="inline-flex items-center gap-0.5"
         :class="sizeClasses"
-        :title="title"
+        :title="titleText"
         role="img"
-        :aria-label="title"
+        :aria-label="titleText"
     >
         <Star
             v-for="i in count"
@@ -51,10 +51,14 @@ const props = withDefaults(defineProps<{
     clickable: false,
     plain: false,
     tone: 'amber',
-    title: 'Remplacement boosté',
+    title: undefined,
 });
 
 const emit = defineEmits<{ click: [] }>();
+
+const { t } = useI18n();
+
+const titleText = computed(() => props.title ?? t('replacements.boostedTitle'));
 
 const sizeClasses = computed(() => ({
     sm: 'gap-0.5',

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Headset, Quote, ShieldCheck, Users } from 'lucide-vue-next';
 
-const { locale } = useI18n();
+const { t, locale } = useI18n();
 const { stats, loading, copy, fetchStats, getKpiValue } = usePlatformStats();
 
 await fetchStats();
@@ -75,23 +75,23 @@ const formattedAsOf = computed(() => {
                         >{{ growthLabel }}</span>
                     </div>
                     <p class="mt-1 text-xs text-white/80">
-                        {{ $t('home.kpi.membersLabel') }}
+                        {{ t('home.kpi.membersLabel') }}
                     </p>
                 </div>
 
                 <div class="flex flex-col rounded-2xl bg-primary p-5 shadow-lg">
                     <Quote class="mb-2 size-5 text-white/70" />
                     <p class="flex-1 text-xs text-white">
-                        {{ $t('home.stats.trustQuote') }}
+                        {{ t('home.stats.trustQuote') }}
                     </p>
                     <div class="mt-3 flex flex-wrap gap-2">
                         <span class="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-2 py-1 text-xs font-bold text-white">
                             <ShieldCheck class="size-3.5" />
-                            {{ $t('home.stats.trustBadgeVerified') }}
+                            {{ t('home.stats.trustBadgeVerified') }}
                         </span>
                         <span class="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-2 py-1 text-xs font-bold text-white">
                             <Headset class="size-3.5" />
-                            {{ $t('home.stats.trustBadgeSupport') }}
+                            {{ t('home.stats.trustBadgeSupport') }}
                         </span>
                     </div>
                 </div>

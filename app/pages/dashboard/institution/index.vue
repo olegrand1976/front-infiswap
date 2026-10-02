@@ -294,6 +294,8 @@ const dataReports = computed(() => reports?.value);
 const { pending } = useAsyncData('institution-dashboard-reports', () => getReports(), {
     server: false,
     lazy: true,
+    dedupe: 'defer',
+    getCachedData: (key, nuxtApp) => nuxtApp.payload.data[key] ?? nuxtApp.static.data[key],
 });
 
 const activeTab = ref('open');

@@ -44,7 +44,7 @@
                 class="mb-0 font-semibold leading-snug text-muted-foreground"
                 :class="compact ? 'min-h-[1.25rem] text-xs' : 'min-h-[2.75rem] text-base'"
             >
-                Institution
+                {{ t('replacements.institutionLabel') }}
             </p>
         </div>
 
@@ -142,6 +142,7 @@ const props = withDefaults(defineProps<{
     compact: false,
 });
 
+const { t } = useI18n();
 const { getLogoUrl } = useInstitutions();
 
 const logoUrl = computed(() => {
@@ -153,12 +154,12 @@ const logoUrl = computed(() => {
     return getLogoUrl(logo) || null;
 });
 
-const displayPhone = computed(() => props.institution.phone_number || 'Non renseigné');
-const displayCity = computed(() => props.institution.city || 'Non renseigné');
+const displayPhone = computed(() => props.institution.phone_number || t('replacements.notProvided'));
+const displayCity = computed(() => props.institution.city || t('replacements.notProvided'));
 const displayZip = computed(() => {
     const z = props.institution.zip_code;
-    if (z === null || z === undefined || z === '') return 'Non renseigné';
+    if (z === null || z === undefined || z === '') return t('replacements.notProvided');
     return String(z);
 });
-const displayCompanyNumber = computed(() => props.institution.company_number || 'Non renseigné');
+const displayCompanyNumber = computed(() => props.institution.company_number || t('replacements.notProvided'));
 </script>

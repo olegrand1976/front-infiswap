@@ -179,7 +179,7 @@
                 </div>
 
                 <p class="text-center text-xs text-muted-foreground">
-                    {{ $t('premiumMarketing.subscriptionsFooter') }}
+                    {{ t('premiumMarketing.subscriptionsFooter') }}
                 </p>
             </div>
         </div>
@@ -202,6 +202,7 @@ useHead({
     title: 'Infiswap Premium',
 });
 
+const { t } = useI18n();
 const { badge, title, subtitle, benefits: proBenefits } = usePremiumMarketing();
 
 /** Contraste vendeur Gratuit vs Premium (page abonnement uniquement). */

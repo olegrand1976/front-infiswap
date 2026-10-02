@@ -23,16 +23,16 @@
                     <LayoutsLogo class="w-64" />
                 </div>
                 <h1 class="md:text-2xl sm:text-xl text-center text-primary">
-                    {{ $t('auth.twoFactorHeading') }}<span class="font-bold"> {{ $t('auth.twoFactorHeadingStrong') }}</span>
+                    {{ t('auth.twoFactorHeading') }}<span class="font-bold"> {{ t('auth.twoFactorHeadingStrong') }}</span>
                 </h1>
                 <p class="text-center lg:w-96 2xl:w-auto">
-                    {{ $t('auth.twoFactorHint') }}
+                    {{ t('auth.twoFactorHint') }}
                 </p>
                 <Button
                     class="border-none rounded-none shadow-none hover:text-blue-600 hover:bg-transparent bg-transparent underline text-blue-500 text-center xl:text-sm sm:text-xs"
                     @click="resendCode"
                 >
-                    {{ $t('auth.twoFactorResend') }}
+                    {{ t('auth.twoFactorResend') }}
                 </Button>
 
                 <Form @submit="submit">
@@ -60,7 +60,7 @@
                                     variant="outline"
                                     class="w-full rounded-full px-16"
                                 >
-                                    {{ $t('common.back') }}
+                                    {{ t('common.back') }}
                                 </Button>
                             </NuxtLink>
                         </div>
@@ -70,7 +70,7 @@
                                 class="w-full px-16"
                                 :in-progress="inProgress"
                             >
-                                {{ $t('auth.twoFactorVerify') }}
+                                {{ t('auth.twoFactorVerify') }}
                             </Button>
                         </div>
                     </div>
@@ -83,16 +83,16 @@
 
             <div class="container mt-32 flex flex-col space-y-8">
                 <h1 class="text-lg text-center text-primary">
-                    {{ $t('auth.twoFactorHeading') }} <span class="font-bold">{{ $t('auth.twoFactorHeadingStrong') }}</span>
+                    {{ t('auth.twoFactorHeading') }} <span class="font-bold">{{ t('auth.twoFactorHeadingStrong') }}</span>
                 </h1>
                 <p class="text-center text-sm">
-                    {{ $t('auth.twoFactorHint') }}
+                    {{ t('auth.twoFactorHint') }}
                 </p>
                 <Button
                     class="border-none rounded-none shadow-none hover:text-blue-600 hover:bg-transparent bg-transparent underline text-blue-500 text-xs text-center"
                     @click="resendCode"
                 >
-                    {{ $t('auth.twoFactorResend') }}
+                    {{ t('auth.twoFactorResend') }}
                 </Button>
             </div>
 
@@ -130,7 +130,7 @@
                                 variant="outline"
                                 class="w-full rounded-full px-12"
                             >
-                                {{ $t('common.back') }}
+                                {{ t('common.back') }}
                             </Button>
                         </NuxtLink>
                     </div>
@@ -140,7 +140,7 @@
                             class="w-full rounded-full px-12"
                             :in-progress="inProgress"
                         >
-                            {{ $t('auth.twoFactorVerify') }}
+                            {{ t('auth.twoFactorVerify') }}
                         </Button>
                     </div>
                 </div>

@@ -22,6 +22,7 @@ const emit = defineEmits<{
     'accepted': [];
 }>();
 
+const { t } = useI18n();
 const { $toast } = useNuxtApp();
 const { changeStatus } = changeStatusReplacement();
 const { checkoutContract, loading: contractLoading } = useReplacementContract();
@@ -35,9 +36,9 @@ const accepting = ref(false);
 
 const respondentName = computed(() => {
     const r = props.response?.respondent;
-    if (!r) return 'cette collègue';
-    if (r.type === 'institution') return r.name ?? 'cette institution';
-    return [r.firstname, r.lastname].filter(Boolean).join(' ') || 'cette collègue';
+    if (!r) return t('replacements.acceptModal.defaultRespondentFallback');
+    if (r.type === 'institution') return r.name ?? t('replacements.acceptModal.defaultInstitutionFallback');
+    return [r.firstname, r.lastname].filter(Boolean).join(' ') || t('replacements.acceptModal.defaultRespondentFallback');
 });
 
 watch(() => props.open, async (isOpen) => {
@@ -115,7 +116,7 @@ async function acceptWithContract() {
 
         $toast({
             variant: 'destructive',
-            description: 'Impossible d\'ouvrir la page de paiement.',
+            description: t('replacements.paymentPageError'),
         });
     }
     catch (error) {
@@ -139,14 +140,14 @@ async function acceptWithContract() {
             <DialogHeader>
                 <DialogTitle class="flex items-center gap-2">
                     <ShieldCheck class="size-5 text-primary" />
-                    Confirmer {{ respondentName }}
+                    {{ t('replacements.acceptModal.dialogTitle', { name: respondentName }) }}
                 </DialogTitle>
                 <DialogDescription>
                     <template v-if="isProSubscriber">
-                        Validez ce remplacement avec ou sans contrat légal — inclus dans votre abonnement.
+                        {{ t('replacements.acceptModal.descPro') }}
                     </template>
                     <template v-else>
-                        Validez ce remplacement avec ou sans contrat légal (3 €).
+                        {{ t('replacements.acceptModal.descFree') }}
                     </template>
                 </DialogDescription>
             </DialogHeader>
@@ -155,7 +156,7 @@ async function acceptWithContract() {
                 v-if="isInstitutionRespondent"
                 class="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900"
             >
-                Le contrat de remplacement n'est pas encore disponible pour les candidatures institution.
+                {{ t('replacements.acceptModal.institutionNotAvailable') }}
             </div>
 
             <div
@@ -165,25 +166,25 @@ async function acceptWithContract() {
                 <div class="rounded-lg border border-primary/15 bg-primary/5 p-3 text-sm space-y-2">
                     <p class="font-medium text-primary flex items-center gap-2">
                         <FileText class="size-4" />
-                        Contrat de remplacement — {{ isProSubscriber ? 'inclus dans Infiswap Premium' : '3 €' }}
+                        {{ t('replacements.acceptModal.contractHeading', { suffix: isProSubscriber ? t('replacements.acceptModal.includedInPremium') : '3 €' }) }}
                     </p>
                     <ul class="list-disc pl-5 text-muted-foreground space-y-1">
-                        <li>Consolide l'accord entre vous et {{ respondentName }}</li>
-                        <li>Période et identités des deux parties</li>
-                        <li>Option délégation patientèle si vous le souhaitez</li>
+                        <li>{{ t('replacements.acceptModal.bulletConsolidate', { name: respondentName }) }}</li>
+                        <li>{{ t('replacements.acceptModal.bulletPeriod') }}</li>
+                        <li>{{ t('replacements.acceptModal.bulletDelegation') }}</li>
                     </ul>
                 </div>
 
                 <SubscriptionProUpsellCallout
                     v-if="!isProSubscriber"
                     tone="amber"
-                    title="Ne repayez plus jamais vos contrats"
-                    description="Contrats illimités inclus dans Infiswap Premium, dès 99 €/an."
+                    :title="t('replacements.acceptModal.upsellTitle')"
+                    :description="t('replacements.acceptModal.upsellDesc')"
                 />
 
                 <div class="space-y-3">
                     <p class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                        Mode de signature
+                        {{ t('replacements.acceptModal.signatureModeLabel') }}
                     </p>
                     <RadioGroup v-model="signatureMode">
                         <div class="flex items-center space-x-2">
@@ -191,14 +192,14 @@ async function acceptWithContract() {
                                 id="sig-pdf"
                                 value="pdf_download"
                             />
-                            <Label for="sig-pdf">Télécharger le PDF à imprimer</Label>
+                            <Label for="sig-pdf">{{ t('replacements.acceptModal.pdfOption') }}</Label>
                         </div>
                         <div class="flex items-center space-x-2">
                             <RadioGroupItem
                                 id="sig-electronic"
                                 value="electronic"
                             />
-                            <Label for="sig-electronic">Signature électronique</Label>
+                            <Label for="sig-electronic">{{ t('replacements.acceptModal.electronicOption') }}</Label>
                         </div>
                     </RadioGroup>
                 </div>
@@ -213,7 +214,7 @@ async function acceptWithContract() {
                         for="patient-access"
                         class="text-sm leading-snug cursor-pointer"
                     >
-                        J'autorise l'accès à ma patientèle pour la durée du remplacement (opt-in explicite).
+                        {{ t('replacements.acceptModal.patientAccessLabel') }}
                     </Label>
                 </div>
             </div>
@@ -225,7 +226,7 @@ async function acceptWithContract() {
                     :in-progress="accepting || contractLoading"
                     @click="acceptWithContract"
                 >
-                    Accepter avec contrat — {{ isProSubscriber ? 'inclus' : '3 €' }}
+                    {{ t('replacements.acceptModal.acceptWithContractCta', { suffix: isProSubscriber ? t('replacements.acceptModal.includedShort') : '3 €' }) }}
                 </Button>
                 <Button
                     variant="outline"
@@ -234,7 +235,7 @@ async function acceptWithContract() {
                     :in-progress="accepting"
                     @click="acceptWithoutContract"
                 >
-                    Accepter sans contrat
+                    {{ t('replacements.acceptModal.acceptWithoutContractCta') }}
                 </Button>
             </DialogFooter>
         </DialogContent>

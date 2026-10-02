@@ -14,7 +14,7 @@
                 v-if="locale === 'nl'"
                 class="container md:mx-8 lg:mx-16 mx-auto mb-6 text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-lg p-4"
             >
-                {{ $t('legal.privacyBody') }}
+                {{ t('legal.privacyBody') }}
             </p>
             <div class="container md:mx-8 lg:mx-16 mx-auto font-light mb-4 lg:mb-6 space-y-2">
                 <p>

@@ -3,11 +3,11 @@
         <div class="mt-6 flex items-center gap-2 text-primary sm:bg-gray-100 sm:px-9 rounded-lg">
             <ArrowLeftIcon
                 class="size-5 cursor-pointer hover:text-primary"
-                :title="$t('common.back')"
+                :title="t('common.back')"
                 @click="goBack"
             />
             <h1 class="py-3 text-primary font-bold">
-                {{ $t('replacements.urgentHeading') }} <strong>{{ $t('replacements.urgentHeadingStrong') }}</strong>
+                {{ t('replacements.urgentHeading') }} <strong>{{ t('replacements.urgentHeadingStrong') }}</strong>
             </h1>
         </div>
 
@@ -25,19 +25,19 @@
                 <thead class="bg-gray-100">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                            {{ $t('replacements.colDate') }}
+                            {{ t('replacements.colDate') }}
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                            {{ $t('replacements.colHours') }}
+                            {{ t('replacements.colHours') }}
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                            {{ $t('replacements.colZip') }}
+                            {{ t('replacements.colZip') }}
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                            {{ $t('replacements.colCities') }}
+                            {{ t('replacements.colCities') }}
                         </th>
                         <th class="px-6 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
-                            {{ $t('replacements.colAction') }}
+                            {{ t('replacements.colAction') }}
                         </th>
                     </tr>
                 </thead>

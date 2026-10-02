@@ -55,19 +55,21 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{ click: [] }>();
 
+const { t } = useI18n();
+
 const label = computed(() =>
-    props.variant === 'owner' ? 'Remplacement boosté' : '',
+    props.variant === 'owner' ? t('replacements.boostedTitle') : '',
 );
 
 const subtitle = computed(() => {
     if (props.variant === 'owner' && props.boostedUntil) {
-        return `Mise en avant active jusqu'au ${formatDate(props.boostedUntil)}`;
+        return t('replacements.activeUntil', { date: formatDate(props.boostedUntil) });
     }
     if (props.variant === 'visitor') {
-        return 'Annonce vérifiée et mise en avant';
+        return t('replacements.boostTrustBadge.subtitleVisitor');
     }
     if (props.variant === 'owner') {
-        return 'Votre annonce bénéficie d\'une visibilité maximale';
+        return t('replacements.maxVisibilityText');
     }
     return null;
 });

@@ -7,6 +7,7 @@ type NurseResponseItem = {
     responses?: Array<{ status?: string }>;
 };
 
+const { t } = useI18n();
 const user = useState<User | null>('user');
 const { $apifetch } = useNuxtApp();
 const {
@@ -192,7 +193,7 @@ function onPartnerBannerClick() {
                 :class="partnerIsNursAssur ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-blue-600 hover:bg-blue-700'"
                 @click="onPartnerBannerClick"
             >
-                {{ partnerIsNursAssur ? $t('partnerPromo.bannerCtaNursassur') : $t('partnerPromo.bannerCtaNurstech') }}
+                {{ partnerIsNursAssur ? t('partnerPromo.bannerCtaNursassur') : t('partnerPromo.bannerCtaNurstech') }}
                 <ArrowRight class="size-4" />
             </NuxtLink>
         </div>

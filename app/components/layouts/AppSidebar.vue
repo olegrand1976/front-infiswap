@@ -3,8 +3,17 @@
         collapsible="offcanvas"
         class="bg-white"
     >
-        <SidebarHeader class="flex flex-col items-center justify-center px-2 pb-2 pt-4">
+        <SidebarHeader class="relative flex flex-col items-center justify-center bg-white px-2 pb-2 pt-4">
             <LayoutsLogo class="w-36" />
+            <button
+                v-if="isMobile"
+                type="button"
+                class="absolute right-2 top-2 rounded-sm p-1 text-neutral-500 hover:text-neutral-700"
+                aria-label="Fermer le menu"
+                @click="setOpenMobile(false)"
+            >
+                <X class="size-5" />
+            </button>
         </SidebarHeader>
 
         <SidebarContent
@@ -207,7 +216,7 @@
 </template>
 
 <script lang="ts" setup>
-import { BarChart3, Briefcase, ChevronRight, CircleHelp, CirclePlay, CircleUser, ClipboardList, Cog, CreditCard, Crown, Euro, FileSearch, FileText, Inbox, LayoutGrid, Link, List, Mail, MapPin, MessageSquare, Plus, Power, RefreshCw, Search, ShieldAlert, ShieldCheck, ShoppingBag, Sparkles, Star, UserCheck, Users, UserSearch, Wrench, IdCard } from 'lucide-vue-next';
+import { BarChart3, Briefcase, ChevronRight, CircleHelp, CirclePlay, CircleUser, ClipboardList, Cog, CreditCard, Crown, Euro, FileSearch, FileText, Inbox, LayoutGrid, Link, List, Mail, MapPin, MessageSquare, Plus, Power, RefreshCw, Search, ShieldAlert, ShieldCheck, ShoppingBag, Sparkles, Star, UserCheck, Users, UserSearch, Wrench, IdCard, X } from 'lucide-vue-next';
 import type { FunctionalComponent } from 'vue';
 import QuickReplacementIcon from '../icons/QuickReplacementIcon.vue';
 import { useSidebar } from '../ui/sidebar';

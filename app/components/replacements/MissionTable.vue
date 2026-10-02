@@ -4,14 +4,14 @@
             :class="['gap-2 grid border border-none overflow-x-hidden relative', gridClass]"
         >
             <div class="text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-0.5 rounded-br-sm shadow-md bg-blue-600 text-white">
-                MISSION
+                {{ t('replacements.missionBadgeAllCaps') }}
             </div>
 
             <TableCell class="flex flex-col justify-center items-center bg-[#F1F2F7] xl:text-[0.7em] lg:text-[0.65em]">
                 <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
                     <span>{{ formatDate(mission.start_date) }}</span>
                 </div>
-                <span class="flex items-center text-xs">au</span>
+                <span class="flex items-center text-xs">{{ t('replacements.to') }}</span>
                 <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
                     <span>{{ formatDate(mission.end_date ?? mission.start_date) }}</span>
                 </div>
@@ -20,7 +20,7 @@
             <TableCell class="bg-[#F1F2F7] text-xs grid grid-cols-3 place-items-center relative">
                 <template v-if="mission.is_long_term">
                     <div class="col-span-3 text-center w-full font-medium text-blue-700 bg-blue-100/50 py-1 rounded text-[10px] leading-tight flex items-center justify-center min-h-[24px]">
-                        Long terme
+                        {{ t('replacements.missionTable.longTerm') }}
                     </div>
                 </template>
                 <template v-else>
@@ -89,7 +89,7 @@
                 class="bg-gray-100 text-xs pt-5"
             >
                 <div class="pt-3 h-10 rounded bg-[#E4E7F4] text-center px-3 flex items-center justify-center">
-                    <span class="">Mission</span>
+                    <span class="">{{ t('replacements.typeMissionLabel') }}</span>
                 </div>
             </TableCell>
 
@@ -143,7 +143,7 @@
                 <Button
                     v-if="isOwner"
                     class="inline-block rounded bg-[#E4E7F4] text-primary hover:bg-primary hover:text-white mx-auto justify-center items-center ml-2"
-                    title="Reposter cette mission"
+                    :title="t('replacements.missionTable.repost')"
                     @click="duplicateMission"
                 >
                     <RefreshCw class="h-6 mt-1" />
@@ -157,14 +157,14 @@
     <div class="lg:hidden contents">
         <TableRow class="grid grid-cols-3 gap-1 border border-none overflow-x-hidden relative">
             <div class="text-xs absolute -top-1 left-0 z-10 text-[0.7rem] font-bold px-2 py-0.5 rounded-br-sm shadow-md bg-blue-600 text-white">
-                MISSION
+                {{ t('replacements.missionBadgeAllCaps') }}
             </div>
 
             <TableCell class="flex flex-col items-center bg-[#F1F2F7] text-[0.75em] py-6">
                 <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
                     <span>{{ formatDate(mission.start_date) }}</span>
                 </div>
-                <span class="flex items-center text-xs">au</span>
+                <span class="flex items-center text-xs">{{ t('replacements.to') }}</span>
                 <div class="flex h-8 py-1 px-2 rounded bg-[#E4E7F4] justify-center items-center">
                     <span>{{ formatDate(mission.end_date ?? mission.start_date) }}</span>
                 </div>
@@ -209,6 +209,8 @@ const props = defineProps<{
     type?: string;
     gridClass?: string;
 }>();
+
+const { t } = useI18n();
 
 const formatDate = (d?: string | null) => {
     if (!d) return '—';

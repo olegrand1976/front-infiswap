@@ -28,10 +28,10 @@
                             <ShieldCheck class="size-5" />
                         </div>
                         <h1 class="font-secondary text-2xl font-semibold text-dark">
-                            {{ $t('auth.resetPasswordTitle') }}
+                            {{ t('auth.resetPasswordTitle') }}
                         </h1>
                         <p class="mt-2 text-sm text-gray-500">
-                            {{ $t('auth.resetPasswordHint') }}
+                            {{ t('auth.resetPasswordHint') }}
                         </p>
                     </div>
 
@@ -41,13 +41,13 @@
                     >
                         <div class="flex flex-col gap-1.5">
                             <label class="text-sm font-medium text-gray-700">
-                                {{ $t('auth.yourEmail') }}
+                                {{ t('auth.yourEmail') }}
                             </label>
                             <InputIcon
                                 v-model="email"
                                 type="email"
                                 rounded="md"
-                                :placeholder="$t('auth.yourEmailPlaceholder')"
+                                :placeholder="t('auth.yourEmailPlaceholder')"
                                 :icon="Mail"
                             />
                         </div>
@@ -57,12 +57,12 @@
                             class="mt-6 w-full font-bold"
                             :in-progress="isSubmitting"
                         >
-                            {{ $t('auth.resetSubmit') }}
+                            {{ t('auth.resetSubmit') }}
                         </Button>
 
                         <div class="mt-4 flex gap-2 rounded-md border border-gray-200 bg-gray-50 px-3.5 py-3 text-xs text-gray-500">
                             <Info class="mt-0.5 size-3.5 shrink-0 text-gray-400" />
-                            <span>{{ $t('auth.resetHelper') }}</span>
+                            <span>{{ t('auth.resetHelper') }}</span>
                         </div>
                     </form>
 
@@ -73,21 +73,21 @@
                         <MailCheck class="mt-0.5 size-4.5 shrink-0 text-success" />
                         <div>
                             <div class="text-sm font-semibold text-dark">
-                                {{ $t('auth.resetSuccessTitle') }}
+                                {{ t('auth.resetSuccessTitle') }}
                             </div>
                             <div class="mt-0.5 text-xs text-gray-500">
-                                {{ $t('auth.resetSuccessDetail') }}
+                                {{ t('auth.resetSuccessDetail') }}
                             </div>
                         </div>
                     </div>
 
                     <p class="mt-5 text-center text-xs text-gray-500">
-                        {{ $t('auth.rememberPassword') }}
+                        {{ t('auth.rememberPassword') }}
                         <NuxtLink
                             :to="localePath('/login')"
                             class="font-bold text-primary underline"
                         >
-                            {{ $t('auth.backToLogin') }}
+                            {{ t('auth.backToLogin') }}
                         </NuxtLink>
                     </p>
                 </div>
@@ -104,10 +104,10 @@
                         <ShieldCheck class="size-4.5" />
                     </div>
                     <h1 class="font-secondary text-xl font-semibold text-dark">
-                        {{ $t('auth.resetPasswordTitle') }}
+                        {{ t('auth.resetPasswordTitle') }}
                     </h1>
                     <p class="mt-1.5 text-xs text-gray-500 px-4">
-                        {{ $t('auth.resetPasswordHint') }}
+                        {{ t('auth.resetPasswordHint') }}
                     </p>
                 </div>
 
@@ -120,14 +120,14 @@
                             <FormField name="email">
                                 <FormItem>
                                     <FormLabel class="text-sm font-medium text-gray-700 mb-1.5 block">
-                                        {{ $t('auth.yourEmail') }}
+                                        {{ t('auth.yourEmail') }}
                                     </FormLabel>
                                     <FormControl>
                                         <InputIcon
                                             v-model="email"
                                             type="email"
                                             rounded="md"
-                                            :placeholder="$t('auth.yourEmailPlaceholder')"
+                                            :placeholder="t('auth.yourEmailPlaceholder')"
                                             :icon="Mail"
                                         />
                                     </FormControl>
@@ -139,12 +139,12 @@
                                 class="mt-6 w-full font-bold"
                                 :in-progress="isSubmitting"
                             >
-                                {{ $t('auth.resetSubmit') }}
+                                {{ t('auth.resetSubmit') }}
                             </Button>
 
                             <div class="mt-4 flex gap-2 rounded-md border border-gray-200 bg-gray-50 px-3.5 py-3 text-xs text-gray-500">
                                 <Info class="mt-0.5 size-3.5 shrink-0 text-gray-400" />
-                                <span>{{ $t('auth.resetHelper') }}</span>
+                                <span>{{ t('auth.resetHelper') }}</span>
                             </div>
                         </form>
                     </Form>
@@ -156,21 +156,21 @@
                         <MailCheck class="mt-0.5 size-4.5 shrink-0 text-success" />
                         <div>
                             <div class="text-sm font-semibold text-dark">
-                                {{ $t('auth.resetSuccessTitle') }}
+                                {{ t('auth.resetSuccessTitle') }}
                             </div>
                             <div class="mt-0.5 text-xs text-gray-500">
-                                {{ $t('auth.resetSuccessDetail') }}
+                                {{ t('auth.resetSuccessDetail') }}
                             </div>
                         </div>
                     </div>
 
                     <p class="mt-5 text-center text-xs text-gray-500">
-                        {{ $t('auth.rememberPassword') }}
+                        {{ t('auth.rememberPassword') }}
                         <NuxtLink
                             :to="localePath('/login')"
                             class="font-bold text-primary underline"
                         >
-                            {{ $t('auth.backToLogin') }}
+                            {{ t('auth.backToLogin') }}
                         </NuxtLink>
                     </p>
                 </div>

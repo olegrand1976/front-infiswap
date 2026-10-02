@@ -772,11 +772,14 @@ const response = await get(Number(id.value));
 institution.value = response.data;
 institutionHistories.value = response.data?.histories ?? [];
 loading.value = false;
-await loadAiInsight();
+
+// Not awaited on purpose: the page must mount as soon as the institution
+// itself is loaded. aiLoading/userReferrer drive their own sections' UI.
+void loadAiInsight();
 
 if (editMode.value) {
     populateEditForm();
-    await getUserReferrer();
+    void getUserReferrer();
 }
 
 const isValidated = computed(() => {

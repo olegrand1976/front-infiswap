@@ -1,5 +1,6 @@
 import { defineNuxtRouteMiddleware, navigateTo } from '#app';
 import { useAuth, useUser } from '~/composables/useAuth';
+import { emailUnverifiedRedirect } from '~/utils/dashboardEntryGuard';
 
 export default defineNuxtRouteMiddleware(() => {
     const user = useUser();
@@ -8,8 +9,9 @@ export default defineNuxtRouteMiddleware(() => {
         return navigateTo('/login', { replace: true });
     }
 
-    if (!user.value.email_verified_at) {
-        return navigateTo('/auth/verify-email', { replace: true });
+    const emailRedirect = emailUnverifiedRedirect(user.value);
+    if (emailRedirect) {
+        return navigateTo(emailRedirect, { replace: true });
     }
 
     const { canCreateInstitution, isInstitution } = useAuth();

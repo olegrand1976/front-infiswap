@@ -19,7 +19,7 @@
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>
-                        Les personnes intéressées
+                        {{ t('replacements.receivedResponses.dialogTitle') }}
                     </DialogTitle>
                 </DialogHeader>
                 <div v-if="selected">
@@ -37,7 +37,7 @@
                                 v-else
                                 class="font-medium text-gray-800"
                             >
-                                {{ res.respondent?.full_name ?? 'Institution' }}
+                                {{ res.respondent?.full_name ?? t('replacements.institutionLabel') }}
                             </span>
                         </li>
                     </ul>
@@ -61,6 +61,7 @@ const page = ref(1);
 const perPage = ref(10);
 const count = ref(0);
 
+const { t } = useI18n();
 const { $apifetch } = useNuxtApp();
 
 const fetchData = async () => {
@@ -94,7 +95,7 @@ const changePerPage = (newPerPage: number) => {
 
 const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
-    if (isNaN(date.getTime())) return 'Date invalide';
+    if (isNaN(date.getTime())) return t('replacements.adminNurseTables.invalidDate');
 
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -116,13 +117,13 @@ const getRespondedUser = (response: ReplacementResponse): User | null => {
     return null;
 };
 
-const columns = [
+const columns = computed(() => [
     {
         header: () =>
             h(
                 'div',
                 { class: 'text-center flex items-center justify-center', style: { minHeight: '40px' } },
-                'Période',
+                t('replacements.period'),
             ),
         accessorKey: 'replacement',
         cell: ({ row }: { row: { original: ReplacementRow } }) => {
@@ -144,7 +145,7 @@ const columns = [
             h(
                 'div',
                 { class: 'text-center flex items-center justify-center', style: { minHeight: '40px' } },
-                'Plage horaire',
+                t('replacements.receivedResponses.timeRangeHeader'),
             ),
         accessorKey: 'replacement.time_slot',
         cell: ({ row }: { row: { original: ReplacementRow } }) => {
@@ -159,7 +160,7 @@ const columns = [
                 parsedTimeSlot = typeof timeSlot === 'string' ? JSON.parse(timeSlot) : timeSlot;
             }
             catch {
-                return h('span', { class: 'text-center block text-red-500', style: { minHeight: '40px' } }, 'Erreur ');
+                return h('span', { class: 'text-center block text-red-500', style: { minHeight: '40px' } }, t('replacements.receivedResponses.parseError'));
             }
 
             const format = (start: string, end: string) => `${start} - ${end}`;
@@ -186,13 +187,13 @@ const columns = [
         },
     },
     {
-        header: 'Créé par',
+        header: t('replacements.receivedResponses.createdBy'),
         accessorKey: 'replacement.user.full_name',
         cell: ({ row }: { row: { original: ReplacementRow } }) =>
             h('div', { style: { minHeight: '40px' } }, row.original.replacement?.user_owner_full_name ?? '—'),
     },
     {
-        header: 'Type',
+        header: t('replacements.filterType'),
         accessorKey: 'replacement.type',
         cell: ({ row }: { row: { original: ReplacementRow } }) => {
             const type = row.original.replacement?.type;
@@ -202,14 +203,14 @@ const columns = [
                     {
                         class: 'inline-block px-2 py-2 text-white text-xs font-bold rounded bg-red-500',
                     },
-                    'URGENT',
+                    t('replacements.urgentBadge'),
                 );
             }
             return h('span', { style: { minHeight: '40px' } }, '');
         },
     },
     {
-        header: 'Réponses',
+        header: t('replacements.receivedResponses.responsesHeader'),
         accessorKey: 'responses_count',
         cell: ({ row }: { row: { original: ReplacementRow } }) =>
             h(
@@ -219,7 +220,7 @@ const columns = [
                     onClick: () => handleRowClick(row),
                     style: { minHeight: '40px' },
                 },
-                `${row.original.responses_count ?? 0} réponses`,
+                t('replacements.receivedResponses.responsesCountCell', { n: row.original.responses_count ?? 0 }),
             ),
     },
     {
@@ -227,7 +228,7 @@ const columns = [
             h(
                 'div',
                 { class: 'flex justify-center items-center', style: { minHeight: '40px' } },
-                'Détail',
+                t('replacements.detail'),
             ),
         accessorKey: 'action',
         cell: ({ row }: { row: { original: ReplacementRow } }) =>
@@ -251,7 +252,7 @@ const columns = [
                 ],
             ),
     },
-];
+]);
 
 onMounted(fetchData);
 </script>

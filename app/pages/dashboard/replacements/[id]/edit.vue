@@ -3,11 +3,11 @@
         <div class="mt-2 flex items-center gap-2 text-primary sm:bg-gray-100 sm:px-4 rounded-lg">
             <ArrowLeft
                 class="size-5 cursor-pointer hover:text-primary"
-                :title="$t('common.back')"
+                :title="t('common.back')"
                 @click="goBack"
             />
             <h1 class="py-3 text-primary font-bold">
-                {{ $t('replacements.editHeading') }} <strong>{{ $t('replacements.editHeadingStrong') }}</strong>
+                {{ t('replacements.editHeading') }} <strong>{{ t('replacements.editHeadingStrong') }}</strong>
             </h1>
         </div>
 

@@ -46,7 +46,7 @@
                         :class="actionButtonClass"
                         @click="emit('manage')"
                     >
-                        Gérer le boost
+                        {{ t('replacements.detailBoostBlock.manageBoostBtn') }}
                     </Button>
                 </div>
             </div>
@@ -72,6 +72,7 @@ const emit = defineEmits<{
     manage: [];
 }>();
 
+const { t } = useI18n();
 const { trackEvent } = useProductAnalytics();
 
 const actionButtonClass = 'border-white/90 bg-white text-amber-700 font-semibold shadow-sm hover:bg-amber-50 hover:text-amber-800 hover:border-white';
@@ -101,36 +102,36 @@ const visible = computed(() => {
 
 const title = computed(() => {
     if (isBoosted.value) {
-        return props.isOwner ? 'Remplacement boosté' : 'Annonce mise en avant';
+        return props.isOwner ? t('replacements.boostedTitle') : t('replacements.detailBoostBlock.titleBoostedVisitor');
     }
 
     if (responsesCount.value === 0 && isStaleWithoutResponses.value) {
-        return 'Aucune candidature ?';
+        return t('replacements.detailBoostBlock.titleNoResponsesStale');
     }
 
-    return 'Boostez votre remplacement';
+    return t('replacements.detailBoostBlock.titleDefault');
 });
 
 const subtitle = computed(() => {
     if (isBoosted.value) {
         if (props.replacement?.boosted_until) {
-            return `Mise en avant active jusqu'au ${formatDate(props.replacement.boosted_until)}`;
+            return t('replacements.activeUntil', { date: formatDate(props.replacement.boosted_until) });
         }
         return props.isOwner
-            ? 'Votre annonce apparaît en tête des recherches.'
-            : 'Cette annonce bénéficie d\'une visibilité maximale.';
+            ? t('replacements.detailBoostBlock.subtitleOwnerBoosted')
+            : t('replacements.detailBoostBlock.subtitleVisitorBoosted');
     }
 
-    const boostOptions = 'Boost 2 — 7 j à 4,40 € (recommandé) · Boost 1 — 3 j à 2 €';
+    const boostOptions = t('replacements.detailBoostBlock.boostOptionsText');
 
     if (responsesCount.value === 0) {
         if (isStaleWithoutResponses.value) {
-            return `Aucune candidature ? ${boostOptions}`;
+            return t('replacements.detailBoostBlock.subtitleStaleWithOptions', { options: boostOptions });
         }
-        return `Lancez votre visibilité : ${boostOptions}`;
+        return t('replacements.detailBoostBlock.subtitleLaunchVisibility', { options: boostOptions });
     }
 
-    return `${responsesCount.value} collègue(s) intéressée(s) — ${boostOptions}`;
+    return t('replacements.detailBoostBlock.subtitleWithResponses', { n: responsesCount.value, options: boostOptions });
 });
 
 watch(visible, (isVisible) => {

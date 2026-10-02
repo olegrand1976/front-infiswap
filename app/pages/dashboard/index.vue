@@ -62,6 +62,8 @@ definePageMeta({
 const { pending } = useAsyncData('dashboard-reports', () => getReports(), {
     server: false,
     lazy: true,
+    dedupe: 'defer',
+    getCachedData: (key, nuxtApp) => nuxtApp.payload.data[key] ?? nuxtApp.static.data[key],
 });
 </script>
 

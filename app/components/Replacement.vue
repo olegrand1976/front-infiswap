@@ -994,6 +994,7 @@ const getRandomItems = (arr: any[], n: number) => [...arr].sort(() => 0.5 - Math
 const { data: asyncData } = await useAsyncData(
     `merged-search-${props.type}-${page.value}`,
     () => fetchMerged(searchParamsParams.value),
+    { dedupe: 'defer' },
 );
 
 if (asyncData.value) {

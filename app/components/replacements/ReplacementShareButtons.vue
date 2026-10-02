@@ -4,13 +4,14 @@ const props = defineProps<{
     title?: string;
 }>();
 
+const { t } = useI18n();
 const config = useRuntimeConfig();
 const shareUrl = computed(() => {
     const base = config.public.FRONT_END_URL ?? '';
     return `${base}/dashboard/replacements/detail/${props.replacementId}`;
 });
 
-const shareText = computed(() => props.title ?? 'Remplacement disponible sur InfiSwap');
+const shareText = computed(() => props.title ?? t('replacements.shareButtons.defaultShareText'));
 
 async function shareNative() {
     if (!import.meta.client || !navigator.share) {
@@ -19,7 +20,7 @@ async function shareNative() {
 
     try {
         await navigator.share({
-            title: 'InfiSwap',
+            title: t('common.brand'),
             text: shareText.value,
             url: shareUrl.value,
         });
@@ -59,7 +60,7 @@ async function handleShare() {
             size="sm"
             @click="handleShare"
         >
-            Partager
+            {{ t('replacements.shareButtons.partager') }}
         </Button>
         <Button
             type="button"

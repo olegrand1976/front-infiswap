@@ -36,23 +36,27 @@ import type { ReplacementCountryCode } from '~/lib/replacementCountry';
 
 const country = defineModel<ReplacementCountryCode>({ required: true });
 
-withDefaults(defineProps<{
+const { t } = useI18n();
+
+const props = withDefaults(defineProps<{
     label?: string;
     labelClass?: string;
     triggerClass?: string;
     contentClass?: string;
     itemClass?: string;
 }>(), {
-    label: 'Pays',
+    label: undefined,
     labelClass: 'text-gray-600 text-sm font-medium',
     triggerClass: 'rounded-md',
     contentClass: 'border border-none',
     itemClass: 'text-sm',
 });
 
+const label = computed(() => props.label ?? t('replacements.countrySelect.defaultLabel'));
+
 const selectedLabel = computed(() => {
     const match = REPLACEMENT_COUNTRIES.find(option => option.value === country.value);
 
-    return match?.label ?? 'Sélectionner...';
+    return match?.label ?? t('replacements.countrySelect.selectPlaceholder');
 });
 </script>

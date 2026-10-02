@@ -280,7 +280,7 @@ function isQuestId(value: unknown): value is QuestId {
     return typeof value === 'string' && QUESTS.some(quest => quest.id === value);
 }
 
-export function getApplicableQuests(user: JourneyUser | null | undefined): Quest[] {
+export function getApplicableQuests(_user: JourneyUser | null | undefined): Quest[] {
     return [...QUESTS].sort((a, b) => a.order - b.order);
 }
 

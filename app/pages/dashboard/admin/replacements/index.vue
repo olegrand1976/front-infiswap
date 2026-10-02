@@ -472,7 +472,7 @@ const debouncedFilterReplacements = debounce(filterReplacements, 300);
 const { pending } = useAsyncData(
     'admin-replacements',
     () => getReplacementsForAdmin(page.value, perPage.value, option.value),
-    { server: false, lazy: true },
+    { server: false, lazy: true, dedupe: 'defer' },
 );
 
 const isLoading = computed(() => pending.value || replacementsLoading.value);

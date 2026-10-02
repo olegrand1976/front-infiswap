@@ -2,7 +2,7 @@
     <div
         class="relative mx-auto w-full max-w-80 select-none"
         role="img"
-        :aria-label="$t('home.mockup.alt')"
+        :aria-label="t('home.mockup.alt')"
     >
         <div class="relative rounded-[1.75rem] bg-gray-900 p-[0.45rem] shadow-[0_18px_40px_rgb(0_0_0/0.28),inset_0_0_0_1px_rgb(255_255_255/0.12)]">
             <div
@@ -23,34 +23,38 @@
                     </div>
 
                     <p class="relative z-[1] mb-1 text-xs leading-[1.2] font-normal">
-                        {{ $t('home.mockup.lookingFor') }}
+                        {{ t('home.mockup.lookingFor') }}
                     </p>
                     <p class="relative font-secondary z-[1] mb-2 text-xl leading-[1.15] font-bold">
-                        {{ $t('home.mockup.lookingForNurse') }}
+                        {{ t('home.mockup.lookingForNurse') }}
                     </p>
                     <span class="relative z-[1] inline-flex min-w-[5.5rem] items-center justify-center rounded-full bg-white text-primary text-xs p-1 font-semibold">
-                        {{ $t('home.mockup.consult') }}
+                        {{ t('home.mockup.consult') }}
                     </span>
                 </div>
 
                 <div class="h-[52%] overflow-hidden bg-white px-[0.8rem] pt-[0.85rem] pb-[0.7rem]">
                     <p class="mb-[0.35rem] text-[0.95rem] leading-[1.2] font-bold text-[#e8304a] lg:text-[1.05rem]">
-                        {{ $t('home.mockup.replaceMe') }}
+                        {{ t('home.mockup.replaceMe') }}
                     </p>
                     <p class="mb-[0.45rem] text-[0.72rem] leading-[1.25] font-bold text-gray-900 lg:text-[0.8rem]">
-                        {{ $t('home.mockup.needReplacement') }}
+                        {{ t('home.mockup.needReplacement') }}
                     </p>
                     <p class="mb-[0.4rem] text-[0.58rem] leading-[1.35] text-gray-700 lg:text-[0.62rem]">
-                        {{ $t('home.mockup.body1') }}
+                        {{ t('home.mockup.body1') }}
                     </p>
                     <p class="mb-[0.4rem] text-[0.58rem] leading-[1.35] text-gray-500 lg:text-[0.62rem]">
-                        {{ $t('home.mockup.body2') }}
+                        {{ t('home.mockup.body2') }}
                     </p>
                 </div>
             </div>
         </div>
     </div>
 </template>
+
+<script setup lang="ts">
+const { t } = useI18n();
+</script>
 
 <style scoped>
 /* Icône presse-papiers : composition à 5 fonds superposés, non exprimable proprement en utilitaires Tailwind. */

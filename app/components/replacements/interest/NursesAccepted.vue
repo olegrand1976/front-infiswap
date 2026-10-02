@@ -17,7 +17,7 @@
             <DialogContent class="max-w-[90vw] lg:max-w-4xl">
                 <DialogHeader>
                     <DialogTitle class="text-center">
-                        Détails des remplacements
+                        {{ t('replacements.adminNurseTables.dialogTitle') }}
                     </DialogTitle>
                 </DialogHeader>
                 <div
@@ -28,19 +28,19 @@
                         <thead class="bg-gray-100 sticky top-0">
                             <tr>
                                 <th class="border p-3 text-left min-w-[120px]">
-                                    Codes postaux
+                                    {{ t('replacements.colZip') }}
                                 </th>
                                 <th class="border p-3 text-left min-w-[150px]">
-                                    Ville(s)
+                                    {{ t('replacements.citiesLabelParenS') }}
                                 </th>
                                 <th class="border p-3 text-left min-w-[100px]">
-                                    Du
+                                    {{ t('replacements.adminNurseTables.colFrom') }}
                                 </th>
                                 <th class="border p-3 text-left min-w-[100px]">
-                                    Au
+                                    {{ t('replacements.adminNurseTables.colTo') }}
                                 </th>
                                 <th class="border p-3 text-left w-20">
-                                    Action
+                                    {{ t('replacements.colAction') }}
                                 </th>
                             </tr>
                         </thead>
@@ -66,7 +66,7 @@
                                     <NuxtLink
                                         :to="`/dashboard/admin/replacements/${replacement.id}`"
                                         class="inline-flex items-center justify-center size-8 bg-blue-50 rounded-full hover:bg-blue-100 transition-colors mx-auto"
-                                        title="Voir détails"
+                                        :title="t('replacements.adminNurseTables.seeDetailsTitle')"
                                     >
                                         <Eye class="size-5 text-blue-600" />
                                     </NuxtLink>
@@ -94,6 +94,7 @@ interface NurseAcceptedRow {
     replacements: Replacement[];
 }
 
+const { t } = useI18n();
 const { data, count, nursesAccepted } = useReplacements();
 
 const perPage = ref(PERPAGE);
@@ -138,15 +139,15 @@ const openModal = (row: NurseAcceptedRow) => {
 
 const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
-    return isNaN(date.getTime()) ? 'Date invalide' : date.toLocaleDateString();
+    return isNaN(date.getTime()) ? t('replacements.adminNurseTables.invalidDate') : date.toLocaleDateString();
 };
 
-const columns: ColumnDef<NurseAcceptedRow>[] = [
+const columns = computed<ColumnDef<NurseAcceptedRow>[]>(() => [
     {
         accessorKey: 'user.full_name',
         header: () =>
             h(Button, { variant: 'ghost', onClick: () => setSort('user.full_name') }, () => [
-                'Nom',
+                t('replacements.nameColumnLabel'),
                 h(ArrowUpDown, { class: 'w-4 h-4 ml-2' }),
             ]),
         cell: info =>
@@ -158,7 +159,7 @@ const columns: ColumnDef<NurseAcceptedRow>[] = [
         accessorKey: 'user.email',
         header: () =>
             h(Button, { variant: 'ghost', onClick: () => setSort('user.email') }, () => [
-                'Email',
+                t('replacements.emailColumnLabel'),
                 h(ArrowUpDown, { class: 'w-4 h-4 ml-2' }),
             ]),
         cell: info => h('div', { class: 'py-2' }, info.getValue() as string),
@@ -167,7 +168,7 @@ const columns: ColumnDef<NurseAcceptedRow>[] = [
         accessorKey: 'user.phone_number',
         header: () =>
             h(Button, { variant: 'ghost', onClick: () => setSort('user.phone_number') }, () => [
-                'Téléphone',
+                t('replacements.phoneColumnLabel'),
                 h(ArrowUpDown, { class: 'w-4 h-4 ml-2' }),
             ]),
         cell: info => h('div', { class: 'py-2' }, info.getValue() as string),
@@ -181,7 +182,7 @@ const columns: ColumnDef<NurseAcceptedRow>[] = [
                     onClick: () => setSort('accepted_count'),
                     class: 'flex items-center justify-center gap-1',
                 }, () => [
-                    'Nb. remplacements',
+                    t('replacements.adminNurseTables.acceptedCountHeader'),
                     h(ArrowUpDown, { class: 'w-4 h-4' }),
                 ]),
             ]),
@@ -195,12 +196,12 @@ const columns: ColumnDef<NurseAcceptedRow>[] = [
                         class: 'text-blue-600 hover:underline',
                         onClick: () => openModal(row),
                     },
-                    `${val ?? 0} accepté(s)`,
+                    t('replacements.adminNurseTables.acceptedCountCell', { n: val ?? 0 }),
                 ),
             ]);
         },
     },
-];
+]);
 
 onMounted(() => {
     refresh(page.value);
