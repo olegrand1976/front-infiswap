@@ -26,7 +26,15 @@ export const useAuth = () => {
     const isManager = hasAccountType(['manager']);
     const isCommunityManager = hasAccountType(['community_manager']);
     const isSaleRepresentative = hasAccountType(['sale_representative']);
-    const canAccessMarketingAnalytics = computed(() => isAdmin.value || isCommunityManager.value || isSaleRepresentative.value);
+    const MARKETING_ANALYTICS_ROLES = ['administrator', 'developer', 'community_manager', 'sale_representative'] as const;
+    const canAccessMarketingAnalytics = computed(() => {
+        const roles = user.value?.roles ?? [];
+        if (MARKETING_ANALYTICS_ROLES.some(role => roles.includes(role))) {
+            return true;
+        }
+
+        return isAdmin.value || isCommunityManager.value || isSaleRepresentative.value;
+    });
     const isMedical = hasAccountType(['nurse', 'caregiver', 'midwife', 'collaborator']);
     const isInstitution = computed((): boolean => {
         return user.value?.type === 'institution';

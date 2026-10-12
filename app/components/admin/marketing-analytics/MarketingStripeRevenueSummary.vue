@@ -74,7 +74,7 @@ const secondaryMetrics = computed(() => {
 
     return [
         {
-            label: 'Paiements',
+            label: 'Paiements (période)',
             value: String(data?.payment_count ?? 0),
         },
         {

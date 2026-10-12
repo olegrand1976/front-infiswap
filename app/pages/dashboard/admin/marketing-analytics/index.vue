@@ -192,7 +192,13 @@ const showUnverified = ref(false);
 
 onMounted(() => {
     if (!canAccess.value) {
+        loading.value = false;
         void navigateTo('/dashboard/admin', { replace: true });
+        return;
+    }
+
+    if (!overview.value) {
+        void loadOverview();
     }
 });
 
@@ -210,6 +216,7 @@ const attendanceChartData = computed(() =>
 
 async function loadOverview() {
     if (!canAccess.value) {
+        loading.value = false;
         return;
     }
 
@@ -217,6 +224,9 @@ async function loadOverview() {
 
     try {
         overview.value = await getOverview(selectedPeriod.value);
+    }
+    catch {
+        overview.value = null;
     }
     finally {
         loading.value = false;
