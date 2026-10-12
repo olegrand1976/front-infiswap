@@ -42,8 +42,7 @@
                         />
 
                         <MarketingStripeRevenueSummary
-                            :kpis="overview?.revenue ?? null"
-                            :loading="loading"
+                            :period="selectedPeriod"
                         />
 
                         <MarketingFunnelPanel
@@ -197,9 +196,7 @@ onMounted(() => {
         return;
     }
 
-    if (!overview.value) {
-        void loadOverview();
-    }
+    void loadOverview();
 });
 
 const selectedPeriod = ref<MarketingAnalyticsPeriod>('30d');

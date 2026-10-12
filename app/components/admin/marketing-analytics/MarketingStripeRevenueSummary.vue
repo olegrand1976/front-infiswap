@@ -18,6 +18,13 @@
                 </p>
             </div>
 
+            <p
+                v-if="showEmptyHint"
+                class="mb-3 text-xs text-gray-500 rounded-md border border-dashed border-gray-200 px-3 py-2"
+            >
+                Aucun paiement enregistré dans la base pour cette période. Les achats Stripe apparaissent ici après confirmation checkout (ou backfill admin).
+            </p>
+
             <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
                 <div
                     v-for="metric in secondaryMetrics"
@@ -53,16 +60,32 @@
 
 <script setup lang="ts">
 import { Badge } from '@/components/ui/badge';
+import {
+    type MarketingAnalyticsPeriod,
+    useMarketingAnalytics,
+} from '@/composables/useMarketingAnalytics';
 import type { StripePaymentKpis } from '@/composables/useStripePaymentsAdmin';
 import { formatStripePaymentAmount, stripePaymentProductLabel } from '@/composables/useStripePaymentsAdmin';
 
 const props = defineProps<{
-    kpis: StripePaymentKpis | null;
-    loading?: boolean;
+    period: MarketingAnalyticsPeriod;
 }>();
 
+const { getStripeKpis } = useMarketingAnalytics();
+
+const loading = ref(true);
+const kpis = ref<StripePaymentKpis | null>(null);
+const loadError = ref(false);
+
+const showEmptyHint = computed(() =>
+    !loading.value
+    && !loadError.value
+    && (kpis.value?.payment_count ?? 0) === 0
+    && !kpis.value?.latest_payment,
+);
+
 const secondaryMetrics = computed(() => {
-    const data = props.kpis;
+    const data = kpis.value;
 
     const latestLabel = data?.latest_payment?.user?.full_name
         ? `${data.latest_payment.user.full_name} · ${formatStripePaymentAmount(data.latest_payment.amount_cents)}`
@@ -93,12 +116,36 @@ const secondaryMetrics = computed(() => {
 });
 
 const productBreakdown = computed(() => {
-    const items = props.kpis?.by_product_type ?? [];
+    const items = kpis.value?.by_product_type ?? [];
 
     return items.map(item => ({
         product_type: item.product_type,
         label: stripePaymentProductLabel(item.product_type),
         count: item.count,
     }));
+});
+
+async function loadStripeKpis() {
+    loading.value = true;
+    loadError.value = false;
+
+    try {
+        kpis.value = await getStripeKpis(props.period);
+    }
+    catch {
+        kpis.value = null;
+        loadError.value = true;
+    }
+    finally {
+        loading.value = false;
+    }
+}
+
+watch(() => props.period, () => {
+    void loadStripeKpis();
+});
+
+onMounted(() => {
+    void loadStripeKpis();
 });
 </script>

@@ -1,4 +1,5 @@
 import type { StripePaymentKpis } from '@/composables/useStripePaymentsAdmin';
+import { unwrapLaravelData } from '@/utils/laravelApiData';
 
 export type MarketingAnalyticsPeriod = '7d' | '30d' | '90d';
 
@@ -165,11 +166,19 @@ export const useMarketingAnalytics = () => {
     const { $apifetch } = useNuxtApp();
 
     const getOverview = async (period: MarketingAnalyticsPeriod = '30d') => {
-        const response = await $apifetch<{ data: MarketingAnalyticsOverview }>(
+        const response = await $apifetch<{ data: MarketingAnalyticsOverview } | MarketingAnalyticsOverview>(
             `api/admin/marketing-analytics?period=${period}`,
         );
 
-        return response.data;
+        return unwrapLaravelData(response);
+    };
+
+    const getStripeKpis = async (period: MarketingAnalyticsPeriod = '30d') => {
+        const response = await $apifetch<{ data: StripePaymentKpis } | StripePaymentKpis>(
+            `api/admin/marketing-analytics/stripe-kpis?period=${period}`,
+        );
+
+        return unwrapLaravelData(response);
     };
 
     const getJourneyTemplatePreview = async (workflow: string) => {
@@ -251,6 +260,7 @@ export const useMarketingAnalytics = () => {
 
     return {
         getOverview,
+        getStripeKpis,
         getJourneyTemplatePreview,
         getJourneySends,
         getUniqueUsers,
