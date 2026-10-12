@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { unwrapLaravelData } from '@/utils/laravelApiData';
+import { unwrapLaravelData } from './laravelApiData';
 
 describe('unwrapLaravelData', () => {
     it('returns nested data when present', () => {
